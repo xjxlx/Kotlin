@@ -1,32 +1,34 @@
 package com.xjx.kotlin
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.amap.api.mapcore.util.it
-import com.android.helper.utils.LogUtil
-import okhttp3.internal.immutableListOf
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.android.helper.base.BaseBindingActivity
+import com.xjx.kotlin.databinding.ActivityMainBinding
+import com.xjx.kotlin.ui.activity.test.TestArrayActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        initData()
+    override fun initListener() {
+        super.initListener()
+        setonClickListener(R.id.tv_item_array)
     }
 
-    private fun initData() {
-        val intArrayOf = intArrayOf(1, 2, 3)
+    override fun initData(savedInstanceState: Bundle?) {
 
-        // 遍历集合，不带角标
-        for (item in intArrayOf) {
-            LogUtil.e("-$item")
+    }
+
+    override fun onClick(v: View?) {
+        super.onClick(v)
+        when (v?.id) {
+            R.id.tv_item_array -> {
+                startActivity(TestArrayActivity::class.java)
+            }
         }
+    }
 
-        // 遍历集合，带角标
-        for ((index, item) in intArrayOf.withIndex()) {
-            LogUtil.e("index: $index, item: $item") // 输出: index: 0, item: 1....index: 13, item: 2
-        }
-
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityMainBinding {
+        return ActivityMainBinding.inflate(inflater)
     }
 }
