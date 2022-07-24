@@ -3,11 +3,11 @@ package com.xjx.kotlin.ui.activity.test
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.android.helper.base.BaseBindingActivity
+import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityTestArrayBinding
 
-class TestArrayActivity : BaseBindingActivity<ActivityTestArrayBinding>() {
+class TestArrayActivity : AppBaseBindingTitleActivity<ActivityTestArrayBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
         val intArrayOf = intArrayOf(1, 2, 3)
@@ -31,6 +31,10 @@ class TestArrayActivity : BaseBindingActivity<ActivityTestArrayBinding>() {
         intArrayOf.forEachIndexed { index, item ->
             LogUtil.e("foreach: index:$index item:$item")
         }
+    }
+
+    override fun setTitleContent(): String {
+        return "数组"
     }
 
     override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityTestArrayBinding {

@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.android.helper.base.BaseBindingActivity
+import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityMainBinding
 import com.xjx.kotlin.ui.activity.test.TestArrayActivity
 
-class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
+class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
     override fun initListener() {
         super.initListener()
@@ -17,6 +17,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
 
+    }
+
+    override fun setTitleContent(): String {
+        return ""
     }
 
     override fun onClick(v: View?) {
@@ -29,6 +33,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
     }
 
     override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityMainBinding {
-        return ActivityMainBinding.inflate(inflater)
+        return ActivityMainBinding.inflate(inflater,container,true)
     }
 }
