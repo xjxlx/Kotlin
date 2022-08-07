@@ -31,6 +31,48 @@ class TestArrayActivity : AppBaseBindingTitleActivity<ActivityTestArrayBinding>(
         intArrayOf.forEachIndexed { index, item ->
             LogUtil.e("foreach: index:$index item:$item")
         }
+
+        // 打印数组中的内容
+        val contentToString = intArrayOf.contentToString()
+        LogUtil.e(contentToString)
+
+        if (1 in intArrayOf) {
+            // 是否包含1
+        }
+
+        if (5 !in intArrayOf) {
+            // 是否包含5
+        }
+
+        LogUtil.e("集合中是否包含 1：${1 in intArrayOf}")
+        LogUtil.e("集合中是否包含 5：${5 in intArrayOf}")
+        LogUtil.e("集合中是否不包含 5：${5 !in intArrayOf}")
+
+        // 创建可变数组
+        val arrayOf = arrayOf("1")
+
+        // 创建指定大小的不可见数组
+        val array = Array(4) { it + 1 }
+        LogUtil.e(array.contentToString())
+
+        // 区间
+        val intRange = 1..10
+        LogUtil.e("区间内容：${intRange.joinToString()}")
+
+        // 闭区间 .. (完全打印所有内容）0..10
+        for (item in 0..10) {
+            LogUtil.e("item:$item")
+        }
+
+        // 半开区间 until（包左不包右）0..9
+        for (item in 0 until 10) {
+            LogUtil.e("item2:$item")
+        }
+
+        // 半开区间 indices == until
+        for (index in intArrayOf.indices) {
+            LogUtil.e("indices:${intArrayOf[index]}")
+        }
     }
 
     override fun setTitleContent(): String {

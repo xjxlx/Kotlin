@@ -11,5 +11,6 @@
         <item name="android:paddingBottom">@dimen/dp_10</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/sp_20</item>
+        <item name="android:layout_marginBottom">@dimen/dp_10</item>
     </style>
 </resources>

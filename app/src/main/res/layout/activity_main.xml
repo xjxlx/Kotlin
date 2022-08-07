@@ -15,6 +15,21 @@
             style="@style/click_item_style"
             android:text="数组" />
 
+        <TextView
+            android:id="@+id/tv_item_list"
+            style="@style/click_item_style"
+            android:text="集合" />
+
+        <TextView
+            android:id="@+id/tv_item_fun"
+            style="@style/click_item_style"
+            android:text="方法" />
+
+        <TextView
+            android:id="@+id/tv_item_class"
+            style="@style/click_item_style"
+            android:text="类" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
