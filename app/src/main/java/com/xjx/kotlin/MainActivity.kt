@@ -6,20 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityMainBinding
-import com.xjx.kotlin.ui.activity.test.ClasssActivity
-import com.xjx.kotlin.ui.activity.test.FunActivity
-import com.xjx.kotlin.ui.activity.test.ListActivity
-import com.xjx.kotlin.ui.activity.test.TestArrayActivity
+import com.xjx.kotlin.ui.activity.test.*
 
 class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
+
 
     override fun initListener() {
         super.initListener()
         setonClickListener(
-            R.id.tv_item_array,
-            R.id.tv_item_list,
-            R.id.tv_item_fun,
-            R.id.tv_item_class
+                R.id.tv_item_test_viewpager2,
+                R.id.tv_item_array,
+                R.id.tv_item_list,
+                R.id.tv_item_fun,
+                R.id.tv_item_class,
+                R.id.tv_item_convert_data
         )
     }
 
@@ -34,6 +34,10 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
     override fun onClick(v: View?) {
         super.onClick(v)
         when (v?.id) {
+            R.id.tv_item_test_viewpager2 -> {
+                startActivity(ViewPager2Activity::class.java)
+            }
+
             R.id.tv_item_array -> {
                 startActivity(TestArrayActivity::class.java)
             }
@@ -48,6 +52,10 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
             R.id.tv_item_class -> {
                 startActivity(ClasssActivity::class.java)
+            }
+
+            R.id.tv_item_convert_data -> {
+                startActivity(ConvertDataActivity::class.java)
             }
         }
     }

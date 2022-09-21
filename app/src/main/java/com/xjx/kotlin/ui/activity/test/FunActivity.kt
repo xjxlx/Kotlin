@@ -1,6 +1,7 @@
 package com.xjx.kotlin.ui.activity.test
 
 import android.os.Bundle
+import android.util.Pair
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.android.helper.base.title.AppBaseBindingTitleActivity
@@ -10,17 +11,26 @@ import com.xjx.kotlin.databinding.ActivityFunBinding
 
 class FunActivity : AppBaseBindingTitleActivity<ActivityFunBinding>() {
 
+    var a: String? = null
+    var b: String = "null"
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fun)
+//        ConvertDataActivity.aaa
+
+        aaa
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
-        val (a, b) = text4(1)
-
         val test5 = test5()
         LogUtil.e(test5.toString())
+
+        // a 强转为不为空的类型，可能会报异常
+        val length = a!!.length
+        // a 如果为空，则后面不执行
+        val length1 = a?.length
 
         // 多返回类型解构
         val (c, d, e) = test5()
@@ -28,6 +38,12 @@ class FunActivity : AppBaseBindingTitleActivity<ActivityFunBinding>() {
         LogUtil.e("" + d)
         LogUtil.e("" + e)
 
+        val tzFun = test1.tzFun("abc")
+        LogUtil.e(tzFun)
+
+        var tz = TZ()
+        tz.text1()
+        tz.getParams("")
     }
 
     override fun setTitleContent(): String {
@@ -68,4 +84,22 @@ class FunActivity : AppBaseBindingTitleActivity<ActivityFunBinding>() {
         return Triple(2, "张三", false)
     }
 
+    private var test1 = "Hello Word"
+
+    // 拓展方法
+    fun String.tzFun(par: String): String {
+        return "$par--->"
+    }
+
+    // 拓展方法
+    fun TZ.getParams(pra: String): String {
+        return "$pra --->"
+    }
+
+    // 普通类
+    class TZ {
+        fun text1(): String {
+            return ""
+        }
+    }
 }

@@ -10,6 +10,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
+        <TextView
+            android:id="@+id/tv_item_test_viewpager2"
+            style="@style/click_item_style"
+            android:text="测试ViewPager2" />
+
         <TextView
             android:id="@+id/tv_item_array"
             style="@style/click_item_style"
@@ -29,6 +35,11 @@
             android:id="@+id/tv_item_class"
             style="@style/click_item_style"
             android:text="类" />
+
+        <TextView
+            android:id="@+id/tv_item_convert_data"
+            style="@style/click_item_style"
+            android:text="数据转换" />
 
     </LinearLayout>
 

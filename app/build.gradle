@@ -16,10 +16,36 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        test {
+            // storeFile file('/Users/dasouche/StudioWorks/App/jks/apphelper.jks')
+            storeFile file('../jks/apphelper.jks')
+            storePassword '123456'
+            keyPassword '123456'
+            keyAlias 'apphelper'
+        }
+        config {
+            // storeFile file('/Users/dasouche/StudioWorks/App/jks/apphelper.jks')
+            storeFile file('../jks/apphelper.jks')
+            storePassword '123456'
+            keyAlias 'apphelper'
+            keyPassword '123456'
+        }
+    }
 
     buildTypes {
         release {
+            signingConfig signingConfigs.config
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            // 给applicationId添加后缀“.debug”
+            // applicationIdSuffix ".debug"
+            signingConfig signingConfigs.test
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -49,6 +75,13 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    api 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'// 必要retrofit依赖
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0' // 必要依赖，和Rxjava结合必须用到，下面会提到
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'// 必要依赖，解析json字符所用
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'// 必要依赖，把数据转产成字符串使用
+
+    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
 }
