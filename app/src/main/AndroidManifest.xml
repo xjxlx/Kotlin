@@ -6,7 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -18,14 +19,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
+        <activity android:name=".ui.activity.test.XCActivity" />
         <activity
             android:name=".ui.activity.test.ConvertDataActivity"
             android:exported="false" />
-        <activity android:name=".ui.activity.test.ViewPager2Activity"></activity>
-        <activity android:name=".ui.activity.test.ClasssActivity"></activity>
-        <activity android:name=".ui.activity.test.FunActivity"></activity>
-        <activity android:name=".ui.activity.test.ListActivity"></activity>
-        <activity android:name=".ui.activity.test.TestArrayActivity"></activity>
+        <activity android:name=".ui.activity.test.ViewPager2Activity" />
+        <activity android:name=".ui.activity.test.ClasssActivity" />
+        <activity android:name=".ui.activity.test.FunActivity" />
+        <activity android:name=".ui.activity.test.ListActivity" />
+        <activity android:name=".ui.activity.test.TestArrayActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

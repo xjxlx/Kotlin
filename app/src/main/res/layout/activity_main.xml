@@ -40,6 +40,10 @@
             android:id="@+id/tv_item_convert_data"
             style="@style/click_item_style"
             android:text="数据转换" />
+        <TextView
+            android:id="@+id/tv_item_xc"
+            style="@style/click_item_style"
+            android:text="协程" />
 
     </LinearLayout>
 

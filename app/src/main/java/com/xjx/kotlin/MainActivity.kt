@@ -10,16 +10,16 @@ import com.xjx.kotlin.ui.activity.test.*
 
 class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
-
     override fun initListener() {
         super.initListener()
         setonClickListener(
-                R.id.tv_item_test_viewpager2,
-                R.id.tv_item_array,
-                R.id.tv_item_list,
-                R.id.tv_item_fun,
-                R.id.tv_item_class,
-                R.id.tv_item_convert_data
+            R.id.tv_item_test_viewpager2,
+            R.id.tv_item_array,
+            R.id.tv_item_list,
+            R.id.tv_item_fun,
+            R.id.tv_item_class,
+            R.id.tv_item_convert_data,
+            R.id.tv_item_xc
         )
     }
 
@@ -56,6 +56,10 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
             R.id.tv_item_convert_data -> {
                 startActivity(ConvertDataActivity::class.java)
+            }
+
+            R.id.tv_item_xc -> {
+                startActivity(XCActivity::class.java)
             }
         }
     }
