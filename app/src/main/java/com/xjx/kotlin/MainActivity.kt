@@ -19,7 +19,8 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
             R.id.tv_item_fun,
             R.id.tv_item_class,
             R.id.tv_item_convert_data,
-            R.id.tv_item_xc
+            R.id.tv_item_xc,
+            R.id.tv_item_aidl
         )
     }
 
@@ -60,6 +61,10 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
             R.id.tv_item_xc -> {
                 startActivity(XCActivity::class.java)
+            }
+
+            R.id.tv_item_aidl -> {
+                startActivity(AidlActivity::class.java)
             }
         }
     }
