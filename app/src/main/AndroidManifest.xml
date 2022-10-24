@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <queries>
-        <!--如果想要与其他的应用进行AIDL通信的话，需要在这里注册包名的信息-->
+
+        <!-- 如果想要与其他的应用进行AIDL通信的话，需要在这里注册包名的信息 -->
         <package android:name="com.android.app.free.debug" />
     </queries>
 
@@ -23,7 +24,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
-
+        <activity
+            android:name=".ControlActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activity.test.AidlActivity"
             android:enabled="true"

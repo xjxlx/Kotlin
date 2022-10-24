@@ -50,6 +50,11 @@
             style="@style/click_item_style"
             android:text="Aild调用" />
 
+        <TextView
+            android:id="@+id/tv_item_control"
+            style="@style/click_item_style"
+            android:text="操作符" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

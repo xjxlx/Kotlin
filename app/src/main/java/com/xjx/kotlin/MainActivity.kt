@@ -20,7 +20,8 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
             R.id.tv_item_class,
             R.id.tv_item_convert_data,
             R.id.tv_item_xc,
-            R.id.tv_item_aidl
+            R.id.tv_item_aidl,
+            R.id.tv_item_control
         )
     }
 
@@ -65,6 +66,10 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
             R.id.tv_item_aidl -> {
                 startActivity(AidlActivity::class.java)
+            }
+
+            R.id.tv_item_control -> {
+                startActivity(ControlActivity::class.java)
             }
         }
     }
