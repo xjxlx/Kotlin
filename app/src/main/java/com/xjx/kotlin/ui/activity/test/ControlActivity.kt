@@ -1,11 +1,14 @@
 package com.xjx.kotlin.ui.activity.test
 
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.android.helper.base.title.AppBaseBindingTitleActivity
+import com.android.helper.utils.FileUtil
 import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityControlBinding
+import java.io.File
 
 class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
 
@@ -93,9 +96,28 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
         }
 
         val apply = person.apply {
-            age
-        }
+            age = 20
+            name = "ss"
+        }.test()
 
+        val numbers = mutableListOf("one", "two", "three")
+        numbers.also {
+            LogUtil.e("在列表添加新元素: $it")
+        }.add("four")
+
+        val appFilesPath = FileUtil.getInstance().getSdTypePublicPath(Environment.DIRECTORY_DOWNLOADS)
+
+        LogUtil.e("appFilesPath:$appFilesPath")
+        File("")
+            .inputStream()
+            .reader()
+            .buffered()
+            .use {
+                LogUtil.e("it --->$it")
+            }
+//            .readLines()
+//            .readLines()
+//            .forEach { println(it) }
     }
 
     inner class Person {
@@ -105,6 +127,9 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
             return "Person(name='$name', age=$age)"
         }
 
+        public fun test() {
+
+        }
     }
 
 }
