@@ -108,16 +108,38 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
         val appFilesPath = FileUtil.getInstance().getSdTypePublicPath(Environment.DIRECTORY_DOWNLOADS)
 
         LogUtil.e("appFilesPath:$appFilesPath")
-        File("")
-            .inputStream()
-            .reader()
-            .buffered()
-            .use {
-                LogUtil.e("it --->$it")
+
+        // 过滤
+        val list2 = arrayListOf<String>()
+        for (item in 0 until 10) {
+            list2.add("" + item)
+        }
+
+        // 过滤条件后返回一个新的数组
+        list2
+            .filter {
+                LogUtil.e("ffff:$it")
+                it.toInt() > 5
+            }.forEach {
+                LogUtil.e("filter ---> $it")
             }
-//            .readLines()
-//            .readLines()
-//            .forEach { println(it) }
+
+
+        list2.map {
+            return@map it.toInt() * 2
+        }.forEach {
+            LogUtil.e("m:$it")
+        }
+
+        val path = "D:\\works\\StudioWorks\\Kotlin\\app\\build.gradle"
+        File(path).readText()
+            .toCharArray()
+            .filterNot { // 不包含的过滤
+                it.isWhitespace() // 空格
+            }.forEach {
+                LogUtil.e("sss:" + it)
+            }
+
     }
 
     inner class Person {
