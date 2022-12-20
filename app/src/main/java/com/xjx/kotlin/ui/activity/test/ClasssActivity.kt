@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityClasssBinding
-import java.util.*
 
 class ClasssActivity : AppBaseBindingTitleActivity<ActivityClasssBinding>() {
 
