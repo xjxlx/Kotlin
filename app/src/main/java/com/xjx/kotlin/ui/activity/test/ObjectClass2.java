@@ -1,6 +1,5 @@
 package com.xjx.kotlin.ui.activity.test;
 
-import com.xjx.kotlin.ui.activity.test.Test.InnerClass;
 import com.xjx.kotlin.ui.activity.test.Test.staticClass;
 import com.xjx.kotlin.ui.activity.test.utils.FileUtil;
 
@@ -13,6 +12,7 @@ import java.io.File;
  */
 public class ObjectClass2 {
     int ab = 12;
+    boolean isStop = false;
 
     public static void main(String[] args) {
         String filePath = FileUtil.getFilePath(new File(""));
@@ -23,10 +23,15 @@ public class ObjectClass2 {
     }
 
     class InnerClass {
-
+        public void sss() {
+            ab = 1;
+            isStop = false;
+        }
     }
 
     static class StaticClasss {
+        public void sssddd() {
 
+        }
     }
 }
