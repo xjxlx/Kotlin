@@ -55,6 +55,11 @@
             style="@style/click_item_style"
             android:text="操作符" />
 
+        <TextView
+            android:id="@+id/tv_item_fx"
+            style="@style/click_item_style"
+            android:text="泛型" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
