@@ -88,4 +88,7 @@ dependencies {
 
     //协程依赖
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+
+    // 反射
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
 }

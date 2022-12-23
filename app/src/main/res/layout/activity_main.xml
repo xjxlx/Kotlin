@@ -60,6 +60,11 @@
             style="@style/click_item_style"
             android:text="泛型" />
 
+        <TextView
+            android:id="@+id/tv_item_fs"
+            style="@style/click_item_style"
+            android:text="反射" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

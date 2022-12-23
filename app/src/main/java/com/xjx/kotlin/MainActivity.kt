@@ -15,7 +15,7 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
     override fun initListener() {
         super.initListener()
-        setonClickListener(R.id.tv_item_test_viewpager2, R.id.tv_item_array, R.id.tv_item_list, R.id.tv_item_fun, R.id.tv_item_class, R.id.tv_item_convert_data, R.id.tv_item_xc, R.id.tv_item_aidl, R.id.tv_item_control, R.id.tv_item_fx)
+        setonClickListener(R.id.tv_item_test_viewpager2, R.id.tv_item_array, R.id.tv_item_list, R.id.tv_item_fun, R.id.tv_item_class, R.id.tv_item_convert_data, R.id.tv_item_xc, R.id.tv_item_aidl, R.id.tv_item_control, R.id.tv_item_fx, R.id.tv_item_fs)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -75,6 +75,9 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
             R.id.tv_item_fx -> {
                 startActivity(FxActivity::class.java)
+            }
+            R.id.tv_item_fs -> {
+                startActivity(FsActivity::class.java)
             }
         }
     }
