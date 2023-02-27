@@ -5,16 +5,21 @@ buildscript {
     // 必须和插件保持一致，否则会导致找不到方法
     ext.kotlin_version = "1.4.32"
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
         google()
-        jcenter()
         mavenCentral()
+        gradlePluginPortal()
         maven { url 'https://jitpack.io' }
-        maven { url "https://maven.aliyun.com/repository/central" }
     }
-    dependencies {
-        classpath "com.android.tools.build:gradle:4.1.0"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
 
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.0.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'
+
+        // 发布JitPack的依赖版本，【3.0+以上用1.5】，【4.1+以上用2.0】，【4.6+以上用2.1】
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1' // Add this line
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -22,11 +27,13 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
         google()
-        jcenter()
         mavenCentral()
+        gradlePluginPortal()
         maven { url 'https://jitpack.io' }
-        maven { url "https://maven.aliyun.com/repository/central" }
     }
 }
 
