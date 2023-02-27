@@ -48,7 +48,13 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.activity.test.XCActivity" />
+        <activity android:name=".ui.activity.test.XCActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".ui.activity.test.ConvertDataActivity" />
         <activity android:name=".ui.activity.test.ViewPager2Activity" />
         <activity android:name=".ui.activity.test.ClasssActivity" />
