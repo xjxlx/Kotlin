@@ -16,6 +16,7 @@
         android:text="测试"
         android:textColor="@color/black"
         android:textSize="@dimen/sp_20" />
+
     <TextView
         android:id="@+id/tv_test2"
         android:layout_width="wrap_content"
@@ -26,6 +27,7 @@
         android:text="测试"
         android:textColor="@color/black"
         android:textSize="@dimen/sp_20" />
+
     <TextView
         android:id="@+id/tv_test3"
         android:layout_width="wrap_content"
@@ -36,5 +38,14 @@
         android:text="测试"
         android:textColor="@color/black"
         android:textSize="@dimen/sp_20" />
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_20"
+        android:text="开始" />
+
 
 </LinearLayout>
