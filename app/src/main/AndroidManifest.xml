@@ -26,6 +26,19 @@
         android:theme="@style/Theme.Kotlin">
 
         <activity
+            android:name=".ui.activity.test.xc.XC2Activity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.activity.test.FsActivity"
             android:exported="false">
             <meta-data
@@ -48,13 +61,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.activity.test.XCActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
+        <activity android:name=".ui.activity.test.xc.XCActivity" />
         <activity android:name=".ui.activity.test.ConvertDataActivity" />
         <activity android:name=".ui.activity.test.ViewPager2Activity" />
         <activity android:name=".ui.activity.test.ClasssActivity" />

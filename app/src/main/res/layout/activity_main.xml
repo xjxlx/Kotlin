@@ -65,6 +65,11 @@
             style="@style/click_item_style"
             android:text="反射" />
 
+        <TextView
+            android:id="@+id/tv_item_xc_2"
+            style="@style/click_item_style"
+            android:text="协程 - 2" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

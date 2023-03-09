@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.activity.test.XCActivity">
+    tools:context=".ui.activity.test.xc.XCActivity">
 
     <TextView
         android:id="@+id/tv_test1"
@@ -46,6 +46,5 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/dp_20"
         android:text="开始" />
-
 
 </LinearLayout>

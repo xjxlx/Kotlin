@@ -1,4 +1,4 @@
-package com.xjx.kotlin.ui.activity.test
+package com.xjx.kotlin.ui.activity.test.xc
 
 import android.os.Bundle
 import android.util.Log
