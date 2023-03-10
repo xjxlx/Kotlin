@@ -70,6 +70,11 @@
             style="@style/click_item_style"
             android:text="协程 - 2" />
 
+        <TextView
+            android:id="@+id/tv_item_xc_3"
+            style="@style/click_item_style"
+            android:text="协程 - 3 - 流" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
