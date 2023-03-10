@@ -12,6 +12,7 @@ import kotlin.system.measureTimeMillis
 class XC2Activity : AppBaseBindingTitleActivity<ActivityXc2Binding>() {
 
     private var TAG = "XC - 2 "
+    private val mainScope = MainScope()
 
     override fun setTitleContent(): String {
         return "协程 - 2"
@@ -46,8 +47,43 @@ class XC2Activity : AppBaseBindingTitleActivity<ActivityXc2Binding>() {
         // asyncMoreBf()
 
         // test Dispatchers
-        test_Dispatchers()
+        // test_Dispatchers()
 
+        // test_coroutineName()
+        // test_coroutineName()
+
+        // test coroutine scope
+//        GlobalScope.launch {
+//            test_CoroutineScope()
+//        }
+
+    }
+
+    private suspend fun test_CoroutineScope() {
+        coroutineScope {
+            LogUtil.e(TAG, "test_CoroutineScope ---> coroutineScope ---> thread :" + Thread.currentThread().name)
+        }
+
+        mainScope.launch {
+            LogUtil.e(TAG, "test_CoroutineScope ---> mainScope ---> thread :" + Thread.currentThread().name)
+        }
+    }
+
+    private fun test_coroutineName() {
+        GlobalScope.launch {
+            val async1 = async(CoroutineName("async - 1")) {
+                delay(2000)
+                LogUtil.e(TAG, "async -----> result -1")
+                "result -1"
+            }
+            val async2 = async(CoroutineName("async - 2")) {
+                delay(2000)
+                LogUtil.e(TAG, "async -----> result -2")
+                "result -2"
+            }
+            LogUtil.e(TAG, "result ---> " + async1.await() + " --- " + async2.await())
+            LogUtil.e(TAG, "result ---> ")
+        }
     }
 
     private fun test_1() = runBlocking {
@@ -161,4 +197,5 @@ class XC2Activity : AppBaseBindingTitleActivity<ActivityXc2Binding>() {
 
         }
     }
+
 }
