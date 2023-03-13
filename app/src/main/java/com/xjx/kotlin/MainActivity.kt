@@ -28,7 +28,9 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
         RxPermissionsUtil
             .Builder(this, *strings)
-            .setSinglePerMissionListener { permissionStatus: Int, permission: String? -> LogUtil.e("permission:$permissionStatus") }
+            .setSinglePerMissionListener { permissionStatus: Int, permission: String? ->
+                LogUtil.e("permission:$permissionStatus")
+            }
             .build()
             .startRequestPermission()
 
