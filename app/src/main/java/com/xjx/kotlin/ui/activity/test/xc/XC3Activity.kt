@@ -329,7 +329,7 @@ class XC3Activity : AppBaseBindingTitleActivity<ActivityXc3Binding>() {
                     if (value == 3) {
                         cancel()
                     }
-                    LogUtil.e(value, "cancel")
+                    LogUtil.e("cancel", value)
                 }
         }
     }
