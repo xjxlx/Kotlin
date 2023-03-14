@@ -80,6 +80,11 @@
             style="@style/click_item_style"
             android:text="协程 - 4 - 管道" />
 
+        <TextView
+            android:id="@+id/tv_item_fz"
+            style="@style/click_item_style"
+            android:text="协程 - 网络封装" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
