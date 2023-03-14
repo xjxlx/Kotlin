@@ -21,7 +21,6 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
 
-//        RetrofitHelper.addInterceptor()
     }
 
 }
