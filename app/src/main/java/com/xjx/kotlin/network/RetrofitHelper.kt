@@ -23,39 +23,45 @@ object RetrofitHelper {
     private const val CONNECT_TIME = 30L
     private val mListInterceptor = arrayListOf<Interceptor>()
     private val retrofit: Retrofit by lazy {
-        val builder = OkHttpClient.Builder().apply {
-            // set connect time
-            readTimeout(CONNECT_TIME, TimeUnit.SECONDS) //设置读取超时时间
-            writeTimeout(CONNECT_TIME, TimeUnit.SECONDS) //设置写的超时时间
-            connectTimeout(CONNECT_TIME, TimeUnit.SECONDS) //设置连接超时时间
+        val builder = OkHttpClient
+            .Builder()
+            .apply {
+                // set connect time
+                readTimeout(CONNECT_TIME, TimeUnit.SECONDS) //设置读取超时时间
+                writeTimeout(CONNECT_TIME, TimeUnit.SECONDS) //设置写的超时时间
+                connectTimeout(CONNECT_TIME, TimeUnit.SECONDS) //设置连接超时时间
 
-            // add  interceptor
-            if (mListInterceptor.size > 0) {
-                mListInterceptor.forEach {
-                    addInterceptor(it)
+                // add  interceptor
+                if (mListInterceptor.size > 0) {
+                    mListInterceptor.forEach {
+                        addInterceptor(it)
+                    }
                 }
             }
-        }
 
         // set  ssl certificates
         setSSLFactory(builder)
 
-        Retrofit.Builder().apply {
-            client(builder.build())
-            if (TextUtils.isEmpty(mBaseUrl)) {
-                LogUtil.e("Retrofit Base url is null !")
-            } else {
-                baseUrl(mBaseUrl)
+        Retrofit
+            .Builder()
+            .apply {
+                client(builder.build())
+                if (TextUtils.isEmpty(mBaseUrl)) {
+                    LogUtil.e("Retrofit Base url is null !")
+                } else {
+                    baseUrl(mBaseUrl)
+                }
+                addConverterFactory(GsonConverterFactory.create())
+                addConverterFactory(ScalarsConverterFactory.create())
             }
-            addConverterFactory(GsonConverterFactory.create())
-            addConverterFactory(ScalarsConverterFactory.create())
-        }.build()
+            .build()
     }
     private var mBaseUrl: String = ""
 
     /**
      * add  connect interceptor
      */
+    @JvmStatic
     fun addInterceptor(interceptor: Interceptor) {
         mListInterceptor.add(interceptor)
     }
@@ -63,6 +69,7 @@ object RetrofitHelper {
     /**
      * set base url path
      */
+    @JvmStatic
     fun setBaseUrl(baseUrl: String) {
         this.mBaseUrl = baseUrl
     }
@@ -70,6 +77,7 @@ object RetrofitHelper {
     /**
      * create a service
      */
+    @JvmStatic
     fun <T> create(service: Class<T>): T {
         return retrofit.create(service)
     }
