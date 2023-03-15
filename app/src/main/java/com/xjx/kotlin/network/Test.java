@@ -1,5 +1,10 @@
 package com.xjx.kotlin.network;
 
+import kotlin.Unit;
+import kotlin.coroutines.Continuation;
+import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function1;
+
 /**
  * @author : 流星
  * @CreateDate: 2023/3/15-09:46
@@ -7,8 +12,10 @@ package com.xjx.kotlin.network;
  */
 public class Test {
     public static void main(String[] args) {
-//        RetrofitHelper.addInterceptor();
-//        RetrofitHelper.create()
-//                RetrofitHelper.setBaseUrl();
+
+    }
+
+    public void test() {
+
     }
 }
