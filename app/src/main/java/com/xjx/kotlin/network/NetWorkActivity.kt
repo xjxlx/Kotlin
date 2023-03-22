@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.android.helper.base.title.AppBaseBindingTitleActivity
+import com.android.helper.utils.DownCountTime
 import com.xjx.kotlin.databinding.ActivityNetWorkBinding
 import com.xjx.kotlin.network.ApiLogic.UserLogic
 import com.xjx.kotlin.network.bean.UserInfoBean
@@ -26,6 +27,10 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
 
+        val downCountTime = DownCountTime.getInstance()
+        downCountTime.interval = 1000
+        downCountTime.total = 10
+
         lifecycleScope.launch {
             HttpClient.http(block = {
                 UserLogic.getUser()
@@ -40,6 +45,16 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
             })
         }
 
+
+        mBinding.btnStart.setOnClickListener {
+            downCountTime.start()
+        }
+        mBinding.btnPause.setOnClickListener {
+            downCountTime.pause()
+        }
+        mBinding.btnResume.setOnClickListener {
+            downCountTime.resume()
+        }
     }
 
 }
