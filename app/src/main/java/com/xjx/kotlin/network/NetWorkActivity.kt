@@ -26,11 +26,7 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
         val downCountTime = DownCountTime.getInstance()
-        downCountTime.interval = 1000
-        downCountTime.total = 10
-
         lifecycleScope.launch {
             HttpClient.http(block = {
                 UserLogic.getUser()
@@ -44,7 +40,6 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
                 }
             })
         }
-
 
         mBinding.btnStart.setOnClickListener {
             downCountTime.start()
