@@ -1,5 +1,8 @@
 package com.xjx.kotlin.network;
 
+import com.android.helper.utils.DownCountTime;
+import com.android.helper.utils.DownCountTime.CallBack;
+
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import kotlin.jvm.functions.Function0;

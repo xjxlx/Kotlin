@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.DownCountTime
+import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityNetWorkBinding
 import com.xjx.kotlin.network.ApiLogic.UserLogic
 import com.xjx.kotlin.network.bean.UserInfoBean
@@ -26,7 +27,17 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        val downCountTime = DownCountTime.getInstance()
+        val downCountTime = DownCountTime()
+        downCountTime.setCountdown(5, 1000, object : DownCountTime.CallBack {
+            override fun onTick(count: Long, current: Long) {
+                LogUtil.e("DOWN--- ", "current: " + current + " count: " + count)
+            }
+
+            override fun onFinish() {
+                LogUtil.e("DOWN--- ", "onFinish: ")
+            }
+        })
+
         lifecycleScope.launch {
             HttpClient.http(block = {
                 UserLogic.getUser()
