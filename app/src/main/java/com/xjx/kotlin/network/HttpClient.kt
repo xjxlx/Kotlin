@@ -1,7 +1,7 @@
 package com.xjx.kotlin.network
 
 import com.android.helper.utils.LogUtil
-import com.xjx.kotlin.network.ApiLogic.UserLogic
+import com.xjx.kotlin.network.bean.UserInfoBean
 import com.xjx.kotlin.network.listener.HttpCallBackListener
 import com.xjx.kotlin.network.listener.HttpResultCallBackListener
 import kotlinx.coroutines.Dispatchers
@@ -68,11 +68,32 @@ object HttpClient {
             }
     }
 
+    /**
+     * T: ApiService
+     * B: ApiService 的方法
+     * R: 返回的具体类型
+     */
     @JvmStatic
-    suspend fun test() {
-
+    suspend inline fun <reified T, B, R> http(block: T.(B) -> HttpResult<R>, b: B): HttpResult<R> {
+        val apiService = RetrofitHelper.create(T::class.java)
+        apiService.block(b)
+        return apiService.block(b)
     }
 
+    inline fun <reified Service, Fun, Result> https(function: Service.(Fun) -> HttpResult<Result>, f: Fun): HttpResult<Result> {
+        val apiService = RetrofitHelper.create(Service::class.java)
+        return apiService.function(f)
+    }
+}
+
+class Test {
+//    fun test() {
+//        HttpClient.https(ApiService::getUserInfo2<UserInfoBean>(), this::test2)
+//    }
+//
+//    fun test2(name2: Int) {
+//
+//    }
 }
 
 //
@@ -81,3 +102,5 @@ object HttpClient {
 //    return t.function(b)
 //}
 //http(ApiService::getUserInfo,b)
+
+

@@ -11,6 +11,9 @@ import com.xjx.kotlin.databinding.ActivityNetWorkBinding
 import com.xjx.kotlin.network.ApiLogic.UserLogic
 import com.xjx.kotlin.network.bean.UserInfoBean
 import com.xjx.kotlin.network.listener.HttpCallBackListener
+import com.xjx.kotlin.ui.activity.test.Api
+import com.xjx.kotlin.ui.activity.test.aaa
+import com.xjx.kotlin.ui.activity.test.fx.TestFx1
 import kotlinx.coroutines.launch
 
 /**
@@ -50,7 +53,7 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
                 }
             })
-        }
+         }
 
         mBinding.btnStart.setOnClickListener {
             downCountTime.start()
@@ -61,6 +64,8 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
         mBinding.btnResume.setOnClickListener {
             downCountTime.resume()
         }
+
+        TestFx1.main(null)
     }
 
 }
