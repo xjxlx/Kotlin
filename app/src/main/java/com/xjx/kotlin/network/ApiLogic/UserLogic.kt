@@ -19,4 +19,10 @@ object UserLogic {
             .create(ApiService::class.java)
             .getUserInfo()
     }
+
+    suspend fun getUser2(name:String): HttpResult<UserInfoBean> {
+        return RetrofitHelper
+            .create(ApiService::class.java)
+            .getUserInfo()
+    }
 }
