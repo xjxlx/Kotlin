@@ -8,6 +8,7 @@ import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityBlockBinding
 
 class BlockActivity : AppBaseBindingTitleActivity<ActivityBlockBinding>() {
+
     override fun setTitleContent(): String {
         return "Block 语法"
     }
