@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * @CreateDate: 2023/3/15-09:46
  * @Description:
  */
-public class Test {
+public class Test1 {
     public static String exec(String cmd) {
         try {
             StringBuilder sb = new StringBuilder();
