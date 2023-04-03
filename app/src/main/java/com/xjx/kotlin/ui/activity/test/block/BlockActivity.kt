@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.android.helper.base.title.AppBaseBindingTitleActivity
+import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityBlockBinding
 
@@ -18,5 +19,17 @@ class BlockActivity : AppBaseBindingTitleActivity<ActivityBlockBinding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        // 无参 无返回
+        testBlockNoArguments {
+
+        }
+    }
+
+    fun testBlockNoArguments(block: () -> Unit) {
+        LogUtil.e("无参 ---> 无返回 ！")
+    }
+
+    fun testBlockNoArguments(){
+
     }
 }

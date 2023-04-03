@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.LogUtil
@@ -14,12 +15,15 @@ import kotlin.system.measureTimeMillis
 class XCActivity : AppBaseBindingTitleActivity<ActivityXcactivityBinding>() {
     private var TAG = "XC"
     private lateinit var launchTestAsynchronous: Job
+    private var viewModel: TestVM? = null
 
     override fun setTitleContent(): String {
         return "协程"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityXcactivityBinding {
+    override fun getBinding(
+        inflater: LayoutInflater, container: ViewGroup?
+    ): ActivityXcactivityBinding {
         return ActivityXcactivityBinding.inflate(inflater, container, true)
     }
 
@@ -37,7 +41,10 @@ class XCActivity : AppBaseBindingTitleActivity<ActivityXcactivityBinding>() {
                     val async2 = async {
                         testAsynchronous2()
                     }
-                    LogUtil.e(TAG, "asynchronous launch --- result ---> ${async1.await()} --- ${async2.await()}")
+                    LogUtil.e(
+                        TAG,
+                        "asynchronous launch --- result ---> ${async1.await()} --- ${async2.await()}"
+                    )
                 }
                 LogUtil.e(TAG, "asynchronous launch --- time --->  $measureTimeMillis")
             }
@@ -45,8 +52,9 @@ class XCActivity : AppBaseBindingTitleActivity<ActivityXcactivityBinding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this).get(TestVM::class.java)
 
-//         1:构建全局的协程
+        //         1:构建全局的协程
 //        GlobalScope.launch() {
 //            LogUtil.e(TAG, "1: 我是默认线程的 --- 全局的协程，默认线程： Thread: " + Thread.currentThread().name)
 //            // 1.1 :非阻塞的挂起函数，不会阻塞线程，但是会挂起协程，并且智能在协程中使用
@@ -177,8 +185,11 @@ class XCActivity : AppBaseBindingTitleActivity<ActivityXcactivityBinding>() {
 //        TAG = " test_zyy - 3 "
 //        test_zyy_3()
 
-        TAG = " test_zyy - 4 "
-        test_zyy_4()
+        TAG = " test_zyy - 5 "
+//        test_zyy_4()
+
+//        test_xc_5()
+        viewModel?.test()
     }
 
     private suspend fun doIO() {
@@ -270,6 +281,19 @@ class XCActivity : AppBaseBindingTitleActivity<ActivityXcactivityBinding>() {
         }
         delay(1300L) // 在延迟后退出
         LogUtil.e(TAG, "Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
+    }
+
+    fun test_xc_5() {
+        GlobalScope.launch {
+            repeat(20) {
+                delay(1000)
+                if (it == 20) {
+                    cancel()
+                    LogUtil.e(TAG, "count: test_xc_5 --->cancel ")
+                }
+                LogUtil.e(TAG, "count: test_xc_5 ---> " + it)
+            }
+        }
     }
 
     override fun onDestroy() {
