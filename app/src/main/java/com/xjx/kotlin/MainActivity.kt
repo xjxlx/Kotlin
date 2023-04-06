@@ -11,6 +11,7 @@ import com.android.helper.utils.permission.RxPermissionsUtil
 import com.xjx.kotlin.databinding.ActivityMainBinding
 import com.xjx.kotlin.network.NetWorkActivity
 import com.xjx.kotlin.ui.activity.test.*
+import com.xjx.kotlin.ui.activity.test.flow.FlowActivity
 import com.xjx.kotlin.ui.activity.test.xc.XC2Activity
 import com.xjx.kotlin.ui.activity.test.xc.XC3Activity
 import com.xjx.kotlin.ui.activity.test.xc.XC4Activity
@@ -20,12 +21,32 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
     override fun initListener() {
         super.initListener()
-        setonClickListener(R.id.tv_item_test_viewpager2, R.id.tv_item_array, R.id.tv_item_list, R.id.tv_item_fun, R.id.tv_item_class, R.id.tv_item_convert_data, R.id.tv_item_xc, R.id.tv_item_aidl, R.id.tv_item_control, R.id.tv_item_fx, R.id.tv_item_fs, R.id.tv_item_xc_2, R.id.tv_item_xc_3, R.id.tv_item_xc_4, R.id.tv_item_fz)
+        setonClickListener(
+            R.id.tv_item_test_viewpager2,
+            R.id.tv_item_array,
+            R.id.tv_item_list,
+            R.id.tv_item_fun,
+            R.id.tv_item_class,
+            R.id.tv_item_convert_data,
+            R.id.tv_item_xc,
+            R.id.tv_item_aidl,
+            R.id.tv_item_control,
+            R.id.tv_item_fx,
+            R.id.tv_item_fs,
+            R.id.tv_item_xc_2,
+            R.id.tv_item_xc_3,
+            R.id.tv_item_xc_4,
+            R.id.tv_item_fz,
+            R.id.tv_item_flow
+        )
     }
 
     override fun initData(savedInstanceState: Bundle?) {
 
-        val strings = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val strings = arrayOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
 
         RxPermissionsUtil
             .Builder(this, *strings)
@@ -34,7 +55,6 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
             }
             .build()
             .startRequestPermission()
-
     }
 
     override fun setTitleContent(): String {
@@ -101,6 +121,9 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
             R.id.tv_item_fz -> {
                 startActivity(NetWorkActivity::class.java)
+            }
+            R.id.tv_item_flow -> {
+                startActivity(FlowActivity::class.java)
             }
         }
     }
