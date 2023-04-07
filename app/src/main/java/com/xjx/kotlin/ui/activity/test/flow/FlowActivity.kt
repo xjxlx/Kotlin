@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.helper.base.title.AppBaseBindingTitleActivity
+import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityFlowBinding
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
@@ -31,50 +33,66 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
 
-//        lifecycleScope.launch {
+        lifecycleScope.launch {
             // stateFlow 粘性的flow
-//            repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                mStateFlow.stateFlow.collect {
-//                    mBinding.tvContent.text = "" + it
-//                }
-//            }
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mStateFlow.stateFlow.collect {
+                    delay(2000)
+                    mBinding.tvContent.text = it.toString()
+                    LogUtil.e("收到  stateFlow : $it")
+                }
+            }
+        }
 
-            // 纯的flow
-//            repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                mStateFlow.flow.collect {
-//                    mBinding.tvContent.text = "" + it
-//                }
+        // string stateFlow
+//        lifecycleScope.launch {
+//            mStateFlow.stringFlow.collect() {
+//                ToastUtil.show(it)
+//                LogUtil.e("粘性： $it")
 //            }
 //        }
 
-        mBinding.btnClick.setOnClickListener {
-            // mStateFlow.repeat()
+        mBinding.btnClickStateFlow.setOnClickListener {
+            lifecycleScope.launch {
+                mStateFlow.repeat()
+                mStateFlow.login()
+            }
+        }
 
-            // 延迟加载
-//            mStateFlow.delaySend()
+        // test flow
+//        lifecycleScope.launch {
+//            mStateFlow.flow.collect() {
+//                mBinding.tvContent.text = it.toString()
+//            }
+//        }
 
-//            lifecycleScope.launch {
-//                mStateFlow.stateFlow.collect {
+        // test flowConvertStateFlow
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                mStateFlow.flowConvertStateflow.collect {
 //                    mBinding.tvContent.text = it.toString()
 //                }
 //            }
-        }
+//        }
 
-        // string flow
-//        lifecycleScope.launch {
-//            mStateFlow.login()
-//            mStateFlow.stateFlowString.collect {
-//                ToastUtil.show(it)
-//            }
+        // shared flow
+
+//        mBinding.btnClickSharedFlow.setOnClickListener {
+//            mSharedFlow.login()
+//            mSharedFlow.repeat()
 //        }
 
 //        lifecycleScope.launch {
-////            mSharedFlow.repeat()
+//            delay(2000)
 //            mSharedFlow.sharedFlow.collect {
 //                mBinding.tvContent.text = it.toString()
 //            }
 //        }
 
-
+//        lifecycleScope.launch {
+//            mSharedFlow.stringSharedFlow.collect {
+//                ToastUtil.show(it)
+//            }
+//        }
     }
 }

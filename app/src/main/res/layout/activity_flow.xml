@@ -7,12 +7,22 @@
     tools:context=".ui.activity.test.flow.FlowActivity">
 
     <Button
-        android:id="@+id/btn_click"
+        android:id="@+id/btn_click_state_flow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/dp_100"
-        android:text="开始点击" />
+        android:text="发送stateFlow数据" />
+
+    <Button
+        android:id="@+id/btn_click_shared_flow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_100"
+        android:text="发送SharedFlow数据" />
+
+
 
     <TextView
         android:id="@+id/tv_content"
