@@ -2,13 +2,21 @@ package com.xjx.kotlin.ui.activity.test.flow
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.helper.utils.LogUtil
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class ShareFlowViewModel : ViewModel() {
-    private val _shareFlow = MutableSharedFlow<Int>()
-    val sharedFlow = _shareFlow.asSharedFlow()
+
+    // 可读可写
+    private val _shareFlow = MutableSharedFlow<Int>(replay = 1)
+
+    // 可读，不可写
+    val sharedFlow: SharedFlow<Int> = _shareFlow.asSharedFlow()
+    val stringSharedFlow = MutableSharedFlow<String>(replay = 10)
 
     fun repeat() {
         viewModelScope.launch {
@@ -16,7 +24,16 @@ class ShareFlowViewModel : ViewModel() {
             repeat(100) {
                 count++
                 _shareFlow.emit(count)
+
+                LogUtil.e("shared: --->count : $count")
+                delay(1000)
             }
+        }
+    }
+
+    fun login() {
+        viewModelScope.launch {
+            stringSharedFlow.emit(" login success ")
         }
     }
 }

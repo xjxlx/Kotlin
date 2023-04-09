@@ -8,8 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.utils.ToastUtil
+import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityFlowBinding
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
@@ -17,7 +18,6 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
     private val mStateFlow: StateFlowViewModel by lazy {
         ViewModelProvider(this)[StateFlowViewModel::class.java]
     }
-
     private val mSharedFlow: ShareFlowViewModel by lazy {
         ViewModelProvider(this)[ShareFlowViewModel::class.java]
     }
@@ -31,43 +31,60 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
         lifecycleScope.launch {
             // stateFlow 粘性的flow
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mStateFlow.stateFlow.collect {
-                    mBinding.tvContent.text = "" + it
-                }
-            }
-
-            // 纯的flow
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mStateFlow.flow.collect {
-                    mBinding.tvContent.text = "" + it
+                    delay(2000)
+                    mBinding.tvContent.text = it.toString()
+                    LogUtil.e("收到  stateFlow : $it")
                 }
             }
         }
-
-        mBinding.btnClick.setOnClickListener {
-            // mStateFlow.repeat()
-
-            // 延迟加载
-            mStateFlow.delaySend()
-
+        // string stateFlow
+//        lifecycleScope.launch {
+//            mStateFlow.stringFlow.collect() {
+//                ToastUtil.show(it)
+//                LogUtil.e("粘性： $it")
+//            }
+//        }
+        mBinding.btnClickStateFlow.setOnClickListener {
             lifecycleScope.launch {
-                mStateFlow.stateFlow.collect {
-//                val value = mStateFlow.stateFlow.value
-                    mBinding.tvContent.text = "" + it
-                }
+                mStateFlow.repeat()
+                mStateFlow.login()
             }
         }
+        // test flow
+//        lifecycleScope.launch {
+//            mStateFlow.flow.collect() {
+//                mBinding.tvContent.text = it.toString()
+//            }
+//        }
+        // test flowConvertStateFlow
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                mStateFlow.flowConvertStateflow.collect {
+//                    mBinding.tvContent.text = it.toString()
+//                }
+//            }
+//        }
+        // shared flow
+//        mBinding.btnClickSharedFlow.setOnClickListener {
+//            mSharedFlow.login()
+//            mSharedFlow.repeat()
+//        }
 
+//        lifecycleScope.launch {
+//            delay(2000)
+//            mSharedFlow.sharedFlow.collect {
+//                mBinding.tvContent.text = it.toString()
+//            }
+//        }
 
-        lifecycleScope.launch {
-            mStateFlow.login()
-            mStateFlow.stateFlowString.collect {
-                ToastUtil.show(it)
-            }
-        }
+//        lifecycleScope.launch {
+//            mSharedFlow.stringSharedFlow.collect {
+//                ToastUtil.show(it)
+//            }
+//        }
     }
 }

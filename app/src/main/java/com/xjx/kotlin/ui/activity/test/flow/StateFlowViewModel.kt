@@ -4,35 +4,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.helper.utils.LogUtil
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class StateFlowViewModel : ViewModel() {
 
-    // An initial default value must be passed
     private val _stateFlow = MutableStateFlow(0)
     val stateFlow = _stateFlow.asStateFlow()
-
-    val stateFlowString = MutableStateFlow("")
+    val stringFlow = MutableStateFlow("")
 
     fun repeat() {
         viewModelScope.launch {
+            var count = 0
             repeat(100) {
-                _stateFlow.value += 1
-                LogUtil.e("value: " + _stateFlow.value)
+                _stateFlow.emit(count)
+                LogUtil.e("count: $count")
                 delay(1000)
             }
         }
     }
 
-    fun delaySend() {
-        viewModelScope.launch {
-            delay(3000)
-            _stateFlow.value = 1000
-        }
+    suspend fun login() {
+        stringFlow.emit("login success")
     }
 
     val flow: Flow<Int> = flow {
@@ -44,7 +37,9 @@ class StateFlowViewModel : ViewModel() {
         }
     }
 
-    fun login() {
-        stateFlowString.value = "登录成功"
-    }
+    val flowConvertStateflow = flow.stateIn(
+        viewModelScope, // 指定的协程域
+        SharingStarted.WhileSubscribed(1000), // 指定的超时时间，这里指的是，在不超过指定时间内，不去停止flow，如果超过了就停止flow
+        0 // 默认值
+    )
 }
