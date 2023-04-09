@@ -18,14 +18,6 @@ class ShareFlowViewModel : ViewModel() {
     val sharedFlow: SharedFlow<Int> = _shareFlow.asSharedFlow()
     val stringSharedFlow = MutableSharedFlow<String>(replay = 10)
 
-    // 可读可写
-    private val _shareFlow = MutableSharedFlow<Int>(replay = 1)
-
-    // 可读，不可写
-    val sharedFlow: SharedFlow<Int> = _shareFlow.asSharedFlow()
-
-    val stringSharedFlow = MutableSharedFlow<String>(replay = 10)
-
     fun repeat() {
         viewModelScope.launch {
             var count = 0
