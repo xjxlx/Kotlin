@@ -44,12 +44,10 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
     override fun initData(savedInstanceState: Bundle?) {
 
         val strings = arrayOf(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
         )
 
-        RxPermissionsUtil
-            .Builder(this, *strings)
+        RxPermissionsUtil.Builder(this, *strings)
             .setSinglePerMissionListener { permissionStatus: Int, permission: String? ->
                 LogUtil.e("permission:$permissionStatus")
             }
@@ -131,4 +129,5 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
     override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityMainBinding {
         return ActivityMainBinding.inflate(inflater, container, true)
     }
+
 }
