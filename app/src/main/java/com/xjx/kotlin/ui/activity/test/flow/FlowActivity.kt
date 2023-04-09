@@ -11,6 +11,9 @@ import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityFlowBinding
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
@@ -21,6 +24,9 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
     private val mSharedFlow: ShareFlowViewModel by lazy {
         ViewModelProvider(this)[ShareFlowViewModel::class.java]
     }
+
+    //     private val mSharedFlow2 = MutableSharedFlow<String>(replay = 0)
+    private val mSharedFlow2 = MutableStateFlow("1")
 
     override fun setTitleContent(): String {
         return "Flow 的使用"
@@ -86,5 +92,34 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
 //                ToastUtil.show(it)
 //            }
 //        }
+
+        // test sharedFlow2
+        lifecycleScope.launch {
+            mSharedFlow2.collect {
+                LogUtil.e("jsq_1:$it")
+            }
+        }
+        lifecycleScope.launch {
+            mSharedFlow2.collect {
+                LogUtil.e("jsq_2:$it")
+            }
+        }
+
+        lifecycleScope.launch {
+            mSharedFlow2.emit("a")
+            mSharedFlow2.emit("b")
+            mSharedFlow2.emit("c")
+            mSharedFlow2.emit("c")
+        }
+
+        lifecycleScope.launch {
+            mSharedFlow2.collect {
+//                delay(3000)
+                LogUtil.e("jsq_3:$it")
+            }
+        }
+
+        // 转换为shared
+        mSharedFlow2.shareIn(lifecycleScope, SharingStarted.WhileSubscribed(500), 1)
     }
 }

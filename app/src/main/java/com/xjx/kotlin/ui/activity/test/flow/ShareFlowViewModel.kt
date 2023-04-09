@@ -11,11 +11,8 @@ import kotlinx.coroutines.launch
 
 class ShareFlowViewModel : ViewModel() {
 
-    // 可读可写
-    private val _shareFlow = MutableSharedFlow<Int>(replay = 1)
-
-    // 可读，不可写
-    val sharedFlow: SharedFlow<Int> = _shareFlow.asSharedFlow()
+    private val _shareFlow = MutableSharedFlow<Int>(replay = 1) // 可读可写
+    val sharedFlow: SharedFlow<Int> = _shareFlow.asSharedFlow() // 可读，不可写
     val stringSharedFlow = MutableSharedFlow<String>(replay = 10)
 
     fun repeat() {
