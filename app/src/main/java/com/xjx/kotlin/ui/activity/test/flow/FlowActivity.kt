@@ -11,7 +11,7 @@ import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityFlowBinding
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
@@ -25,8 +25,8 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
         ViewModelProvider(this)[ShareFlowViewModel::class.java]
     }
 
-    //     private val mSharedFlow2 = MutableSharedFlow<String>(replay = 0)
-    private val mSharedFlow2 = MutableStateFlow("1")
+    private val mSharedFlow2 = MutableSharedFlow<String>(replay = 0)
+//    private val mSharedFlow2 = MutableStateFlow("1")
 
     override fun setTitleContent(): String {
         return "Flow 的使用"
@@ -116,6 +116,14 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
             mSharedFlow2.collect {
 //                delay(3000)
                 LogUtil.e("jsq_3:$it")
+            }
+        }
+
+        mBinding.btnClickSharedFlow.setOnClickListener {
+            lifecycleScope.launch {
+                mSharedFlow2.collect {
+                    LogUtil.e("jsq_4:$it")
+                }
             }
         }
 
