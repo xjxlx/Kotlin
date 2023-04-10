@@ -53,7 +53,7 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
                 }
             })
-         }
+        }
 
         mBinding.btnStart.setOnClickListener {
             downCountTime.start()
@@ -66,6 +66,27 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
         }
 
         TestFx1.main(null)
+
+//        HttpClient.http(ApiService::getUserInfo<com.xjx.kotlin.network.bean.UserInfoBean>(), this::getTest)
+
+//
+//        test {
+//
+//        }
+
+//        test(  {ApiService::getUserInfo},"")
+//        test(ApiService::getUserInfo(), "")
+
+    }
+
+    suspend inline fun <reified T, F, R> http(block: T.(F) -> HttpResult<R>, b: F): HttpResult<R> {
+        val apiService = RetrofitHelper.create(T::class.java)
+        apiService.block(b)
+        return apiService.block(b)
+    }
+
+    fun test(block: () -> HttpResult<UserInfoBean>, arg: String) {
+
     }
 
 }
