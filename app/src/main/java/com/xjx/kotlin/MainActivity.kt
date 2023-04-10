@@ -22,15 +22,13 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
     override fun initListener() {
         super.initListener()
         setonClickListener(R.id.tv_item_test_viewpager2, R.id.tv_item_array, R.id.tv_item_list, R.id.tv_item_fun,
-            R.id.tv_item_class, R.id.tv_item_convert_data, R.id.tv_item_xc, R.id.tv_item_aidl, R.id.tv_item_control,
-            R.id.tv_item_fx, R.id.tv_item_fs, R.id.tv_item_xc_2, R.id.tv_item_xc_3, R.id.tv_item_xc_4, R.id.tv_item_fz,
-            R.id.tv_item_flow)
+                           R.id.tv_item_class, R.id.tv_item_convert_data, R.id.tv_item_xc, R.id.tv_item_aidl,
+                           R.id.tv_item_control, R.id.tv_item_fx, R.id.tv_item_fs, R.id.tv_item_xc_2, R.id.tv_item_xc_3,
+                           R.id.tv_item_xc_4, R.id.tv_item_fz, R.id.tv_item_flow)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
         val strings = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-
         RxPermissionsUtil.Builder(this, *strings)
             .setSinglePerMissionListener { permissionStatus: Int, permission: String? ->
                 LogUtil.e("permission:$permissionStatus")
