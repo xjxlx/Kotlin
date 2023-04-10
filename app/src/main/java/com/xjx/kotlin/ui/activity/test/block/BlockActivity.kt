@@ -20,12 +20,13 @@ class BlockActivity : AppBaseBindingTitleActivity<ActivityBlockBinding>() {
     override fun initData(savedInstanceState: Bundle?) {
         // 无参 无返回
         testBlockNoArguments {
-
+            LogUtil.e("it ----> " + it)
         }
     }
 
-    fun testBlockNoArguments(block: () -> Unit) {
+    private fun testBlockNoArguments(block: (arg: String) -> Unit) {
         LogUtil.e("无参 ---> 无返回 ！")
+        block("abc")
     }
 
     fun testBlockNoArguments() {
