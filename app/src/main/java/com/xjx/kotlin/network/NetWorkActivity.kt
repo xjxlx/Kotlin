@@ -76,7 +76,7 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
 //        test(ApiService::getUserInfo(), "")
 
 
-    }
+     }
 
     suspend inline fun <reified T, F, R> http(block: T.(F) -> HttpResult<R>, b: F): HttpResult<R> {
         val apiService = RetrofitHelper.create(T::class.java)
@@ -84,7 +84,7 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
         return apiService.block(b)
     }
 
-    fun test(block: () -> HttpResult<UserInfoBean>, arg: String) {
+    fun <T>test(block: T.() -> String) {
 
     }
 
