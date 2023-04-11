@@ -90,6 +90,11 @@
             style="@style/click_item_style"
             android:text="Flow" />
 
+        <TextView
+            android:id="@+id/tv_item_block"
+            style="@style/click_item_style"
+            android:text="Block 语法" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -11,8 +11,6 @@ import com.xjx.kotlin.databinding.ActivityNetWorkBinding
 import com.xjx.kotlin.network.ApiLogic.UserLogic
 import com.xjx.kotlin.network.bean.UserInfoBean
 import com.xjx.kotlin.network.listener.HttpCallBackListener
-import com.xjx.kotlin.ui.activity.test.Api
-import com.xjx.kotlin.ui.activity.test.aaa
 import com.xjx.kotlin.ui.activity.test.fx.TestFx1
 import kotlinx.coroutines.launch
 
@@ -77,6 +75,7 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
 //        test(  {ApiService::getUserInfo},"")
 //        test(ApiService::getUserInfo(), "")
 
+
     }
 
     suspend inline fun <reified T, F, R> http(block: T.(F) -> HttpResult<R>, b: F): HttpResult<R> {
@@ -88,5 +87,6 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
     fun test(block: () -> HttpResult<UserInfoBean>, arg: String) {
 
     }
+
 
 }

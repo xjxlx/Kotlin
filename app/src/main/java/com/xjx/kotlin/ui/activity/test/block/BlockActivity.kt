@@ -22,6 +22,12 @@ class BlockActivity : AppBaseBindingTitleActivity<ActivityBlockBinding>() {
         testBlockNoArguments {
             LogUtil.e("it ----> " + it)
         }
+
+        test4 { x, y ->
+            return@test4 x + y
+        }
+
+        test6(1, 2, ::test7)
     }
 
     private fun testBlockNoArguments(block: (arg: String) -> Unit) {
@@ -29,6 +35,32 @@ class BlockActivity : AppBaseBindingTitleActivity<ActivityBlockBinding>() {
         block("abc")
     }
 
-    fun testBlockNoArguments() {
+    //kotlin
+    private fun test4(block: (x: Int, y: Int) -> Int) {
+        val result = block(1, 2)
+        LogUtil.e("result :$result")
+    }
+
+    private fun test5(block: (x: Int, y: Int) -> Unit) {
+        block(1, 2)
+    }
+
+    // 把方法作为参数使用
+    fun test6(a: Int, b: Int, block: (x: Int, y: Int) -> Unit) {
+        block(1, 2)
+    }
+
+    fun test7(x: Int, y: Int) {
+        LogUtil.e("x:$x y  :$y")
+    }
+
+    class Test1 {
+        fun isOdd(x: Int) = x % 2 != 0
+
+        fun test() {
+            var list = listOf(1, 2, 3, 4, 5)
+             print(list.filter(::isOdd))
+
+        }
     }
 }
