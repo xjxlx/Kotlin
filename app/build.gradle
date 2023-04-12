@@ -98,4 +98,8 @@ dependencies {
 
     // 反射
     implementation "org.jetbrains.kotlin:kotlin-reflect"
+
+    implementation 'androidx.activity:activity-ktx:1.3.0'
+    implementation 'androidx.fragment:fragment-ktx:1.3.0'
+
 }

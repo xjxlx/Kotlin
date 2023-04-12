@@ -3,12 +3,14 @@ package com.xjx.kotlin.ui.activity.test.flow
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.LogUtil
+import com.android.helper.utils.ToastUtil
 import com.xjx.kotlin.databinding.ActivityFlowBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,9 +26,10 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
     private val mSharedFlow: ShareFlowViewModel by lazy {
         ViewModelProvider(this)[ShareFlowViewModel::class.java]
     }
-
     private val mSharedFlow2 = MutableSharedFlow<String>(replay = 0)
-//    private val mSharedFlow2 = MutableStateFlow("1")
+
+    //    private val mSharedFlow2 = MutableStateFlow("1")
+    private val mFlowViewModel: FlowViewModel by viewModels()
 
     override fun setTitleContent(): String {
         return "Flow 的使用"
@@ -56,8 +59,17 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
 //        }
         mBinding.btnClickStateFlow.setOnClickListener {
             lifecycleScope.launch {
-                mStateFlow.repeat()
-                mStateFlow.login()
+//                mStateFlow.repeat()
+//                mStateFlow.login()
+
+                LogUtil.e("viewModel", "1-> ${mFlowViewModel.bean}")
+
+                mFlowViewModel.bean.name = "李四"
+                mFlowViewModel.bean.age = mFlowViewModel.count++
+
+                LogUtil.e("viewModel", "2-> ${mFlowViewModel.bean}")
+                mFlowViewModel.mStateFlow.emit(mFlowViewModel.bean)
+
             }
         }
         // test flow
@@ -129,5 +141,16 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
 
         // 转换为shared
         mSharedFlow2.shareIn(lifecycleScope, SharingStarted.WhileSubscribed(500), 1)
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mFlowViewModel.mStateFlow.collect() {
+                    LogUtil.e("viewModel", "result:---> $it")
+                    ToastUtil.show("" + it)
+                }
+            }
+        }
+
     }
 }
