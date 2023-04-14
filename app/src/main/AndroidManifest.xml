@@ -34,15 +34,8 @@
         </activity>
         <activity
             android:name=".ui.activity.test.flow.FlowActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.activity.test.block.BlockActivity"
             android:exported="true" />
+        <activity android:name=".ui.activity.test.block.BlockActivity" />
         <activity
             android:name=".network.NetWorkActivity"
             android:exported="true" />
@@ -78,7 +71,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

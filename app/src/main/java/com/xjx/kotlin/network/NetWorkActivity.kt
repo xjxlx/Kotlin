@@ -119,10 +119,7 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
     class User {
         var name = "张三"
         fun test2(agt: Int): HttpResult<UserInfoBean> {
-
-
             return HttpResult()
-
         }
     }
 
