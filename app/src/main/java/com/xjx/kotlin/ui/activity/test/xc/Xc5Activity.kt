@@ -115,11 +115,12 @@ class Xc5Activity : AppBaseBindingTitleActivity<ActivityXc5Binding>() {
     /**
      *2: call the method
      */
-    private suspend fun moreCoroutine(): Any {
+    private suspend fun moreCoroutine(): String {
         return suspendCancellableCoroutine { cancellableContinuation ->
             request(object : ICallBack {
                 override fun onSuccess(data: String) {
                     cancellableContinuation.resume(data)
+                    cancellableContinuation.cancel()
                 }
 
                 override fun onFailure(t: Throwable) {
