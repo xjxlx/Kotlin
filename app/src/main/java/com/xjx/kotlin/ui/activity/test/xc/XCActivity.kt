@@ -21,9 +21,7 @@ class XCActivity : AppBaseBindingTitleActivity<ActivityXcactivityBinding>() {
         return "协程"
     }
 
-    override fun getBinding(
-        inflater: LayoutInflater, container: ViewGroup?
-    ): ActivityXcactivityBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityXcactivityBinding {
         return ActivityXcactivityBinding.inflate(inflater, container, true)
     }
 
@@ -41,10 +39,7 @@ class XCActivity : AppBaseBindingTitleActivity<ActivityXcactivityBinding>() {
                     val async2 = async {
                         testAsynchronous2()
                     }
-                    LogUtil.e(
-                        TAG,
-                        "asynchronous launch --- result ---> ${async1.await()} --- ${async2.await()}"
-                    )
+                    LogUtil.e(TAG, "asynchronous launch --- result ---> ${async1.await()} --- ${async2.await()}")
                 }
                 LogUtil.e(TAG, "asynchronous launch --- time --->  $measureTimeMillis")
             }

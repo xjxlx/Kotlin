@@ -3,9 +3,9 @@ package com.xjx.kotlin.network.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.helper.httpclient.kotlin.HttpResult
 import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.network.ApiLogic.UserLogic
-import com.xjx.kotlin.network.HttpResult
 import com.xjx.kotlin.network.bean.UserInfoBean
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

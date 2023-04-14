@@ -1,11 +1,9 @@
 package com.xjx.kotlin.network.ApiLogic
 
+import com.android.helper.httpclient.kotlin.HttpResult
+import com.android.helper.httpclient.kotlin.RetrofitHelper
 import com.xjx.kotlin.network.ApiService
-import com.xjx.kotlin.network.HttpResult
-import com.xjx.kotlin.network.RetrofitHelper
 import com.xjx.kotlin.network.bean.UserInfoBean
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.transform
 
 /**
  * @author : 流星
@@ -20,7 +18,7 @@ object UserLogic {
             .getUserInfo()
     }
 
-    suspend fun getUser2(name:String): HttpResult<UserInfoBean> {
+    suspend fun getUser2(name: String): HttpResult<UserInfoBean> {
         return RetrofitHelper
             .create(ApiService::class.java)
             .getUserInfo()

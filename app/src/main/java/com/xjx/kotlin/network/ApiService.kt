@@ -19,13 +19,13 @@ interface ApiService {
      * 获取用户信息
      */
     @GET("test-api/mobile/getInfo")
-       fun getUserInfo(): HttpResult<UserInfoBean>
+    fun getUserInfo(): HttpResult<UserInfoBean>
 
     /**
      * 获取用户信息
      */
     @GET("test-api/mobile/getInfo")
-      fun getUserInfo2(name: Int): HttpResult<UserInfoBean>
+    suspend fun getUserInfo2(name: Int): HttpResult<UserInfoBean>
 
     /**
      * 获取供奉列表数据
