@@ -30,26 +30,39 @@ class Xc5Activity : AppBaseBindingTitleActivity<ActivityXc5Binding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        runSingleCallBackInterface()
+        // runSingleCallBackInterface()
 
-        lifecycleScope.launch {
+        LogUtil.e("job started")
+        val job = lifecycleScope.launch {
             val singleCoroutine = runSingleCallBackCoroutine()
             LogUtil.e("singleCoroutine: $singleCoroutine")
+        }
+        LogUtil.e("job ---> cancel")
+        // job.cancel()
 
+        // more
+        val job1 = lifecycleScope.launch {
             try {
                 val moreCoroutine = moreCoroutine()
                 LogUtil.e("moreCoroutine ->success: $moreCoroutine")
             } catch (e: Exception) {
-                LogUtil.e("moreCoroutine ->failure: ${e.message}")
+                LogUtil.e("moreCoroutine ->failure: ${e}")
             }
         }
+
+        // 携程结束的回调
+        job1.invokeOnCompletion {
+            LogUtil.e("job1: ---> invokeOnCompletion")
+        }
+
+//        LogUtil.e("job1: ---> cancel")
+//        job1.cancel()
     }
 
     /**
      * 1：the usage of coroutine callbacks
      */
     private suspend fun runSingleCallBackCoroutine(): String {
-        // suspendCoroutine是一个挂起函数
         return suspendCoroutine { continuation ->
             runTask(object : SingleMethodCallback {
                 override fun onCallBack(value: String) {
@@ -103,8 +116,6 @@ class Xc5Activity : AppBaseBindingTitleActivity<ActivityXc5Binding>() {
         thread {
             try {
                 Thread.sleep(3000)
-//                val ints = arrayOf(3)
-//                LogUtil.e(ints[99])
                 callback.onSuccess("success")
             } catch (e: Exception) {
                 callback.onFailure(e)
@@ -120,13 +131,18 @@ class Xc5Activity : AppBaseBindingTitleActivity<ActivityXc5Binding>() {
             request(object : ICallBack {
                 override fun onSuccess(data: String) {
                     cancellableContinuation.resume(data)
-                    cancellableContinuation.cancel()
                 }
 
                 override fun onFailure(t: Throwable) {
                     cancellableContinuation.resumeWithException(t)
                 }
             })
+
+            // 注册一个响应协程取消请求的回调函数，只有在取消的时候才会响应，如果正常结束了，则不会响应
+            cancellableContinuation.invokeOnCancellation {
+                // 取消
+                LogUtil.e("-----> job -1 >>>> invokeOnCancellation")
+            }
         }
     }
 
