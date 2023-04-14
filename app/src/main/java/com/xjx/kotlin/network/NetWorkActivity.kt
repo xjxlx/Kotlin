@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.android.helper.base.title.AppBaseBindingTitleActivity
+import com.android.helper.httpclient.kotlin.HttpResult
 import com.android.helper.httpclient.kotlin.RetrofitHelper
 import com.android.helper.utils.DownCountTime
 import com.android.helper.utils.LogUtil

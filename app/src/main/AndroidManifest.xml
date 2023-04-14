@@ -25,6 +25,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.activity.test.xc.Xc5Activity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.activity.test.flow.FlowActivity"
             android:exported="true">
             <intent-filter>
@@ -37,12 +45,7 @@
             android:exported="true" />
         <activity
             android:name=".network.NetWorkActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
         <activity android:name=".ui.activity.test.xc.XC4Activity" />
         <activity android:name=".ui.activity.test.xc.XC3Activity" />
         <activity android:name=".ui.activity.test.xc.XC2Activity" />
@@ -75,6 +78,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
