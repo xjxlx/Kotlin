@@ -44,7 +44,7 @@ class App : Application() {
             }
 
             override fun logTag(): String {
-                return "AppHelper-kltlin"
+                return "AppHelper-kotlin"
             }
 
             override fun getAppName(): String {

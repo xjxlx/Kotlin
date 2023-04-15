@@ -13,6 +13,7 @@ import com.xjx.kotlin.network.NetWorkActivity
 import com.xjx.kotlin.ui.activity.test.*
 import com.xjx.kotlin.ui.activity.test.block.BlockActivity
 import com.xjx.kotlin.ui.activity.test.flow.FlowActivity
+import com.xjx.kotlin.ui.activity.test.flow.FlowCallActivity
 import com.xjx.kotlin.ui.activity.test.xc.*
 
 class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
@@ -22,7 +23,7 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
         setonClickListener(R.id.tv_item_test_viewpager2, R.id.tv_item_array, R.id.tv_item_list, R.id.tv_item_fun, R.id.tv_item_class,
                 R.id.tv_item_convert_data, R.id.tv_item_xc, R.id.tv_item_aidl, R.id.tv_item_control, R.id.tv_item_fx, R.id.tv_item_fs,
                 R.id.tv_item_xc_2, R.id.tv_item_xc_3, R.id.tv_item_xc_4, R.id.tv_item_fz, R.id.tv_item_flow, R.id.tv_item_block,
-                R.id.tv_item_xc_5)
+                R.id.tv_item_xc_5, R.id.tv_item_flow_call)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -110,6 +111,9 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
 
             R.id.tv_item_xc_5 -> {
                 startActivity(Xc5Activity::class.java)
+            }
+            R.id.tv_item_flow_call -> {
+                startActivity(FlowCallActivity::class.java)
             }
         }
     }

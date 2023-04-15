@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <queries>
+
         <!-- 如果想要与其他的应用进行AIDL通信的话，需要在这里注册包名的信息 -->
         <package android:name="com.android.app.free.debug" />
     </queries>
@@ -25,13 +26,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
-            android:name=".ui.activity.test.xc.Xc5Activity"
+            android:name=".ui.activity.test.flow.FlowCallActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.activity.test.xc.Xc5Activity"
+            android:exported="true" />
         <activity
             android:name=".ui.activity.test.flow.FlowActivity"
             android:exported="true" />
@@ -71,6 +75,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
