@@ -5,11 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.httpclient.kotlin.HttpClient
 import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityFlowCallBinding
-import com.xjx.kotlin.network.ApiService
-import com.xjx.kotlin.network.bean.UserInfoBean
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -27,7 +24,6 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
         val flow = callbackFlow {
             requestApi {
                 // 发送成功的数据
@@ -44,7 +40,6 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
             }
         }
 
-
         lifecycleScope.launch {
             // 直接使用，会报错，flow如果发送数据的时候，必须要在携程体内发送，否则或报错
 //            val flow = flow {
@@ -56,15 +51,9 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
 
             flow.collect {
                 LogUtil.e("flow call result --->", "$it")
-
                 cancel()
             }
         }
-
-        lifecycleScope.launch {
-            HttpClient.http<ApiService, UserInfoBean> { getUserInfo() }
-        }
-
     }
 
     /**

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.httpclient.kotlin.HttpClient
 import com.android.helper.httpclient.kotlin.HttpResult
 import com.android.helper.httpclient.kotlin.RetrofitHelper
 import com.android.helper.utils.DownCountTime
@@ -13,9 +12,6 @@ import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityNetWorkBinding
 import com.xjx.kotlin.network.bean.UserInfoBean
 import com.xjx.kotlin.ui.activity.test.fx.TestFx1
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -114,21 +110,6 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
         user.apply4<User, Int, UserInfoBean>({
             test2(it)
         }, 34)
-
-        lifecycleScope.launch {
-            HttpClient.http<ApiService, UserInfoBean> {
-                getUserInfo()
-            }
-                .onStart {
-
-                }
-                .catch {
-
-                }
-                .onCompletion {
-
-                }
-        }
     }
 
     private fun <T, P, R> T.apply4(block: T.(P) -> HttpResult<R>, p: P) {
