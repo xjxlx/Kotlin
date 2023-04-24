@@ -7,13 +7,17 @@ import androidx.lifecycle.lifecycleScope
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityFlowCallBinding
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
-import kotlin.concurrent.thread
 
 class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() {
+
+    private val mSharedFlow = MutableSharedFlow<Int>()
 
     override fun setTitleContent(): String {
         return "Flow Call"
@@ -23,47 +27,53 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
         return ActivityFlowCallBinding.inflate(inflater, container, true)
     }
 
-    override fun initData(savedInstanceState: Bundle?) {
-        val flow = callbackFlow {
-            requestApi {
-                // 发送成功的数据
-                trySend("2")
+    override fun initListener() {
+        super.initListener()
+        mBinding.btnStart.setOnClickListener {
 
-                // 发送错误的数据
-                close(NullPointerException("error"))
-            }
-
-            // 关闭的回调
-            awaitClose {
-                // 关闭的回调
-                LogUtil.e("awaitClose ---->")
-            }
-        }
-
-        lifecycleScope.launch {
-            // 直接使用，会报错，flow如果发送数据的时候，必须要在携程体内发送，否则或报错
-//            val flow = flow {
-//                //模拟网络请求
-//                requestApi {
-//                    emit(1)
-//                }
-//            }
-
-            flow.collect {
-                LogUtil.e("flow call result --->", "$it")
-                cancel()
+            lifecycleScope.launch {
+                repeat(100) {
+                    LogUtil.e("sample ---> send ---> ", " send ---> $it")
+                    mSharedFlow.emit(it)
+                    delay(1000)
+                }
             }
         }
     }
 
-    /**
-     * 模拟网络请求
-     */
-    private fun requestApi(block: (Int) -> Unit) {
-        thread {
-            Thread.sleep(3000)
-            block(3)
+    override fun initData(savedInstanceState: Bundle?) {
+//        val flow = callbackFlow {
+//            requestApi {
+//                // 发送成功的数据
+//                trySend("2")
+//
+//                // 发送错误的数据
+//                close(NullPointerException("error"))
+//            }
+//
+//            // 关闭的回调
+//            awaitClose {
+//                // 关闭的回调
+//                LogUtil.e("awaitClose ---->")
+//            }
+//        }
+
+        lifecycleScope.launch {
+            mSharedFlow
+                .sample(3000)
+                .debounce(1000)
+                .onEach {
+
+                }
+                .collect() {
+                    LogUtil.e("sample ---> result ---> ", "result ---> $it")
+                }
         }
+
+        val flow  = flow<Int> {
+            emit(1)
+        }
+
     }
 
 }
