@@ -1,13 +1,16 @@
 package com.xjx.kotlin.ui.activity.test.flow
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.android.apphelper2.utils.LogUtil
+import com.android.apphelper2.utils.permission.PermissionCallBackListener
+import com.android.apphelper2.utils.permission.PermissionRationaleCallBackListener
+import com.android.apphelper2.utils.permission.PermissionUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityFlowCallBinding
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flow
@@ -18,6 +21,7 @@ import kotlinx.coroutines.launch
 class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() {
 
     private val mSharedFlow = MutableSharedFlow<Int>()
+    private val mPermission = PermissionUtil.PermissionActivity(this)
 
     override fun setTitleContent(): String {
         return "Flow Call"
@@ -31,13 +35,27 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
         super.initListener()
         mBinding.btnStart.setOnClickListener {
 
-            lifecycleScope.launch {
-                repeat(100) {
-                    LogUtil.e("sample ---> send ---> ", " send ---> $it")
-                    mSharedFlow.emit(it)
-                    delay(1000)
+//            lifecycleScope.launch {
+//                repeat(100) {
+//                    LogUtil.e("sample ---> send ---> ", " send ---> $it")
+//                    mSharedFlow.emit(it)
+//                    delay(1000)
+//                }
+//            }
+
+            mPermission.shouldShow(Manifest.permission.READ_EXTERNAL_STORAGE, object : PermissionRationaleCallBackListener {
+                override fun onCallBack(permission: String, rationale: Boolean) {
+                    LogUtil.e("--->permission  : rationale: $rationale")
+
+                    mPermission.setCallBackListener(object : PermissionCallBackListener {
+                        override fun onCallBack(permission: String, isGranted: Boolean) {
+                            LogUtil.e("--->permission  : isGranted: $isGranted")
+
+                        }
+                    })
+                        .request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 }
-            }
+            })
         }
     }
 
@@ -59,8 +77,7 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
 //        }
 
         lifecycleScope.launch {
-            mSharedFlow
-                .sample(3000)
+            mSharedFlow.sample(3000)
                 .debounce(1000)
                 .onEach {
 
@@ -70,7 +87,7 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
                 }
         }
 
-        val flow  = flow<Int> {
+        val flow = flow<Int> {
             emit(1)
         }
 
