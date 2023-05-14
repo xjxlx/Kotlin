@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.android.apphelper2.utils.LogUtil
 import com.xjx.kotlin.utils.zmq.send.ZmqUtil
 
 class ZmqActivity : AppCompatActivity() {
@@ -32,6 +33,7 @@ class ZmqActivity : AppCompatActivity() {
 
                 override fun afterTextChanged(s: Editable?) {
                     mZmqUtil.sendMessage(s.toString())
+                    LogUtil.e("ZMQ",s.toString())
                 }
             })
         }
