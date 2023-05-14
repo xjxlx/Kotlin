@@ -8,7 +8,7 @@ class ZMQMessageSender(private val handler: Handler, private val message: String
 
     override fun run() {
         val context: ZMQ.Context = ZMQ.context(1)
-        val socket: ZMQ.Socket = context.socket(SocketType.REQ)
+        val socket: ZMQ.Socket = context.socket(SocketType.PAIR)
         socket.connect(ZmqUtil.TCP_ADDRESS)
         socket.send(message.toByteArray(ZMQ.CHARSET), ZmqUtil.ZMQ_WAIT)
 
