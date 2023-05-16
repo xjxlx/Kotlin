@@ -105,6 +105,11 @@
             style="@style/click_item_style"
             android:text="FlowCall" />
 
+        <TextView
+            android:id="@+id/tv_item_custom_view"
+            style="@style/click_item_style"
+            android:text="自定义view" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

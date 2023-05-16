@@ -1,4 +1,4 @@
-package com.xjx.kotlin.ui.activity.test.utils
+package com.xjx.kotlin.utils
 
 import java.io.File
 

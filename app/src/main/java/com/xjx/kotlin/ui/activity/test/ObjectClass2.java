@@ -1,7 +1,7 @@
 package com.xjx.kotlin.ui.activity.test;
 
 import com.xjx.kotlin.ui.activity.test.Test.staticClass;
-import com.xjx.kotlin.ui.activity.test.utils.FileUtil;
+import com.xjx.kotlin.utils.FileUtil;
 
 import java.io.File;
 
