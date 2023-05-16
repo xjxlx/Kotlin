@@ -3,11 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#20000000"
     tools:context=".ui.activity.customview.DescriptionViewActivity">
 
-    <com.xjx.kotlin.widget.DescriptionView
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_50"
+        android:text="开始" />
+
+    <com.xjx.kotlin.widget.ThemeFinishLayout
+        android:layout_width="wrap_content"
         android:id="@+id/v_dv"
-        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>
