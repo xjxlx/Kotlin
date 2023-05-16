@@ -2,4 +2,15 @@
     <string name="app_name">Kotlin</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="theme_finish_try_again">再接再厉！</string>
+    <string name="theme_finish_no_bad">不错！</string>
+    <string name="theme_finish_very_good">很好！</string>
+    <string name="theme_finish_great">特别棒！</string>
+    <string name="theme_finish_super">超级棒！</string>
+    <string name="theme_finish_score_desc">呼吸总结</string>
+    <string name="theme_fragment_prepare">请跟随语音提示准备</string>
+    <string name="theme_fragment_start_inhale">开始吸气</string>
+    <string name="theme_fragment_hold_breath">屏住呼吸</string>
 </resources>
