@@ -15,6 +15,11 @@
             style="@style/click_item_style"
             android:text="文字描述" />
 
+        <TextView
+            android:id="@+id/tv_item_recycleview"
+            style="@style/click_item_style"
+            android:text="测试RecycleView" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

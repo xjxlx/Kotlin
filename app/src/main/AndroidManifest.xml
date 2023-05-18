@@ -35,6 +35,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.activity.customview.RecycleViewActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.customview.CustomViewMapActivity"
             android:exported="false" />
         <activity
