@@ -56,6 +56,17 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
                 delay(1000)
             }
         }
+
+
+        scope.launch {
+            LogUtil.e("thread ---> 1 --> ${ Thread.currentThread().name }")
+        }
+        scope.launch {
+            LogUtil.e("thread ---> 2 --> ${ Thread.currentThread().name }")
+        }
+        scope.launch {
+            LogUtil.e("thread ---> 3 --> ${ Thread.currentThread().name }")
+        }
     }
 
     var job: Job? = null
