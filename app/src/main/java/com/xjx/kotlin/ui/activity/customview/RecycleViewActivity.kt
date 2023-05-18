@@ -23,7 +23,7 @@ class RecycleViewActivity : AppBaseBindingTitleActivity<ActivityRecycleViewBindi
         return@lazy Adapter(this)
     }
     val gson = Gson()
-    private val gsonUtil: GsonUtil = GsonUtil()
+//    private val gsonUtil: GsonUtil = GsonUtil()
 
     override fun setTitleContent(): String {
         return "RecycleView"
@@ -55,7 +55,7 @@ class RecycleViewActivity : AppBaseBindingTitleActivity<ActivityRecycleViewBindi
 
 //            val fromJson = gsonUtil.fromJson<Student>(toJson)
 
-            val fromJsonNested = gsonUtil.fromJsonNested<HttpRequest<ZmqBean>>(toJson)
+            val fromJsonNested = GsonUtil.fromJsonNested<HttpRequest<ZmqBean>>(toJson)
             LogUtil.e("fromJson ", "fromJson ---> $fromJsonNested")
         }
 
