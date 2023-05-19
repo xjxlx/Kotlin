@@ -1,18 +1,19 @@
 package com.xjx.kotlin.ui.activity.test.flow
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.LogWriteUtil
+import com.android.apphelper2.utils.SystemUtil
 import com.android.apphelper2.utils.permission.PermissionUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityFlowCallBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 
 class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() {
 
@@ -34,6 +35,7 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
         return ActivityFlowCallBinding.inflate(inflater, container, true)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun initListener() {
         super.initListener()
         mBinding.btnStart.setOnClickListener {
@@ -61,6 +63,13 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
             LogUtil.e("pause ---> collect ----> ")
 
             mWrite.write("close -----pause ---->")
+//            val appInstallApp = SystemUtil.appInstallApp(this, "com.android.poc")
+
+            lifecycleScope.launch {
+                LogUtil.e("开始执行 --->")
+                SystemUtil.openApplication(this@FlowCallActivity, "com.android.poc")
+            }
+//            LogUtil.e("appInstallAppn : $appInstallApp")
         }
     }
 
