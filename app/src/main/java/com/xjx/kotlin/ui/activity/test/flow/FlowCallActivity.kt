@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.android.apphelper2.utils.LogUtil
+import com.android.apphelper2.utils.LogWriteUtil
 import com.android.apphelper2.utils.permission.PermissionUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityFlowCallBinding
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 
 class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() {
 
@@ -18,6 +22,9 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
     private var job: Job? = null
     private var count = 0
     private var isSendFlag = false
+    private val mWrite: LogWriteUtil by lazy {
+        return@lazy LogWriteUtil(this, "test.txt")
+    }
 
     override fun setTitleContent(): String {
         return "Flow Call"
@@ -52,6 +59,8 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
         mBinding.btnPause.setOnClickListener {
             isSendFlag = false
             LogUtil.e("pause ---> collect ----> ")
+
+            mWrite.write("close -----pause ---->")
         }
     }
 
@@ -85,4 +94,8 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mWrite.write("onDestroy")
+    }
 }
