@@ -1,6 +1,7 @@
-package com.xjx.kotlin.utils.zmq.send
+package com.xjx.kotlin.utils.zmq
 
 import android.os.Handler
+import com.xjx.kotlin.utils.zmq.send.ZMQMessageSender
 
 class MessageSender(private val handler: Handler) {
 

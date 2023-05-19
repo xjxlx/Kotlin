@@ -1,4 +1,4 @@
-package com.xjx.kotlin.utils.zmq.send
+package com.xjx.kotlin.utils.zmq
 
 import android.os.Bundle
 import android.os.Handler
@@ -6,6 +6,7 @@ import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
 import com.android.apphelper2.utils.LogUtil
+import com.xjx.kotlin.utils.zmq.send.ZmqMessageListener
 
 /**
  * Zmq util

@@ -1,8 +1,9 @@
-package com.xjx.kotlin.utils.zmq.send
+package com.xjx.kotlin.utils.zmq
 
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import com.xjx.kotlin.utils.zmq.send.ZmqMessageListener
 
 class ZmqHandler(looper: Looper, private val messageListener: ZmqMessageListener, private val message: String) : Handler(looper) {
 
