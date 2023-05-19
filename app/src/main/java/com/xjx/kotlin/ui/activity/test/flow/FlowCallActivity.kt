@@ -12,9 +12,12 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 
 class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() {
 
-    private val mSharedFlow = MutableSharedFlow<Int>()
+    private val mSharedFlow = MutableSharedFlow<String>()
     private val mPermission = PermissionUtil.PermissionActivity(this)
     private val scope = CoroutineScope(Dispatchers.IO)
+    private var job: Job? = null
+    private var count = 0
+    private var isSendFlag = false
 
     override fun setTitleContent(): String {
         return "Flow Call"
@@ -27,49 +30,59 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
     override fun initListener() {
         super.initListener()
         mBinding.btnStart.setOnClickListener {
+            isSendFlag = true
+            LogUtil.e("start ---> collect ----> ")
 
-//            lifecycleScope.launch {
-//                repeat(100) {
-//                    mSharedFlow.emit(it)
-//                    delay(100)
-//                }
-//            }
+            job?.let {
+                if (it.isActive) {
+                    it.cancel()
+                }
+            }
 
-            job?.cancel()
-            scope.cancel()
+            job = scope.launch {
+                repeat(Int.MAX_VALUE) {
+                    if (isSendFlag) {
+                        mSharedFlow.emit("当前item: $it")
+//                        delay(100)
+                    }
+                }
+            }
+        }
+
+        mBinding.btnPause.setOnClickListener {
+            isSendFlag = false
+            LogUtil.e("pause ---> collect ----> ")
         }
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
-//        lifecycleScope.launch {
-//            mSharedFlow.sample(1000)
-//                .collect() {
-//                    LogUtil.e("sample ---> result ---> ", "result ---> $it")
-//                }
+//        job = scope.launch {
+//            while (true) {
+//                LogUtil.e("interval ----> $count")
+//                count++
+//                delay(1000)
+//            }
+//        }
+//
+//        scope.launch {
+//            LogUtil.e("thread ---> 1 --> ${ Thread.currentThread().name }")
+//        }
+//        scope.launch {
+//            LogUtil.e("thread ---> 2 --> ${ Thread.currentThread().name }")
+//        }
+//        scope.launch {
+//            LogUtil.e("thread ---> 3 --> ${ Thread.currentThread().name }")
 //        }
 
-        job = scope.launch {
+        scope.launch {
             while (true) {
-                LogUtil.e("interval ----> $count")
-                count++
-                delay(1000)
+                if (isSendFlag) {
+                    mSharedFlow.collect() {
+                        LogUtil.e("collect ----> $it")
+                    }
+                }
             }
-        }
-
-
-        scope.launch {
-            LogUtil.e("thread ---> 1 --> ${ Thread.currentThread().name }")
-        }
-        scope.launch {
-            LogUtil.e("thread ---> 2 --> ${ Thread.currentThread().name }")
-        }
-        scope.launch {
-            LogUtil.e("thread ---> 3 --> ${ Thread.currentThread().name }")
         }
     }
 
-    var job: Job? = null
-
-    var count = 0
 }
