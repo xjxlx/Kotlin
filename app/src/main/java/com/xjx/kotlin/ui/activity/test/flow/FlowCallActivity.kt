@@ -67,9 +67,9 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
 
             lifecycleScope.launch {
                 LogUtil.e("开始执行 --->")
-                SystemUtil.openApplication(this@FlowCallActivity, "com.android.poc")
+                val appRunning = SystemUtil.isRunningForeground(this@FlowCallActivity )
+//                LogUtil.e("appRunning : $appRunning")
             }
-//            LogUtil.e("appInstallAppn : $appInstallApp")
         }
     }
 
