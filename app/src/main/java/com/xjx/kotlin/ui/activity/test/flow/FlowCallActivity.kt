@@ -25,7 +25,7 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
     private var isSendFlag = false
     private val mWrite: LogWriteUtil by lazy {
         return@lazy LogWriteUtil("test.txt").apply {
-            init(this@FlowCallActivity)
+            initWrite(this@FlowCallActivity)
         }
     }
 
