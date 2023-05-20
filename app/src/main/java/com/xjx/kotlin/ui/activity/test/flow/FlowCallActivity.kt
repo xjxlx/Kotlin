@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.KeepLifeBroadCast
 import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.LogWriteUtil
+import com.android.apphelper2.utils.SystemUtil
 import com.android.apphelper2.utils.permission.PermissionUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityFlowCallBinding
@@ -42,6 +43,7 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
         super.initListener()
         mBinding.btnStart.setOnClickListener {
             isSendFlag = true
+            KeepLifeBroadCast.closeListener()
             LogUtil.e("start ---> collect ----> ")
 
             job?.let {
@@ -50,27 +52,25 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
                 }
             }
 
-            job = scope.launch {
-                repeat(Int.MAX_VALUE) {
-                    if (isSendFlag) {
-                        mSharedFlow.emit("当前item: $it")
-//                        delay(100)
-                    }
-                }
-            }
+//            job = scope.launch {
+//                repeat(Int.MAX_VALUE) {
+//                    if (isSendFlag) {
+//                        mSharedFlow.emit("当前item: $it")
+////                        delay(100)
+//                    }
+//                }
+//            }
         }
 
         mBinding.btnPause.setOnClickListener {
             isSendFlag = false
-            LogUtil.e("pause ---> collect ----> ")
-
             mWrite.write("close -----pause ---->")
 //            val appInstallApp = SystemUtil.appInstallApp(this, "com.android.poc")
 
-            lifecycleScope.launch {
-                LogUtil.e("开始执行 --->")
-                KeepLifeBroadCast.sendAppErrorBroadcast(this@FlowCallActivity, "com.android.poc")
-                KeepLifeBroadCast.sendAppPollListenerBroadcast(this@FlowCallActivity, "com.android.poc", 9500)
+            lifecycleScope.launch(Dispatchers.IO) {
+//                KeepLifeBroadCast.sendAppErrorBroadcast(this@FlowCallActivity, "com.android.poc")
+//                KeepLifeBroadCast.sendAppPollListenerBroadcast(this@FlowCallActivity, "com.android.poc", 9500)
+                SystemUtil.openApplication(this@FlowCallActivity, "com.android.poc")
             }
         }
     }
