@@ -24,7 +24,9 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
     private var count = 0
     private var isSendFlag = false
     private val mWrite: LogWriteUtil by lazy {
-        return@lazy LogWriteUtil(this, "test.txt")
+        return@lazy LogWriteUtil("test.txt").apply {
+            init(this@FlowCallActivity)
+        }
     }
 
     override fun setTitleContent(): String {
