@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
-import com.android.apphelper2.utils.KeepLifeUtil
+import com.android.apphelper2.utils.KeepLifeBroadCast
 import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.LogWriteUtil
 import com.android.apphelper2.utils.permission.PermissionUtil
@@ -67,7 +67,8 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
 
             lifecycleScope.launch {
                 LogUtil.e("开始执行 --->")
-                KeepLifeUtil.sendAppRunningBroadcast(this@FlowCallActivity, "com.android.poc")
+                KeepLifeBroadCast.sendAppErrorBroadcast(this@FlowCallActivity, "com.android.poc")
+                KeepLifeBroadCast.sendAppPollListenerBroadcast(this@FlowCallActivity, "com.android.poc", 9500)
             }
         }
     }
