@@ -1,16 +1,22 @@
 package com.xjx.kotlin.ui.activity.thread
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.widget.Button
+import androidx.fragment.app.FragmentActivity
 import com.android.apphelper2.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.xjx.kotlin.databinding.ActivityTestConcurrenceThreadBinding
+import com.xjx.kotlin.R
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
 
-class TestConcurrenceThreadActivity : AppBaseBindingTitleActivity<ActivityTestConcurrenceThreadBinding>() {
+class TestConcurrenceThreadActivity : FragmentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_test_concurrence_thread)
+
+        initData()
+    }
 
     @Volatile
     private var isPauseFlag: Boolean = false
@@ -49,26 +55,15 @@ class TestConcurrenceThreadActivity : AppBaseBindingTitleActivity<ActivityTestCo
         }
     }
 
-    override fun setTitleContent(): String {
-        return "测试并发的线程"
-    }
+    fun initData() {
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityTestConcurrenceThreadBinding {
-        return ActivityTestConcurrenceThreadBinding.inflate(inflater, container, true)
-    }
-
-    override fun initListener() {
-        super.initListener()
-        mBinding.btnStart.setOnClickListener {
+        findViewById<Button>(R.id.btn_start).setOnClickListener {
             start()
         }
-        mBinding.btnPause.setOnClickListener {
+        findViewById<Button>(R.id.btn_pause).setOnClickListener {
             pause()
         }
-    }
 
-    @OptIn(ObsoleteCoroutinesApi::class)
-    override fun initData(savedInstanceState: Bundle?) {
         mScope.launch {
             mSendChannel = actor {
                 val iterator = iterator()
