@@ -8,11 +8,10 @@ import com.xjx.kotlin.R
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
-import java.util.concurrent.atomic.AtomicBoolean
 
 class TestConcurrenceThreadActivity : FragmentActivity() {
 
-    private val atomicBoolean: AtomicBoolean = AtomicBoolean()
+//    private val atomicBoolean: AtomicBoolean = AtomicBoolean()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,22 +68,19 @@ class TestConcurrenceThreadActivity : FragmentActivity() {
             mSendChannel = actor {
                 val iterator = iterator()
                 while (true) {
-                    // if (!isPauseFlag) {
-                    if (!atomicBoolean.get()) {
                         if (iterator.hasNext()) {
                             val next = iterator.next()
-                            LogUtil.e(" 收集 ---> $next")
+                            if (!isPauseFlag) {
+                                LogUtil.e(" 收集 ---> $next")
+                            }
                         }
-                    }
                 }
             }
         }
     }
 
     private fun start() {
-        // isPauseFlag = false
-        atomicBoolean.set(false)
-
+        isPauseFlag = false
         mJob1.start()
         mJob2.start()
         mJob3.start()
@@ -93,8 +89,7 @@ class TestConcurrenceThreadActivity : FragmentActivity() {
 
     @Synchronized
     private fun pause() {
-        //isPauseFlag = true
-        atomicBoolean.set(true)
+        isPauseFlag = true
 
         mJob1.cancel()
         mJob2.cancel()
