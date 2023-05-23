@@ -12,9 +12,8 @@ import kotlinx.coroutines.channels.actor
 
 class TestConcurrenceThreadActivity : AppBaseBindingTitleActivity<ActivityTestConcurrenceThreadBinding>() {
 
-        @Volatile
+    @Volatile
     private var isPauseFlag: Boolean = false
-
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO)
     }
@@ -45,7 +44,7 @@ class TestConcurrenceThreadActivity : AppBaseBindingTitleActivity<ActivityTestCo
         mScope.launch {
             repeat(Int.MAX_VALUE) {
                 mSendChannel?.send("我是tag: $tag  ---> 我是item : $it")
-                delay(50)
+//                delay(50)
             }
         }
     }
@@ -74,9 +73,11 @@ class TestConcurrenceThreadActivity : AppBaseBindingTitleActivity<ActivityTestCo
             mSendChannel = actor {
                 val iterator = iterator()
                 while (true) {
-                    if (iterator.hasNext() && !isPauseFlag) {
-                        val next = iterator.next()
-                        LogUtil.e(" 收集 ---> $next")
+                    if (!isPauseFlag) {
+                        if (iterator.hasNext()) {
+                            val next = iterator.next()
+                            LogUtil.e(" 收集 ---> $next")
+                        }
                     }
                 }
             }
@@ -94,11 +95,13 @@ class TestConcurrenceThreadActivity : AppBaseBindingTitleActivity<ActivityTestCo
 
     @Synchronized
     private fun pause() {
-        isPauseFlag = true
-        mJob1.cancel()
-        mJob2.cancel()
-        mJob3.cancel()
-        mJob4.cancel()
-        LogUtil.e(" 暂停了   当前的flag ---> pause : true")
+        mScope.launch(Dispatchers.IO) {
+            isPauseFlag = true
+            mJob1.cancel()
+            mJob2.cancel()
+            mJob3.cancel()
+            mJob4.cancel()
+            LogUtil.e(" 暂停了   当前的flag ---> pause : true")
+        }
     }
 }

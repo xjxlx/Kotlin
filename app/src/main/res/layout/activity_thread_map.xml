@@ -13,7 +13,12 @@
         <TextView
             android:id="@+id/tv_item_thread"
             style="@style/click_item_style"
-            android:text="thread" />
+            android:text="thread - kotlin" />
+
+        <TextView
+            android:id="@+id/tv_item_thread_java"
+            style="@style/click_item_style"
+            android:text="thread - java" />
 
     </LinearLayout>
 

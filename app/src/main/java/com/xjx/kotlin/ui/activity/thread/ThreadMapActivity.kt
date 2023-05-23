@@ -12,6 +12,9 @@ class ThreadMapActivity : AppBaseBindingTitleActivity<ActivityThreadMapBinding>(
         mBinding.tvItemThread.setOnClickListener {
             startActivity(TestConcurrenceThreadActivity::class.java)
         }
+        mBinding.tvItemThreadJava.setOnClickListener {
+            startActivity(ConcurrenceThread2Activity::class.java)
+        }
     }
 
     override fun setTitleContent(): String {
