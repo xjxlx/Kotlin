@@ -110,6 +110,11 @@
             style="@style/click_item_style"
             android:text="自定义view" />
 
+        <TextView
+            android:id="@+id/tv_item_thread"
+            style="@style/click_item_style"
+            android:text="thread" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

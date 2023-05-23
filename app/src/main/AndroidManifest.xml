@@ -17,16 +17,15 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
-
-    <!--    REORDER_TASKS-->
+        tools:ignore="QueryAllPackagesPermission" /> <!-- REORDER_TASKS -->
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
+
     <queries>
+
         <!-- 如果想要与其他的应用进行AIDL通信的话，需要在这里注册包名的信息 -->
         <package android:name="com.android.app.free.debug" />
         <package android:name="com.android.poc" />
@@ -42,6 +41,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
+        <activity
+            android:name=".ui.activity.thread.TestConcurrenceThreadActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.thread.ThreadMapActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activity.customview.RecycleViewActivity"
             android:exported="false" />
