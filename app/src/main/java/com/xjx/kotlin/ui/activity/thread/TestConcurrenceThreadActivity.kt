@@ -8,8 +8,11 @@ import com.xjx.kotlin.R
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
+import java.util.concurrent.atomic.AtomicBoolean
 
 class TestConcurrenceThreadActivity : FragmentActivity() {
+
+    private val atomicBoolean: AtomicBoolean = AtomicBoolean()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,19 +47,17 @@ class TestConcurrenceThreadActivity : FragmentActivity() {
         }
     }
     private var mSendChannel: SendChannel<String>? = null
-
     private fun sendData(tag: String) {
         LogUtil.e("tag: $tag - thread: ${Thread.currentThread().name}")
         mScope.launch {
             repeat(Int.MAX_VALUE) {
                 mSendChannel?.send("我是tag: $tag  ---> 我是item : $it")
-//                delay(50)
+                delay(50)
             }
         }
     }
 
     fun initData() {
-
         findViewById<Button>(R.id.btn_start).setOnClickListener {
             start()
         }
@@ -68,7 +69,8 @@ class TestConcurrenceThreadActivity : FragmentActivity() {
             mSendChannel = actor {
                 val iterator = iterator()
                 while (true) {
-                    if (!isPauseFlag) {
+                    // if (!isPauseFlag) {
+                    if (!atomicBoolean.get()) {
                         if (iterator.hasNext()) {
                             val next = iterator.next()
                             LogUtil.e(" 收集 ---> $next")
@@ -79,9 +81,10 @@ class TestConcurrenceThreadActivity : FragmentActivity() {
         }
     }
 
-    @Synchronized
     private fun start() {
-        isPauseFlag = false
+        // isPauseFlag = false
+        atomicBoolean.set(false)
+
         mJob1.start()
         mJob2.start()
         mJob3.start()
@@ -90,13 +93,13 @@ class TestConcurrenceThreadActivity : FragmentActivity() {
 
     @Synchronized
     private fun pause() {
-        mScope.launch(Dispatchers.IO) {
-            isPauseFlag = true
-            mJob1.cancel()
-            mJob2.cancel()
-            mJob3.cancel()
-            mJob4.cancel()
-            LogUtil.e(" 暂停了   当前的flag ---> pause : true")
-        }
+        //isPauseFlag = true
+        atomicBoolean.set(true)
+
+        mJob1.cancel()
+        mJob2.cancel()
+        mJob3.cancel()
+        mJob4.cancel()
+        LogUtil.e(" 暂停了   当前的flag ---> pause : true")
     }
 }
