@@ -12,21 +12,39 @@ import kotlinx.coroutines.channels.actor
 
 class TestConcurrenceThreadActivity : AppBaseBindingTitleActivity<ActivityTestConcurrenceThreadBinding>() {
 
-    private var isPauseFlag = false
+    //    @Volatile
+    private var isPauseFlag: Boolean = false
+
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO)
     }
-    private val mJob: Job by lazy {
+    private val mJob1: Job by lazy {
         return@lazy mScope.launch(start = CoroutineStart.LAZY) {
-            sendData()
+            sendData("JOB - 1")
+        }
+    }
+    private val mJob2: Job by lazy {
+        return@lazy mScope.launch(start = CoroutineStart.LAZY) {
+            sendData("JOB - 2")
+        }
+    }
+    private val mJob3: Job by lazy {
+        return@lazy mScope.launch(start = CoroutineStart.LAZY) {
+            sendData("JOB - 3")
+        }
+    }
+    private val mJob4: Job by lazy {
+        return@lazy mScope.launch(start = CoroutineStart.LAZY) {
+            sendData("JOB - 4")
         }
     }
     private var mSendChannel: SendChannel<String>? = null
 
-    private fun sendData() {
+    private fun sendData(tag: String) {
+        LogUtil.e("tag: $tag - thread: ${Thread.currentThread().name}")
         mScope.launch {
             repeat(Int.MAX_VALUE) {
-                mSendChannel?.send("我是item : $it")
+                mSendChannel?.send("我是tag: $tag  ---> 我是item : $it")
                 delay(50)
             }
         }
@@ -57,6 +75,7 @@ class TestConcurrenceThreadActivity : AppBaseBindingTitleActivity<ActivityTestCo
                 val iterator = iterator()
                 while (true) {
                     if (!isPauseFlag) {
+                        LogUtil.e(" 当前的flag actor ---> $isPauseFlag")
                         if (iterator.hasNext()) {
                             val next = iterator.next()
                             LogUtil.e(" 收集 ---> $next")
@@ -68,14 +87,20 @@ class TestConcurrenceThreadActivity : AppBaseBindingTitleActivity<ActivityTestCo
     }
 
     private fun start() {
-        if (!mJob.isActive) {
-            isPauseFlag = false
-            mJob.start()
-        }
+        isPauseFlag = false
+        mJob1.start()
+        mJob2.start()
+        mJob3.start()
+        mJob4.start()
     }
 
     private fun pause() {
         isPauseFlag = true
+        mJob1.cancel()
+        mJob2.cancel()
+        mJob3.cancel()
+        mJob4.cancel()
         LogUtil.e(" 暂停了")
+        LogUtil.e(" 当前的flag ---> pause : $isPauseFlag")
     }
 }
