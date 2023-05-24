@@ -52,11 +52,9 @@ class TestConcurrenceThreadActivity : FragmentActivity() {
     private fun sendData(tag: String) {
         LogUtil.e("tag: $tag - thread: ${Thread.currentThread().name}")
         mScope.launch(Dispatchers.IO) {
-//            withContext(counterContext) {
             repeat(Int.MAX_VALUE) {
                 mSendChannel?.send("我是tag: $tag  ---> 我是item : $it")
             }
-//            }
         }
     }
 
@@ -69,15 +67,13 @@ class TestConcurrenceThreadActivity : FragmentActivity() {
         }
 
         mScope.launch(Dispatchers.IO) {
-//            withContext(counterContext) {
             mSendChannel = actor {
                 val iterator = iterator()
                 while (true) {
                     if (iterator.hasNext()) {
                         if (!isPauseFlag) {
-                            LogUtil.e(" start --->  $isPauseFlag")
                             val next = iterator.next()
-                            delay(100)
+                            // delay(10)
                             if (!isPauseFlag) {
                                 LogUtil.e(" 收集 --->flag: $isPauseFlag  $next")
                             }
@@ -85,33 +81,28 @@ class TestConcurrenceThreadActivity : FragmentActivity() {
                     }
                 }
             }
-//            }
         }
     }
 
     private fun start() {
         mScope.launch {
-//            withContext(counterContext) {
             isPauseFlag = false
             mJob1.start()
             mJob2.start()
             mJob3.start()
             mJob4.start()
-//            }
         }
     }
 
     @Synchronized
     private fun pause() {
         mScope.launch {
-//            withContext(counterContext) {
             isPauseFlag = true
             mJob1.cancel()
             mJob2.cancel()
             mJob3.cancel()
             mJob4.cancel()
             LogUtil.e(" 暂停了   当前的flag ---> pause : true")
-//            }
         }
     }
 }

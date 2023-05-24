@@ -16,10 +16,11 @@
         android:textSize="@dimen/sp_18" />
 
     <Button
+        android:layout_marginStart="@dimen/dp_20"
         android:id="@+id/btn_pause"
+        android:layout_toEndOf="@+id/btn_start"
         android:layout_width="@dimen/dp_80"
         android:layout_height="@dimen/dp_50"
-        android:layout_alignParentEnd="true"
         android:text="暂停"
         android:textSize="@dimen/sp_18" />
 
