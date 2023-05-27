@@ -6,17 +6,30 @@ plugins {
 def configCompile = rootProject.ext.android
 
 android {
-    compileSdkVersion configCompile.compileSdkVersion
-    buildToolsVersion configCompile.buildToolsVersion
+    namespace 'com.xjx.kotlin'
+
+//    compileSdkVersion configCompile.compileSdkVersion
+    // buildToolsVersion configCompile.buildToolsVersion
+    compileSdk configCompile.compileSdkVersion
 
     defaultConfig {
         applicationId "com.xjx.kotlin"
-        minSdkVersion configCompile.minSdkVersion
-        targetSdkVersion configCompile.targetSdkVersion
+//        minSdkVersion configCompile.minSdkVersion
+//        targetSdkVersion configCompile.targetSdkVersion
+//        versionCode configCompile.versionCode
+//        versionName configCompile.versionName
+
+        minSdk configCompile.minSdkVersion
+        targetSdk configCompile.targetSdkVersion
         versionCode configCompile.versionCode
         versionName configCompile.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+
+        ndk {
+            abiFilters 'arm64-v8a', 'x86_64'
+        }
     }
     signingConfigs {
         test {
@@ -52,8 +65,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
@@ -105,4 +118,61 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.3.0'
 
     implementation 'org.zeromq:jeromq:0.5.2'
+
+    implementation(name: 'Cariad_CDA_AudioRecorder_release_202302031659', ext: 'aar')
+
 }
+
+
+//def build_tools_version = "30.0.3"
+//
+//def sdkPath = project.android.getSdkDirectory().getAbsolutePath()
+//def buildToolsPath = "${sdkPath}${File.separator}build-tools${File.separator}${build_tools_version}${File.separator}"
+//def sdkAddOnPath = "${sdkPath}${File.separator}add-ons${File.separator}addon-hcp3_android_sdk_apis-harman-31${File.separator}"
+//def signingKeysPath = "${sdkAddOnPath}signing${File.separator}"
+//def apkSignerBatPath = buildToolsPath + "${if (org.gradle.internal.os.OperatingSystem.current().isWindows()) 'apksigner.bat' else 'apksigner'}"
+//def keyFile = signingKeysPath + 'platform.pk8'
+//def certFile = signingKeysPath + 'platform.x509.pem'
+//def buildDir = "${project.getBuildDir()}"
+//def rootDir = "${project.getRootDir()}"
+//
+//tasks.whenTaskAdded { task ->
+//    if ("assembleDebug" == task.name || "connectedDebugAndroidTest" == task.name) {
+//        def appDebugTest = new File("${buildDir}${File.separator}intermediates${File.separator}apk${File.separator}/debug/app-debug.apk")
+//        if (appDebugTest.exists()) {
+//            task.doFirst {
+//                exec {
+//                    commandLine apkSignerBatPath, 'sign', '--key', keyFile, '--cert', certFile, appDebugTest.absolutePath
+//                }
+//            }
+//        }
+//    } else if (task.name.indexOf('assemble') > -1) {
+//        task.doLast {
+//            //always sign /outputs and /intermediates!
+//            def allApks = []
+//            println " rootDir ---> " + rootDir
+//
+//            def apkPathOutputs = new File("${buildDir}${File.separator}outputs${File.separator}apk${File.separator}")
+//            if (apkPathOutputs.exists()) {
+//                apkPathOutputs.eachFileRecurse(groovy.io.FileType.FILES) {
+//                    if (it.name.endsWith(".apk")) {
+//                        allApks << it
+//                    }
+//                }
+//            }
+//
+//            if (allApks.isEmpty()) {
+//                println "apks are missing/not generated. Please try again, if problem persists, give a clean build."
+//                return
+//            }
+//
+//            for (apk in allApks) {
+//                println "signing $apk"
+//                def signerCommand = [apkSignerBatPath, 'sign', '--key', keyFile, '--cert', certFile, apk]
+//                exec {
+//                    commandLine signerCommand
+//                }
+//            }
+//        }
+//    }
+//}
