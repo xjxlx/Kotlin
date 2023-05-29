@@ -157,8 +157,8 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
                             for (i in 0 until streamRead) {
                                 list.add(audioData[i * 14])
                                 list.add(audioData[i * 14 + 1])
-//                                list.add(audioData[i * 14 + 2])
-//                                list.add(audioData[i * 14 + 3])
+                                list.add(audioData[i * 14 + 2])
+                                list.add(audioData[i * 14 + 3])
                             }
                             if (list.size >= cacheSize) {
                                 if (!mPauseFlag.get()) {
@@ -166,20 +166,6 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
                                     list.clear()
                                 }
                             }
-
-//                            while (this.cariadAudioReadFlag) {
-//                                val frameread = AudioRecorder.streamRead(audioData, frameCount, delayTime)
-//                                for (j in 0 until frameread) {
-//                                    list.add(audioData[j * 14])
-//                                    list.add(audioData[j * 14 + 1])
-//                                }
-//                                if (list.size >= cacheSize) {
-//                                    Log.i("steven", "local cache reached 8K push to server....$frameread")
-//                                    this.pushFrame(SDKUtils.toPrimitives(list.toTypedArray<Byte?>()), fos)
-//                                    list.clear()
-//                                }
-//                            }
-//
                         }
                     }
                 } catch (e: Exception) {
