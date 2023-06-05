@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+'(*) --> "Initialization"
+'if "Some Test" then
+'-->[true] "Some Activity"
+'--> "Another activity"
+'-right-> (*)
+'else
+'->[false] "Something else"
+'-->[Ending process] (*)
+'endif
+
+'你可以使用关键字 if/then/else 创建分支。
+(*) --> "应用开始"
+-->"选择主题"
+-->"动画结束"
+
+[同时执行三个分支]if ""
+  -->"开始呼吸"
+else
+   -->"初始化TN"
+   if ""
+     -->true;
+   else
+     -->false;
+   endif
+else
+    -->"初始化商汤"
+
+endif
+
+-->(*)
+@enduml

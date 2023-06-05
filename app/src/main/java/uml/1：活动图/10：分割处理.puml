@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+' You can use split, split again and end split keywords to denote split processing
+
+'split/split again/end split
+
+start
+:sss;
+    split
+        :A;
+    split again
+        :B;
+    split again
+        :a;
+        :b;
+    end split
+        :D;
+
+@enduml

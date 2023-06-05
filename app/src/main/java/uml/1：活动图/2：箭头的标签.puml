@@ -1,0 +1,9 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+' 使用[] 作为箭头链接中间的标签
+
+(*)-->开始
+-->[我是中间的标签]中间
+-->(*)
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+'你可以使用关键字 fork，fork again 和 end fork 表示并行处理。
+
+start
+if (multiprocessor?) then (yes)
+    fork
+        :Treatment 1;
+    fork again
+        :Treatment 2;
+    end fork
+elseif (monoproc)
+    :Treatment 1;
+    :Treatment 2;
+elseif(sss)
+    :sss;
+endif
+@enduml

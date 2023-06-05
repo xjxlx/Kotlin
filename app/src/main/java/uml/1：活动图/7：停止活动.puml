@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+' 可以使用 kill or detach 进行停止
+
+'kill 版
+'if (condition?) then
+'#pink:error;
+'kill
+'endif
+'#palegreen:action;
+
+
+' detach 版
+if (condition?) then
+#pink:error;
+detach
+endif
+#palegreen:action;
+
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+'-up-> 代表分支
+
+' 你可以使用-> 定义水平方向箭头，还可以使用下列语法强制指定箭头的方向：
+' • -down-> (default arrow)
+' • -right-> or ->
+' • -left->
+
+(*) -up-> "选择主题"
+-right-> "Second Activity"
+--> "Third Activity"
+-left-> (*)
+
+(*) -up-> "初始化TN"
+-right-> "Second Activity"
+--> "Third Activity"
+-left-> (*)
+
+
+@enduml
