@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:starting progress;
+#HotPink:reading configuration files
+These files should edited at this point!;
+#AAAAAA:ending of the process;
+
+
+'箭头颜色
+:foo1;
+-> You can put text on arrows;
+if (test) then
+-[#blue]->
+:foo2;
+-[#green,dashed]-> The text can
+also be on several lines
+and **very** long...;
+:foo3;
+else
+-[#black,dotted]->
+:foo4;
+endif
+-[#gray,bold]->
+:foo5;
+
+@enduml
