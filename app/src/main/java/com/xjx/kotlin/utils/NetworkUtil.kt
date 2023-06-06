@@ -13,11 +13,13 @@ import com.android.apphelper2.app.AppHelperManager
 import com.android.apphelper2.utils.LogUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.net.Inet4Address
 import java.net.NetworkInterface
+import java.net.URL
 
 /**
  * network util
@@ -200,5 +202,22 @@ class NetworkUtil private constructor() {
         } else {
             block(mIpAddress)
         }
+    }
+
+    suspend fun isConnected(): Boolean {
+        val async = mScope.async {
+            runCatching {
+                val url = URL("https://www.baidu.com")
+                url.openStream()
+                return@async true
+            }.onFailure {
+                return@async false
+            }
+        }
+        val await = async.await()
+        if (await is Boolean) {
+            return await
+        }
+        return false
     }
 }
