@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.GsonUtil
 import com.android.apphelper2.utils.LogUtil
+import com.android.apphelper2.utils.NetworkUtil
 import com.android.apphelper2.utils.permission.PermissionMultipleCallBackListener
 import com.android.apphelper2.utils.permission.PermissionUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityRecordingBinding
-import com.xjx.kotlin.utils.NetworkUtil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -85,8 +85,9 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
         mBinding.btnResume.setOnClickListener {
             // resume()
             lifecycleScope.launch {
-                val connectedHttp = mNetworkUtil.isConnectedHttp()
-                LogUtil.e(NetworkUtil.TAG, "connectedHttp: $connectedHttp")
+                val connectedHttp = mNetworkUtil.isConnectedHttp {
+                    LogUtil.e(NetworkUtil.TAG, "connectedHttp: $it")
+                }
             }
         }
 
