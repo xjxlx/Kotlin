@@ -6,9 +6,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiInfo
-import android.os.Build
 import android.text.TextUtils
-import androidx.annotation.RequiresApi
 import com.android.apphelper2.app.AppHelperManager
 import com.android.apphelper2.utils.LogUtil
 import kotlinx.coroutines.CoroutineScope
@@ -26,22 +24,45 @@ import java.net.URL
  */
 class NetworkUtil private constructor() {
 
+    companion object {
+        const val TAG = "NetworkUtil : "
+        val instance: NetworkUtil by lazy {
+            return@lazy NetworkUtil()
+        }
+    }
+
     private var mIpAddress = ""
-    private val mStateFlow = MutableStateFlow("")
-    private val mScope = CoroutineScope(Dispatchers.IO)
+    private val mScope: CoroutineScope by lazy {
+        return@lazy CoroutineScope(Dispatchers.IO)
+    }
+    private val mStateFlow: MutableStateFlow<String> by lazy {
+        return@lazy MutableStateFlow("")
+    }
     private val mConnectivityManager: ConnectivityManager by lazy {
-        AppHelperManager.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return@lazy AppHelperManager.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
     private val mRequest: NetworkRequest by lazy {
-        NetworkRequest.Builder()
+        return@lazy NetworkRequest.Builder()
+            // add Specified requirement，this specifies that networking is required
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
             .build()
     }
     private val mCallBack = object : ConnectivityManager.NetworkCallback() {
-        @RequiresApi(Build.VERSION_CODES.Q)
+
+        // called the method when the network is lost
+        override fun onLost(network: Network) {
+            super.onLost(network)
+            LogUtil.e(TAG, "this $network is lost!")
+            mIpAddress = ""
+        }
+
+        // called the method when the network changes
         override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
             super.onCapabilitiesChanged(network, networkCapabilities)
+
+            // if connected is wifi
             if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) { // wifi connect
                 val transportInfo = networkCapabilities.transportInfo
                 if (transportInfo is WifiInfo) {
@@ -56,7 +77,7 @@ class NetworkUtil private constructor() {
                                     val hostAddress = address.hostAddress
                                     if (hostAddress != null) {
                                         if ((!TextUtils.equals(hostAddress, "0.0.0.0")) && (!(hostAddress.contains(":")))) {
-                                            LogUtil.e("hostAddress: wifi: $hostAddress")
+                                            LogUtil.e(TAG, "hostAddress: wifi: $hostAddress")
                                             mScope.launch {
                                                 mStateFlow.emit(hostAddress)
                                                 mIpAddress = hostAddress
@@ -70,7 +91,7 @@ class NetworkUtil private constructor() {
                     }
                 }
             } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) { // Mobile connect
-                // current use 2G/3G/4G
+                // if connected is 2G/3G/4G/5G
                 val networkInterfaces = NetworkInterface.getNetworkInterfaces()
                 while (networkInterfaces.hasMoreElements()) {
                     val element = networkInterfaces.nextElement()
@@ -85,7 +106,7 @@ class NetworkUtil private constructor() {
                                         mStateFlow.emit(hostAddress)
                                         mIpAddress = hostAddress
                                     }
-                                    LogUtil.e("hostAddress: mobile: $hostAddress")
+                                    LogUtil.e(TAG, "hostAddress: mobile: $hostAddress")
                                     return
                                 }
                             }
@@ -96,87 +117,35 @@ class NetworkUtil private constructor() {
         }
     }
 
-    companion object {
-
-        @JvmStatic
-        val instance: NetworkUtil by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-            NetworkUtil()
+    /**
+     * must has permission
+     * @RequiresPermission(value = "android.permission.ACCESS_NETWORK_STATE")
+     * @return current network is connected , note，the method just only works on regular devices or mobile device,but on the hcp3 device ,it will fail
+     */
+    fun isNetworkConnected(): Boolean {
+        val network = mConnectivityManager.activeNetwork
+        if (network != null) {
+            val nc = mConnectivityManager.getNetworkCapabilities(network)
+            nc?.let {
+                return it.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+            }
         }
+        return false
     }
-
-    /**
-     * must has permission
-     * @RequiresPermission(value = "android.permission.ACCESS_NETWORK_STATE")
-     * @return current network is connect
-     */
-    val isNetworkConnected: Boolean
-        get() {
-            val network = mConnectivityManager.activeNetwork
-            if (network != null) {
-                val nc = mConnectivityManager.getNetworkCapabilities(network)
-                if (nc != null) {
-                    if (nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) { // WIFI
-                        return true
-                    } else if (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) { // mobile is connect
-                        return true
-                    }
-                }
-            }
-            return false
-        }
-
-    /**
-     * must has permission
-     * @RequiresPermission(value = "android.permission.ACCESS_NETWORK_STATE")
-     * @return wifi is connect
-     */
-    val isWifiConnect: Boolean
-        get() {
-            val network = mConnectivityManager.activeNetwork
-            if (network != null) {
-                val nc = mConnectivityManager.getNetworkCapabilities(network)
-                if (nc != null) {
-                    if (nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) { // WIFI
-                        return true
-                    }
-                }
-            }
-            return false
-        }
-
-    /**
-     * must has permission
-     * @RequiresPermission(value = "android.permission.ACCESS_NETWORK_STATE")
-     * @return mobile is connect
-     */
-    val isMobileConnect: Boolean
-        get() {
-            val network = mConnectivityManager.activeNetwork
-            if (network != null) {
-                val nc = mConnectivityManager.getNetworkCapabilities(network)
-                if (nc != null) {
-                    if (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) { // mobile is connect
-                        return true
-                    }
-                }
-            }
-            return false
-        }
 
     /**
      * @RequiresPermission(value = "android.permission.ACCESS_NETWORK_STATE")
      * must has permission
      *@return if network is connect ,return the ipAddress, it can call back multiple count
      */
-    suspend fun getIPAddress(block: (ipAddress: String) -> Unit) {
-        mConnectivityManager.requestNetwork(mRequest, mCallBack)
+    suspend fun getIPAddress(block: (ipAddress: String) -> Unit): NetworkUtil {
         mStateFlow.first {
-            LogUtil.e("hostAddress:------:> result---> $it")
             if (!TextUtils.isEmpty(it)) {
                 block(it)
             }
             return@first false
         }
+        return this
     }
 
     /**
@@ -184,40 +153,54 @@ class NetworkUtil private constructor() {
      * must has permission
      * @return if network is connect ,return the ipAddress ,it only can call back one count
      */
-    suspend fun getSingleIpAddress(block: (String) -> Unit) {
+    suspend fun getSingleIpAddress(block: (String) -> Unit): NetworkUtil {
         if (TextUtils.isEmpty(mIpAddress)) {
             runCatching {
-                mConnectivityManager.requestNetwork(mRequest, mCallBack)
                 mStateFlow.first {
                     if (!TextUtils.isEmpty(it)) {
-                        LogUtil.e("hostAddress:------:> result--->block---> $it")
+                        LogUtil.e(TAG, "hostAddress:------:> result--->block---> $it")
                         block(it)
                         return@first true
                     }
                     return@first false
                 }
             }.onFailure {
-                block("network ---> error :" + it.message)
+                LogUtil.e(TAG, "network ---> error :" + it.message)
+                block("")
             }
         } else {
             block(mIpAddress)
         }
+        return this
     }
 
-    suspend fun isConnected(): Boolean {
-        val async = mScope.async {
-            runCatching {
-                val url = URL("https://www.baidu.com")
-                url.openStream()
-                return@async true
-            }.onFailure {
+    /**
+     * this method will return it is connected http，called the method, it will connect www.baidu.com,if baidu can connect ,return true ,else return false
+     */
+    suspend fun isConnectedHttp(): Boolean {
+        mScope.let {
+            val async = it.async {
+                runCatching {
+                    val url = URL("https://www.baidu.com")
+                    url.openStream()
+                    LogUtil.e(TAG, "isConnectedHttp - onSuccess")
+                    return@async true
+                }.onFailure {
+                    LogUtil.e(TAG, "isConnectedHttp - onFailure")
+                    return@async false
+                }
                 return@async false
             }
+            return async.await()
         }
-        val await = async.await()
-        if (await is Boolean) {
-            return await
-        }
-        return false
+    }
+
+    fun register(): NetworkUtil {
+        mConnectivityManager.requestNetwork(mRequest, mCallBack)
+        return this
+    }
+
+    fun unregister() {
+        mConnectivityManager.unregisterNetworkCallback(mCallBack)
     }
 }

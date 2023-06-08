@@ -108,9 +108,9 @@ dependencies {
     //协程依赖 - 基础
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     // 协程 - activity / fragment 扩展
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     // 协程 - viewModel 扩展
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
     // 反射
     implementation "org.jetbrains.kotlin:kotlin-reflect"
