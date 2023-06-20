@@ -6,15 +6,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
-import com.android.apphelper2.utils.KeepLifeBroadCast
 import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.LogWriteUtil
-import com.android.apphelper2.utils.SystemUtil
 import com.android.apphelper2.utils.permission.PermissionUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityFlowCallBinding
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.*
 
 class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() {
 
@@ -29,6 +27,7 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
             initWrite(this@FlowCallActivity)
         }
     }
+    private val mStateFlow2: MutableSharedFlow<Bean> = MutableStateFlow(Bean("张三", 12))
 
     override fun setTitleContent(): String {
         return "Flow Call"
@@ -43,14 +42,14 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
         super.initListener()
         mBinding.btnStart.setOnClickListener {
             isSendFlag = true
-            KeepLifeBroadCast.closeListener()
+//            KeepLifeBroadCast.closeListener()
             LogUtil.e("start ---> collect ----> ")
 
-            job?.let {
-                if (it.isActive) {
-                    it.cancel()
-                }
-            }
+//            job?.let {
+//                if (it.isActive) {
+//                    it.cancel()
+//                }
+//            }
 
 //            job = scope.launch {
 //                repeat(Int.MAX_VALUE) {
@@ -60,6 +59,14 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
 //                    }
 //                }
 //            }
+
+            lifecycleScope.launch {
+                mStateFlow2.collectLatest {
+                    LogUtil.e("lastOrNull ->$it")
+                    it.age++
+                    mStateFlow2.emit(it)
+                }
+            }
         }
 
         mBinding.btnPause.setOnClickListener {
@@ -70,7 +77,11 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
             lifecycleScope.launch(Dispatchers.IO) {
 //                KeepLifeBroadCast.sendAppErrorBroadcast(this@FlowCallActivity, "com.android.poc")
 //                KeepLifeBroadCast.sendAppPollListenerBroadcast(this@FlowCallActivity, "com.android.poc", 9500)
-                SystemUtil.openApplication(this@FlowCallActivity, "com.android.poc")
+                // SystemUtil.openApplication(this@FlowCallActivity, "com.android.poc")
+
+                mStateFlow2.collectLatest {
+                    LogUtil.e("last or null", it)
+                }
             }
         }
     }
@@ -109,4 +120,5 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
         super.onDestroy()
         mWrite.write("onDestroy")
     }
+    data class Bean(var name: String, var age: Int) {}
 }
