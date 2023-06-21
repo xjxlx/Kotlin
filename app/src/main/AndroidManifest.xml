@@ -23,6 +23,7 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
 
     <queries>
+
         <!-- 如果想要与其他的应用进行AIDL通信的话，需要在这里注册包名的信息 -->
         <package android:name="com.android.app.free.debug" />
         <package android:name="com.android.poc" />
@@ -54,6 +55,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.activity.feature.RecordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.feature.FeatureMapActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.audio.RecordingActivity"
             android:exported="true" />
         <activity
@@ -78,10 +85,10 @@
             android:name=".ui.activity.test.flow.FlowCallActivity"
             android:exported="true">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".ui.activity.test.xc.Xc5Activity"

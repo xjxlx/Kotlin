@@ -115,6 +115,11 @@
             style="@style/click_item_style"
             android:text="thread" />
 
+        <TextView
+            android:id="@+id/tv_item_function"
+            style="@style/click_item_style"
+            android:text="功能测试" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
