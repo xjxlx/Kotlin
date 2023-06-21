@@ -136,7 +136,7 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
         mCamera?.setDisplayOrientation(90);
         // 预览摄像机
         mCamera?.setPreviewDisplay(mSurfaceHolder)
-        mCamera?.startPreview();
+        mCamera?.startPreview()
         // 解锁摄像机
         mCamera?.unlock();
     }
