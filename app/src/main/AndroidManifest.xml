@@ -56,6 +56,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
+
+        <activity
+            android:name=".ui.activity.customview.CanvasSaveRestoreActivity"
+            android:exported="false" />
+
         <activity
             android:name=".ui.activity.test.flow.FlowControlActivity"
             android:exported="false" />

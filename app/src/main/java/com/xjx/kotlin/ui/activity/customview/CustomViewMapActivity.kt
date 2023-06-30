@@ -16,6 +16,10 @@ class CustomViewMapActivity : AppBaseBindingTitleActivity<ActivityCustomViewMapB
         mBinding.tvItemRecycleview.setOnClickListener {
             startActivity(RecycleViewActivity::class.java)
         }
+
+        mBinding.tvItemCustomSaveRestore.setOnClickListener {
+            startActivity(CanvasSaveRestoreActivity::class.java)
+        }
     }
 
     override fun setTitleContent(): String {

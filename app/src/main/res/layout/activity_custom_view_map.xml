@@ -20,6 +20,11 @@
             style="@style/click_item_style"
             android:text="测试RecycleView" />
 
+        <TextView
+            android:id="@+id/tv_item_custom_save_restore"
+            style="@style/click_item_style"
+            android:text="Canvas 的save 和 restore" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
