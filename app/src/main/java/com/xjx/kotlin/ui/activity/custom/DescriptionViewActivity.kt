@@ -1,4 +1,4 @@
-package com.xjx.kotlin.ui.activity.customview
+package com.xjx.kotlin.ui.activity.custom
 
 import android.os.Bundle
 import android.view.LayoutInflater

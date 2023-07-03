@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.customview.CustomViewMapActivity">
+    tools:context=".ui.activity.custom.CustomViewMapActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,11 +19,6 @@
             android:id="@+id/tv_item_recycleview"
             style="@style/click_item_style"
             android:text="测试RecycleView" />
-
-        <TextView
-            android:id="@+id/tv_item_custom_save_restore"
-            style="@style/click_item_style"
-            android:text="Canvas 的save 和 restore" />
 
     </LinearLayout>
 

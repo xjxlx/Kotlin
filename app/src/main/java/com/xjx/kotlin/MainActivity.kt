@@ -10,7 +10,7 @@ import com.android.helper.utils.LogUtil
 import com.android.helper.utils.permission.RxPermissionsUtil
 import com.xjx.kotlin.databinding.ActivityMainBinding
 import com.xjx.kotlin.network.NetWorkActivity
-import com.xjx.kotlin.ui.activity.customview.CustomViewMapActivity
+import com.xjx.kotlin.ui.activity.custom.CustomViewMapActivity
 import com.xjx.kotlin.ui.activity.feature.FeatureMapActivity
 import com.xjx.kotlin.ui.activity.test.*
 import com.xjx.kotlin.ui.activity.test.block.BlockActivity

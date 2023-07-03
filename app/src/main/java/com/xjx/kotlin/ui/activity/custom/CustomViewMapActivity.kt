@@ -1,4 +1,4 @@
-package com.xjx.kotlin.ui.activity.customview
+package com.xjx.kotlin.ui.activity.custom
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,10 +15,6 @@ class CustomViewMapActivity : AppBaseBindingTitleActivity<ActivityCustomViewMapB
 
         mBinding.tvItemRecycleview.setOnClickListener {
             startActivity(RecycleViewActivity::class.java)
-        }
-
-        mBinding.tvItemCustomSaveRestore.setOnClickListener {
-            startActivity(CanvasSaveRestoreActivity::class.java)
         }
     }
 
