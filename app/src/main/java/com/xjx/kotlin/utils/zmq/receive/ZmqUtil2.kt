@@ -108,6 +108,9 @@ object ZmqUtil2 {
                 if (!mAtomicStatus.get()) {
                     mAtomicStatus.set(true)
                     log("pause --->")
+                    mSocket.unbind(TCP_ADDRESS)
+                    mSocket.disconnect(TCP_ADDRESS)
+                    mBinding = false
                 }
             }.onFailure {
                 log("pause - error: ${it.message}")

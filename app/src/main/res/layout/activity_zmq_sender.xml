@@ -21,9 +21,27 @@
         android:layout_height="wrap_content"
         android:text="绑定" />
 
-    <EditText
-        android:id="@+id/et_input"
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        android:text="发送" />
+
+    <Button
+        android:id="@+id/btn_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        android:text="暂停" />
+
+    <TextView
+        android:id="@+id/tv_data"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        android:hint="ssss"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_18" />
 
 </LinearLayout>
