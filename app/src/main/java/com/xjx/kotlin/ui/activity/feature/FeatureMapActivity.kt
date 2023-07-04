@@ -20,6 +20,14 @@ class FeatureMapActivity : AppBaseBindingTitleActivity<ActivityFeatureMapBinding
 
     override fun initData(savedInstanceState: Bundle?) {
         setonClickListener(R.id.tv_item_recording_video)
+
+        mBinding.tvItemZmqSend.setOnClickListener {
+            startActivity(ZmqSenderActivity::class.java)
+        }
+
+        mBinding.tvItemZmqReceive.setOnClickListener {
+            startActivity(ZmqReceiveActivity::class.java)
+        }
     }
 
     override fun onClick(v: View?) {

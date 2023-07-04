@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.LogUtil
 import com.android.helper.utils.permission.RxPermissionsUtil
@@ -32,6 +33,8 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         val strings = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
         RxPermissionsUtil.Builder(this, *strings)
             .setSinglePerMissionListener { permissionStatus: Int, permission: String? ->
