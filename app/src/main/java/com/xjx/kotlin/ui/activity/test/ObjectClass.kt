@@ -1,28 +1,5 @@
 package com.xjx.kotlin.ui.activity.test
 
-import com.android.helper.utils.LogUtil
-import com.xjx.kotlin.utils.FileUtil
-import java.io.File
-
-/**
- * @author : 流星
- * @CreateDate: 2022/12/21-18:54
- * @Description:
- */
-class ObjectClass {
-
-    fun test() {
-        val filePath: String = FileUtil.getFilePath(File(""))
-        LogUtil.e("filePath: " + filePath)
-        Test.a
-        FileUtil.pathUrl
-
-        Test.staticClass()
-        Test().InnerClass()
-    }
-
-}
-
 class Test {
 
     var abc: Int = 0

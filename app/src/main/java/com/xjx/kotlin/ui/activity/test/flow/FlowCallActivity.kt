@@ -24,7 +24,7 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
     private var isSendFlag = false
     private val mWrite: LogWriteUtil by lazy {
         return@lazy LogWriteUtil("test.txt").apply {
-            initWrite(this@FlowCallActivity)
+            init(this@FlowCallActivity)
         }
     }
     private val mStateFlow2: MutableSharedFlow<Bean> = MutableStateFlow(Bean("张三", 12))
@@ -71,7 +71,7 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
 
         mBinding.btnPause.setOnClickListener {
             isSendFlag = false
-            mWrite.write("close -----pause ---->")
+            mWrite.send("close -----pause ---->")
 //            val appInstallApp = SystemUtil.appInstallApp(this, "com.android.poc")
 
             lifecycleScope.launch(Dispatchers.IO) {
@@ -118,7 +118,7 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
 
     override fun onDestroy() {
         super.onDestroy()
-        mWrite.write("onDestroy")
+        mWrite.send("onDestroy")
     }
     data class Bean(var name: String, var age: Int) {}
 }
