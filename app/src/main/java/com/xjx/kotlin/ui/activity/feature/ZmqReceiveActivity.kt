@@ -30,20 +30,20 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
 
         ZmqUtil2.initLog(this)
 
-        mBinding.btnBind.setOnClickListener {
+        mBinding.btnStart.setOnClickListener {
             lifecycleScope.launch {
                 mNetwork.getIPAddress {
                     mBinding.tvContent.text = "ip: $it"
                     ZmqUtil2.log("IP: $it")
                     ZmqUtil2.IP_ADDRESS = it
-                    val bindSocket = ZmqUtil2.isBindSocket()
-                    if (bindSocket) {
-                        ZmqUtil2.resume()
-                    } else {
-                        ZmqUtil2.start()
-                    }
+                    ZmqUtil2.start()
                 }
             }
+        }
+
+
+        mBinding.btnBind.setOnClickListener {
+            ZmqUtil2.start()
         }
 
         mBinding.btnUnbind.setOnClickListener {

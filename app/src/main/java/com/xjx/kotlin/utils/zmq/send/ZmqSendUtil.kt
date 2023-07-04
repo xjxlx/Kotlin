@@ -1,6 +1,6 @@
 package com.xjx.kotlin.utils.zmq.send
 
-import com.xjx.kotlin.utils.zmq.receive.ZmqUtil2
+import com.android.apphelper2.utils.LogUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,14 +23,14 @@ class ZmqSendUtil {
 
     fun send(content: String) {
         mScope.launch {
-            ZmqUtil2.log("发送数据--->$content")
+            LogUtil.e("ZMQ", "发送数据--->$content")
             val toByteArray = content.toByteArray(ZMQ.CHARSET)
             socket.send(toByteArray, 1)
         }
     }
 
     fun close() {
-        ZmqUtil2.log("发送端 close --->")
+        LogUtil.e("ZMQ", "发送端 close --->")
         socket.close()
         context.close()
     }

@@ -10,7 +10,6 @@ import com.android.apphelper2.utils.SpUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
-import com.xjx.kotlin.utils.zmq.receive.ZmqUtil2
 import com.xjx.kotlin.utils.zmq.send.ZmqSendUtil
 import kotlinx.coroutines.*
 
@@ -43,16 +42,17 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
             }
             if (TextUtils.isEmpty(ip)) {
                 ToastUtil.show("IP 为空！")
-                ZmqUtil2.log("发送端IP 为空！")
+                // ZmqUtil2.log("发送端IP 为空！")
                 return@setOnClickListener
             }
 
             mZmqSendUtil.connect(ip) {
                 if (it) {
+                    mBinding.etIp.setText("ip:$ip")
                     mBinding.etIp.isEnabled = false
                 }
                 lifecycleScope.launch {
-                    ZmqUtil2.log("绑定成功： $it")
+                    // ZmqUtil2.log("绑定成功： $it")
                     ToastUtil.show("绑定成功：$it")
                 }
             }
@@ -60,7 +60,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
 
         mBinding.btnSend.setOnClickListener {
             mJob = lifecycleScope.launch {
-                repeat(1000) {
+                repeat(Int.MAX_VALUE) {
                     delay(500)
                     val data = "当前的count: $it"
                     mZmqSendUtil.send(data)

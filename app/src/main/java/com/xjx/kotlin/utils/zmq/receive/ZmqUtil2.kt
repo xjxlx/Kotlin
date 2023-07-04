@@ -21,12 +21,8 @@ object ZmqUtil2 {
     private val mAtomicStatus: AtomicBoolean by lazy {
         return@lazy AtomicBoolean()
     }
-    private val mContext: ZMQ.Context by lazy {
-        return@lazy ZMQ.context(1)
-    }
-    private val mSocket: ZMQ.Socket by lazy {
-        return@lazy mContext.socket(SocketType.PAIR)
-    }
+    private var mContext: ZMQ.Context? = null
+    private var mSocket: ZMQ.Socket? = null
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO + CoroutineName(javaClass.simpleName))
     }
@@ -34,7 +30,7 @@ object ZmqUtil2 {
         return@lazy MutableSharedFlow<HttpRequest<ZmqBean>>()
     }
     private var mBinding = false
-    private const val TAG = "ZMQ"
+    private val TAG = "ZMQ"
     private var mWriter: LogWriteUtil? = null
     private var mJsonWrite: JsonWriteUtil? = null
     private var mSendMsg: String? = null
@@ -76,7 +72,7 @@ object ZmqUtil2 {
         }
 
         runCatching {
-            mBinding = mSocket.bind(TCP_ADDRESS)
+            mBinding = getSocket().bind(TCP_ADDRESS)
             log("bind address:[ $TCP_ADDRESS ]   ---> bind success：$mBinding")
 
             // loop data
@@ -108,9 +104,6 @@ object ZmqUtil2 {
                 if (!mAtomicStatus.get()) {
                     mAtomicStatus.set(true)
                     log("pause --->")
-                    mSocket.unbind(TCP_ADDRESS)
-                    mSocket.disconnect(TCP_ADDRESS)
-                    mBinding = false
                 }
             }.onFailure {
                 log("pause - error: ${it.message}")
@@ -138,17 +131,18 @@ object ZmqUtil2 {
                 // unbind
                 log("stop ---> binding status :$mBinding")
                 if (mBinding) {
-                    val unbind = mSocket.unbind(TCP_ADDRESS)
+                    val unbind = getSocket().unbind(TCP_ADDRESS)
                     log("stop ---> unbind --->: $unbind")
 
                     log("stop ---> socket ---> close ! ")
-                    mSocket.close()
+                    getSocket().close()
 
-                    val contextClosed = mContext.isClosed
+                    val contextClosed = mContext?.isClosed
                     log("stop ---> context is close : $contextClosed")
 
-                    if (!contextClosed) {
-                        mContext.close()
+                    if (!contextClosed!!) {
+                        mContext?.close()
+                        mContext = null
                         log("stop ---> context close !")
                     }
                 }
@@ -164,12 +158,12 @@ object ZmqUtil2 {
     private fun loopData() {
         mScope.launch {
             runCatching {
-                log("loopData ---> isPause:${mAtomicStatus.get()} context: ${!mContext.isTerminated}")
+                log("loopData ---> isPause:${mAtomicStatus.get()} context: ${!getContext().isTerminated}")
                 //  the Zmq context  is not stop
-                while (!mContext.isTerminated) {
+                while (!getContext().isTerminated) {
                     mDebounceUtil.send(true)
                     // get the result from the zmq context
-                    val reply = mSocket.recv(0)
+                    val reply = getSocket().recv(0)
                     if (reply != null) {
                         val content = reply.toString(Charsets.UTF_8)
                         LogUtil.e(TAG, "reply :$content")
@@ -178,8 +172,7 @@ object ZmqUtil2 {
                                 log("数据收集中...")
                                 mSendMsg = content
                             }
-                            LogUtil.e(TAG, "reply --- send ...")
-
+                            // LogUtil.e(TAG, "reply --- send ...")
                         }
                     } else {
                         LogUtil.e(TAG, "reply : null")
@@ -207,6 +200,20 @@ object ZmqUtil2 {
                 }
             }
         }
+    }
+
+    fun getSocket(): ZMQ.Socket {
+        if (mSocket == null) {
+            mSocket = getContext().socket(SocketType.PAIR)
+        }
+        return mSocket!!
+    }
+
+    fun getContext(): ZMQ.Context {
+        if (mContext == null) {
+            mContext = ZMQ.context(1)
+        }
+        return mContext!!
     }
 
     fun log(content: String) {
