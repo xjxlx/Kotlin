@@ -2,6 +2,7 @@ package com.xjx.kotlin.utils.zmq.receive
 
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.android.apphelper2.utils.DebounceUtil
 import com.android.apphelper2.utils.GsonUtil
 import com.android.apphelper2.utils.LogUtil
@@ -226,6 +227,16 @@ object ZmqUtil2 {
         if (BuildConfig.LogSwitch) {
             mJsonWrite = JsonWriteUtil("json.txt")
             mJsonWrite?.init(fragment)
+        }
+    }
+
+    fun initLog(activity: FragmentActivity) {
+        mWriter = LogWriteUtil("$TAG.txt")
+        mWriter?.init(activity)
+
+        if (BuildConfig.LogSwitch) {
+            mJsonWrite = JsonWriteUtil("json.txt")
+            mJsonWrite?.init(activity)
         }
     }
 }
