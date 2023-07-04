@@ -3,6 +3,7 @@ package com.xjx.kotlin.ui.activity.feature
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.NetworkUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
@@ -25,12 +26,15 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         ZmqUtil2.initLog(this)
 
         mBinding.btnBind.setOnClickListener {
             lifecycleScope.launch {
                 mNetwork.getIPAddress {
                     mBinding.tvContent.text = "ip: $it"
+                    ZmqUtil2.log("IP: $it")
                     ZmqUtil2.IP_ADDRESS = it
                     val bindSocket = ZmqUtil2.isBindSocket()
                     if (bindSocket) {
@@ -45,5 +49,10 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
         mBinding.btnUnbind.setOnClickListener {
             ZmqUtil2.pause()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ZmqUtil2.pause()
     }
 }

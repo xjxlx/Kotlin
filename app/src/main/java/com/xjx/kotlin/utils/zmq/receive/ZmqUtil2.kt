@@ -4,7 +4,6 @@ import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.android.apphelper2.utils.DebounceUtil
-import com.android.apphelper2.utils.GsonUtil
 import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.LogWriteUtil
 import com.xjx.kotlin.BuildConfig
@@ -43,7 +42,7 @@ object ZmqUtil2 {
     // true:open  false:close
     var ZMQ_SWITCH = true
     var IP_ADDRESS = ""
-    private val TCP_ADDRESS: String
+    val TCP_ADDRESS: String
         get() {
             if (TextUtils.isEmpty(IP_ADDRESS)) {
                 return ""
@@ -176,16 +175,8 @@ object ZmqUtil2 {
                                 log("数据收集中...")
                                 mSendMsg = content
                             }
-                            val bean = GsonUtil.fromJsonNested<HttpRequest<ZmqBean>>(content)
-                            if (!mAtomicStatus.get()) {
-                                LogUtil.e(TAG, "reply --- send ...")
-                                mShardFlow.emit(bean)
+                            LogUtil.e(TAG, "reply --- send ...")
 
-                                // write log data
-                                if (BuildConfig.LogSwitch) {
-                                    mJsonWrite?.send(content)
-                                }
-                            }
                         }
                     } else {
                         LogUtil.e(TAG, "reply : null")
@@ -238,5 +229,6 @@ object ZmqUtil2 {
             mJsonWrite = JsonWriteUtil("json.txt")
             mJsonWrite?.init(activity)
         }
+        log("init log --->")
     }
 }
