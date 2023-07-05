@@ -68,7 +68,7 @@ object ZmqUtil2 {
             log("iPv6 is: $iPv6 iPv4Only: $iPv4Only")
 
             mBinding = getSocket().bind(TCP.TCP_ADDRESS)
-            log("bind address:[ $TCP.ADDRESS ]   ---> bind success：$mBinding")
+            log("bind address:[ ${TCP.TCP_ADDRESS} ]   ---> bind success：$mBinding")
 
             // loop data
             mAtomicStatus.set(false)

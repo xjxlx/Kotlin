@@ -60,6 +60,6 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
 
     override fun onDestroy() {
         super.onDestroy()
-        ZmqUtil2.pause()
+        ZmqUtil2.stop()
     }
 }

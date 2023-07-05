@@ -10,6 +10,6 @@ object TCP {
             if (TextUtils.isEmpty(ip_address)) {
                 return ""
             }
-            return "tcp://${ip_address}:5555"
+            return "tcp://${ip_address}:59999"
         }
 }
