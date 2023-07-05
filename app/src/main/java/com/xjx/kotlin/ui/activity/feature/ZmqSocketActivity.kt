@@ -20,12 +20,13 @@ import java.net.Socket
 class ZmqSocketActivity : AppBaseBindingTitleActivity<ActivityZmqSocketBinding>() {
 
     private val tag = "ZMQ"
-    private var mSocket: Socket? = null
     private val encoding = "UTF-8"
     private var mStream: PrintStream? = null
     private val mBuffer: StringBuffer = StringBuffer()
     private var mContext: ZMQ.Context? = null
     private var mZmqSocket: ZMQ.Socket? = null
+    private var mServerSocket: ServerSocket? = null
+    private var mSocket: Socket? = null
 
     override fun setTitleContent(): String {
         return "ZMQ - Socket"
@@ -78,12 +79,12 @@ class ZmqSocketActivity : AppBaseBindingTitleActivity<ActivityZmqSocketBinding>(
     private fun initSocket() {
         lifecycleScope.launch(Dispatchers.IO) {
             runCatching {
-                val serverSocket = ServerSocket(TCP.SocketPort)
+                mServerSocket = ServerSocket(TCP.SocketPort)
                 log("create socket success , port: ${TCP.SocketPort}")
                 while (true) {
                     // Starts blocking the thread, waiting for the client to connect
                     log("start blocking the thread , waiting for the client to connect  .......")
-                    mSocket = serverSocket.accept()
+                    mSocket = mServerSocket?.accept()
                     mSocket?.let { socket ->
                         val inetAddress = socket.inetAddress
                         if (inetAddress != null) {
@@ -123,10 +124,12 @@ class ZmqSocketActivity : AppBaseBindingTitleActivity<ActivityZmqSocketBinding>(
 
     private fun log(content: String) {
         LogUtil.e(tag, content)
-        lifecycleScope.launch(Dispatchers.Main) {
-            mBuffer.append(content)
-                .append("\r\n")
-            mBinding.tvContent.text = mBuffer.toString()
+        lifecycleScope.launchWhenStarted {
+            withContext(Dispatchers.Main) {
+                mBuffer.append(content)
+                    .append("\r\n")
+                mBinding.tvContent.text = mBuffer.toString()
+            }
         }
     }
 
@@ -137,5 +140,10 @@ class ZmqSocketActivity : AppBaseBindingTitleActivity<ActivityZmqSocketBinding>(
         mZmqSocket = null
         mContext?.close()
         mContext = null
+
+        mSocket?.close()
+        mSocket = null
+        mServerSocket?.close()
+        mServerSocket = null
     }
 }
