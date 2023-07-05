@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityZmqSocketBinding
+import com.xjx.kotlin.utils.zmq.TCP
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -18,15 +19,13 @@ import java.net.Socket
 
 class ZmqSocketActivity : AppBaseBindingTitleActivity<ActivityZmqSocketBinding>() {
 
-    private val mZmqPort: Int = 9999
-    private val mSocketPort: Int = 9998
     private val tag = "ZMQ"
     private var mSocket: Socket? = null
     private val encoding = "UTF-8"
     private var mStream: PrintStream? = null
-    private val tcp: String by lazy {
-        return@lazy "tcp://${"192.168.8.85"}:$mZmqPort"
-    }
+    private val mBuffer: StringBuffer = StringBuffer()
+    private var mContext: ZMQ.Context? = null
+    private var mZmqSocket: ZMQ.Socket? = null
 
     override fun setTitleContent(): String {
         return "ZMQ - Socket"
@@ -38,24 +37,30 @@ class ZmqSocketActivity : AppBaseBindingTitleActivity<ActivityZmqSocketBinding>(
 
     override fun initData(savedInstanceState: Bundle?) {
         mBinding.btnStart.setOnClickListener {
-            initSocket()
-            initZmq()
+            lifecycleScope.launch {
+                val job = lifecycleScope.launch(Dispatchers.Default) {
+                    initSocket()
+                }
+                job.join()
+                initZmq()
+            }
         }
     }
 
     private fun initZmq() {
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.Default) {
             runCatching {
-                log("init - ZMQ !")
-                val context = ZMQ.context(1)
+                log("ZMQ - init --->")
+                mContext = ZMQ.context(1)
                 log("ZMQ - context create success !")
-                val socket = context.socket(SocketType.PAIR)
+                mZmqSocket = mContext?.socket(SocketType.PAIR)
+                log("ZMQ - ip: ${TCP.TCP_ADDRESS}")
                 log("ZMQ - socket create success !")
-                val bind = socket.bind(tcp)
+                val bind = mZmqSocket?.bind(TCP.TCP_ADDRESS)
                 log("ZMQ - bind address success : $bind")
-                if (context != null) {
-                    while (!context.isTerminated) {
-                        val bytes = socket.recv(0)
+                if (mContext != null) {
+                    while (!mContext!!.isTerminated) {
+                        val bytes = mZmqSocket?.recv(0)
                         if (bytes != null) {
                             val content = bytes.toString(Charsets.UTF_8)
                             sendSocket(content)
@@ -71,16 +76,20 @@ class ZmqSocketActivity : AppBaseBindingTitleActivity<ActivityZmqSocketBinding>(
     }
 
     private fun initSocket() {
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             runCatching {
-                val serverSocket = ServerSocket(mSocketPort)
-                log("create socket success !")
+                val serverSocket = ServerSocket(TCP.SocketPort)
+                log("create socket success , port: ${TCP.SocketPort}")
                 while (true) {
                     // Starts blocking the thread, waiting for the client to connect
-                    log("start blocking the thread , waiting for the client to connect  !")
+                    log("start blocking the thread , waiting for the client to connect  .......")
                     mSocket = serverSocket.accept()
-                    val inetAddress = mSocket?.inetAddress
-                    log("client connect success: host address: ：${inetAddress?.hostAddress}  host name:${inetAddress?.hostName}")
+                    mSocket?.let { socket ->
+                        val inetAddress = socket.inetAddress
+                        if (inetAddress != null) {
+                            log("client connect success: host address: ：${inetAddress.hostAddress}  host name:${inetAddress.hostName}")
+                        }
+                    }
                 }
             }.onFailure {
                 log("socket error: " + it.message)
@@ -114,5 +123,19 @@ class ZmqSocketActivity : AppBaseBindingTitleActivity<ActivityZmqSocketBinding>(
 
     private fun log(content: String) {
         LogUtil.e(tag, content)
+        lifecycleScope.launch(Dispatchers.Main) {
+            mBuffer.append(content)
+                .append("\r\n")
+            mBinding.tvContent.text = mBuffer.toString()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mZmqSocket?.unbind(TCP.TCP_ADDRESS)
+        mZmqSocket?.close()
+        mZmqSocket = null
+        mContext?.close()
+        mContext = null
     }
 }

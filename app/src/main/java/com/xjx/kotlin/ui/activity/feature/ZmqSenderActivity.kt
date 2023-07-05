@@ -35,11 +35,11 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
         mBinding.btnStart.setOnClickListener {
 
             val ip = mBinding.etIp.text.toString()
-            TCP.ip_address = ip
             if (TextUtils.isEmpty(ip)) {
                 ToastUtil.show("Ip地址为空！")
                 return@setOnClickListener
             }
+            TCP.ip_address = ip
 
             LogUtil.e("ZMQ", "IP:${TCP.TCP_ADDRESS}")
 

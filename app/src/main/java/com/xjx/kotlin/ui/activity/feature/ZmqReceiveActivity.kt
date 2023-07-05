@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqReceiveBinding
+import com.xjx.kotlin.utils.zmq.TCP
 import com.xjx.kotlin.utils.zmq.receive.ZmqUtil2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -75,7 +76,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
     private fun initSocket() {
         lifecycleScope.launch(Dispatchers.IO) {
             runCatching {
-                val mClientSocket = Socket("192.168.8.85", 9998)
+                val mClientSocket = Socket(TCP.ip_address, TCP.SocketPort)
 
                 // 取得输入流读取客户端传送的数据,要接收中文只需将编码设置为"UTF-8"
                 val connected: Boolean = mClientSocket.isConnected
