@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
-import com.android.apphelper2.utils.NetworkUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqReceiveBinding
@@ -15,10 +14,6 @@ import com.xjx.kotlin.utils.zmq.receive.ZmqUtil2
 import kotlinx.coroutines.launch
 
 class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding>() {
-
-    private val mNetwork: NetworkUtil by lazy {
-        return@lazy NetworkUtil.instance.register()
-    }
 
     override fun setTitleContent(): String {
         return "Zmq接收端"
@@ -44,9 +39,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             ZmqUtil2.log("IP: ${mBinding.tvIp.text}")
 
             lifecycleScope.launch {
-                mNetwork.getIPAddress {
-                    ZmqUtil2.start()
-                }
+                ZmqUtil2.start()
             }
         }
 
