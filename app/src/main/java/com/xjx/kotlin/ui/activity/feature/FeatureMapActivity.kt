@@ -28,6 +28,10 @@ class FeatureMapActivity : AppBaseBindingTitleActivity<ActivityFeatureMapBinding
         mBinding.tvItemZmqReceive.setOnClickListener {
             startActivity(ZmqReceiveActivity::class.java)
         }
+
+        mBinding.tvItemZmqSocket.setOnClickListener {
+            startActivity(ZmqSocketActivity::class.java)
+        }
     }
 
     override fun onClick(v: View?) {
