@@ -17,6 +17,12 @@ import java.io.PrintStream
 import java.net.ServerSocket
 import java.net.Socket
 
+/**
+ * 使用说明：
+ * 1：先开启 ZmqSocket 页面，进行数据的等待。。。
+ * 2：开始发送端...
+ * 3: 开启接收端...
+ */
 class ZmqSocketActivity : AppBaseBindingTitleActivity<ActivityZmqSocketBinding>() {
 
     private val tag = "ZMQ"
