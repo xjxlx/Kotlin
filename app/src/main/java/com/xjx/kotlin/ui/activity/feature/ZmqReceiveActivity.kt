@@ -1,13 +1,16 @@
 package com.xjx.kotlin.ui.activity.feature
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.NetworkUtil
+import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqReceiveBinding
+import com.xjx.kotlin.utils.zmq.TCP
 import com.xjx.kotlin.utils.zmq.receive.ZmqUtil2
 import kotlinx.coroutines.launch
 
@@ -31,11 +34,17 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
         ZmqUtil2.initLog(this)
 
         mBinding.btnStart.setOnClickListener {
+            val ip = mBinding.tvIp.text.toString()
+            if (TextUtils.isEmpty(ip)) {
+                ToastUtil.show("Ip为空！")
+                return@setOnClickListener
+            }
+            TCP.ip_address = ip
+
+            ZmqUtil2.log("IP: ${mBinding.tvIp.text}")
+
             lifecycleScope.launch {
                 mNetwork.getIPAddress {
-                    mBinding.tvContent.text = "ip: $it"
-                    ZmqUtil2.log("IP: $it")
-                    ZmqUtil2.IP_ADDRESS = it
                     ZmqUtil2.start()
                 }
             }

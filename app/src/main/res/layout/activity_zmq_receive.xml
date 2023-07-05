@@ -7,11 +7,12 @@
     android:orientation="vertical"
     tools:context=".ui.activity.feature.ZmqReceiveActivity">
 
-    <TextView
-        android:id="@+id/tv_content"
+    <EditText
+        android:id="@+id/tv_ip"
+        android:hint="请输入绑定的IP:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="当前的ip:" />
+        android:textSize="@dimen/sp_28" />
 
     <Button
         android:layout_marginTop="@dimen/dp_20"
@@ -35,6 +36,8 @@
 
     <TextView
         android:id="@+id/tv_data"
+        android:hint="sssss"
+        android:textSize="@dimen/sp_28"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_20" />

@@ -6,16 +6,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
-import com.android.apphelper2.utils.SpUtil
+import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
+import com.xjx.kotlin.utils.zmq.TCP
 import com.xjx.kotlin.utils.zmq.send.ZmqSendUtil
 import kotlinx.coroutines.*
 
 class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() {
 
-    private val IP: String = "IP_ADDRESS"
     private val mZmqSendUtil: ZmqSendUtil by lazy {
         return@lazy ZmqSendUtil()
     }
@@ -33,22 +33,19 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         mBinding.btnStart.setOnClickListener {
-            var ip = mBinding.etIp.text.toString()
-            if (!TextUtils.isEmpty(ip)) {
-                SpUtil.putString(IP, ip)
-            }
+
+            val ip = mBinding.etIp.text.toString()
+            TCP.ip_address = ip
             if (TextUtils.isEmpty(ip)) {
-                ip = SpUtil.getString(IP)
-            }
-            if (TextUtils.isEmpty(ip)) {
-                ToastUtil.show("IP 为空！")
-                // ZmqUtil2.log("发送端IP 为空！")
+                ToastUtil.show("Ip地址为空！")
                 return@setOnClickListener
             }
 
-            mZmqSendUtil.connect(ip) {
+            LogUtil.e("ZMQ", "IP:${TCP.TCP_ADDRESS}")
+
+            mZmqSendUtil.connect(TCP.TCP_ADDRESS) {
                 if (it) {
-                    mBinding.etIp.setText("ip:$ip")
+                    mBinding.etIp.setText("ip: ${TCP.TCP_ADDRESS}")
                     mBinding.etIp.isEnabled = false
                 }
                 lifecycleScope.launch {

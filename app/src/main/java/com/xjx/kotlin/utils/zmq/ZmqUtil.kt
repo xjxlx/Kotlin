@@ -35,7 +35,6 @@ class ZmqUtil {
         // true:open  false:close
         const val ZMQ_SWITCH = false
 
-        val TCP_ADDRESS: String= "tcp://192.168.124.10:30000"
 
         fun bundledMessage(handler: Handler, msg: String): Message {
             val message: Message = handler.obtainMessage()

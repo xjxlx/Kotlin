@@ -8,6 +8,7 @@ import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.LogWriteUtil
 import com.xjx.kotlin.BuildConfig
 import com.xjx.kotlin.utils.JsonWriteUtil
+import com.xjx.kotlin.utils.zmq.TCP
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.zeromq.SocketType
@@ -35,14 +36,6 @@ object ZmqUtil2 {
 
     // true:open  false:close
     var ZMQ_SWITCH = true
-    var IP_ADDRESS = ""
-    val TCP_ADDRESS: String
-        get() {
-            if (TextUtils.isEmpty(IP_ADDRESS)) {
-                return ""
-            }
-            return "tcp://${IP_ADDRESS}:10086"
-        }
 
     private val mDebounceUtil: DebounceUtil<Boolean> by lazy { return@lazy DebounceUtil(15 * 1000) }
 
@@ -64,14 +57,14 @@ object ZmqUtil2 {
             return
         }
 
-        if (TextUtils.isEmpty(TCP_ADDRESS)) {
+        if (TextUtils.isEmpty(TCP.TCP_ADDRESS)) {
             log("tcp is empty！")
             return
         }
 
         runCatching {
-            mBinding = getSocket().bind(TCP_ADDRESS)
-            log("bind address:[ $TCP_ADDRESS ]   ---> bind success：$mBinding")
+            mBinding = getSocket().bind(TCP.TCP_ADDRESS)
+            log("bind address:[ $TCP.ADDRESS ]   ---> bind success：$mBinding")
 
             // loop data
             mAtomicStatus.set(false)
@@ -129,7 +122,7 @@ object ZmqUtil2 {
                 // unbind
                 log("stop ---> binding status :$mBinding")
                 if (mBinding) {
-                    val unbind = getSocket().unbind(TCP_ADDRESS)
+                    val unbind = getSocket().unbind(TCP.TCP_ADDRESS)
                     log("stop ---> unbind --->: $unbind")
 
                     log("stop ---> socket ---> close ! ")
