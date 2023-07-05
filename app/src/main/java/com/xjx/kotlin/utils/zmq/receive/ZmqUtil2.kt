@@ -7,8 +7,6 @@ import com.android.apphelper2.utils.DebounceUtil
 import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.LogWriteUtil
 import com.xjx.kotlin.BuildConfig
-import com.xjx.kotlin.bean.HttpRequest
-import com.xjx.kotlin.bean.ZmqBean
 import com.xjx.kotlin.utils.JsonWriteUtil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,8 +24,8 @@ object ZmqUtil2 {
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO + CoroutineName(javaClass.simpleName))
     }
-    private val mShardFlow: MutableSharedFlow<HttpRequest<ZmqBean>> by lazy {
-        return@lazy MutableSharedFlow<HttpRequest<ZmqBean>>()
+    private val mShardFlow: MutableSharedFlow<String> by lazy {
+        return@lazy MutableSharedFlow<String>()
     }
     private var mBinding = false
     private val TAG = "ZMQ"
@@ -43,7 +41,7 @@ object ZmqUtil2 {
             if (TextUtils.isEmpty(IP_ADDRESS)) {
                 return ""
             }
-            return "tcp://${IP_ADDRESS}:19716"
+            return "tcp://${IP_ADDRESS}:10086"
         }
 
     private val mDebounceUtil: DebounceUtil<Boolean> by lazy { return@lazy DebounceUtil(15 * 1000) }
@@ -173,6 +171,7 @@ object ZmqUtil2 {
                                 mSendMsg = content
                             }
                             // LogUtil.e(TAG, "reply --- send ...")
+                            mShardFlow.emit(content)
                         }
                     } else {
                         LogUtil.e(TAG, "reply : null")
@@ -192,7 +191,7 @@ object ZmqUtil2 {
         return mBinding
     }
 
-    fun setCallBackListener(block: (HttpRequest<ZmqBean>) -> Unit) {
+    fun setCallBackListener(block: (String) -> Unit) {
         if (ZMQ_SWITCH) {
             mScope.launch {
                 mShardFlow.collect {

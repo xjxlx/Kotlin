@@ -17,7 +17,7 @@ class ZmqSendUtil {
     }
 
     fun connect(ip: String, block: (Boolean) -> Unit) {
-        val connect = socket.connect("tcp://${ip}:19716")
+        val connect = socket.connect("tcp://${ip}:10086")
         block(connect)
     }
 

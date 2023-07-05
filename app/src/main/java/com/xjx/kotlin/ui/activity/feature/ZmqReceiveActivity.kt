@@ -41,13 +41,18 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             }
         }
 
-
         mBinding.btnBind.setOnClickListener {
             ZmqUtil2.start()
         }
 
         mBinding.btnUnbind.setOnClickListener {
             ZmqUtil2.pause()
+        }
+
+        ZmqUtil2.setCallBackListener {
+            mBinding.tvData.post {
+                mBinding.tvData.text = it
+            }
         }
     }
 
