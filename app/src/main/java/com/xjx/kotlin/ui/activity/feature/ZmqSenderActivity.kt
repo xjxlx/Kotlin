@@ -58,7 +58,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
         mBinding.btnSend.setOnClickListener {
             mJob = lifecycleScope.launch {
                 repeat(Int.MAX_VALUE) {
-                    delay(500)
+                    delay(100)
                     val data = "当前的count: $it"
                     mZmqSendUtil.send(data)
                     withContext(Dispatchers.Main) {
