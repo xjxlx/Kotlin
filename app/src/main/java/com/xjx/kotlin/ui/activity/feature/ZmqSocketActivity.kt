@@ -130,7 +130,7 @@ class ZmqSocketActivity : AppBaseBindingTitleActivity<ActivityZmqSocketBinding>(
 
     private fun log(content: String) {
         LogUtil.e(tag, content)
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             withContext(Dispatchers.Main) {
                 mBuffer.append(content)
                     .append("\r\n")
