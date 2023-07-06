@@ -7,7 +7,8 @@ import org.zeromq.ZMQ
 
 class ZmqUtil6 {
 
-    private val tcp = "tcp://127.0.0.1:6666"
+    private val port = 6666
+    private val tcp = "tcp://192.168.124.3:$port"
     private var mContext: ZContext? = null
     private var socketService: ZMQ.Socket? = null
     private var clientService: ZMQ.Socket? = null
@@ -31,8 +32,20 @@ class ZmqUtil6 {
                 // Socket to talk to clients
                 socketService = mContext?.createSocket(SocketType.PAIR)
                 log("创建 socketService !")
-                socketService?.connect(tcp)
+                socketService?.bind("tcp://127.0.0.1:$port")
                 log("服务端初始化成功!")
+
+                while (!Thread.currentThread().isInterrupted) {
+                    // Block until a message is received
+                    val reply: ByteArray = socketService!!.recv(0)
+
+                    // Print the message
+                    log("Received: [" + String(reply, ZMQ.CHARSET) + "]")
+
+                    // Send a response
+                    val response = "Hello, world!"
+                    socketService!!.send(response.toByteArray(ZMQ.CHARSET), 0)
+                }
             } catch (e: Exception) {
                 log("初始化服务端异常--->" + e.message)
                 e.printStackTrace()
@@ -58,7 +71,7 @@ class ZmqUtil6 {
             try {
                 clientService = mContext?.createSocket(SocketType.PAIR)
                 log("clientService---> ")
-                clientService?.bind(tcp)
+                clientService?.connect(tcp)
                 log("bind---> ")
 
                 while (!Thread.currentThread().isInterrupted) {
@@ -94,15 +107,13 @@ class ZmqUtil6 {
 
     fun stop() {
         if (clientService != null) {
-//            clientService!!.unbind(tcp)
-//            clientService!!.disconnect(tcp)
+            clientService!!.disconnect(tcp)
             clientService!!.close()
             clientService = null
         }
 
         if (socketService != null) {
             socketService!!.unbind(tcp)
-            socketService!!.disconnect(tcp)
             socketService!!.close()
             socketService = null
         }
