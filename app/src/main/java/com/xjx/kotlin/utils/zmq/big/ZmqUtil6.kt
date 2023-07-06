@@ -7,7 +7,7 @@ import org.zeromq.ZMQ
 
 class ZmqUtil6 {
 
-    private val tcp = "tcp://192.168.124.4:6666"
+    private val tcp = "tcp://127.0.0.1:6666"
     private var mContext: ZContext? = null
     private var socketService: ZMQ.Socket? = null
     private var clientService: ZMQ.Socket? = null
