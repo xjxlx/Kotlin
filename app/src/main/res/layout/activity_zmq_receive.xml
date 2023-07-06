@@ -15,24 +15,11 @@
         android:textSize="@dimen/sp_28" />
 
     <Button
+        android:id="@+id/btn_receiver"
         android:layout_marginTop="@dimen/dp_20"
-        android:id="@+id/btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="开始" />
-
-    <Button
-        android:id="@+id/btn_bind"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_20"
-        android:text="绑定" />
-
-    <Button
-        android:id="@+id/btn_unbind"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="解绑" />
+        android:text="开始接收" />
 
     <TextView
         android:id="@+id/tv_data"

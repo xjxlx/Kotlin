@@ -9,7 +9,7 @@ import com.android.apphelper2.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqReceiveBinding
 import com.xjx.kotlin.utils.zmq.TCP
-import com.xjx.kotlin.utils.zmq.receive.ZmqUtil2
+import com.xjx.kotlin.utils.zmq.big.ZmqUtil6
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
@@ -18,6 +18,8 @@ import java.io.InputStreamReader
 import java.net.Socket
 
 class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding>() {
+
+    private val zm6: ZmqUtil6 = ZmqUtil6()
 
     override fun setTitleContent(): String {
         return "Zmq接收端"
@@ -30,43 +32,22 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
     override fun initData(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        ZmqUtil2.initLog(this)
-
-        mBinding.btnStart.setOnClickListener {
-            initSocket()
-
-//            val ip = mBinding.tvIp.text.toString()
-//            if (TextUtils.isEmpty(ip)) {
-//                ToastUtil.show("Ip为空！")
-//                return@setOnClickListener
-//            }
-//            TCP.ip_address = ip
-//
-//            ZmqUtil2.log("IP: ${mBinding.tvIp.text}")
-//
-//            lifecycleScope.launch {
-//                ZmqUtil2.start()
-//            }
-        }
-
-        mBinding.btnBind.setOnClickListener {
-            ZmqUtil2.start()
-        }
-
-        mBinding.btnUnbind.setOnClickListener {
-            ZmqUtil2.pause()
-        }
-
-        ZmqUtil2.setCallBackListener {
-            mBinding.tvData.post {
-                mBinding.tvData.text = it
+        zm6.setCallBackListener(object : ZmqUtil6.CallBackListener {
+            override fun onCall(content: String?) {
+                mBinding.tvData.post {
+                    mBinding.tvData.text = content
+                }
             }
+        })
+
+        mBinding.btnReceiver.setOnClickListener {
+            zm6.initClient()
         }
     }
 
     override fun onDestroy() {
+        zm6.stop()
         super.onDestroy()
-        ZmqUtil2.stop()
     }
 
     // 客户端的读取数据流

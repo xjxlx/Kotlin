@@ -6,18 +6,20 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.zeromq.SocketType
+import org.zeromq.ZContext
 import org.zeromq.ZMQ
 
 class ZmqSendUtil {
 
     private val context: ZMQ.Context = ZMQ.context(1)
-    private val socket: ZMQ.Socket = context.socket(SocketType.PAIR)
+    private val socket: ZMQ.Socket = context.socket(SocketType.REP)
+    private val mContext: ZContext? = null
 
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO)
     }
 
-    fun connect(ip: String, block: (Boolean) -> Unit) {
+    fun connect(block: (Boolean) -> Unit) {
         val connect = socket.connect(TCP.TCP_ADDRESS)
         block(connect)
     }
