@@ -4,14 +4,15 @@ import com.android.apphelper2.utils.LogUtil.e
 import org.zeromq.SocketType
 import org.zeromq.ZContext
 import org.zeromq.ZMQ
-import java.util.*
 
 class ZmqUtil6 {
 
-    private val tcp = "tcp://192.168.8.204:6666"
+    private val tcp = "tcp://192.168.124.9:6666"
     private var mContext: ZContext? = null
     private var socketService: ZMQ.Socket? = null
     private var clientService: ZMQ.Socket? = null
+    private var number: Int = 0
+
     private fun initZContext() {
         if (mContext == null) {
             mContext = ZContext(1)
@@ -30,8 +31,7 @@ class ZmqUtil6 {
                 // Socket to talk to clients
                 socketService = mContext?.createSocket(SocketType.PAIR)
                 log("创建 socketService !")
-                socketService?.bind(tcp)
-//                socketService?.connect(tcp)
+                socketService?.connect(tcp)
                 log("服务端初始化成功!")
             } catch (e: Exception) {
                 log("初始化服务端异常--->" + e.message)
@@ -41,10 +41,11 @@ class ZmqUtil6 {
     }
 
     fun sendService(block: (String) -> Unit) {
-        val response = "服务端的消息(" + UUID.randomUUID() + ")"
+        val response = "服务端--->：($number)"
         log("send --->$response")
         socketService?.send(response.toByteArray(ZMQ.CHARSET), 0)
         block(response)
+        number++
     }
 
     /**
@@ -57,9 +58,8 @@ class ZmqUtil6 {
             try {
                 clientService = mContext?.createSocket(SocketType.PAIR)
                 log("clientService---> ")
-                clientService?.connect(tcp)
-//                clientService?.bind(tcp)
-                log("connect---> ")
+                clientService?.bind(tcp)
+                log("bind---> ")
 
                 while (!Thread.currentThread().isInterrupted) {
                     // Block until a message is received
