@@ -33,3 +33,4 @@ include ':app'
 include ':apphelper'
 include ':apphelper2'
 
+include ':model'
