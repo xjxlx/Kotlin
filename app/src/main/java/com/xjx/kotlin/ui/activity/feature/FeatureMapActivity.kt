@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityFeatureMapBinding
+import com.xjx.kotlin.utils.zmq.big.ServiceActivity
 
 class FeatureMapActivity : AppBaseBindingTitleActivity<ActivityFeatureMapBinding>() {
 
@@ -31,6 +32,10 @@ class FeatureMapActivity : AppBaseBindingTitleActivity<ActivityFeatureMapBinding
 
         mBinding.tvItemZmqSocket.setOnClickListener {
             startActivity(ZmqSocketActivity::class.java)
+        }
+
+        mBinding.tvItemZmqTest.setOnClickListener {
+            startActivity(ServiceActivity::class.java)
         }
     }
 

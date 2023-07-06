@@ -23,7 +23,6 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
 
     <queries>
-
         <!-- 如果想要与其他的应用进行AIDL通信的话，需要在这里注册包名的信息 -->
         <package android:name="com.android.app.free.debug" />
         <package android:name="com.android.poc" />
@@ -59,6 +58,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
+
+        <activity android:name=".utils.zmq.big.ServiceActivity" />
+
         <activity
             android:name=".ui.activity.feature.ZmqSocketActivity"
             android:exported="false" />

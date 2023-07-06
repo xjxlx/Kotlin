@@ -16,7 +16,7 @@
             android:id="@+id/et_ip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="tcp://192.168.7.17:6666"
+            android:text="tcp://192.168.8.204:6666"
             android:textColor="@color/black" />
 
         <TextView

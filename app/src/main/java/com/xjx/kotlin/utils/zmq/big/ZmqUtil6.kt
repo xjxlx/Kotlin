@@ -8,7 +8,7 @@ import java.util.*
 
 class ZmqUtil6 {
 
-    private val tcp = "tcp://192.168.88.113:6666"
+    private val tcp = "tcp://192.168.8.204:6666"
     private var mContext: ZContext? = null
     private var socketService: ZMQ.Socket? = null
     private var clientService: ZMQ.Socket? = null
