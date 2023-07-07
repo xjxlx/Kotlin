@@ -30,6 +30,14 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
     override fun initData(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
+        ZmqUtil6.setServiceCallBackListener(object : ZmqUtil6.ServiceCallBackListener {
+            override fun onCall(content: String?) {
+                mBinding.tvData.post {
+                    mBinding.tvData.text = content
+                }
+            }
+        })
+
         mBinding.btnServiceBind.setOnClickListener {
             val ip = mBinding.etIp.text
             val tcp = "tcp://$ip:${ZmqUtil6.port}"

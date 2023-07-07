@@ -23,7 +23,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
     override fun initData(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        ZmqUtil6.setCallBackListener(object : ZmqUtil6.CallBackListener {
+        ZmqUtil6.setClientCallBackListener(object : ZmqUtil6.ClientCallBackListener {
             override fun onCall(content: String?) {
                 mBinding.tvData.post {
                     mBinding.tvData.text = content

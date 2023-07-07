@@ -19,10 +19,15 @@ object ZmqUtil6 {
         return@lazy CoroutineScope(Dispatchers.IO)
     }
 
+    private val mServiceBuffer: StringBuffer = StringBuffer()
+    private val mClientBuffer: StringBuffer = StringBuffer()
+
     /**
      * 初始化发送端代码
      */
     fun initServiceZmq(ipAddress: String) {
+        mServiceBuffer.setLength(0)
+
         initZContext()
         log("初始化服务端---> :  $ipAddress")
 
@@ -33,6 +38,8 @@ object ZmqUtil6 {
                 log("创建 socketService !")
                 socketService?.connect(ipAddress)
                 log("服务端初始化成功!")
+
+                serviceListener?.onCall(mServiceBuffer.toString())
 
                 while (!Thread.currentThread().isInterrupted) {
                     // Block until a message is received
@@ -45,6 +52,7 @@ object ZmqUtil6 {
                 }
             } catch (e: ZMQException) {
                 log("初始化服务端异常--->$e")
+                serviceListener?.onCall(mServiceBuffer.toString())
                 e.printStackTrace()
             }
 
@@ -63,6 +71,7 @@ object ZmqUtil6 {
      * 接收端代码
      */
     fun initClientZmq(tcpAddress: String) {
+        mClientBuffer.setLength(0)
         initZContext()
         log("客户端连接--->$tcpAddress")
 
@@ -73,37 +82,57 @@ object ZmqUtil6 {
                 clientService?.bind(tcpAddress)
                 log("bind---> ")
 
+                if (clientListener != null) {
+                    clientListener!!.onCall(mClientBuffer.toString())
+                }
+
                 while (!Thread.currentThread().isInterrupted) {
                     // Block until a message is received
                     val reply = clientService?.recv(0)
                     if (reply != null) {
                         val content = String(reply, ZMQ.CHARSET)
                         log("客户端接收到服务端发送的数据---->$content")
-                        if (listener != null) {
-                            listener!!.onCall(content)
+                        if (clientListener != null) {
+                            clientListener!!.onCall(content)
                         }
                     }
                 }
             } catch (e: ZMQException) {
                 log("客户端连接发送异常--->$e")
                 e.printStackTrace()
+                if (clientListener != null) {
+                    clientListener!!.onCall(mClientBuffer.toString())
+                }
             }
         }
     }
 
-    interface CallBackListener {
+    interface ClientCallBackListener {
         fun onCall(content: String?)
     }
 
-    private var listener: CallBackListener? = null
-    fun setCallBackListener(listener: CallBackListener?) {
-        this.listener = listener
+    private var clientListener: ClientCallBackListener? = null
+    fun setClientCallBackListener(listener: ClientCallBackListener?) {
+        this.clientListener = listener
+    }
+
+    interface ServiceCallBackListener {
+        fun onCall(content: String?)
+    }
+
+    private var serviceListener: ServiceCallBackListener? = null
+    fun setServiceCallBackListener(listener: ServiceCallBackListener?) {
+        this.serviceListener = listener
     }
 
     private var mContext: ZContext? = null
 
     fun log(content: String) {
         e("ZMQ", content)
+        mServiceBuffer.append(content)
+            .append("\r\n")
+        mClientBuffer.append(content)
+            .append("\r\n")
     }
 
     private fun initZContext() {
