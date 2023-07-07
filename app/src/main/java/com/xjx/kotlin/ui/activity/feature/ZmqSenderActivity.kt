@@ -30,7 +30,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
     override fun initData(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        ZmqUtil6.setServiceCallBackListener(object : ZmqUtil6.ServiceCallBackListener {
+        ZmqUtil6.setSendCallBackListener(object : ZmqUtil6.SendCallBackListener {
             override fun onCall(content: String?) {
                 mBinding.tvData.post {
                     mBinding.tvData.text = content
@@ -46,7 +46,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
                 return@setOnClickListener
             }
 
-            ZmqUtil6.initServiceZmq(tcp)
+            ZmqUtil6.initSendZmq(tcp)
         }
 
         mBinding.btnSend.setOnClickListener {
@@ -54,7 +54,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
                 repeat(Int.MAX_VALUE) {
                     delay(100)
                     ZmqUtil6.log("---> $it")
-                    ZmqUtil6.sendService { content ->
+                    ZmqUtil6.send { content ->
                         mBinding.tvData.post {
                             mBinding.tvData.text = content
                         }

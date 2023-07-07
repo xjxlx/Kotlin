@@ -23,7 +23,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
     override fun initData(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        ZmqUtil6.setClientCallBackListener(object : ZmqUtil6.ClientCallBackListener {
+        ZmqUtil6.setResultCallBackListener(object : ZmqUtil6.ResultCallBackListener {
             override fun onCall(content: String?) {
                 mBinding.tvData.post {
                     mBinding.tvData.text = content
@@ -41,7 +41,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             val tcp = "tcp://$ip:${ZmqUtil6.port}"
 
             ToastUtil.show("开始接收！")
-            ZmqUtil6.initClientZmq(tcp)
+            ZmqUtil6.initResultZmq(tcp)
         }
     }
 
