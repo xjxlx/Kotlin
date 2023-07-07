@@ -1,59 +1,57 @@
 package com.xjx.kotlin.utils.zmq.big
 
 import com.android.apphelper2.utils.LogUtil.e
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.zeromq.SocketType
 import org.zeromq.ZContext
 import org.zeromq.ZMQ
+import org.zeromq.ZMQException
 
-class ZmqUtil6 {
+object ZmqUtil6 {
 
-    private val port = 6666
-    private val tcp = "tcp://192.168.124.3:$port"
-    private var mContext: ZContext? = null
+    val port = 6667
     private var socketService: ZMQ.Socket? = null
     private var clientService: ZMQ.Socket? = null
     private var number: Int = 0
-
-    private fun initZContext() {
-        if (mContext == null) {
-            mContext = ZContext(1)
-            log("创建 context !")
-        }
+    private val mScope: CoroutineScope by lazy {
+        return@lazy CoroutineScope(Dispatchers.IO)
     }
 
     /**
      * 初始化发送端代码
      */
-    fun initTcpService() {
+    fun initServiceZmq(ipAddress: String) {
         initZContext()
-        log("初始化服务端---> tcp:$tcp")
-        Thread {
+        log("初始化服务端---> :  $ipAddress")
+
+        mScope.launch {
             try {
                 // Socket to talk to clients
                 socketService = mContext?.createSocket(SocketType.PAIR)
                 log("创建 socketService !")
-                socketService?.bind("tcp://127.0.0.1:$port")
+                socketService?.connect(ipAddress)
                 log("服务端初始化成功!")
 
                 while (!Thread.currentThread().isInterrupted) {
                     // Block until a message is received
                     val reply: ByteArray = socketService!!.recv(0)
-
                     // Print the message
                     log("Received: [" + String(reply, ZMQ.CHARSET) + "]")
-
                     // Send a response
                     val response = "Hello, world!"
                     socketService!!.send(response.toByteArray(ZMQ.CHARSET), 0)
                 }
-            } catch (e: Exception) {
-                log("初始化服务端异常--->" + e.message)
+            } catch (e: ZMQException) {
+                log("初始化服务端异常--->$e")
                 e.printStackTrace()
             }
-        }.start()
+
+        }
     }
 
-    fun sendService(block: (String) -> Unit) {
+    suspend fun sendService(block: (String) -> Unit) {
         val response = "服务端--->：($number)"
         log("send --->$response")
         socketService?.send(response.toByteArray(ZMQ.CHARSET), 0)
@@ -64,14 +62,15 @@ class ZmqUtil6 {
     /**
      * 接收端代码
      */
-    fun initClient() {
+    fun initClientZmq(tcpAddress: String) {
         initZContext()
-        log("客户端连接--->$tcp")
-        Thread {
+        log("客户端连接--->$tcpAddress")
+
+        mScope.launch {
             try {
                 clientService = mContext?.createSocket(SocketType.PAIR)
                 log("clientService---> ")
-                clientService?.connect(tcp)
+                clientService?.bind(tcpAddress)
                 log("bind---> ")
 
                 while (!Thread.currentThread().isInterrupted) {
@@ -85,11 +84,11 @@ class ZmqUtil6 {
                         }
                     }
                 }
-            } catch (e: Exception) {
-                log("客户端连接发送异常--->" + e.message)
+            } catch (e: ZMQException) {
+                log("客户端连接发送异常--->$e")
                 e.printStackTrace()
             }
-        }.start()
+        }
     }
 
     interface CallBackListener {
@@ -101,19 +100,26 @@ class ZmqUtil6 {
         this.listener = listener
     }
 
-    private fun log(content: String) {
+    private var mContext: ZContext? = null
+
+    fun log(content: String) {
         e("ZMQ", content)
+    }
+
+    private fun initZContext() {
+        log("创建 context ---->")
+        if (mContext == null) {
+            mContext = ZContext(1)
+        }
     }
 
     fun stop() {
         if (clientService != null) {
-            clientService!!.disconnect(tcp)
             clientService!!.close()
             clientService = null
         }
 
         if (socketService != null) {
-            socketService!!.unbind(tcp)
             socketService!!.close()
             socketService = null
         }
@@ -122,5 +128,6 @@ class ZmqUtil6 {
             mContext!!.close()
             mContext = null
         }
+        log("释放了zmq!")
     }
 }

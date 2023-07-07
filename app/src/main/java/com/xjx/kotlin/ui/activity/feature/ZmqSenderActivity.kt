@@ -1,10 +1,12 @@
 package com.xjx.kotlin.ui.activity.feature
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
+import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqUtil6
@@ -25,22 +27,28 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
         return ActivityZmqSenderBinding.inflate(inflater, container, true)
     }
 
-    private var zmq6: ZmqUtil6 = ZmqUtil6()
-
     override fun initData(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         mBinding.btnServiceBind.setOnClickListener {
-            zmq6.initTcpService()
+            val ip = mBinding.etIp.text
+            val tcp = "tcp://$ip:${ZmqUtil6.port}"
+            if (TextUtils.isEmpty(ip)) {
+                ToastUtil.show("ip 不能为空！")
+                return@setOnClickListener
+            }
+
+            ZmqUtil6.initServiceZmq(tcp)
         }
 
         mBinding.btnSend.setOnClickListener {
             mJob = lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
                     delay(100)
-                    zmq6.sendService {
+                    ZmqUtil6.log("---> $it")
+                    ZmqUtil6.sendService { content ->
                         mBinding.tvData.post {
-                            mBinding.tvData.text = it
+                            mBinding.tvData.text = content
                         }
                     }
                 }
@@ -49,7 +57,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
     }
 
     override fun onDestroy() {
-        zmq6.stop()
         super.onDestroy()
+        ZmqUtil6.stop()
     }
 }
