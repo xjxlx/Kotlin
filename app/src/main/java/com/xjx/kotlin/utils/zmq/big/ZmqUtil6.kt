@@ -21,6 +21,7 @@ object ZmqUtil6 {
 
     private val mServiceBuffer: StringBuffer = StringBuffer()
     private val mClientBuffer: StringBuffer = StringBuffer()
+    private var mBind: Boolean = false
 
     /**
      * 初始化发送端代码
@@ -36,7 +37,10 @@ object ZmqUtil6 {
                 // Socket to talk to clients
                 socketService = mContext?.createSocket(SocketType.PAIR)
                 log("创建 socketService !")
-                socketService?.connect(ipAddress)
+                val bind = socketService?.bind(ipAddress)
+                if (bind != null) {
+                    mBind = bind
+                }
                 log("服务端初始化成功!")
 
                 serviceListener?.onCall(mServiceBuffer.toString())
@@ -55,16 +59,17 @@ object ZmqUtil6 {
                 serviceListener?.onCall(mServiceBuffer.toString())
                 e.printStackTrace()
             }
-
         }
     }
 
     suspend fun sendService(block: (String) -> Unit) {
         val response = "服务端--->：($number)"
-        log("send --->$response")
-        socketService?.send(response.toByteArray(ZMQ.CHARSET), 0)
-        block(response)
-        number++
+        log("send --->$response   bind: $mBind")
+        if (mBind) {
+            socketService?.send(response.toByteArray(ZMQ.CHARSET), 0)
+            block(response)
+            number++
+        }
     }
 
     /**
@@ -79,7 +84,7 @@ object ZmqUtil6 {
             try {
                 clientService = mContext?.createSocket(SocketType.PAIR)
                 log("clientService---> ")
-                clientService?.bind(tcpAddress)
+                clientService?.connect(tcpAddress)
                 log("bind---> ")
 
                 if (clientListener != null) {
