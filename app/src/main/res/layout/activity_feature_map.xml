@@ -26,24 +26,24 @@
             android:text="Zmq接收端" />
 
         <TextView
-            android:id="@+id/tv_item_zmq_socket"
-            style="@style/click_item_style"
-            android:text="Zmq - Socket" />
-
-        <TextView
             android:id="@+id/tv_item_zmq_test"
             style="@style/click_item_style"
             android:text="Zmq - Test" />
 
         <TextView
-            android:id="@+id/tv_item_zmq_two"
-            style="@style/click_item_style"
-            android:text="Zmq - Test --- Two" />
-
-        <TextView
             android:id="@+id/tv_item_current_ip"
             style="@style/click_item_style"
             android:text="当前的ip地址" />
+
+        <TextView
+            android:id="@+id/tv_socket_send"
+            style="@style/click_item_style"
+            android:text="Socket-发送端" />
+
+        <TextView
+            android:id="@+id/tv_socket_result"
+            style="@style/click_item_style"
+            android:text="Socket-接收端" />
 
     </LinearLayout>
 

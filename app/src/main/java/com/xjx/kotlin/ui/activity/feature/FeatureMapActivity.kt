@@ -30,20 +30,18 @@ class FeatureMapActivity : AppBaseBindingTitleActivity<ActivityFeatureMapBinding
             startActivity(ZmqReceiveActivity::class.java)
         }
 
-        mBinding.tvItemZmqSocket.setOnClickListener {
-            startActivity(ZmqSocketActivity::class.java)
-        }
-
         mBinding.tvItemZmqTest.setOnClickListener {
             startActivity(ServiceActivity::class.java)
         }
 
-        mBinding.tvItemZmqTwo.setOnClickListener {
-            startActivity(ZmqTwoActivity::class.java)
-        }
-
         mBinding.tvItemCurrentIp.setOnClickListener {
             startActivity(CurrentIpActivity::class.java)
+        }
+        mBinding.tvSocketSend.setOnClickListener {
+            startActivity(SocketSendActivity::class.java)
+        }
+        mBinding.tvSocketResult.setOnClickListener {
+            startActivity(SocketResultActivity::class.java)
         }
     }
 
