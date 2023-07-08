@@ -32,9 +32,12 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         ZmqUtil6.setSendCallBackListener(object : ZmqUtil6.SendCallBackListener {
-            override fun onCall(content: String?) {
-                mBinding.tvData.post {
-                    mBinding.tvData.text = content
+            override fun onCall(send: String, result: String) {
+                mBinding.tvDataSend.post {
+                    mBinding.tvDataSend.text = send
+                }
+                mBinding.tvDataResult.post {
+                    mBinding.tvDataResult.text = result
                 }
             }
         })
@@ -47,32 +50,6 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
                 return@setOnClickListener
             }
 
-//            lifecycleScope.launch(Dispatchers.IO) {
-//                try {
-//                    val zContext = ZContext(1)
-//                    log("send ---> context!")
-//                    val socket = zContext.createSocket(SocketType.PAIR)
-//                    log("send ---> socket!")
-//                    val connect = socket.connect(tcp)
-//                    log("send ---> connect : $connect")
-//
-//                    while (!Thread.currentThread().isInterrupted) {
-//                        val recv = socket.recv(0)
-//                        val content = String(recv, ZMQ.CHARSET)
-//                        log("send ---> 接收到服务端的数据 : $content")
-//
-//                        withContext(Dispatchers.Main) {
-//                            mBinding.tvData.text = content
-//                        }
-//
-//                        val msg = "我是发送端 --->$it"
-//                        socket.send(msg.toByteArray(ZMQ.CHARSET), 0)
-//                        log("send ---> 发送数据到服务器 : $content")
-//                    }
-//                } catch (e: ZMQException) {
-//                    log("send ---> error: $e")
-//                }
-//            }
             ZmqUtil6.initSendZmq(tcp)
         }
 
@@ -80,11 +57,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
             mJob = lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
                     delay(100)
-                    ZmqUtil6.send { content ->
-                        mBinding.tvData.post {
-                            mBinding.tvData.text = content
-                        }
-                    }
+                    ZmqUtil6.send()
                 }
             }
         }

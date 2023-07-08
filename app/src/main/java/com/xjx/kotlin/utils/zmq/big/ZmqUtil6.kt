@@ -22,11 +22,25 @@ object ZmqUtil6 {
     private val mServiceBuffer: StringBuffer = StringBuffer()
     private val mClientBuffer: StringBuffer = StringBuffer()
 
+    interface ResultCallBackListener {
+        fun onCall(send: String, result: String)
+    }
+
+    private var resultListener: ResultCallBackListener? = null
+    fun setResultCallBackListener(listener: ResultCallBackListener?) {
+        this.resultListener = listener
+    }
+
+    private var mResultSendData = ""
+    private var mResultResultData = ""
+
     /**
      * 接收端代码
      */
     fun initResultZmq(ipAddress: String) {
         mServiceBuffer.setLength(0)
+        mResultSendData = ""
+        mResultResultData = ""
 
         initZContext()
         log("初始化服务端---> :  $ipAddress")
@@ -41,8 +55,8 @@ object ZmqUtil6 {
                     bind = socketResult?.bind(ipAddress)
                 }
                 log("服务端初始化成功 $bind")
-
-                resultListener?.onCall(mServiceBuffer.toString())
+                mResultSendData = mServiceBuffer.toString()
+                resultListener?.onCall(mResultSendData, mResultResultData)
 
                 var number = 0
                 while (!Thread.currentThread().isInterrupted) {
@@ -50,26 +64,34 @@ object ZmqUtil6 {
                     val reply: ByteArray = socketResult!!.recv(0)
                     // Print the message
                     val content = String(reply, ZMQ.CHARSET)
-                    resultListener?.onCall(content)
+                    mResultResultData = "接收端-->接收：$content"
 
-                    val msg = "hello word $number"
+                    val msg = "接收端-->发送--> $number"
                     socketResult?.send(msg.toByteArray(ZMQ.CHARSET), 0)
                     number++
+                    mResultSendData = msg
+                    resultListener?.onCall(mResultSendData, mResultResultData)
                 }
             } catch (e: ZMQException) {
                 log("初始化服务端异常--->$e")
-                resultListener?.onCall(mServiceBuffer.toString())
+                mResultSendData = mServiceBuffer.toString()
+                resultListener?.onCall(mResultSendData, mResultResultData)
                 e.printStackTrace()
             }
         }
     }
 
-    var mBind = false
+    private var mBind = false
+    private var mSendSendData = ""
+    private var mSendResultData = ""
 
     /**
      * 发送端代码
      */
     fun initSendZmq(tcpAddress: String) {
+        mSendSendData = ""
+        mSendResultData = ""
+
         mClientBuffer.setLength(0)
         initZContext()
         log("客户端连接--->$tcpAddress")
@@ -77,6 +99,7 @@ object ZmqUtil6 {
         mScope.launch {
             try {
                 if (socketClient == null) {
+                    mBind = false
                     socketClient = mContext?.createSocket(SocketType.PAIR)
                     log("clientService---> ")
                     val connect = socketClient?.connect(tcpAddress)
@@ -87,7 +110,8 @@ object ZmqUtil6 {
                 log("bind---> $mBind")
 
                 if (sendListener != null) {
-                    sendListener!!.onCall(mClientBuffer.toString())
+                    mSendSendData = mClientBuffer.toString();
+                    sendListener!!.onCall(mSendSendData, mSendResultData)
                 }
 
                 while (!Thread.currentThread().isInterrupted) {
@@ -97,7 +121,8 @@ object ZmqUtil6 {
                         val content = String(reply, ZMQ.CHARSET)
                         log("客户端接收到服务端发送的数据---->$content")
                         if (sendListener != null) {
-                            sendListener!!.onCall(content)
+                            mSendResultData = "发送端-->接收：$content"
+                            sendListener!!.onCall(mSendSendData, mSendResultData)
                         }
                     }
                 }
@@ -105,39 +130,31 @@ object ZmqUtil6 {
                 log("客户端连接发送异常--->$e")
                 e.printStackTrace()
                 if (sendListener != null) {
-                    sendListener!!.onCall(mClientBuffer.toString())
+                    mSendSendData = mClientBuffer.toString()
+                    sendListener!!.onCall(mSendSendData, mSendResultData)
                 }
                 mBind = false
             }
         }
     }
 
-    suspend fun send(block: (String) -> Unit) {
-        val response = "发送数据到接收端--->：($number)"
+    suspend fun send() {
+        val response = "发送端-->发送-->：($number)"
         if (mBind) {
             log("send --->$response   bind: $mBind")
+            mSendSendData = response
             socketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
-//            block(response)
             number++
         }
     }
 
     interface SendCallBackListener {
-        fun onCall(content: String?)
+        fun onCall(send: String, result: String)
     }
 
     private var sendListener: SendCallBackListener? = null
     fun setSendCallBackListener(listener: SendCallBackListener?) {
         this.sendListener = listener
-    }
-
-    interface ResultCallBackListener {
-        fun onCall(content: String?)
-    }
-
-    private var resultListener: ResultCallBackListener? = null
-    fun setResultCallBackListener(listener: ResultCallBackListener?) {
-        this.resultListener = listener
     }
 
     private var mContext: ZContext? = null

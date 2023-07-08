@@ -27,9 +27,12 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         ZmqUtil6.setResultCallBackListener(object : ZmqUtil6.ResultCallBackListener {
-            override fun onCall(content: String?) {
-                mBinding.tvData.post {
-                    mBinding.tvData.text = content
+            override fun onCall(send: String, result: String) {
+                mBinding.tvDataSend.post {
+                    mBinding.tvDataSend.text = "$send"
+                }
+                mBinding.tvDataResult.post {
+                    mBinding.tvDataResult.text = "$result"
                 }
             }
         })
@@ -45,33 +48,6 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
 
             ToastUtil.show("开始接收！")
             ZmqUtil6.initResultZmq(tcp)
-
-//            lifecycleScope.launch(Dispatchers.IO) {
-//                try {
-//                    val zContext = ZContext(1)
-//                    log("result ---> context!")
-//                    val socket = zContext.createSocket(SocketType.PAIR)
-//                    log("result ---> socket!")
-//                    val connect = socket.bind(tcp)
-//                    log("result ---> connect : $connect")
-//
-//                    while (!Thread.currentThread().isInterrupted) {
-//                        val recv = socket.recv(0)
-//                        val content = String(recv, ZMQ.CHARSET)
-//                        log("result ---> 接收到发送端的数据 : $content")
-//
-//                        withContext(Dispatchers.Main) {
-//                            mBinding.tvData.text = content
-//                        }
-//
-//                        val msg = "我是服务端 --->$it"
-//                        socket.send(msg.toByteArray(ZMQ.CHARSET), 0)
-//                        log("result ---> 发送数据到发送端 : $content")
-//                    }
-//                } catch (e: ZMQException) {
-//                    log("result ---> error: $e")
-//                }
-//            }
         }
         mBinding.btnSend.setOnClickListener {
             lifecycleScope.launch {

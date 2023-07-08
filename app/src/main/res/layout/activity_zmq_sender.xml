@@ -11,15 +11,15 @@
     <EditText
         android:id="@+id/et_ip"
         android:layout_width="match_parent"
-        android:text="192.168.8.132"
         android:layout_height="wrap_content"
-        android:hint="输入ip地址" />
+        android:hint="输入ip地址"
+        android:text="192.168.124.24" />
 
     <Button
-        android:layout_marginTop="@dimen/dp_20"
         android:id="@+id/btn_service_bind"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
         android:text="绑定" />
 
     <Button
@@ -29,13 +29,36 @@
         android:layout_marginTop="@dimen/dp_20"
         android:text="发送" />
 
-    <TextView
-        android:id="@+id/tv_data"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_20"
-        android:hint="ssss"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sp_18" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_data_send"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_weight="1"
+            android:hint="发送的数据"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_18" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+
+        <TextView
+            android:id="@+id/tv_data_result"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_weight="1"
+            android:hint="接受的数据"
+            android:paddingLeft="@dimen/dp_16"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_18" />
+    </LinearLayout>
 
 </LinearLayout>
