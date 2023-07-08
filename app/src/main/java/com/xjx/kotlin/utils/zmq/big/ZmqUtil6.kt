@@ -117,7 +117,6 @@ object ZmqUtil6 {
         mScope.launch {
             try {
                 if (!mSendFlag) {
-                    mSendFlag = false
                     socketClient = mContext?.createSocket(SocketType.PAIR)
                     log("clientService---> ")
                     val connect = socketClient?.connect(tcpAddress)
