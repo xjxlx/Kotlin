@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
+import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
@@ -46,6 +47,32 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
                 return@setOnClickListener
             }
 
+//            lifecycleScope.launch(Dispatchers.IO) {
+//                try {
+//                    val zContext = ZContext(1)
+//                    log("send ---> context!")
+//                    val socket = zContext.createSocket(SocketType.PAIR)
+//                    log("send ---> socket!")
+//                    val connect = socket.connect(tcp)
+//                    log("send ---> connect : $connect")
+//
+//                    while (!Thread.currentThread().isInterrupted) {
+//                        val recv = socket.recv(0)
+//                        val content = String(recv, ZMQ.CHARSET)
+//                        log("send ---> 接收到服务端的数据 : $content")
+//
+//                        withContext(Dispatchers.Main) {
+//                            mBinding.tvData.text = content
+//                        }
+//
+//                        val msg = "我是发送端 --->$it"
+//                        socket.send(msg.toByteArray(ZMQ.CHARSET), 0)
+//                        log("send ---> 发送数据到服务器 : $content")
+//                    }
+//                } catch (e: ZMQException) {
+//                    log("send ---> error: $e")
+//                }
+//            }
             ZmqUtil6.initSendZmq(tcp)
         }
 
@@ -61,6 +88,10 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
                 }
             }
         }
+    }
+
+    fun log(content: String) {
+        LogUtil.e("ZMQ", content)
     }
 
     override fun onDestroy() {

@@ -44,12 +44,17 @@ object ZmqUtil6 {
 
                 resultListener?.onCall(mServiceBuffer.toString())
 
+                var number = 0
                 while (!Thread.currentThread().isInterrupted) {
                     // Block until a message is received
                     val reply: ByteArray = socketResult!!.recv(0)
                     // Print the message
                     val content = String(reply, ZMQ.CHARSET)
                     resultListener?.onCall(content)
+
+                    val msg = "hello word $number"
+                    socketResult?.send(msg.toByteArray(ZMQ.CHARSET), 0)
+                    number++
                 }
             } catch (e: ZMQException) {
                 log("初始化服务端异常--->$e")
@@ -109,10 +114,10 @@ object ZmqUtil6 {
 
     suspend fun send(block: (String) -> Unit) {
         val response = "发送数据到接收端--->：($number)"
-        log("send --->$response   bind: $mBind")
         if (mBind) {
+            log("send --->$response   bind: $mBind")
             socketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
-            block(response)
+//            block(response)
             number++
         }
     }
