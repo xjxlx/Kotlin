@@ -53,7 +53,6 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
             mJob = lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
                     delay(100)
-                    ZmqUtil6.log("---> $it")
                     ZmqUtil6.send { content ->
                         mBinding.tvData.post {
                             mBinding.tvData.text = content

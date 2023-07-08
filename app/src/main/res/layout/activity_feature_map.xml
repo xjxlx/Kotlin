@@ -40,6 +40,11 @@
             style="@style/click_item_style"
             android:text="Zmq - Test --- Two" />
 
+        <TextView
+            android:id="@+id/tv_item_current_ip"
+            style="@style/click_item_style"
+            android:text="当前的ip地址" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

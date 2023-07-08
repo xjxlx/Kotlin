@@ -5,10 +5,12 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqReceiveBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqUtil6
+import kotlinx.coroutines.launch
 
 class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding>() {
 
@@ -42,6 +44,15 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
 
             ToastUtil.show("开始接收！")
             ZmqUtil6.initResultZmq(tcp)
+        }
+        mBinding.btnSend.setOnClickListener {
+            lifecycleScope.launch {
+//                ZmqUtil6.sendResult {
+//                    mBinding.tvData.post {
+//                        mBinding.tvData.text = it
+//                    }
+//                }
+            }
         }
     }
 

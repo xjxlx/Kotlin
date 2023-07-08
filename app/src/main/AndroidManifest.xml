@@ -60,6 +60,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.activity.feature.CurrentIpActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.feature.ZmqTwoActivity"
             android:exported="false" />
         <activity android:name=".utils.zmq.big.ServiceActivity" />

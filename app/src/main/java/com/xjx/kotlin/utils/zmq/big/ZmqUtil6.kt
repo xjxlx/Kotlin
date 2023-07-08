@@ -12,8 +12,8 @@ import org.zeromq.ZMQException
 object ZmqUtil6 {
 
     val port = 6667
-    private var socketService: ZMQ.Socket? = null
-    private var clientService: ZMQ.Socket? = null
+    private var socketResult: ZMQ.Socket? = null
+    private var socketClient: ZMQ.Socket? = null
     private var number: Int = 0
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO)
@@ -35,10 +35,10 @@ object ZmqUtil6 {
             try {
                 // Socket to talk to clients
                 var bind: Boolean? = false
-                if (socketService == null) {
-                    socketService = mContext?.createSocket(SocketType.PAIR)
+                if (socketResult == null) {
+                    socketResult = mContext?.createSocket(SocketType.PAIR)
                     log("创建 socketService !")
-                    bind = socketService?.bind(ipAddress)
+                    bind = socketResult?.bind(ipAddress)
                 }
                 log("服务端初始化成功 $bind")
 
@@ -46,7 +46,7 @@ object ZmqUtil6 {
 
                 while (!Thread.currentThread().isInterrupted) {
                     // Block until a message is received
-                    val reply: ByteArray = socketService!!.recv(0)
+                    val reply: ByteArray = socketResult!!.recv(0)
                     // Print the message
                     val content = String(reply, ZMQ.CHARSET)
                     resultListener?.onCall(content)
@@ -71,10 +71,10 @@ object ZmqUtil6 {
 
         mScope.launch {
             try {
-                if (clientService == null) {
-                    clientService = mContext?.createSocket(SocketType.PAIR)
+                if (socketClient == null) {
+                    socketClient = mContext?.createSocket(SocketType.PAIR)
                     log("clientService---> ")
-                    val connect = clientService?.connect(tcpAddress)
+                    val connect = socketClient?.connect(tcpAddress)
                     if (connect != null) {
                         mBind = connect
                     }
@@ -85,17 +85,17 @@ object ZmqUtil6 {
                     sendListener!!.onCall(mClientBuffer.toString())
                 }
 
-//                while (!Thread.currentThread().isInterrupted) {
-//                    // Block until a message is received
-//                    val reply = clientService?.recv(0)
-//                    if (reply != null) {
-//                        val content = String(reply, ZMQ.CHARSET)
-//                        log("客户端接收到服务端发送的数据---->$content")
-//                        if (clientListener != null) {
-//                            clientListener!!.onCall(content)
-//                        }
-//                    }
-//                }
+                while (!Thread.currentThread().isInterrupted) {
+                    // Block until a message is received
+                    val reply = socketClient?.recv(0)
+                    if (reply != null) {
+                        val content = String(reply, ZMQ.CHARSET)
+                        log("客户端接收到服务端发送的数据---->$content")
+                        if (sendListener != null) {
+                            sendListener!!.onCall(content)
+                        }
+                    }
+                }
             } catch (e: ZMQException) {
                 log("客户端连接发送异常--->$e")
                 e.printStackTrace()
@@ -108,10 +108,10 @@ object ZmqUtil6 {
     }
 
     suspend fun send(block: (String) -> Unit) {
-        val response = "服务端--->：($number)"
+        val response = "发送数据到接收端--->：($number)"
         log("send --->$response   bind: $mBind")
         if (mBind) {
-            clientService?.send(response.toByteArray(ZMQ.CHARSET), 0)
+            socketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
             block(response)
             number++
         }

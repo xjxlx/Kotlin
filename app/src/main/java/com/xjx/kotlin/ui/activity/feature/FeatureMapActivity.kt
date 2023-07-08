@@ -41,6 +41,10 @@ class FeatureMapActivity : AppBaseBindingTitleActivity<ActivityFeatureMapBinding
         mBinding.tvItemZmqTwo.setOnClickListener {
             startActivity(ZmqTwoActivity::class.java)
         }
+
+        mBinding.tvItemCurrentIp.setOnClickListener {
+            startActivity(CurrentIpActivity::class.java)
+        }
     }
 
     override fun onClick(v: View?) {
