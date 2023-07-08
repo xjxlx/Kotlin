@@ -35,6 +35,11 @@
             style="@style/click_item_style"
             android:text="Zmq - Test" />
 
+        <TextView
+            android:id="@+id/tv_item_zmq_two"
+            style="@style/click_item_style"
+            android:text="Zmq - Test --- Two" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -19,6 +19,11 @@ import org.zeromq.ZMQ;
 
 import java.util.UUID;
 
+/**
+ * @Author：Danny
+ * @Time： 2023/7/6 11:39
+ * @Description
+ */
 public class ServiceActivity extends AppCompatActivity {
 
     private String tcp;
@@ -72,56 +77,69 @@ public class ServiceActivity extends AppCompatActivity {
     }
 
 
+    int number = 0;
+
     /**
      * 初始化TCP服务
      */
     private void initTcpService() {
-        stringBuffer.append("初始化服务端--->" + tcp).append("\n");
+        log("初始化服务端--->" + tcp);
         new Thread(() -> {
             try {
                 // Socket to talk to clients
+                log("初始化服务端---> createSocket");
+                setData();
                 socketService = mContext.createSocket(SocketType.PAIR);
+                log("初始化服务端---> bind");
+                setData();
                 socketService.bind(tcp);
-                stringBuffer.append("服务端初始化成功").append("\n");
+                setData();
+                log("服务端初始化成功");
                 setData();
                 while (!Thread.currentThread().isInterrupted()) {
                     // Block until a message is received
                     byte[] reply = socketService.recv(0);
-                    stringBuffer.append("服务端接收消息--->" + new String(reply, ZMQ.CHARSET)).append("\n");
-                    // Send a response
-                    String response = "服务端的消息(" + UUID.randomUUID() + ")";
-                    socketService.send(response.getBytes(ZMQ.CHARSET), 0);
-                    stringBuffer.append("服务端发送消息--->" + response).append("\n");
+                    log("客户端发来消息--->" + new String(reply, ZMQ.CHARSET));
                     setData();
                 }
             } catch (Exception e) {
-                Log.d("ZJW_LOG", "初始化服务端异常--->" + e.getMessage());
+                String error = "初始化服务端异常--->" + e.getMessage();
+                log("error: " + error);
                 setData();
                 e.printStackTrace();
             }
         }).start();
     }
 
-
     /**
      * 初始化客户端
      */
     private void initClient() {
-        stringBuffer.append("客户端连接--->" + tcp).append("\n");
+        log("客户端连接--->" + tcp);
+        setData();
         String uuid = UUID.randomUUID().toString();
         new Thread(() -> {
             try {
-                clientService = mContext.createSocket(SocketType.PAIR);
-//                clientService = mContext.createSocket(SocketType.REQ);//TODO 服务端对应SocketType.REP
-                clientService.connect(tcp);
-                String message = "客户端的消息(" + uuid + ")";
-                clientService.send(message);
-                stringBuffer.append("客户端发送消息--->" + message).append("\n");
-                byte[] recv = clientService.recv();
-                stringBuffer.append("客户端接收到服务端发送的数据---->" + new String(recv)).append("\n");
+//                clientService = mContext.createSocket(SocketType.PAIR);
+                log("客户端创建--->");
+                clientService = mContext.createSocket(SocketType.PAIR);//TODO 服务端对应SocketType.REP
+                boolean connect = clientService.connect(tcp);
+                log("客户端连接---> connect ---> success : " + connect);
+
+                while (number < 10000) {
+                    String message = "客户端发送消息(" + number + ")";
+                    log("客户端发送---> send：" + message);
+                    clientService.send(message);
+                    setData();
+                    number++;
+                }
+
+//                byte[] recv = clientService.recv();
+//                stringBuffer.append("客户端接收到服务端发送的数据---->" + new String(recv)).append("\n");
+//                number++;
                 setData();
             } catch (Exception e) {
-                stringBuffer.append("客户端连接发送异常--->" + e.getMessage()).append("\n");
+                log("客户端连接发送异常--->" + e.getMessage());
                 setData();
                 e.printStackTrace();
             }
@@ -137,4 +155,8 @@ public class ServiceActivity extends AppCompatActivity {
         });
     }
 
+    private void log(String content) {
+        stringBuffer.append("初始化服务端--->" + tcp).append("\n");
+        Log.d("ZJW_LOG", content);
+    }
 }
