@@ -11,6 +11,7 @@ import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqReceiveBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqUtil6
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding>() {
@@ -51,11 +52,10 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
         }
         mBinding.btnSend.setOnClickListener {
             lifecycleScope.launch {
-//                ZmqUtil6.sendResult {
-//                    mBinding.tvData.post {
-//                        mBinding.tvData.text = it
-//                    }
-//                }
+                repeat(Int.MAX_VALUE) {
+                    ZmqUtil6.sendResult()
+                    delay(200)
+                }
             }
         }
     }
