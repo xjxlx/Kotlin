@@ -1,22 +1,28 @@
 package com.xjx.kotlin.ui.activity.feature
 
 import android.os.Bundle
+import android.os.Message
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
+import com.android.apphelper2.utils.HandlerUtil
 import com.android.apphelper2.utils.SocketUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivitySocketSendBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SocketSendActivity : AppBaseBindingTitleActivity<ActivitySocketSendBinding>() {
 
     private val socketUtil = SocketUtil.SocketClient()
+    private val mHandler: HandlerUtil by lazy {
+        return@lazy HandlerUtil()
+    }
 
     override fun setTitleContent(): String {
         return "Socket - 发送端"
@@ -29,14 +35,23 @@ class SocketSendActivity : AppBaseBindingTitleActivity<ActivitySocketSendBinding
     override fun initData(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
+        mHandler.setHandlerCallBackListener(object : HandlerUtil.HandlerMessageListener {
+            override fun handleMessage(msg: Message) {
+                if (msg.what == 100) {
+                    val obj = msg.obj as String
+                    val split = obj.split("|")
+                    mBinding.tvSend.text = split[0]
+                    mBinding.tvResult.text = split[1]
+                }
+            }
+        })
+
         socketUtil.setServiceCallBackListener(object : SocketUtil.SocketClient.ClientCallBackListener {
             override fun callBack(send: String, result: String) {
-                mBinding.tvSend.post {
-                    mBinding.tvSend.text = send
-                }
-                mBinding.tvResult.post {
-                    mBinding.tvResult.text = result
-                }
+                val message = mHandler.getMessage()
+                message.what = 100
+                message.obj = "$send|$result"
+                mHandler.send(message)
             }
         })
 
@@ -49,10 +64,17 @@ class SocketSendActivity : AppBaseBindingTitleActivity<ActivitySocketSendBinding
             socketUtil.initClientSocket(ip)
         }
 
+        mBinding.btnClose.setOnClickListener {
+            socketUtil.stop()
+        }
+
         mBinding.btnSend.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
-                    socketUtil.sendClientData("客户端-->发送：$it")
+                    val clientData = socketUtil.sendClientData("客户端-->发送：$it")
+                    if (!clientData) {
+                        cancel()
+                    }
                     delay(200)
                 }
             }
