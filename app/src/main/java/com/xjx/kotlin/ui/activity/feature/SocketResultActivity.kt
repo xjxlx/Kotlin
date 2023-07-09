@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.SocketUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivitySocketResultBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -40,14 +41,18 @@ class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBin
             socketUtil.initSocketService()
         }
 
-
         mBinding.btnSend.setOnClickListener {
-            lifecycleScope.launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
                     socketUtil.sendServerData("服务端-->发送：$it")
                     delay(200)
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        socketUtil.stop()
     }
 }

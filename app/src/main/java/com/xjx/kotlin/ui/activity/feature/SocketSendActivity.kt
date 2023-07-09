@@ -10,6 +10,7 @@ import com.android.apphelper2.utils.SocketUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivitySocketSendBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -39,7 +40,6 @@ class SocketSendActivity : AppBaseBindingTitleActivity<ActivitySocketSendBinding
             }
         })
 
-
         mBinding.btnInitSocket.setOnClickListener {
             val ip = mBinding.etIp.text.toString()
             if (TextUtils.isEmpty(ip)) {
@@ -50,12 +50,17 @@ class SocketSendActivity : AppBaseBindingTitleActivity<ActivitySocketSendBinding
         }
 
         mBinding.btnSend.setOnClickListener {
-            lifecycleScope.launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
                     socketUtil.sendClientData("客户端-->发送：$it")
                     delay(200)
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        socketUtil.stop()
     }
 }
