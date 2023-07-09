@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.SocketUtil
 import com.android.apphelper2.utils.ToastUtil
@@ -25,6 +26,8 @@ class SocketSendActivity : AppBaseBindingTitleActivity<ActivitySocketSendBinding
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         socketUtil.setServiceCallBackListener(object : SocketUtil.SocketClient.ClientCallBackListener {
             override fun callBack(send: String, result: String) {
                 mBinding.tvSend.post {

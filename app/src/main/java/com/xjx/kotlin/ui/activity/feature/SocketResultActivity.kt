@@ -3,6 +3,7 @@ package com.xjx.kotlin.ui.activity.feature
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.SocketUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
@@ -22,6 +23,7 @@ class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBin
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         socketUtil.setServiceCallBackListener(object : SocketUtil.SocketService.ServerCallBackListener {
             override fun callBack(send: String, result: String) {
