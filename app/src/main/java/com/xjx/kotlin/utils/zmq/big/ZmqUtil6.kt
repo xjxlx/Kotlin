@@ -50,8 +50,7 @@ object ZmqUtil6 {
             try {
                 // Socket to talk to clients
                 var bind: Boolean? = false
-                if (socketResult == null) {
-                    mResultFlag = false
+                if (!mResultFlag) {
                     socketResult = mContext?.createSocket(SocketType.PAIR)
                     log("创建 socketService !")
                     bind = socketResult?.bind(ipAddress)
