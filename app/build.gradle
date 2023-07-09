@@ -59,7 +59,7 @@ android {
 
         debug {
             // 给applicationId添加后缀“.debug”
-            // applicationIdSuffix ".debug"
+            applicationIdSuffix ".debug"
             signingConfig signingConfigs.test
             minifyEnabled false
             shrinkResources false
