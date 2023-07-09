@@ -15,6 +15,7 @@ object ZmqUtil6 {
     private var socketResult: ZMQ.Socket? = null
     private var socketClient: ZMQ.Socket? = null
     private var number: Int = 0
+    private var tcp = ""
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO)
     }
@@ -53,6 +54,7 @@ object ZmqUtil6 {
                 if (!mResultFlag) {
                     socketResult = mContext?.createSocket(SocketType.PAIR)
                     log("创建 socketService !")
+                    tcp = ipAddress
                     bind = socketResult?.bind(ipAddress)
                 }
                 log("服务端初始化成功 $bind")
@@ -118,6 +120,7 @@ object ZmqUtil6 {
                 if (!mSendFlag) {
                     socketClient = mContext?.createSocket(SocketType.PAIR)
                     log("clientService---> ")
+                    tcp = tcpAddress
                     val connect = socketClient?.connect(tcpAddress)
                     if (connect != null) {
                         mSendFlag = connect
@@ -200,20 +203,28 @@ object ZmqUtil6 {
     }
 
     fun stop() {
-//        if (clientService != null) {
-//            clientService!!.close()
-//            clientService = null
-//        }
-//
-//        if (socketService != null) {
-//            socketService!!.close()
-//            socketService = null
-//        }
-//
-//        if (mContext != null) {
-//            mContext!!.close()
-//            mContext = null
-//        }
+        runCatching {
+            if (socketResult != null) {
+                socketResult?.unbind(tcp)
+                socketResult?.close()
+                socketResult = null
+            }
+        }
+
+        runCatching {
+            if (socketClient != null) {
+                socketClient?.disconnect(tcp)
+                socketClient?.close()
+                socketClient = null
+            }
+        }
+
+        runCatching {
+            if (mContext != null) {
+                mContext?.close()
+                mContext = null
+            }
+        }
         log("释放了zmq!")
     }
 }

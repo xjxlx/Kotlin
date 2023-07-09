@@ -42,6 +42,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
             }
         })
 
+        // 初始化
         mBinding.btnServiceBind.setOnClickListener {
             val ip = mBinding.etIp.text
             val tcp = "tcp://$ip:${ZmqUtil6.port}"
@@ -52,6 +53,12 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
 
             ZmqUtil6.initSendZmq(tcp)
         }
+
+        // 关闭
+        mBinding.btnServiceClose.setOnClickListener {
+            ZmqUtil6.stop()
+        }
+
 
         mBinding.btnSend.setOnClickListener {
             mJob = lifecycleScope.launch(Dispatchers.IO) {
