@@ -45,13 +45,14 @@ class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBin
         })
 
         mBinding.btnInitSocket.setOnClickListener {
+            socketUtil.initSocketService()
+
             lifecycleScope.launch {
                 mNetWorkUtil.getIPAddress {
                     mBinding.tvIp.post {
                         mBinding.tvIp.text = "当前的ip:${it.ip} 当前wifi: ${it.ssid}"
                     }
                 }
-                socketUtil.initSocketService()
             }
         }
 
