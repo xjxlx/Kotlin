@@ -41,7 +41,7 @@ class SocketSendActivity : AppBaseBindingTitleActivity<ActivitySocketSendBinding
                 val obj = msg.obj as String
                 if (msg.what == 100) {
                     mBinding.tvSend.text = obj
-                } else if (msg.what == 200) {
+                } else if (msg.what == 101) {
                     mBinding.tvResult.text = obj
                 }
             }
