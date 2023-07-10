@@ -34,7 +34,7 @@ class CurrentIpActivity : AppBaseBindingTitleActivity<ActivityCurrentIpBinding>(
 
                 network.getIPAddress {
                     LogUtil.e("ip:$it")
-                    mBinding.tvIp.text = it.hostIp + " -- " + it.hostName
+                    mBinding.tvIp.text = it.ip + " -- " + it.ssid
                 }
             }
         }

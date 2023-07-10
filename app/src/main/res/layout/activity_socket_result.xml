@@ -5,30 +5,29 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.feature.SocketResultActivity">
 
-    <RelativeLayout
+    <LinearLayout
+        android:layout_marginTop="@dimen/dp_10"
         android:id="@+id/ll_server"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/btn_init_socket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_10"
             android:text="初始化服务端Socket" />
 
         <TextView
+            android:layout_marginTop="@dimen/dp_10"
             android:id="@+id/tv_ip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/dp_16"
             android:text="当前ip：" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_send"

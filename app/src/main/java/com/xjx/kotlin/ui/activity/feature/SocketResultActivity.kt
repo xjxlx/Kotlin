@@ -1,5 +1,6 @@
 package com.xjx.kotlin.ui.activity.feature
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBin
         return ActivitySocketResultBinding.inflate(inflater, container, true)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun initData(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
@@ -46,7 +48,7 @@ class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBin
             lifecycleScope.launch {
                 mNetWorkUtil.getIPAddress {
                     mBinding.tvIp.post {
-                        mBinding.tvIp.text = "当前的ip:$it"
+                        mBinding.tvIp.text = "当前的ip:${it.ip} 当前wifi: ${it.ssid}"
                     }
                 }
                 socketUtil.initSocketService()

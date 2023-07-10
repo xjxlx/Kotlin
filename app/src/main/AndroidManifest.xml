@@ -22,6 +22,11 @@
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 获取WIFI信息状态的权限 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取网络状态改变的权限 -->
+    <!--    如果需要获取ssid，需要定位信息-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <queries>
         <!-- 如果想要与其他的应用进行AIDL通信的话，需要在这里注册包名的信息 -->
         <package android:name="com.android.app.free.debug" />
