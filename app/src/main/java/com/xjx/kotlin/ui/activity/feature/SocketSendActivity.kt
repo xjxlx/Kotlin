@@ -47,6 +47,7 @@ class SocketSendActivity : AppBaseBindingTitleActivity<ActivitySocketSendBinding
             }
         })
 
+        socketUtil.autoRestart()
         socketUtil.setTraceListener(object : SocketListener {
             override fun callBackListener(content: String) {
                 val message = mHandler.getMessage()
