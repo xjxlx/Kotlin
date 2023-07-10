@@ -7,16 +7,18 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.NetworkUtil
-import com.android.apphelper2.utils.SocketUtil
+import com.android.apphelper2.utils.socket.SocketListener
+import com.android.apphelper2.utils.socket.SocketServerUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivitySocketResultBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBinding>() {
 
-    private val socketUtil = SocketUtil.SocketService()
+    private val socketUtil = SocketServerUtil()
     private val mNetWorkUtil: NetworkUtil by lazy {
         return@lazy NetworkUtil.instance.register()
     }
@@ -33,13 +35,19 @@ class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBin
     override fun initData(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        socketUtil.setServiceCallBackListener(object : SocketUtil.SocketService.ServerCallBackListener {
-            override fun callBack(send: String, result: String) {
+        // 追踪 + 发送
+        socketUtil.setTraceListener(object : SocketListener {
+            override fun callBackListener(content: String) {
                 mBinding.tvSend.post {
-                    mBinding.tvSend.text = send
+                    mBinding.tvSend.text = content
                 }
+            }
+        })
+
+        socketUtil.setResultListener(object : SocketListener {
+            override fun callBackListener(content: String) {
                 mBinding.tvResult.post {
-                    mBinding.tvResult.text = result
+                    mBinding.tvResult.text = content
                 }
             }
         })
@@ -59,7 +67,10 @@ class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBin
         mBinding.btnSend.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
-                    socketUtil.sendServerData("服务端-->发送：$it")
+                    val send = socketUtil.send("服务端-->发送：$it")
+                    if (!send) {
+                        cancel()
+                    }
                     delay(200)
                 }
             }
