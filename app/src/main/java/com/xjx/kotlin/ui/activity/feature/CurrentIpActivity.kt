@@ -1,5 +1,6 @@
 package com.xjx.kotlin.ui.activity.feature
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ class CurrentIpActivity : AppBaseBindingTitleActivity<ActivityCurrentIpBinding>(
         return@lazy NetworkUtil.instance.register()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun initData(savedInstanceState: Bundle?) {
         mBinding.btnIp.setOnClickListener {
             lifecycleScope.launch {
@@ -32,7 +34,7 @@ class CurrentIpActivity : AppBaseBindingTitleActivity<ActivityCurrentIpBinding>(
 
                 network.getIPAddress {
                     LogUtil.e("ip:$it")
-                    mBinding.tvIp.text = it
+                    mBinding.tvIp.text = it.hostIp + " -- " + it.hostName
                 }
             }
         }
