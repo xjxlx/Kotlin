@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
+import com.android.apphelper2.utils.NetworkUtil
 import com.android.apphelper2.utils.SocketUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivitySocketResultBinding
@@ -13,7 +14,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBinding>() {
+
     private val socketUtil = SocketUtil.SocketService()
+    private val mNetWorkUtil: NetworkUtil by lazy {
+        return@lazy NetworkUtil.instance.register()
+    }
 
     override fun setTitleContent(): String {
         return "Socket - 接收端"
@@ -38,7 +43,14 @@ class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBin
         })
 
         mBinding.btnInitSocket.setOnClickListener {
-            socketUtil.initSocketService()
+            lifecycleScope.launch {
+                mNetWorkUtil.getIPAddress {
+                    mBinding.tvIp.post {
+                        mBinding.tvIp.text = "当前的ip:$it"
+                    }
+                }
+                socketUtil.initSocketService()
+            }
         }
 
         mBinding.btnSend.setOnClickListener {

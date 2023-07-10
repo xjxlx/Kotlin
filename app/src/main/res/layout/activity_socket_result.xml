@@ -5,19 +5,36 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.feature.SocketResultActivity">
 
-    <Button
-        android:id="@+id/btn_init_socket"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/ll_server"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dp_10"
-        android:text="初始化服务端Socket" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_init_socket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="初始化服务端Socket" />
+
+        <TextView
+            android:id="@+id/tv_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:text="当前ip：" />
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/btn_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_init_socket"
+        android:layout_below="@+id/ll_server"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dp_10"
         android:text="发送" />
