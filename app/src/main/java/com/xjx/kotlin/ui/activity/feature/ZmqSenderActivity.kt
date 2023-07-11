@@ -13,14 +13,12 @@ import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqCallBackListener
-import com.xjx.kotlin.utils.zmq.big.ZmqClientUtil
-import com.xjx.kotlin.utils.zmq.big.ZmqInfo
+import com.xjx.kotlin.utils.zmq.big.ZmqUtil
 import kotlinx.coroutines.*
 
 class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() {
 
     private var mJob: Job? = null
-    private val mZmq: ZmqClientUtil = ZmqClientUtil()
     private val mHandler: HandlerUtil = HandlerUtil()
 
     override fun setTitleContent(): String {
@@ -51,7 +49,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
             }
         })
 
-        mZmq.setTraceListener(object : ZmqCallBackListener {
+        ZmqUtil.setClientTraceListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 100
@@ -60,7 +58,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
             }
         })
 
-        mZmq.setSendListener(object : ZmqCallBackListener {
+        ZmqUtil.setClientSendListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 101
@@ -69,7 +67,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
             }
         })
 
-        mZmq.setReceiverListener(object : ZmqCallBackListener {
+        ZmqUtil.setClientReceiverListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 102
@@ -81,19 +79,19 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
         // 初始化
         mBinding.btnServiceBind.setOnClickListener {
             val ip = mBinding.etIp.text
-            val tcp = "tcp://$ip:${ZmqInfo.PORT}"
+            val tcp = "tcp://$ip:${ZmqUtil.PORT}"
 //            val tcp = "tcp://localhost:${ZmqUtil6.port}"
             if (TextUtils.isEmpty(ip)) {
                 ToastUtil.show("ip 不能为空！")
                 return@setOnClickListener
             }
 
-            mZmq.initSendZmq(tcp)
+            ZmqUtil.initClientZmq(tcp)
         }
 
         // 关闭
         mBinding.btnServiceClose.setOnClickListener {
-            mZmq.stop()
+            ZmqUtil.stopClient()
         }
 
 
@@ -101,7 +99,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
             mJob = lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
                     delay(100)
-                    val send = mZmq.send()
+                    val send = ZmqUtil.sendClient()
                     if (!send) {
                         cancel()
                     }
@@ -116,6 +114,6 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
 
     override fun onDestroy() {
         super.onDestroy()
-        mZmq.stop()
+        // ZmqUtil.stop()
     }
 }

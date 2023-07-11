@@ -12,15 +12,14 @@ import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqReceiveBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqCallBackListener
-import com.xjx.kotlin.utils.zmq.big.ZmqInfo
-import com.xjx.kotlin.utils.zmq.big.ZmqReceiverUtil
+import com.xjx.kotlin.utils.zmq.big.ZmqUtil
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding>() {
 
-    private val mZmq: ZmqReceiverUtil = ZmqReceiverUtil()
     private val mHandler: HandlerUtil = HandlerUtil()
 
     override fun setTitleContent(): String {
@@ -51,7 +50,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             }
         })
 
-        mZmq.setTraceListener(object : ZmqCallBackListener {
+        ZmqUtil.setServerTraceListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 100
@@ -60,7 +59,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             }
         })
 
-        mZmq.setSendListener(object : ZmqCallBackListener {
+        ZmqUtil.setServerSendListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 101
@@ -69,7 +68,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             }
         })
 
-        mZmq.setReceiverListener(object : ZmqCallBackListener {
+        ZmqUtil.setServerReceiverListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 102
@@ -86,14 +85,14 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             }
 
             // val tcp = "tcp://$ip:${ZmqUtil6.port}"
-            val tcp = "tcp://*:${ZmqInfo.PORT}"
+            val tcp = "tcp://*:${ZmqUtil.PORT}"
             ToastUtil.show("开始接收！")
-            mZmq.initReceiverZmq(tcp)
+            ZmqUtil.initServerZmq(tcp)
         }
         mBinding.btnSend.setOnClickListener {
-            lifecycleScope.launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
-                    val send = mZmq.send()
+                    val send = ZmqUtil.sendServer()
                     if (!send) {
                         cancel()
                     }
@@ -105,6 +104,6 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
 
     override fun onDestroy() {
         super.onDestroy()
-        mZmq.stop()
+        // mZmq.stop()
     }
 }

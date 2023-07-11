@@ -97,7 +97,7 @@ class ZmqReceiverUtil {
         }
     }
 
-    suspend fun send(): Boolean {
+    fun send(): Boolean {
         try {
             val response = "接收端-->发送-->：(${mNumber})"
             try {
@@ -153,6 +153,6 @@ class ZmqReceiverUtil {
     private fun trace(content: String) {
         mTraceInfo += (content + "\n\n")
         mTraceListener?.onCallBack(mTraceInfo)
-        LogUtil.e(ZmqInfo.TAG, content)
+        LogUtil.e(ZmqUtil.TAG, content)
     }
 }
