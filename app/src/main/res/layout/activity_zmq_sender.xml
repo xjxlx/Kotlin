@@ -21,27 +21,38 @@
         android:layout_marginTop="@dimen/dp_20">
 
         <Button
-            android:id="@+id/btn_service_bind"
+            android:id="@+id/btn_ip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:text="查看IP" />
+
+        <Button
+            android:id="@+id/btn_service_bind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:text="绑定" />
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_ip"
+            android:layout_marginTop="@dimen/dp_20"
+            android:enabled="true"
+            android:text="发送" />
 
         <Button
             android:id="@+id/btn_service_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_service_bind"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/dp_20"
             android:text="关闭" />
-    </RelativeLayout>
 
-    <Button
-        android:id="@+id/btn_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:layout_marginTop="@dimen/dp_20"
-        android:text="发送" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

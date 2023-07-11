@@ -9,17 +9,25 @@ import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.HandlerUtil
 import com.android.apphelper2.utils.LogUtil
+import com.android.apphelper2.utils.NetworkUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqCallBackListener
 import com.xjx.kotlin.utils.zmq.big.ZmqUtil
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() {
 
     private var mJob: Job? = null
     private val mHandler: HandlerUtil = HandlerUtil()
+    private val mNetWorkUtil: NetworkUtil by lazy {
+        return@lazy NetworkUtil.instance.register()
+    }
 
     override fun setTitleContent(): String {
         return "ZMQ 发送端"
@@ -39,9 +47,11 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
                     100 -> {
                         mBinding.tvTrace.text = obj
                     }
+
                     101 -> {
                         mBinding.tvDataSend.text = obj
                     }
+
                     102 -> {
                         mBinding.tvDataResult.text = obj
                     }
@@ -75,6 +85,15 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
                 mHandler.send(message)
             }
         })
+
+        // 查看IP
+        mBinding.btnIp.setOnClickListener {
+            lifecycleScope.launch {
+                mNetWorkUtil.getIPAddress { ip ->
+                    mBinding.etIp.setText(ip.ip)
+                }
+            }
+        }
 
         // 初始化
         mBinding.btnServiceBind.setOnClickListener {

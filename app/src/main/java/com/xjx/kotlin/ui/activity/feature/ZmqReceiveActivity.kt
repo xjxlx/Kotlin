@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.HandlerUtil
+import com.android.apphelper2.utils.NetworkUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqReceiveBinding
@@ -21,6 +22,9 @@ import kotlinx.coroutines.launch
 class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding>() {
 
     private val mHandler: HandlerUtil = HandlerUtil()
+    private val mNetWorkUtil: NetworkUtil by lazy {
+        return@lazy NetworkUtil.instance.register()
+    }
 
     override fun setTitleContent(): String {
         return "Zmq接收端"
@@ -40,9 +44,11 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
                     100 -> {
                         mBinding.tvTrace.text = obj
                     }
+
                     101 -> {
                         mBinding.tvDataSend.text = obj
                     }
+
                     102 -> {
                         mBinding.tvDataResult.text = obj
                     }
@@ -77,6 +83,15 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             }
         })
 
+        // 检查IP
+        mBinding.btnIp.setOnClickListener {
+            lifecycleScope.launch {
+                mNetWorkUtil.getIPAddress { ip ->
+                    mBinding.tvIp.setText(ip.ip)
+                }
+            }
+        }
+
         mBinding.btnReceiver.setOnClickListener {
             val ip = mBinding.tvIp.text
             if (TextUtils.isEmpty(ip)) {
@@ -85,7 +100,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             }
 
             // val tcp = "tcp://$ip:${ZmqUtil6.port}"
-            val tcp = "tcp://*:port"
+            val tcp = "tcp://*:${ZmqUtil.PORT}"
             ToastUtil.show("开始接收！")
             ZmqUtil.initServerZmq(tcp)
         }
