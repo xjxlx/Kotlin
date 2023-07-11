@@ -1,11 +1,13 @@
 package com.xjx.kotlin.ui.activity.feature
 
 import android.os.Bundle
+import android.os.Message
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
+import com.android.apphelper2.utils.HandlerUtil
 import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
@@ -19,6 +21,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
 
     private var mJob: Job? = null
     private val mZmq: ZmqClientUtil = ZmqClientUtil()
+    private val mHandler: HandlerUtil = HandlerUtil()
 
     override fun setTitleContent(): String {
         return "ZMQ 发送端"
@@ -31,18 +34,47 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
     override fun initData(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        mZmq.setTraceListener(object : ZmqCallBackListener {
-            override fun onCallBack(content: String) {
-                mBinding.tvDataSend.post {
-                    mBinding.tvDataSend.text = content
+        mHandler.setHandlerCallBackListener(object : HandlerUtil.HandlerMessageListener {
+            override fun handleMessage(msg: Message) {
+                val obj = msg.obj as String
+                when (msg.what) {
+                    100 -> {
+                        mBinding.tvTrace.text = obj
+                    }
+                    101 -> {
+                        mBinding.tvDataSend.text = obj
+                    }
+                    102 -> {
+                        mBinding.tvDataResult.text = obj
+                    }
                 }
             }
         })
+
+        mZmq.setTraceListener(object : ZmqCallBackListener {
+            override fun onCallBack(content: String) {
+                val message = mHandler.getMessage()
+                message.what = 100
+                message.obj = content
+                mHandler.send(message)
+            }
+        })
+
+        mZmq.setSendListener(object : ZmqCallBackListener {
+            override fun onCallBack(content: String) {
+                val message = mHandler.getMessage()
+                message.what = 101
+                message.obj = content
+                mHandler.send(message)
+            }
+        })
+
         mZmq.setReceiverListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
-                mBinding.tvDataResult.post {
-                    mBinding.tvDataResult.text = content
-                }
+                val message = mHandler.getMessage()
+                message.what = 102
+                message.obj = content
+                mHandler.send(message)
             }
         })
 

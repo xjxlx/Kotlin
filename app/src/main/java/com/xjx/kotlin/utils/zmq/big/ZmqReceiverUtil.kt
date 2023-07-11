@@ -23,6 +23,7 @@ class ZmqReceiverUtil {
     private var mNumber = 0
     private var mIp = ""
     private var mTraceListener: ZmqCallBackListener? = null
+    private var mSendListener: ZmqCallBackListener? = null
     private var mReceiverListener: ZmqCallBackListener? = null
     private var mContext: ZContext? = null
 
@@ -95,18 +96,14 @@ class ZmqReceiverUtil {
 
     suspend fun send(): Boolean {
         try {
-            val response = "发送端-->发送-->：(${mNumber})"
-//            if (mReceiverFlag) {
-            if (true) {
-                try {
-                    mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
-                    mNumber++
-                    return true
-                } catch (e: ZMQException) {
-                    trace("send message failure: : $e")
-                }
-            } else {
-                trace("connection failed, can't send message!'")
+            val response = "接收端-->发送-->：(${mNumber})"
+            try {
+                mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
+                mNumber++
+                mSendListener?.onCallBack(response)
+                return true
+            } catch (e: ZMQException) {
+                trace("send message failure: : $e")
             }
         } catch (e: ZMQException) {
             trace("send message failure: : $e")
@@ -139,6 +136,10 @@ class ZmqReceiverUtil {
 
     fun setReceiverListener(listener: ZmqCallBackListener) {
         this.mReceiverListener = listener
+    }
+
+    fun setSendListener(listener: ZmqCallBackListener) {
+        this.mSendListener = listener
     }
 
     private fun trace(content: String) {
