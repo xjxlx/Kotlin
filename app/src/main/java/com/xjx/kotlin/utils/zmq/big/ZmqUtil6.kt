@@ -104,85 +104,8 @@ object ZmqUtil6 {
     private var mSendSendData = ""
     private var mSendResultData = ""
 
-    /**
-     * 发送端代码
-     */
-    fun initSendZmq(tcpAddress: String) {
-        mSendSendData = ""
-        mSendResultData = ""
-
-        mClientBuffer.setLength(0)
-        initZContext()
-        log("客户端连接--->$tcpAddress")
-
-        mScope.launch {
-            try {
-                if (!mSendFlag) {
-                    socketClient = mContext?.createSocket(SocketType.PAIR)
-                    log("clientService---> ")
-                    tcp = tcpAddress
-                    val connect = socketClient?.connect(tcpAddress)
-                    if (connect != null) {
-                        mSendFlag = connect
-                    }
-                }
-                log("bind---> $mSendFlag")
-
-                if (sendListener != null) {
-                    mSendSendData = mClientBuffer.toString();
-                    sendListener!!.onCall(mSendSendData, mSendResultData)
-                }
-
-                while (!Thread.currentThread().isInterrupted) {
-                    // Block until a message is received
-                    val reply = socketClient?.recv(0)
-                    if (reply != null) {
-                        val content = String(reply, ZMQ.CHARSET)
-                        log("客户端接收到服务端发送的数据---->$content")
-                        if (sendListener != null) {
-                            mSendResultData = "发送端-->接收：$content"
-                            sendListener!!.onCall(mSendSendData, mSendResultData)
-                        }
-                    }
-                }
-            } catch (e: ZMQException) {
-                log("客户端连接发送异常--->$e")
-                e.printStackTrace()
-                if (sendListener != null) {
-                    mSendSendData = mClientBuffer.toString()
-                    sendListener!!.onCall(mSendSendData, mSendResultData)
-                }
-                mSendFlag = false
-            }
-        }
-    }
-
-    suspend fun sendSend() {
-        try {
-            val response = "发送端-->发送-->：($number)"
-            if (mSendFlag) {
-                log("send --->$response   bind: $mSendFlag")
-                mSendSendData = response
-                socketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
-                number++
-                sendListener!!.onCall(mSendSendData, mSendResultData)
-            } else {
-                mSendSendData = "发送端绑定接收端失败，请重新connect !"
-                sendListener!!.onCall(mSendSendData, mSendResultData)
-            }
-        } catch (e: ZMQException) {
-            mSendSendData = "发送端发送数据异常：$e"
-            sendListener!!.onCall(mSendSendData, mSendResultData)
-        }
-    }
-
     interface SendCallBackListener {
         fun onCall(send: String, result: String)
-    }
-
-    private var sendListener: SendCallBackListener? = null
-    fun setSendCallBackListener(listener: SendCallBackListener?) {
-        this.sendListener = listener
     }
 
     private var mContext: ZContext? = null
