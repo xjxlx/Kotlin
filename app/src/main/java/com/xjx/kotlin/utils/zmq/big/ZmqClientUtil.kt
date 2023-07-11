@@ -46,6 +46,11 @@ class ZmqClientUtil {
         trace("tcp:[ $tcpAddress ]")
         initZContext()
 
+        if (mReceiverFlag) {
+            trace("connected succeeded , break!")
+            return
+        }
+
         mJob = mScope.launch {
             try {
                 try {

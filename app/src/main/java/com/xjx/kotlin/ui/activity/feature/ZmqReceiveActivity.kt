@@ -108,9 +108,6 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
                     val send = ZmqUtil.sendServer()
-                    if (!send) {
-                        cancel()
-                    }
                     delay(100)
                 }
             }
