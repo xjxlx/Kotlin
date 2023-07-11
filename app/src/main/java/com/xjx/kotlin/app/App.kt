@@ -1,15 +1,23 @@
 package com.xjx.kotlin.app
 
 import android.app.Application
+import android.os.Process
+import android.provider.Settings
+import android.text.TextUtils
 import com.android.apphelper2.app.AppHelperManager
+import com.android.apphelper2.utils.LogUtil
 import com.android.helper.app.ApplicationInterface
 import com.android.helper.app.BaseApplication
 import com.android.helper.base.title.PageLayoutBuilder
 import com.android.helper.base.title.PageLayoutManager
 import com.android.helper.httpclient.AutoInterceptor
+import com.tencent.bugly.crashreport.CrashReport
 import com.xjx.kotlin.BuildConfig
 import com.xjx.kotlin.R
 import okhttp3.Interceptor
+import java.io.BufferedReader
+import java.io.FileReader
+import java.io.IOException
 
 /**
  * @author : 流星
@@ -18,10 +26,14 @@ import okhttp3.Interceptor
  */
 class App : Application() {
 
+    companion object {
+        private const val TAG = "APP"
+    }
+
     override fun onCreate() {
         super.onCreate()
 
-        AppHelperManager.init(this,true)
+        AppHelperManager.init(this, true)
 
         BaseApplication.getInstance()
             .setApplication(object : ApplicationInterface {
@@ -62,5 +74,48 @@ class App : Application() {
                     return arrayOf(AutoInterceptor())
                 }
             })
+
+        // init crash
+        runCatching {
+            val strategy = CrashReport.UserStrategy(this)
+            val id = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+            if (!TextUtils.isEmpty(id)) {
+                strategy.deviceID = id
+            }
+            val processName = getProcessName(Process.myPid())
+            val packageName: String = this.packageName
+            strategy.isUploadProcess = processName == null || processName == packageName;
+            // 设置anr时是否获取系统trace文件，默认为false
+            strategy.isEnableCatchAnrTrace = true
+            // 设置是否获取anr过程中的主线程堆栈，默认为true
+            strategy.isEnableRecordAnrMainStack = true
+            CrashReport.initCrashReport(this, "b6b92710db", BuildConfig.DEBUG, strategy);
+        }.onFailure {
+            LogUtil.e(TAG, "init crash error: ${it.message}")
+        }
+    }
+
+    /**
+     * return process name
+     */
+    private fun getProcessName(pid: Int): String? {
+        var reader: BufferedReader? = null
+        try {
+            reader = BufferedReader(FileReader("/proc/$pid/cmdline"))
+            var processName: String = reader.readLine()
+            if (!TextUtils.isEmpty(processName)) {
+                processName = processName.trim { it <= ' ' }
+            }
+            return processName
+        } catch (throwable: Throwable) {
+            throwable.printStackTrace()
+        } finally {
+            try {
+                reader?.close()
+            } catch (exception: IOException) {
+                exception.printStackTrace()
+            }
+        }
+        return null
     }
 }

@@ -123,6 +123,7 @@ dependencies {
 
     implementation(name: 'Cariad_CDA_AudioRecorder_release_202302031659', ext: 'aar')
 
+    implementation 'com.tencent.bugly:crashreport:latest.release'
 }
 
 
