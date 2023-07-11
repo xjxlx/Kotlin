@@ -111,7 +111,7 @@ class ZmqReceiverUtil {
         try {
             val response = "接收端-->发送-->：(${mNumber})"
             try {
-                if (mConnected) {
+                if (mReceiverFlag) {
                     mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
                     mNumber++
                     mSendListener?.onCallBack(response)

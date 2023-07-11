@@ -68,6 +68,8 @@ class ZmqClientUtil {
                         mConnected = socketClient!!.connect(tcpAddress)
                         trace("connect success!")
 
+                        socketClient?.send("success".toByteArray(ZMQ.CHARSET), 0)
+
                         // loop wait client send message
                         while (!Thread.currentThread().isInterrupted && !mLoopFlag.get()) {
                             try {
