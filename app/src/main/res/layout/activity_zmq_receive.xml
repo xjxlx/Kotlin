@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="请输入绑定的IP:"
-        android:text="192.168.124.24"
+        android:text="192.168.88.201"
         android:textSize="@dimen/sp_28" />
 
     <Button
