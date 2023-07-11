@@ -48,11 +48,17 @@ class ZmqReceiverUtil {
 
         mJob = mScope.launch {
             try {
+                if (mConnected) {
+                    trace("socket is binding !")
+                    return@launch
+                }
+
                 try {
                     trace("create socket --->")
                     mSocketReceiver = mContext?.createSocket(SocketType.PAIR)
                     trace("create socket success!")
                 } catch (e: ZMQException) {
+                    mConnected = false
                     trace("create socket failure : $e")
                 }
 
@@ -77,19 +83,23 @@ class ZmqReceiverUtil {
                                         mReceiverListener?.onCallBack(content)
                                     }
                                 } catch (e: ZMQException) {
+                                    mConnected = false
                                     trace("receiver failure :$e")
                                 }
                             } catch (e: ZMQException) {
+                                mConnected = false
                                 mReceiverFlag = false
                                 trace("receiver failure : $e")
                             }
                         }
                     } catch (e: ZMQException) {
+                        mConnected = false
                         mReceiverFlag = false
                         trace("bind failure : $e")
                     }
                 }
             } catch (e: ZMQException) {
+                mConnected = false
                 mReceiverFlag = false
                 trace("zmq receiver failure : $e")
                 e.printStackTrace()
