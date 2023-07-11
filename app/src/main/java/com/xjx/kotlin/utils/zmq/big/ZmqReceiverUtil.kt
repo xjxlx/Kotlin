@@ -10,12 +10,12 @@ import org.zeromq.ZContext
 import org.zeromq.ZMQ
 import org.zeromq.ZMQException
 
-class ZmqClientUtil {
+class ZmqReceiverUtil {
 
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO)
     }
-    private var socketClient: ZMQ.Socket? = null
+    private var mSocketReceiver: ZMQ.Socket? = null
     private var mJob: Job? = null
     private var mConnected: Boolean = false
     private var mReceiverFlag: Boolean = false
@@ -34,11 +34,11 @@ class ZmqClientUtil {
     }
 
     /**
-     * 发送端代码
+     * 接收端代码
      */
-    fun initSendZmq(tcpAddress: String) {
+    fun initReceiverZmq(tcpAddress: String) {
         mTraceInfo = ""
-        trace("initSendZmq !")
+        trace("initReceiverZmq !")
         trace("tcp:[ $tcpAddress ]")
         initZContext()
 
@@ -46,23 +46,23 @@ class ZmqClientUtil {
             try {
                 try {
                     trace("create socket --->")
-                    socketClient = mContext?.createSocket(SocketType.PAIR)
+                    mSocketReceiver = mContext?.createSocket(SocketType.PAIR)
                     trace("create socket success!")
                 } catch (e: ZMQException) {
                     trace("create socket failure : $e")
                 }
 
-                if (socketClient != null) {
+                if (mSocketReceiver != null) {
                     try {
-                        trace("connect --->")
+                        trace("bind --->")
                         mIp = tcpAddress
-                        mConnected = socketClient!!.connect(tcpAddress)
-                        trace("connect success!")
+                        mConnected = mSocketReceiver!!.bind(tcpAddress)
+                        trace("bind success!")
 
                         // loop wait client send message
                         while (!Thread.currentThread().isInterrupted) {
                             try {
-                                val receiver = socketClient?.recv(0)
+                                val receiver = mSocketReceiver?.recv(0)
                                 mReceiverFlag = true
                                 if (receiver != null) {
                                     val content = String(receiver, ZMQ.CHARSET)
@@ -75,7 +75,7 @@ class ZmqClientUtil {
                         }
                     } catch (e: ZMQException) {
                         mReceiverFlag = false
-                        trace("connect failure : $e")
+                        trace("bind failure : $e")
                     }
                 }
             } catch (e: ZMQException) {
@@ -91,7 +91,7 @@ class ZmqClientUtil {
             val response = "发送端-->发送-->：(${mNumber})"
             if (mReceiverFlag) {
                 try {
-                    socketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
+                    mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
                     mNumber++
                     return true
                 } catch (e: ZMQException) {
@@ -108,10 +108,10 @@ class ZmqClientUtil {
 
     fun stop() {
         runCatching {
-            if (socketClient != null) {
-                socketClient?.disconnect(mIp)
-                socketClient?.close()
-                socketClient = null
+            if (mSocketReceiver != null) {
+                mSocketReceiver?.disconnect(mIp)
+                mSocketReceiver?.close()
+                mSocketReceiver = null
             }
         }
 
