@@ -62,11 +62,18 @@ class ZmqReceiverUtil {
                         // loop wait client send message
                         while (!Thread.currentThread().isInterrupted) {
                             try {
-                                val receiver = mSocketReceiver?.recv(0)
-                                mReceiverFlag = true
-                                if (receiver != null) {
-                                    val content = String(receiver, ZMQ.CHARSET)
-                                    mReceiverListener?.onCallBack(content)
+                                try {
+                                    val receiver = mSocketReceiver?.recv(0)
+                                    if (!mReceiverFlag) {
+                                        trace("client bind success!")
+                                    }
+                                    mReceiverFlag = true
+                                    if (receiver != null) {
+                                        val content = String(receiver, ZMQ.CHARSET)
+                                        mReceiverListener?.onCallBack(content)
+                                    }
+                                } catch (e: ZMQException) {
+                                    trace("receiver failure :$e")
                                 }
                             } catch (e: ZMQException) {
                                 mReceiverFlag = false
@@ -89,7 +96,8 @@ class ZmqReceiverUtil {
     suspend fun send(): Boolean {
         try {
             val response = "发送端-->发送-->：(${mNumber})"
-            if (mReceiverFlag) {
+//            if (mReceiverFlag) {
+            if (true) {
                 try {
                     mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
                     mNumber++
@@ -109,7 +117,7 @@ class ZmqReceiverUtil {
     fun stop() {
         runCatching {
             if (mSocketReceiver != null) {
-                mSocketReceiver?.disconnect(mIp)
+                mSocketReceiver?.unbind(mIp)
                 mSocketReceiver?.close()
                 mSocketReceiver = null
             }

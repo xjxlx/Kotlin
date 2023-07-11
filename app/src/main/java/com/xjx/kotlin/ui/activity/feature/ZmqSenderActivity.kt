@@ -12,7 +12,7 @@ import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqCallBackListener
 import com.xjx.kotlin.utils.zmq.big.ZmqClientUtil
-import com.xjx.kotlin.utils.zmq.big.ZmqUtil6
+import com.xjx.kotlin.utils.zmq.big.ZmqInfo
 import kotlinx.coroutines.*
 
 class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() {
@@ -49,7 +49,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
         // 初始化
         mBinding.btnServiceBind.setOnClickListener {
             val ip = mBinding.etIp.text
-            val tcp = "tcp://$ip:${ZmqUtil6.port}"
+            val tcp = "tcp://$ip:${ZmqInfo.PORT}"
 //            val tcp = "tcp://localhost:${ZmqUtil6.port}"
             if (TextUtils.isEmpty(ip)) {
                 ToastUtil.show("ip 不能为空！")
@@ -61,7 +61,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
 
         // 关闭
         mBinding.btnServiceClose.setOnClickListener {
-            ZmqUtil6.stop()
+            mZmq.stop()
         }
 
 
@@ -84,6 +84,6 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
 
     override fun onDestroy() {
         super.onDestroy()
-        ZmqUtil6.stop()
+        mZmq.stop()
     }
 }

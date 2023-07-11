@@ -10,8 +10,8 @@ import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqReceiveBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqCallBackListener
+import com.xjx.kotlin.utils.zmq.big.ZmqInfo
 import com.xjx.kotlin.utils.zmq.big.ZmqReceiverUtil
-import com.xjx.kotlin.utils.zmq.big.ZmqUtil6
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -55,7 +55,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             }
 
             // val tcp = "tcp://$ip:${ZmqUtil6.port}"
-            val tcp = "tcp://*:${ZmqUtil6.port}"
+            val tcp = "tcp://*:${ZmqInfo.PORT}"
             ToastUtil.show("开始接收！")
             mZmq.initReceiverZmq(tcp)
         }
@@ -74,6 +74,6 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
 
     override fun onDestroy() {
         super.onDestroy()
-        ZmqUtil6.stop()
+        mZmq.stop()
     }
 }

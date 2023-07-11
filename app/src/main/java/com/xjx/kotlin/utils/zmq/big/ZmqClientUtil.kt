@@ -63,6 +63,9 @@ class ZmqClientUtil {
                         while (!Thread.currentThread().isInterrupted) {
                             try {
                                 val receiver = socketClient?.recv(0)
+                                if (!mReceiverFlag) {
+                                    trace("server connect success!")
+                                }
                                 mReceiverFlag = true
                                 if (receiver != null) {
                                     val content = String(receiver, ZMQ.CHARSET)
@@ -89,7 +92,8 @@ class ZmqClientUtil {
     suspend fun send(): Boolean {
         try {
             val response = "发送端-->发送-->：(${mNumber})"
-            if (mReceiverFlag) {
+//            if (mReceiverFlag) {
+            if (true) {
                 try {
                     socketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
                     mNumber++
