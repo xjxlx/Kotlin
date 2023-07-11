@@ -9,6 +9,7 @@ import org.zeromq.SocketType
 import org.zeromq.ZContext
 import org.zeromq.ZMQ
 import org.zeromq.ZMQException
+import java.util.concurrent.atomic.AtomicBoolean
 
 class ZmqClientUtil {
 
@@ -26,6 +27,7 @@ class ZmqClientUtil {
     private var mSendListener: ZmqCallBackListener? = null
     private var mReceiverListener: ZmqCallBackListener? = null
     private var mContext: ZContext? = null
+    private var mLoopFlag: AtomicBoolean = AtomicBoolean()
 
     private fun initZContext() {
         if (mContext == null) {
@@ -39,6 +41,7 @@ class ZmqClientUtil {
      */
     fun initSendZmq(tcpAddress: String) {
         mTraceInfo = ""
+        mLoopFlag.set(false)
         trace("initSendZmq !")
         trace("tcp:[ $tcpAddress ]")
         initZContext()
@@ -61,7 +64,7 @@ class ZmqClientUtil {
                         trace("connect success!")
 
                         // loop wait client send message
-                        while (!Thread.currentThread().isInterrupted) {
+                        while (!Thread.currentThread().isInterrupted && !mLoopFlag.get()) {
                             try {
                                 val receiver = socketClient?.recv(0)
                                 if (!mReceiverFlag) {
@@ -108,6 +111,7 @@ class ZmqClientUtil {
     }
 
     fun stop() {
+        mLoopFlag.set(true)
         runCatching {
             if (socketClient != null) {
                 socketClient?.disconnect(mIp)
