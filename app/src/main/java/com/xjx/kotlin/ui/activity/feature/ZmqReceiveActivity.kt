@@ -97,7 +97,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
                     if (!send) {
                         cancel()
                     }
-                    delay(200)
+                    delay(100)
                 }
             }
         }
