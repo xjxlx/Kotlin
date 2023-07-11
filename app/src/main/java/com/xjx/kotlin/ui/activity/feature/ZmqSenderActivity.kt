@@ -46,6 +46,7 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
         mBinding.btnServiceBind.setOnClickListener {
             val ip = mBinding.etIp.text
             val tcp = "tcp://$ip:${ZmqUtil6.port}"
+//            val tcp = "tcp://localhost:${ZmqUtil6.port}"
             if (TextUtils.isEmpty(ip)) {
                 ToastUtil.show("ip 不能为空！")
                 return@setOnClickListener

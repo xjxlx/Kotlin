@@ -11,7 +11,7 @@ import org.zeromq.ZMQException
 
 object ZmqUtil6 {
 
-    val port = 6667
+    val port = 6669
     private var socketResult: ZMQ.Socket? = null
     private var socketClient: ZMQ.Socket? = null
     private var number: Int = 0
