@@ -85,7 +85,7 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
             }
 
             // val tcp = "tcp://$ip:${ZmqUtil6.port}"
-            val tcp = "tcp://*:${ZmqUtil.PORT}"
+            val tcp = "tcp://*:port"
             ToastUtil.show("开始接收！")
             ZmqUtil.initServerZmq(tcp)
         }
