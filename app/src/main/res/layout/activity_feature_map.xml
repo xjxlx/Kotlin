@@ -13,7 +13,8 @@
         <TextView
             android:id="@+id/tv_item_recording_video"
             style="@style/click_item_style"
-            android:text="录制视频" />
+            android:text="录制视频"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_item_zmq_send"
@@ -28,22 +29,26 @@
         <TextView
             android:id="@+id/tv_item_zmq_test"
             style="@style/click_item_style"
-            android:text="Zmq - Test" />
+            android:text="Zmq - Test"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_item_current_ip"
             style="@style/click_item_style"
-            android:text="当前的ip地址" />
+            android:text="当前的ip地址"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_socket_send"
             style="@style/click_item_style"
-            android:text="Socket-发送端" />
+            android:text="Socket-发送端"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_socket_result"
             style="@style/click_item_style"
-            android:text="Socket-接收端" />
+            android:text="Socket-接收端"
+            android:visibility="gone" />
 
     </LinearLayout>
 
