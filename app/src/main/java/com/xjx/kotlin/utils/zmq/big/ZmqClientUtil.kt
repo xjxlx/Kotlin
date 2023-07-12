@@ -15,17 +15,16 @@ class ZmqClientUtil {
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO)
     }
+    private var mContext: ZContext? = null
     private var socketClient: ZMQ.Socket? = null
     private var mJob: Job? = null
-    private var mConnected: Boolean = false
-    private var mReceiverFlag: AtomicBoolean = AtomicBoolean()
     private var mTraceInfo = ""
     private var mNumber = 0
     private var mIp = ""
     private var mTraceListener: ZmqCallBackListener? = null
     private var mSendListener: ZmqCallBackListener? = null
     private var mReceiverListener: ZmqCallBackListener? = null
-    private var mContext: ZContext? = null
+    private var mReceiverFlag: AtomicBoolean = AtomicBoolean()
     private var mLoopFlag: AtomicBoolean = AtomicBoolean()
 
     private fun initZContext() {
@@ -54,25 +53,32 @@ class ZmqClientUtil {
             runCatching {
                 trace("create socket !")
                 socketClient = mContext?.createSocket(SocketType.PAIR)
-                socketClient?.let {
+                socketClient?.let { socket ->
+                    var connected = false
                     runCatching {
-                        mConnected = it.connect(tcpAddress)
+                        connected = socket.connect(tcpAddress)
                         mIp = tcpAddress
                         trace("connect success!")
-                    }.onFailure {
-                        trace("connect failure : $it")
-                        it.printStackTrace()
+                    }.onFailure { connect ->
+                        connected = false
+                        trace("connect failure : $connect")
+                        connect.printStackTrace()
+                    }
+
+                    if (!connected) {
+                        trace("connect failure , break!")
+                        return@launch
                     }
 
                     mScope.launch {
                         trace("send connect success flag--->")
-                        it.send("success".toByteArray(ZMQ.CHARSET), 0)
+                        socket.send("success".toByteArray(ZMQ.CHARSET), 0)
                     }
 
                     mScope.launch {
                         while (!Thread.currentThread().isInterrupted && !mLoopFlag.get()) {
                             runCatching {
-                                val receiver = socketClient?.recv(0)
+                                val receiver = socket.recv(0)
                                 if (!mReceiverFlag.get()) {
                                     trace("【 server connect success ！】")
                                 }
@@ -82,6 +88,7 @@ class ZmqClientUtil {
                                     mReceiverListener?.onCallBack(content)
                                 }
                             }.onFailure {
+                                mReceiverFlag.set(false)
                                 trace("receiver msg failure: $it")
                                 it.printStackTrace()
                             }
