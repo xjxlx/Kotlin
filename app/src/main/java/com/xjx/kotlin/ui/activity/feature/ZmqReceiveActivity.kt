@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.HandlerUtil
+import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.NetworkUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
@@ -66,10 +67,12 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
 
         ZmqUtil.setServerSendListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
-                val message = mHandler.getMessage()
-                message.what = 101
-                message.obj = content
-                mHandler.send(message)
+                LogUtil.e("ZMQ", "send --->$content")
+
+//                val message = mHandler.getMessage()
+//                message.what = 101
+//                message.obj = content
+//                mHandler.send(message)
             }
         })
 
