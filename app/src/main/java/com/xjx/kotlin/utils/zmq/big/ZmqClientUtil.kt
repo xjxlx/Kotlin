@@ -66,8 +66,12 @@ class ZmqClientUtil {
                     }
 
                     mScope.launch {
-                        trace("send connect success flag--->")
-                        socket.send("success".toByteArray(ZMQ.CHARSET), 0)
+                        runCatching {
+                            trace("send connect success flag--->")
+                            socket.send("success".toByteArray(ZMQ.CHARSET), 0)
+                        }.onFailure {
+                            trace("send connect failure:$it")
+                        }
                     }
 
                     mScope.launch {
