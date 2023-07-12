@@ -16,9 +16,10 @@ class ZmqReceiverUtil {
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO)
     }
-    private var mSocketReceiver: ZMQ.Socket? = null
     private var mJob: Job? = null
-    private var mConnected: Boolean = false
+    private var mContext: ZContext? = null
+    private var mSocketReceiver: ZMQ.Socket? = null
+    private var mLoopFlag: AtomicBoolean = AtomicBoolean()
     private var mReceiverFlag: AtomicBoolean = AtomicBoolean()
     private var mTraceInfo = ""
     private var mTraceOldMsg = ""
@@ -27,8 +28,6 @@ class ZmqReceiverUtil {
     private var mTraceListener: ZmqCallBackListener? = null
     private var mSendListener: ZmqCallBackListener? = null
     private var mReceiverListener: ZmqCallBackListener? = null
-    private var mContext: ZContext? = null
-    private var mLoopFlag: AtomicBoolean = AtomicBoolean()
 
     private fun initZContext() {
         if (mContext == null) {
@@ -56,24 +55,25 @@ class ZmqReceiverUtil {
             runCatching {
                 mSocketReceiver = mContext?.createSocket(SocketType.PAIR)
                 trace("create socket success!")
-
+                var connected = false
                 mSocketReceiver?.let { socket ->
+                    socket.sendTimeOut = 3000
                     runCatching {
-                        mConnected = socket.bind(tcpAddress)
+                        connected = socket.bind(tcpAddress)
                         trace("bind success!")
                     }.onFailure {
-                        mConnected = false
+                        connected = false
                         it.printStackTrace()
                         trace("bind failure:$it")
                     }
 
-                    if (!mConnected) {
+                    if (!connected) {
                         trace("bind address failure,break --->")
                     }
                     mScope.launch {
                         while (!Thread.currentThread().isInterrupted && !mLoopFlag.get()) {
                             runCatching {
-                                val receiver = mSocketReceiver?.recv(0)
+                                val receiver = socket.recv(0)
                                 if (!mReceiverFlag.get()) {
                                     trace("【 client bind success ！】")
                                 }
