@@ -3,8 +3,8 @@ package com.xjx.kotlin.utils.zmq.big
 object ZmqUtil {
     const val TAG = "ZMQ"
     const val PORT = 5566
-    private val mZmqResult: ZmqReceiverUtil = ZmqReceiverUtil()
-    private val mZmqClient: ZmqClientUtil = ZmqClientUtil()
+    private val mZmqResult: ZmqClientUtil = ZmqClientUtil()
+    private val mZmqClient: ZmqReceiverUtil = ZmqReceiverUtil()
 
     fun initServerZmq(ip: String) {
         mZmqResult.initReceiverZmq(ip)
