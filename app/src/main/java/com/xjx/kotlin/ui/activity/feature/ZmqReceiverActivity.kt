@@ -106,7 +106,7 @@ class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBindi
 
         // 关闭
         mBinding.btnServiceClose.setOnClickListener {
-            ZmqUtil.stopClient()
+            ZmqUtil.releaseClient()
         }
 
 

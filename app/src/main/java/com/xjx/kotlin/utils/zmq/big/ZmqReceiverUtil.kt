@@ -115,13 +115,17 @@ class ZmqReceiverUtil {
     }
 
     fun stop() {
+        mTraceInfo = ""
+        mNumber = 0
         mLoopFlag.set(true)
+        mReceiverFlag.set(false)
         runCatching {
-            if (socketClient != null) {
-                socketClient?.disconnect(mIp)
-                socketClient?.close()
-                socketClient = null
+            socketClient?.let {
+                it.disconnect(mIp)
+                it.close()
+                mIp = ""
             }
+            socketClient = null
         }
         mJob?.cancel()
         trace("stop zmq!")
@@ -130,10 +134,12 @@ class ZmqReceiverUtil {
     fun release() {
         stop()
         runCatching {
-            if (mContext != null) {
-                mContext?.close()
-                mContext = null
+            mContext?.let {
+                if (!it.isClosed) {
+                    it.close()
+                }
             }
+            mContext = null
         }
         trace("release zmq!")
     }
