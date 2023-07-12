@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import org.zeromq.SocketType
 import org.zeromq.ZContext
 import org.zeromq.ZMQ
-import org.zeromq.ZMQException
 import java.util.concurrent.atomic.AtomicBoolean
 
 class ZmqReceiverUtil {
@@ -48,92 +47,77 @@ class ZmqReceiverUtil {
         trace("tcp:[ $tcpAddress ]")
         initZContext()
 
+        if (mReceiverFlag.get()) {
+            trace("client already linked success ,break!")
+            return
+        }
+
         mJob = mScope.launch {
-            try {
-                if (mConnected) {
-                    trace("socket is binding !")
-                    return@launch
-                }
+            runCatching {
+                mSocketReceiver = mContext?.createSocket(SocketType.PAIR)
+                trace("create socket success!")
 
-                try {
-                    trace("create socket --->")
-                    mSocketReceiver = mContext?.createSocket(SocketType.PAIR)
-                    trace("create socket success!")
-                } catch (e: ZMQException) {
-                    mConnected = false
-                    trace("create socket failure : $e")
-                }
-
-                if (mSocketReceiver != null) {
-                    try {
-                        trace("bind --->")
-                        mIp = tcpAddress
-                        mConnected = mSocketReceiver!!.bind(tcpAddress)
+                mSocketReceiver?.let { socket ->
+                    runCatching {
+                        mConnected = socket.bind(tcpAddress)
                         trace("bind success!")
+                    }.onFailure {
+                        mConnected = false
+                        it.printStackTrace()
+                        trace("bind failure:$it")
+                    }
 
-                        // loop wait client send message
+                    if (!mConnected) {
+                        trace("bind address failure,break --->")
+                    }
+                    mScope.launch {
                         while (!Thread.currentThread().isInterrupted && !mLoopFlag.get()) {
-                            try {
-                                try {
-                                    val receiver = mSocketReceiver?.recv(0)
-                                    if (!mReceiverFlag.get()) {
-                                        trace("【 client bind success ！】")
-                                    }
-                                    mReceiverFlag.set(true)
-                                    if (receiver != null) {
-                                        val content = String(receiver, ZMQ.CHARSET)
-                                        mReceiverListener?.onCallBack(content)
-                                    }
-                                } catch (e: ZMQException) {
-                                    releaseSocket()
-                                    trace("receiver failure :$e")
+                            runCatching {
+                                val receiver = mSocketReceiver?.recv(0)
+                                if (!mReceiverFlag.get()) {
+                                    trace("【 client bind success ！】")
                                 }
-                            } catch (e: ZMQException) {
-                                releaseSocket()
-                                trace("receiver failure : $e")
+                                mReceiverFlag.set(true)
+                                if (receiver != null) {
+                                    val content = String(receiver, ZMQ.CHARSET)
+                                    mReceiverListener?.onCallBack(content)
+                                }
+                            }.onFailure {
+                                it.printStackTrace()
+                                trace("receiver failure :$it")
+                                mReceiverFlag.set(false)
                             }
                         }
-                    } catch (e: ZMQException) {
-                        releaseSocket()
-                        trace("bind failure : $e")
                     }
                 }
-            } catch (e: ZMQException) {
-                releaseSocket()
-                trace("zmq receiver failure : $e")
-                e.printStackTrace()
+
+            }.onFailure {
+                it.printStackTrace()
+                trace("init socket failure :$it")
             }
         }
     }
 
-    private fun releaseSocket() {
-        mReceiverFlag.set(false)
-        mConnected = false
-    }
-
     fun send(): Boolean {
-        try {
+        runCatching {
             val response = "接收端-->发送-->：(${mNumber})"
-            try {
-                if (mReceiverFlag.get()) {
-                    mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
-                    mNumber++
-                    mSendListener?.onCallBack(response)
-                    return true
-                } else {
-                    trace("bind address is failure ,cant send!")
-                }
-            } catch (e: ZMQException) {
-                trace("send message failure: : $e")
+            if (mReceiverFlag.get()) {
+                mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
+                mNumber++
+                mSendListener?.onCallBack(response)
+                return true
+            } else {
+                trace("bind address is failure ,cant send!")
             }
-        } catch (e: ZMQException) {
-            trace("send message failure: : $e")
+        }.onFailure {
+            it.printStackTrace()
+            trace("send message failure: : $it")
         }
         return false
     }
 
     fun stop() {
-        releaseSocket()
+        mReceiverFlag.set(false)
         mLoopFlag.set(true)
         runCatching {
             if (mSocketReceiver != null) {
