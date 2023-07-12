@@ -1,5 +1,6 @@
 package com.xjx.kotlin.utils.zmq.big
 
+import android.text.TextUtils
 import com.android.apphelper2.utils.LogUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ class ZmqReceiverUtil {
     private var mConnected: Boolean = false
     private var mReceiverFlag: AtomicBoolean = AtomicBoolean()
     private var mTraceInfo = ""
+    private var mTraceOldMsg = ""
     private var mNumber = 0
     private var mIp = ""
     private var mTraceListener: ZmqCallBackListener? = null
@@ -75,7 +77,7 @@ class ZmqReceiverUtil {
                                 try {
                                     val receiver = mSocketReceiver?.recv(0)
                                     if (!mReceiverFlag.get()) {
-                                        trace("client bind success!")
+                                        trace("【 client bind success ！】")
                                     }
                                     mReceiverFlag.set(true)
                                     if (receiver != null) {
@@ -165,8 +167,11 @@ class ZmqReceiverUtil {
     }
 
     private fun trace(content: String) {
-        mTraceInfo += (content + "\n\n")
-        mTraceListener?.onCallBack(mTraceInfo)
+        if (!TextUtils.equals(mTraceOldMsg, content)) {
+            mTraceInfo += (content + "\n\n")
+            mTraceListener?.onCallBack(mTraceInfo)
+            mTraceOldMsg = content
+        }
         LogUtil.e(ZmqUtil.TAG, content)
     }
 }

@@ -75,7 +75,7 @@ class ZmqClientUtil {
                             try {
                                 val receiver = socketClient?.recv(0)
                                 if (!mReceiverFlag) {
-                                    trace("server connect success!")
+                                    trace("【 server connect success ！】")
                                 }
                                 mReceiverFlag = true
                                 if (receiver != null) {
