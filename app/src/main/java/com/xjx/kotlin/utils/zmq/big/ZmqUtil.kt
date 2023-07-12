@@ -2,7 +2,7 @@ package com.xjx.kotlin.utils.zmq.big
 
 object ZmqUtil {
     const val TAG = "ZMQ"
-    const val PORT = 7000
+    const val PORT = 5556
     private val mZmqResult: ZmqReceiverUtil = ZmqReceiverUtil()
     private val mZmqClient: ZmqClientUtil = ZmqClientUtil()
 

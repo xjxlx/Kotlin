@@ -15,11 +15,7 @@ import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqCallBackListener
 import com.xjx.kotlin.utils.zmq.big.ZmqUtil
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() {
 
@@ -133,6 +129,6 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
 
     override fun onDestroy() {
         super.onDestroy()
-        // ZmqUtil.stop()
+        ZmqUtil.stopClient()
     }
 }
