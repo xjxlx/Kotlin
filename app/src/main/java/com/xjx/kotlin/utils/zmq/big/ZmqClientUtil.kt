@@ -50,14 +50,12 @@ class ZmqClientUtil {
             runCatching {
                 mSocketClient = mContext?.createSocket(SocketType.PAIR)
                 trace("create socket success!")
-                var connected = false
                 mSocketClient?.let { socket ->
                     socket.sendTimeOut = 3000
                     runCatching {
-                        connected = socket.bind(tcpAddress)
-                        trace("bind success!")
+                        val connected = socket.bind(tcpAddress)
+                        trace("bind success : $connected")
                     }.onFailure {
-                        connected = false
                         it.printStackTrace()
                         trace("bind failure:$it")
                     }
