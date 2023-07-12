@@ -93,7 +93,6 @@ class ZmqReceiverUtil {
     fun send(): Boolean {
         var result = false
         val response = "接收端-->发送-->：(${mNumber})"
-        trace("send :$response")
         runCatching {
             if (mReceiverFlag.get()) {
                 val send = mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
