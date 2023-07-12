@@ -11,14 +11,14 @@ import com.android.apphelper2.utils.HandlerUtil
 import com.android.apphelper2.utils.NetworkUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.xjx.kotlin.databinding.ActivityZmqReceiveBinding
+import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqCallBackListener
 import com.xjx.kotlin.utils.zmq.big.ZmqUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding>() {
+class ZmqSendActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() {
 
     private val mHandler: HandlerUtil = HandlerUtil()
     private val mNetWorkUtil: NetworkUtil by lazy {
@@ -26,11 +26,11 @@ class ZmqReceiveActivity : AppBaseBindingTitleActivity<ActivityZmqReceiveBinding
     }
 
     override fun setTitleContent(): String {
-        return "Zmq接收端"
+        return "Zmq发送端"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityZmqReceiveBinding {
-        return ActivityZmqReceiveBinding.inflate(inflater, container, true)
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityZmqSenderBinding {
+        return ActivityZmqSenderBinding.inflate(inflater, container, true)
     }
 
     override fun initData(savedInstanceState: Bundle?) {

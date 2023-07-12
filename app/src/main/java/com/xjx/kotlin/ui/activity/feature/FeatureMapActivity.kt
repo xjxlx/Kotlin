@@ -23,11 +23,11 @@ class FeatureMapActivity : AppBaseBindingTitleActivity<ActivityFeatureMapBinding
         setonClickListener(R.id.tv_item_recording_video)
 
         mBinding.tvItemZmqSend.setOnClickListener {
-            startActivity(ZmqSenderActivity::class.java)
+            startActivity(ZmqSendActivity::class.java)
         }
 
         mBinding.tvItemZmqReceive.setOnClickListener {
-            startActivity(ZmqReceiveActivity::class.java)
+            startActivity(ZmqReceiverActivity::class.java)
         }
 
         mBinding.tvItemZmqTest.setOnClickListener {

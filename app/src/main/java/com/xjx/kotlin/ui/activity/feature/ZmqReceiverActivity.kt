@@ -12,12 +12,12 @@ import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.NetworkUtil
 import com.android.apphelper2.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
+import com.xjx.kotlin.databinding.ActivityZmqReceiverBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqCallBackListener
 import com.xjx.kotlin.utils.zmq.big.ZmqUtil
 import kotlinx.coroutines.*
 
-class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() {
+class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBinding>() {
 
     private var mJob: Job? = null
     private val mHandler: HandlerUtil = HandlerUtil()
@@ -26,11 +26,11 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
     }
 
     override fun setTitleContent(): String {
-        return "ZMQ 发送端"
+        return "ZMQ-接收端"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityZmqSenderBinding {
-        return ActivityZmqSenderBinding.inflate(inflater, container, true)
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityZmqReceiverBinding {
+        return ActivityZmqReceiverBinding.inflate(inflater, container, true)
     }
 
     override fun initData(savedInstanceState: Bundle?) {

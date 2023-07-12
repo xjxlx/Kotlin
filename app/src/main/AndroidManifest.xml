@@ -71,10 +71,10 @@
             android:name=".ui.activity.feature.CurrentIpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.feature.ZmqReceiveActivity"
+            android:name=".ui.activity.feature.ZmqSendActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.feature.ZmqSenderActivity"
+            android:name=".ui.activity.feature.ZmqReceiverActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.test.flow.FlowControlActivity"
