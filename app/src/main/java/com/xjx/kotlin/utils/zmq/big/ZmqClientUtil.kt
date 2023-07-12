@@ -44,11 +44,6 @@ class ZmqClientUtil {
         trace("tcp:[ $tcpAddress ]")
         initZContext()
 
-        if (mReceiverFlag.get()) {
-            trace("connected succeeded , break!")
-            return
-        }
-
         mJob = mScope.launch {
             runCatching {
                 trace("create socket !")

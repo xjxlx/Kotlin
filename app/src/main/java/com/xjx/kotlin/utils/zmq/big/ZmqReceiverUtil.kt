@@ -46,11 +46,6 @@ class ZmqReceiverUtil {
         trace("tcp:[ $tcpAddress ]")
         initZContext()
 
-        if (mReceiverFlag.get()) {
-            trace("client already linked success ,break!")
-            return
-        }
-
         mJob = mScope.launch {
             runCatching {
                 mSocketReceiver = mContext?.createSocket(SocketType.PAIR)
@@ -67,9 +62,6 @@ class ZmqReceiverUtil {
                         trace("bind failure:$it")
                     }
 
-                    if (!connected) {
-                        trace("bind address failure,break --->")
-                    }
                     mScope.launch {
                         while (!Thread.currentThread().isInterrupted && !mLoopFlag.get()) {
                             runCatching {
@@ -99,21 +91,27 @@ class ZmqReceiverUtil {
     }
 
     fun send(): Boolean {
+        var result = false
+        val response = "接收端-->发送-->：(${mNumber})"
+        trace("send :$response")
         runCatching {
-            val response = "接收端-->发送-->：(${mNumber})"
             if (mReceiverFlag.get()) {
-                mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
+                val send = mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
+                if (send != null) {
+                    result = send
+                }
                 mNumber++
                 mSendListener?.onCallBack(response)
-                return true
             } else {
                 trace("bind address is failure ,cant send!")
             }
         }.onFailure {
+            result = false
             it.printStackTrace()
             trace("send message failure: : $it")
         }
-        return false
+        trace("send result :$result response:$response")
+        return result
     }
 
     fun stop() {
