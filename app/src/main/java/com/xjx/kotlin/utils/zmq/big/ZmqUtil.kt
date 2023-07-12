@@ -7,7 +7,7 @@ object ZmqUtil {
     private val mZmqClient: ZmqReceiverUtil = ZmqReceiverUtil()
 
     fun initServerZmq(ip: String) {
-        mZmqResult.initReceiverZmq(ip)
+        mZmqResult.initClientZmq(ip)
     }
 
     /**
@@ -39,7 +39,7 @@ object ZmqUtil {
 
     /******************************************* ******************************************************************************/
     fun initClientZmq(ip: String) {
-        mZmqClient.initSendZmq(ip)
+        mZmqClient.initReceiverZmq(ip)
     }
 
     /**

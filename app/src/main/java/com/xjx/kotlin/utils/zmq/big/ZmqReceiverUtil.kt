@@ -35,12 +35,12 @@ class ZmqReceiverUtil {
     }
 
     /**
-     * 发送端代码
+     * 接收端代码
      */
-    fun initSendZmq(tcpAddress: String) {
+    fun initReceiverZmq(tcpAddress: String) {
         mTraceInfo = ""
         mLoopFlag.set(false)
-        trace("initSendZmq !")
+        trace("initReceiverZmq !")
         trace("tcp:[ $tcpAddress ]")
         initZContext()
 
@@ -103,7 +103,7 @@ class ZmqReceiverUtil {
 
     fun send(): Boolean {
         runCatching {
-            val response = "发送端-->发送-->：(${mNumber})"
+            val response = "接收端-->发送-->：(${mNumber})"
             socketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
             mNumber++
             mSendListener?.onCallBack(response)
