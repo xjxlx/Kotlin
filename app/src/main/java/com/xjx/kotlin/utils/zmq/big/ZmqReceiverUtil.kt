@@ -112,10 +112,11 @@ class ZmqReceiverUtil {
             val response = "接收端-->发送-->：(${mNumber})"
             try {
 //                if (mReceiverFlag) {
-                    mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
-                    mNumber++
-                    mSendListener?.onCallBack(response)
-                    return true
+                trace("send  data: $response")
+                mSocketReceiver?.send(response.toByteArray(ZMQ.CHARSET), 0)
+                mNumber++
+                mSendListener?.onCallBack(response)
+                return true
 //                } else {
 //                    trace("bind address is failure ,cant send!")
 //                }
