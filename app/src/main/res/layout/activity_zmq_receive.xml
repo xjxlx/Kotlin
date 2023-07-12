@@ -60,7 +60,7 @@
             android:layout_weight="1"
             android:hint="动作"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_8" />
+            android:textSize="10sp" />
 
         <View
             android:layout_width="1dp"
