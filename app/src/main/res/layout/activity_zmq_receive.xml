@@ -17,6 +17,8 @@
         android:textSize="@dimen/sp_28" />
 
     <RelativeLayout
+        android:background="@color/teal_200"
+        android:padding="@dimen/dp_10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_20"

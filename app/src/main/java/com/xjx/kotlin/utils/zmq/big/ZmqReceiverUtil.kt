@@ -129,6 +129,7 @@ class ZmqReceiverUtil {
     }
 
     fun stop() {
+        mReceiverFlag = false
         mLoopFlag.set(true)
         runCatching {
             if (mSocketReceiver != null) {
