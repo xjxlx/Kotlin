@@ -33,6 +33,10 @@ object ZmqUtil {
         mZmqResult.stop()
     }
 
+    fun releaseServer() {
+        mZmqResult.release()
+    }
+
     /******************************************* ******************************************************************************/
     fun initClientZmq(ip: String) {
         mZmqClient.initSendZmq(ip)

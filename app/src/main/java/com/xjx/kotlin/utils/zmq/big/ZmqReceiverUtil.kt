@@ -123,14 +123,18 @@ class ZmqReceiverUtil {
                 mSocketReceiver = null
             }
         }
+        mJob?.cancel()
+        trace("stop zmq!")
+    }
 
+    fun release() {
+        stop()
         runCatching {
             if (mContext != null) {
                 mContext?.close()
                 mContext = null
             }
         }
-        mJob?.cancel()
         trace("release zmq!")
     }
 
