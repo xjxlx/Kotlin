@@ -129,6 +129,6 @@ class ZmqSenderActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>(
 
     override fun onDestroy() {
         super.onDestroy()
-        ZmqUtil.stopClient()
+        ZmqUtil.releaseClient()
     }
 }

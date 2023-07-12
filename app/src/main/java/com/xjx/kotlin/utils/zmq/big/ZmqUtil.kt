@@ -60,4 +60,8 @@ object ZmqUtil {
     fun stopClient() {
         mZmqClient.stop()
     }
+
+    fun releaseClient() {
+        mZmqClient.release()
+    }
 }
