@@ -101,7 +101,7 @@ class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBindi
                 return@setOnClickListener
             }
 
-            ZmqUtil.initClientZmq(tcp)
+            ZmqUtil.initClientZmq(tcp.trim())
         }
 
         // 关闭

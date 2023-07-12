@@ -101,7 +101,7 @@ class ZmqSendActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() 
             // val tcp = "tcp://$ip:${ZmqUtil6.port}"
             val tcp = "tcp://*:${ZmqUtil.PORT}"
             ToastUtil.show("开始发送！")
-            ZmqUtil.initServerZmq(tcp)
+            ZmqUtil.initServerZmq(tcp.trim())
         }
         mBinding.btnSend.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
