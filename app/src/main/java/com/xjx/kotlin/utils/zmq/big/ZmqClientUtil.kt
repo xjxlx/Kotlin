@@ -107,7 +107,7 @@ class ZmqClientUtil {
             it.printStackTrace()
             trace("send message failure: : $it")
         }
-        trace("send result :$result response:$response")
+        // trace("send result :$result response:$response")
         return result
     }
 
