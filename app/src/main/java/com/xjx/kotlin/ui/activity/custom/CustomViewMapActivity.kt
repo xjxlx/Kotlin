@@ -16,6 +16,9 @@ class CustomViewMapActivity : AppBaseBindingTitleActivity<ActivityCustomViewMapB
         mBinding.tvItemRecycleview.setOnClickListener {
             startActivity(RecycleViewActivity::class.java)
         }
+        mBinding.tvItemChart.setOnClickListener {
+            startActivity(ChartViewActivity::class.java)
+        }
     }
 
     override fun setTitleContent(): String {

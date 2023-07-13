@@ -19,13 +19,13 @@
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 获取WIFI信息状态的权限 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取网络状态改变的权限 -->
-    <!--    如果需要获取ssid，需要定位信息-->
+    <!-- 如果需要获取ssid，需要定位信息 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <queries>
+
         <!-- 如果想要与其他的应用进行AIDL通信的话，需要在这里注册包名的信息 -->
         <package android:name="com.android.app.free.debug" />
         <package android:name="com.android.poc" />
@@ -61,6 +61,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
+
+        <activity
+            android:name=".ui.activity.custom.ChartViewActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activity.feature.SocketResultActivity"
             android:exported="false" />
@@ -88,12 +92,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.activity.feature.FeatureMapActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ui.activity.audio.RecordingActivity"
             android:exported="true" />
@@ -164,10 +163,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

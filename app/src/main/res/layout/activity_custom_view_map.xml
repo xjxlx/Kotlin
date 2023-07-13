@@ -20,6 +20,11 @@
             style="@style/click_item_style"
             android:text="测试RecycleView" />
 
+        <TextView
+            android:id="@+id/tv_item_chart"
+            style="@style/click_item_style"
+            android:text="自定义图标" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
