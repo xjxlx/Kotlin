@@ -55,7 +55,7 @@ class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBindi
             }
         })
 
-        ZmqUtil.setClientTraceListener(object : ZmqCallBackListener {
+        ZmqUtil.setReceiverTraceListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 100
@@ -64,7 +64,7 @@ class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBindi
             }
         })
 
-        ZmqUtil.setClientSendListener(object : ZmqCallBackListener {
+        ZmqUtil.setReceiverSendListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 101
@@ -73,7 +73,7 @@ class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBindi
             }
         })
 
-        ZmqUtil.setClientReceiverListener(object : ZmqCallBackListener {
+        ZmqUtil.setReceiverReceiverListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 102
@@ -101,12 +101,12 @@ class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBindi
                 return@setOnClickListener
             }
 
-            ZmqUtil.initClientZmq(tcp.trim())
+            ZmqUtil.initReceiverZmq(tcp.trim())
         }
 
         // 关闭
         mBinding.btnServiceClose.setOnClickListener {
-            ZmqUtil.releaseClient()
+            ZmqUtil.releaseReceiver()
         }
 
 
@@ -114,7 +114,7 @@ class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBindi
             mJob = lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
                     delay(100)
-                    val send = ZmqUtil.sendClient()
+                    val send = ZmqUtil.sendReceiver()
                     if (!send) {
                         cancel()
                     }
@@ -129,6 +129,6 @@ class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBindi
 
     override fun onDestroy() {
         super.onDestroy()
-        ZmqUtil.releaseClient()
+        ZmqUtil.releaseReceiver()
     }
 }

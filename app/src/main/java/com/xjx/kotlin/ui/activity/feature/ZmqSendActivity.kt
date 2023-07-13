@@ -55,7 +55,7 @@ class ZmqSendActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() 
             }
         })
 
-        ZmqUtil.setServerTraceListener(object : ZmqCallBackListener {
+        ZmqUtil.setClientTraceListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 100
@@ -64,7 +64,7 @@ class ZmqSendActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() 
             }
         })
 
-        ZmqUtil.setServerSendListener(object : ZmqCallBackListener {
+        ZmqUtil.setClientSendListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 101
@@ -73,7 +73,7 @@ class ZmqSendActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() 
             }
         })
 
-        ZmqUtil.setServerReceiverListener(object : ZmqCallBackListener {
+        ZmqUtil.setClientReceiverListener(object : ZmqCallBackListener {
             override fun onCallBack(content: String) {
                 val message = mHandler.getMessage()
                 message.what = 102
@@ -101,12 +101,12 @@ class ZmqSendActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() 
             // val tcp = "tcp://$ip:${ZmqUtil6.port}"
             val tcp = "tcp://*:${ZmqUtil.PORT}"
             ToastUtil.show("开始发送！")
-            ZmqUtil.initServerZmq(tcp.trim())
+            ZmqUtil.initClientZmq(tcp.trim())
         }
         mBinding.btnSend.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
-                    val send = ZmqUtil.sendServer()
+                    val send = ZmqUtil.sendClient()
                     delay(100)
                 }
             }

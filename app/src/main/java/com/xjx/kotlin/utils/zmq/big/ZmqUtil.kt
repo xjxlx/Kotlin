@@ -6,66 +6,66 @@ object ZmqUtil {
     private val mZmqResult: ZmqClientUtil = ZmqClientUtil()
     private val mZmqClient: ZmqReceiverUtil = ZmqReceiverUtil()
 
-    fun initServerZmq(ip: String) {
+    fun initClientZmq(ip: String) {
         mZmqResult.initClientZmq(ip)
     }
 
     /**
      * 必须在异步线程
      */
-    fun sendServer(): Boolean {
+    fun sendClient(): Boolean {
         return mZmqResult.send()
     }
 
-    fun setServerTraceListener(listener: ZmqCallBackListener) {
+    fun setClientTraceListener(listener: ZmqCallBackListener) {
         mZmqResult.setTraceListener(listener)
     }
 
-    fun setServerReceiverListener(listener: ZmqCallBackListener) {
+    fun setClientReceiverListener(listener: ZmqCallBackListener) {
         mZmqResult.setReceiverListener(listener)
     }
 
-    fun setServerSendListener(listener: ZmqCallBackListener) {
+    fun setClientSendListener(listener: ZmqCallBackListener) {
         mZmqResult.setSendListener(listener)
     }
 
-    fun stopServer() {
+    fun stopClient() {
         mZmqResult.stop()
     }
 
-    fun releaseServer() {
+    fun releaseClient() {
         mZmqResult.release()
     }
 
     /******************************************* ******************************************************************************/
-    fun initClientZmq(ip: String) {
+    fun initReceiverZmq(ip: String) {
         mZmqClient.initReceiverZmq(ip)
     }
 
     /**
      * 必须在异步线程
      */
-    fun sendClient(): Boolean {
+    fun sendReceiver(): Boolean {
         return mZmqClient.send()
     }
 
-    fun setClientTraceListener(listener: ZmqCallBackListener) {
+    fun setReceiverTraceListener(listener: ZmqCallBackListener) {
         mZmqClient.setTraceListener(listener)
     }
 
-    fun setClientReceiverListener(listener: ZmqCallBackListener) {
+    fun setReceiverReceiverListener(listener: ZmqCallBackListener) {
         mZmqClient.setReceiverListener(listener)
     }
 
-    fun setClientSendListener(listener: ZmqCallBackListener) {
+    fun setReceiverSendListener(listener: ZmqCallBackListener) {
         mZmqClient.setSendListener(listener)
     }
 
-    fun stopClient() {
+    fun stopReceiver() {
         mZmqClient.stop()
     }
 
-    fun releaseClient() {
+    fun releaseReceiver() {
         mZmqClient.release()
     }
 }
