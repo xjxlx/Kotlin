@@ -45,19 +45,19 @@ class ZmqReceiverUtil {
         initZContext()
 
         mJob = mScope.launch {
-            runCatching {
+            try {
                 trace("create socket !")
                 socketClient = mContext?.createSocket(SocketType.PAIR)
                 socketClient?.let { socket ->
                     var connected = false
-                    runCatching {
+                    try {
                         connected = socket.connect(tcpAddress)
                         mIp = tcpAddress
                         trace("connect success!")
-                    }.onFailure { connect ->
+                    } catch (it: Throwable) {
                         connected = false
-                        trace("connect failure : $connect")
-                        connect.printStackTrace()
+                        trace("connect failure : $it")
+                        it.printStackTrace()
                     }
 
                     if (!connected) {
@@ -66,17 +66,17 @@ class ZmqReceiverUtil {
                     }
 
                     mScope.launch {
-                        runCatching {
+                        try {
                             trace("send connect success flag--->")
                             socket.send("success".toByteArray(ZMQ.CHARSET), 0)
-                        }.onFailure {
+                        } catch (it: Throwable) {
                             trace("send connect failure:$it")
                         }
                     }
 
                     mScope.launch {
                         while (!Thread.currentThread().isInterrupted && !mLoopFlag.get()) {
-                            runCatching {
+                            try {
                                 val receiver = socket.recv(0)
                                 if (!mReceiverFlag.get()) {
                                     trace("【 server connect success ！】")
@@ -86,7 +86,7 @@ class ZmqReceiverUtil {
                                     val content = String(receiver, ZMQ.CHARSET)
                                     mReceiverListener?.onCallBack(content)
                                 }
-                            }.onFailure {
+                            } catch (it: Throwable) {
                                 mReceiverFlag.set(false)
                                 trace("receiver msg failure: $it")
                                 it.printStackTrace()
@@ -94,7 +94,7 @@ class ZmqReceiverUtil {
                         }
                     }
                 }
-            }.onFailure {
+            } catch (it: Throwable) {
                 it.printStackTrace()
                 trace("initSocket failure: $it")
             }
@@ -102,13 +102,13 @@ class ZmqReceiverUtil {
     }
 
     fun send(): Boolean {
-        runCatching {
+        try {
             val response = "接收端-->发送-->：(${mNumber})"
             socketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
             mNumber++
             mSendListener?.onCallBack(response)
             return true
-        }.onFailure {
+        } catch (it: Throwable) {
             trace("send message failure: : $it")
         }
         return false
@@ -119,13 +119,15 @@ class ZmqReceiverUtil {
         mNumber = 0
         mLoopFlag.set(true)
         mReceiverFlag.set(false)
-        runCatching {
+        try {
             socketClient?.let {
                 it.disconnect(mIp)
                 it.close()
                 mIp = ""
             }
             socketClient = null
+        } catch (it: Throwable) {
+            trace("stop zmq failure: $it")
         }
         mJob?.cancel()
         trace("stop zmq!")
@@ -133,13 +135,15 @@ class ZmqReceiverUtil {
 
     fun release() {
         stop()
-        runCatching {
+        try {
             mContext?.let {
                 if (!it.isClosed) {
                     it.close()
                 }
             }
             mContext = null
+        } catch (it: Throwable) {
+            trace("release zmq failure: $it")
         }
         trace("release zmq!")
     }

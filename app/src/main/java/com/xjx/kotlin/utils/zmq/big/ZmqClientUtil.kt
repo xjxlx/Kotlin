@@ -47,22 +47,22 @@ class ZmqClientUtil {
         initZContext()
 
         mJob = mScope.launch {
-            runCatching {
+            try {
                 mSocketClient = mContext?.createSocket(SocketType.PAIR)
                 trace("create socket success!")
                 mSocketClient?.let { socket ->
                     socket.sendTimeOut = 3000
-                    runCatching {
+                    try {
                         val connected = socket.bind(tcpAddress)
                         trace("bind success : $connected")
-                    }.onFailure {
+                    } catch (it: Throwable) {
                         it.printStackTrace()
                         trace("bind failure:$it")
                     }
 
                     mScope.launch {
                         while (!Thread.currentThread().isInterrupted && !mLoopFlag.get()) {
-                            runCatching {
+                            try {
                                 val receiver = socket.recv(0)
                                 if (!mReceiverFlag.get()) {
                                     trace("【 receiver connect success ！】")
@@ -72,7 +72,7 @@ class ZmqClientUtil {
                                     val content = String(receiver, ZMQ.CHARSET)
                                     mReceiverListener?.onCallBack(content)
                                 }
-                            }.onFailure {
+                            } catch (it: Throwable) {
                                 it.printStackTrace()
                                 trace("receiver connect failure :$it")
                                 mReceiverFlag.set(false)
@@ -80,8 +80,7 @@ class ZmqClientUtil {
                         }
                     }
                 }
-
-            }.onFailure {
+            } catch (it: Throwable) {
                 it.printStackTrace()
                 trace("init socket failure :$it")
             }
@@ -91,7 +90,7 @@ class ZmqClientUtil {
     fun send(): Boolean {
         var result = false
         val response = "发送端-->发送-->：(${mNumber})"
-        runCatching {
+        try {
             if (mReceiverFlag.get()) {
                 val send = mSocketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
                 if (send != null) {
@@ -102,7 +101,7 @@ class ZmqClientUtil {
             } else {
                 trace("connect address is failure ,cant send!")
             }
-        }.onFailure {
+        } catch (it: Throwable) {
             result = false
             it.printStackTrace()
             trace("send message failure: : $it")
@@ -114,12 +113,14 @@ class ZmqClientUtil {
     fun stop() {
         mReceiverFlag.set(false)
         mLoopFlag.set(true)
-        runCatching {
+        try {
             if (mSocketClient != null) {
                 mSocketClient?.unbind(mIp)
                 mSocketClient?.close()
                 mSocketClient = null
             }
+        } catch (it: Throwable) {
+            trace("stop socket error:$it")
         }
         mJob?.cancel()
         trace("stop zmq!")
@@ -127,11 +128,13 @@ class ZmqClientUtil {
 
     fun release() {
         stop()
-        runCatching {
+        try {
             if (mContext != null) {
                 mContext?.close()
                 mContext = null
             }
+        } catch (it: Throwable) {
+            trace("release zmq failure: $it")
         }
         trace("release zmq!")
     }
