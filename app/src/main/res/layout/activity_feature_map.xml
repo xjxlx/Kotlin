@@ -35,8 +35,7 @@
         <TextView
             android:id="@+id/tv_item_current_ip"
             style="@style/click_item_style"
-            android:text="当前的ip地址"
-            android:visibility="gone" />
+            android:text="当前的ip地址" />
 
         <TextView
             android:id="@+id/tv_socket_send"
