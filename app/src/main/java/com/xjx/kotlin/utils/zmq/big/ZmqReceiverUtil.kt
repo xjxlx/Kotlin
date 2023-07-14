@@ -47,7 +47,7 @@ class ZmqReceiverUtil {
         mJob = mScope.launch {
             try {
                 trace("create socket !")
-                socketClient = mContext?.createSocket(SocketType.PAIR)
+                socketClient = mContext?.createSocket(SocketType.PULL)
                 socketClient?.let { socket ->
                     var connected = false
                     try {
@@ -65,14 +65,14 @@ class ZmqReceiverUtil {
                         return@launch
                     }
 
-                    mScope.launch {
-                        try {
-                            trace("send connect success flag--->")
-                            socket.send("success".toByteArray(ZMQ.CHARSET), 0)
-                        } catch (it: Throwable) {
-                            trace("send connect failure:$it")
-                        }
-                    }
+//                    mScope.launch {
+//                        try {
+//                            trace("send connect success flag--->")
+//                            socket.send("success".toByteArray(ZMQ.CHARSET), 0)
+//                        } catch (it: Throwable) {
+//                            trace("send connect failure:$it")
+//                        }
+//                    }
 
                     mScope.launch {
                         while (!Thread.currentThread().isInterrupted && !mLoopFlag.get()) {

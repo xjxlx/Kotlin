@@ -48,7 +48,7 @@ class ZmqClientUtil {
 
         mJob = mScope.launch {
             try {
-                mSocketClient = mContext?.createSocket(SocketType.PAIR)
+                mSocketClient = mContext?.createSocket(SocketType.PUSH)
                 trace("create socket success!")
                 mSocketClient?.let { socket ->
                     socket.sendTimeOut = 3000
@@ -91,16 +91,16 @@ class ZmqClientUtil {
         var result = false
         val response = "发送端-->发送-->：(${mNumber})"
         try {
-            if (mReceiverFlag.get()) {
-                val send = mSocketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
-                if (send != null) {
-                    result = send
-                }
-                mNumber++
-                mSendListener?.onCallBack(response)
-            } else {
-                trace("connect address is failure ,cant send!")
+//            if (mReceiverFlag.get()) {
+            val send = mSocketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
+            if (send != null) {
+                result = send
             }
+            mNumber++
+            mSendListener?.onCallBack(response)
+//            } else {
+//                trace("connect address is failure ,cant send!")
+//            }
         } catch (it: Throwable) {
             result = false
             it.printStackTrace()
