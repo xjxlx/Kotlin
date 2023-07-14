@@ -10,15 +10,14 @@ import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.LogUtil
 import com.android.helper.utils.permission.RxPermissionsUtil
 import com.xjx.kotlin.databinding.ActivityMainBinding
-import com.xjx.kotlin.network.NetWorkActivity
 import com.xjx.kotlin.ui.activity.custom.CustomViewMapActivity
 import com.xjx.kotlin.ui.activity.feature.FeatureMapActivity
 import com.xjx.kotlin.ui.activity.test.*
 import com.xjx.kotlin.ui.activity.test.block.BlockActivity
+import com.xjx.kotlin.ui.activity.test.coroutine.CoroutineMapActivity
 import com.xjx.kotlin.ui.activity.test.flow.FlowActivity
 import com.xjx.kotlin.ui.activity.test.flow.FlowCallActivity
 import com.xjx.kotlin.ui.activity.test.flow.FlowMapActivity
-import com.xjx.kotlin.ui.activity.test.xc.*
 import com.xjx.kotlin.ui.activity.thread.ThreadMapActivity
 
 class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
@@ -27,9 +26,8 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
         super.initListener()
         setonClickListener(R.id.tv_item_test_viewpager2, R.id.tv_item_array, R.id.tv_item_list, R.id.tv_item_fun, R.id.tv_item_class,
             R.id.tv_item_convert_data, R.id.tv_item_xc, R.id.tv_item_aidl, R.id.tv_item_control, R.id.tv_item_fx, R.id.tv_item_fs,
-            R.id.tv_item_xc_2, R.id.tv_item_xc_3, R.id.tv_item_xc_4, R.id.tv_item_fz, R.id.tv_item_flow, R.id.tv_item_block,
-            R.id.tv_item_xc_5, R.id.tv_item_flow_call, R.id.tv_item_custom_view, R.id.tv_item_thread, R.id.tv_item_function,
-            R.id.tv_item_flow_map)
+            R.id.tv_item_flow, R.id.tv_item_block, R.id.tv_item_flow_call, R.id.tv_item_custom_view, R.id.tv_item_thread,
+            R.id.tv_item_function, R.id.tv_item_flow_map, R.id.tv_item_coroutine_map)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -75,9 +73,7 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
                 startActivity(ConvertDataActivity::class.java)
             }
 
-            R.id.tv_item_xc -> {
-                startActivity(XCActivity::class.java)
-            }
+
 
             R.id.tv_item_aidl -> {
                 startActivity(AidlActivity::class.java)
@@ -95,20 +91,7 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
                 startActivity(FsActivity::class.java)
             }
 
-            R.id.tv_item_xc_2 -> {
-                startActivity(XC2Activity::class.java)
-            }
-            R.id.tv_item_xc_3 -> {
-                startActivity(XC3Activity::class.java)
-            }
 
-            R.id.tv_item_xc_4 -> {
-                startActivity(XC4Activity::class.java)
-            }
-
-            R.id.tv_item_fz -> {
-                startActivity(NetWorkActivity::class.java)
-            }
             R.id.tv_item_flow -> {
                 startActivity(FlowActivity::class.java)
             }
@@ -117,9 +100,6 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
                 startActivity(BlockActivity::class.java)
             }
 
-            R.id.tv_item_xc_5 -> {
-                startActivity(Xc5Activity::class.java)
-            }
             R.id.tv_item_flow_call -> {
                 startActivity(FlowCallActivity::class.java)
             }
@@ -134,6 +114,9 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
             }
             R.id.tv_item_flow_map -> {
                 startActivity(FlowMapActivity::class.java)
+            }
+            R.id.tv_item_coroutine_map -> {
+                startActivity(CoroutineMapActivity::class.java)
             }
         }
     }

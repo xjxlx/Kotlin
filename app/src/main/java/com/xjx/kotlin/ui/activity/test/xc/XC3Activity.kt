@@ -6,8 +6,13 @@ import android.view.ViewGroup
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityXc3Binding
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import kotlin.system.measureTimeMillis
 
 class XC3Activity : AppBaseBindingTitleActivity<ActivityXc3Binding>() {
@@ -320,18 +325,18 @@ class XC3Activity : AppBaseBindingTitleActivity<ActivityXc3Binding>() {
             }
         }
 
-        runBlocking {
-//            foo()
-            (1..5)
-                .asFlow()
-                .cancellable()
-                .collect { value ->
-                    if (value == 3) {
-                        cancel()
-                    }
-                    LogUtil.e("cancel", value)
-                }
-        }
+//        runBlocking {
+////            foo()
+//            (1..5)
+//                .asFlow()
+//                .cancellable()
+//                .collect { value ->
+//                    if (value == 3) {
+//                        cancel()
+//                    }
+//                    LogUtil.e("cancel", value)
+//                }
+//        }
     }
 
     suspend fun simple2(): ArrayList<Int> {
