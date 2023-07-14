@@ -15,8 +15,6 @@ import com.xjx.kotlin.ui.activity.feature.FeatureMapActivity
 import com.xjx.kotlin.ui.activity.test.*
 import com.xjx.kotlin.ui.activity.test.block.BlockActivity
 import com.xjx.kotlin.ui.activity.test.coroutine.CoroutineMapActivity
-import com.xjx.kotlin.ui.activity.test.flow.FlowActivity
-import com.xjx.kotlin.ui.activity.test.flow.FlowCallActivity
 import com.xjx.kotlin.ui.activity.test.flow.FlowMapActivity
 import com.xjx.kotlin.ui.activity.thread.ThreadMapActivity
 
@@ -26,8 +24,8 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
         super.initListener()
         setonClickListener(R.id.tv_item_test_viewpager2, R.id.tv_item_array, R.id.tv_item_list, R.id.tv_item_fun, R.id.tv_item_class,
             R.id.tv_item_convert_data, R.id.tv_item_xc, R.id.tv_item_aidl, R.id.tv_item_control, R.id.tv_item_fx, R.id.tv_item_fs,
-            R.id.tv_item_flow, R.id.tv_item_block, R.id.tv_item_flow_call, R.id.tv_item_custom_view, R.id.tv_item_thread,
-            R.id.tv_item_function, R.id.tv_item_flow_map, R.id.tv_item_coroutine_map)
+            R.id.tv_item_flow, R.id.tv_item_block, R.id.tv_item_custom_view, R.id.tv_item_thread, R.id.tv_item_function,
+            R.id.tv_item_flow_map, R.id.tv_item_coroutine_map)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -91,18 +89,10 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
                 startActivity(FsActivity::class.java)
             }
 
-
-            R.id.tv_item_flow -> {
-                startActivity(FlowActivity::class.java)
-            }
-
             R.id.tv_item_block -> {
                 startActivity(BlockActivity::class.java)
             }
 
-            R.id.tv_item_flow_call -> {
-                startActivity(FlowCallActivity::class.java)
-            }
             R.id.tv_item_custom_view -> {
                 startActivity(CustomViewMapActivity::class.java)
             }

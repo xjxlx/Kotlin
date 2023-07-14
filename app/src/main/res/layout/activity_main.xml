@@ -62,21 +62,10 @@
             style="@style/click_item_style"
             android:text="反射" />
 
-
-        <TextView
-            android:id="@+id/tv_item_flow"
-            style="@style/click_item_style"
-            android:text="Flow" />
-
         <TextView
             android:id="@+id/tv_item_block"
             style="@style/click_item_style"
             android:text="Block 语法" />
-
-        <TextView
-            android:id="@+id/tv_item_flow_call"
-            style="@style/click_item_style"
-            android:text="FlowCall" />
 
         <TextView
             android:id="@+id/tv_item_custom_view"
