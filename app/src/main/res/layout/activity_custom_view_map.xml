@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/tv_item_chart"
             style="@style/click_item_style"
-            android:text="自定义图标" />
+            android:text="自定义图表View" />
 
     </LinearLayout>
 
