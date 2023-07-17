@@ -30,6 +30,7 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
 
     //    private val mSharedFlow2 = MutableStateFlow("1")
     private val mFlowViewModel: FlowViewModel by viewModels()
+    private var mNumber = 0
 
     override fun setTitleContent(): String {
         return "Flow 的使用"
@@ -58,18 +59,28 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
 //            }
 //        }
         mBinding.btnClickStateFlow.setOnClickListener {
-            lifecycleScope.launch {
-//                mStateFlow.repeat()
-//                mStateFlow.login()
+//            lifecycleScope.launch {
+////                mStateFlow.repeat()
+////                mStateFlow.login()
+//
+//                LogUtil.e("viewModel", "1-> ${mFlowViewModel.bean}")
+//
+//                mFlowViewModel.bean.name = "李四"
+//                mFlowViewModel.bean.age = mFlowViewModel.count++
+//
+//                LogUtil.e("viewModel", "2-> ${mFlowViewModel.bean}")
+//                mFlowViewModel.mStateFlow.emit(mFlowViewModel.bean)
+//
+//            }
 
-                LogUtil.e("viewModel", "1-> ${mFlowViewModel.bean}")
+            lifecycleScope.launchWhenStarted {
+                LogUtil.e("XJX", Thread.currentThread().name)
 
-                mFlowViewModel.bean.name = "李四"
-                mFlowViewModel.bean.age = mFlowViewModel.count++
-
-                LogUtil.e("viewModel", "2-> ${mFlowViewModel.bean}")
-                mFlowViewModel.mStateFlow.emit(mFlowViewModel.bean)
-
+                repeat(100) {
+                    mSharedFlow2.emit("" + mNumber)
+                    mNumber++
+                    delay(200)
+                }
             }
         }
         // test flow
