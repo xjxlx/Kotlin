@@ -3,6 +3,7 @@ package com.xjx.kotlin.ui.activity.custom
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.WindowManager
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityChartViewBinding
 
@@ -17,5 +18,6 @@ class ChartViewActivity : AppBaseBindingTitleActivity<ActivityChartViewBinding>(
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 }
