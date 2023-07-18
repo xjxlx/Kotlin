@@ -9,8 +9,17 @@
     <com.android.apphelper2.widget.ChartView
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:id="@+id/cv_chart"
         android:layout_width="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/dp_34" />
+
+    <Button
+        android:id="@+id/btn_chart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_20"
+        android:text="图表数据" />
 
 </RelativeLayout>
