@@ -21,8 +21,9 @@ class ChartViewActivity : AppBaseBindingTitleActivity<ActivityChartViewBinding>(
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         mBinding.btnChart.setOnClickListener {
-            val floatArray = floatArrayOf(0.6f, 0.3f, 0.2f, 0.1f, 0.4f)
-            mBinding.cvChart.setChartArray(floatArray)
+            val bottomArray = floatArrayOf(0.6f, 0.3f, 0.2f, 0.1f, 0.4f)
+            val topArray = floatArrayOf(0.9f, 0.3f, 0.5f, 0.7f, 0.6f)
+            mBinding.cvChart.setChartArray(bottomArray, topArray)
         }
     }
 }
