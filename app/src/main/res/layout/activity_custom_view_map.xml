@@ -25,6 +25,11 @@
             style="@style/click_item_style"
             android:text="自定义图表View" />
 
+        <TextView
+            android:id="@+id/tv_item_score_progress"
+            style="@style/click_item_style"
+            android:text="自定义总和评分进度条" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
