@@ -21,6 +21,8 @@ class CustomProgressActivity : AppBaseBindingTitleActivity<ActivityCustomProgres
 
         mBinding.btnStart.setOnClickListener {
 
+            mBinding.spvScore.restart()
+
             var value = mBinding.etNumber.text.toString()
             if (TextUtils.isEmpty(value)) {
                 value = "0"

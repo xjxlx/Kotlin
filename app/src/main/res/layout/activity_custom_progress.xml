@@ -15,7 +15,7 @@
 
     <EditText
         android:id="@+id/et_number"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/spv_score"
         android:layout_marginStart="@dimen/dp_30"
@@ -28,9 +28,10 @@
 
     <Button
         android:id="@+id/btn_start"
+        android:layout_alignLeft="@+id/et_number"
+        android:layout_toRightOf="@+id/et_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/et_number"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dp_20"
         android:text="开始" />
