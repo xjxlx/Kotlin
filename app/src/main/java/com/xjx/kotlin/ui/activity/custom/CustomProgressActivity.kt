@@ -27,8 +27,8 @@ class CustomProgressActivity : AppBaseBindingTitleActivity<ActivityCustomProgres
             if (TextUtils.isEmpty(value)) {
                 value = "0"
             }
-            val toFloat = value.toFloat()
-            mBinding.spvScore.setScore(toFloat)
+            val toFloat = value.toInt()
+            mBinding.spvScore.setScore(toFloat, 23)
         }
     }
 }
