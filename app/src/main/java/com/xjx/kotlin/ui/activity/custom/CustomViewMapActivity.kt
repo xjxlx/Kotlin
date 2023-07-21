@@ -22,6 +22,9 @@ class CustomViewMapActivity : AppBaseBindingTitleActivity<ActivityCustomViewMapB
         mBinding.tvItemScoreProgress.setOnClickListener {
             startActivity(CustomProgressActivity::class.java)
         }
+        mBinding.tvItemTextWrap.setOnClickListener {
+            startActivity(CustomWrapTextViewActivity::class.java)
+        }
     }
 
     override fun setTitleContent(): String {

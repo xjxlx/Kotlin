@@ -30,6 +30,11 @@
             style="@style/click_item_style"
             android:text="自定义总和评分进度条" />
 
+        <TextView
+            android:id="@+id/tv_item_text_wrap"
+            style="@style/click_item_style"
+            android:text="文字换行" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
