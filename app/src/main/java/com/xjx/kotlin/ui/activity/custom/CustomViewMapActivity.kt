@@ -25,6 +25,9 @@ class CustomViewMapActivity : AppBaseBindingTitleActivity<ActivityCustomViewMapB
         mBinding.tvItemTextWrap.setOnClickListener {
             startActivity(CustomWrapTextViewActivity::class.java)
         }
+        mBinding.tvItemScoreResult.setOnClickListener {
+            startActivity(ScoreSummarizeActivity::class.java)
+        }
     }
 
     override fun setTitleContent(): String {
