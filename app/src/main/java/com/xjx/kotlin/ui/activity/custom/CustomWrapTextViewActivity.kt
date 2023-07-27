@@ -3,8 +3,10 @@ package com.xjx.kotlin.ui.activity.custom
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityCustomWrapTextViewBinding
+import kotlinx.coroutines.launch
 
 class CustomWrapTextViewActivity : AppBaseBindingTitleActivity<ActivityCustomWrapTextViewBinding>() {
 
@@ -18,7 +20,9 @@ class CustomWrapTextViewActivity : AppBaseBindingTitleActivity<ActivityCustomWra
 
     override fun initData(savedInstanceState: Bundle?) {
         mBinding.btnStart.setOnClickListener {
-            mBinding.twvContent.setExplain(20,"加油","下次努力哦！","呼吸时长足够，注意保持均匀的呼吸次数和平缓的心率，让情绪更稳定些效果更好哦！")
+            lifecycleScope.launch {
+                mBinding.twvContent.setExplain(20, "加油", "下次努力哦！", "呼吸时长足够，注意保持均匀的呼吸次数和平缓的心率，让情绪更稳定些效果更好哦！")
+            }
         }
     }
 }

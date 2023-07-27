@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityCustomProgressBinding
+import kotlinx.coroutines.launch
 
 class CustomProgressActivity : AppBaseBindingTitleActivity<ActivityCustomProgressBinding>() {
 
@@ -28,7 +30,9 @@ class CustomProgressActivity : AppBaseBindingTitleActivity<ActivityCustomProgres
                 value = "0"
             }
             val toFloat = value.toInt()
-            mBinding.spvScore.setScore(toFloat, 23)
+            lifecycleScope.launch {
+                mBinding.spvScore.setScore(toFloat, 23)
+            }
         }
     }
 }
