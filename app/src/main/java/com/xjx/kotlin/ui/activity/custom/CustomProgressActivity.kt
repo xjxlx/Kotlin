@@ -23,7 +23,7 @@ class CustomProgressActivity : AppBaseBindingTitleActivity<ActivityCustomProgres
 
         mBinding.btnStart.setOnClickListener {
 
-            mBinding.spvScore.restart()
+            mBinding.spvScore.reset()
 
             var value = mBinding.etNumber.text.toString()
             if (TextUtils.isEmpty(value)) {
