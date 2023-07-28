@@ -4,7 +4,7 @@ import android.app.Application
 import android.os.Process
 import android.provider.Settings
 import android.text.TextUtils
-import com.android.apphelper2.app.AppHelperManager
+import com.android.apphelper2.app.AppHelper2
 import com.android.apphelper2.utils.LogUtil
 import com.android.helper.app.ApplicationInterface
 import com.android.helper.app.BaseApplication
@@ -33,7 +33,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        AppHelperManager.init(this, true)
+        AppHelper2.init(this, true, AppHelper2.Builder())
 
         BaseApplication.getInstance()
             .setApplication(object : ApplicationInterface {
