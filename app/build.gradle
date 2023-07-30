@@ -108,7 +108,8 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
 
     //协程依赖 - 基础
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0"
+    //noinspection GradleDependency
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     // 协程 - activity / fragment 扩展
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     // 协程 - viewModel 扩展
