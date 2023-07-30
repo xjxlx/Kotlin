@@ -33,6 +33,10 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        RetrofitHelper.setBaseUrl("https://web.jollyeng.com/")
+        RetrofitHelper.addInterceptor(AutoInterceptor())
+        RetrofitHelper.addInterceptor(HttpLogInterceptor())
+
         val downCountTime = DownCountTime()
         downCountTime.setCountdown(5, 1000, object : DownCountTime.CallBack {
             override fun onTick(count: Long, current: Long) {
@@ -50,10 +54,6 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
 //            downCountTime.start()
 
             lifecycleScope.launch {
-                RetrofitHelper.setBaseUrl("https://web.jollyeng.com/")
-                RetrofitHelper.addInterceptor(AutoInterceptor())
-                RetrofitHelper.addInterceptor(HttpLogInterceptor())
-
                 val unId = "newcL6_2"
                 val suiJi = "o9RWl1EJPHolk8_7smU39k1-LqVs"
                 val mParameters = mutableMapOf<String, Any>()
