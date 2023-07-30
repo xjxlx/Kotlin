@@ -5,3 +5,7 @@
 [submodule "apphelper2"]
 	path = apphelper2
 	url = git@github.com:xjxlx/apphelper2.git
+
+[submodule "refresh"]
+	path = refresh
+	url = git@github.com:xjxlx/refresh.git
