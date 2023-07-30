@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.httpclient.*
 import com.android.apphelper2.utils.httpclient.listener.HttpCallBackListener
 import com.android.apphelper2.utils.httpclient.test.HttpResponse
+import com.android.apphelper2.utils.httpclient.test.L6HomeRightBookListBean
 import com.android.apphelper2.utils.httpclient.test.TestApiService
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.DownCountTime
@@ -60,14 +61,14 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
                 mParameters["unid"] = unId
                 mParameters["suiji"] = suiJi
 
-                HttpClient.http<TestApiService, MutableMap<String, Any>, HttpResponse<String>>({ getL6BookList(it) }, mParameters,
-                    object : HttpCallBackListener<HttpResponse<String>>() {
+                HttpClient.http<TestApiService, MutableMap<String, Any>, HttpResponse<L6HomeRightBookListBean>>({ getL6BookList(it) },
+                    mParameters, object : HttpCallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
                         override fun onFailure(exception: Throwable) {
                             super.onFailure(exception)
                             LogUtil.e("sss", "error:${exception}")
                         }
 
-                        override fun onSuccess(t: HttpResponse<String>) {
+                        override fun onSuccess(t: HttpResponse<L6HomeRightBookListBean>) {
                             LogUtil.e("sss", t)
                         }
                     })
