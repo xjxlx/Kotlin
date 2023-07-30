@@ -34,8 +34,8 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
         RetrofitHelper.setBaseUrl("https://web.jollyeng.com/")
-        RetrofitHelper.addInterceptor(AutoInterceptor())
-        RetrofitHelper.addInterceptor(HttpLogInterceptor())
+        RetrofitHelper.addInterceptor(AutoInterceptor2())
+        RetrofitHelper.addInterceptor(HttpLogInterceptor2())
 
         val downCountTime = DownCountTime()
         downCountTime.setCountdown(5, 1000, object : DownCountTime.CallBack {
@@ -49,13 +49,12 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
         })
 
 
-
         mBinding.btnStart.setOnClickListener {
 //            downCountTime.start()
 
             lifecycleScope.launch {
-                val unId = "newcL6_2"
-                val suiJi = "o9RWl1EJPHolk8_7smU39k1-LqVs"
+                val unId = "o9RWl1EJPHolk8_7smU39k1-LqVs"
+                val suiJi = "newcL6_2"
                 val mParameters = mutableMapOf<String, Any>()
                 mParameters["service"] = "App.App2022.GetBook"
                 mParameters["unid"] = unId
