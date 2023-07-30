@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.android.apphelper2.utils.httpclient.*
+import com.android.apphelper2.utils.httpclient.listener.HttpCallBackListener
+import com.android.apphelper2.utils.httpclient.test.HttpResponse
+import com.android.apphelper2.utils.httpclient.test.TestApiService
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.httpclient.kotlin.HttpResult
-import com.android.helper.httpclient.kotlin.RetrofitHelper
 import com.android.helper.utils.DownCountTime
 import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityNetWorkBinding
@@ -42,22 +44,35 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
             }
         })
 
-        lifecycleScope.launch {
-//            HttpClient.http(block = {
-//                UserLogic.getUser()
-//            }, listener = object : HttpCallBackListener<HttpResult<UserInfoBean>> {
-//                override fun onSuccess(t: HttpResult<UserInfoBean>) {
-//
-//                }
-//
-//                override fun onError(throwable: Throwable) {
-//
-//                }
-//            })
-        }
+
 
         mBinding.btnStart.setOnClickListener {
-            downCountTime.start()
+//            downCountTime.start()
+
+            lifecycleScope.launch {
+                RetrofitHelper.setBaseUrl("https://web.jollyeng.com/")
+                RetrofitHelper.addInterceptor(AutoInterceptor())
+                RetrofitHelper.addInterceptor(HttpLogInterceptor())
+
+                val unId = "newcL6_2"
+                val suiJi = "o9RWl1EJPHolk8_7smU39k1-LqVs"
+                val mParameters = mutableMapOf<String, Any>()
+                mParameters["service"] = "App.App2022.GetBook"
+                mParameters["unid"] = unId
+                mParameters["suiji"] = suiJi
+
+                HttpClient.http<TestApiService, MutableMap<String, Any>, HttpResponse<String>>({ getL6BookList(it) }, mParameters,
+                    object : HttpCallBackListener<HttpResponse<String>>() {
+                        override fun onFailure(exception: Throwable) {
+                            super.onFailure(exception)
+                            LogUtil.e("sss", "error:${exception}")
+                        }
+
+                        override fun onSuccess(t: HttpResponse<String>) {
+                            LogUtil.e("sss", t)
+                        }
+                    })
+            }
         }
         mBinding.btnPause.setOnClickListener {
             downCountTime.pause()
