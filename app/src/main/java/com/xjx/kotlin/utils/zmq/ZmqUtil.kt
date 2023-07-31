@@ -5,7 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
-import com.android.apphelper2.utils.LogUtil
+import com.android.common.utils.LogUtil
 import com.xjx.kotlin.utils.zmq.send.ZmqMessageListener
 
 /**

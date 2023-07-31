@@ -3,7 +3,7 @@ package com.xjx.kotlin.ui.activity.thread
 import android.os.Bundle
 import android.widget.Button
 import androidx.fragment.app.FragmentActivity
-import com.android.apphelper2.utils.LogUtil
+import com.android.common.utils.LogUtil
 import com.xjx.kotlin.R
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.SendChannel

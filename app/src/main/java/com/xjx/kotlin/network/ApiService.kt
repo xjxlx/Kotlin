@@ -1,6 +1,6 @@
 package com.xjx.kotlin.network
 
-import com.android.apphelper2.utils.httpclient.HttpResult
+import com.android.http.utils.client.HttpResult
 import com.xjx.kotlin.network.bean.ConsecrateListBean
 import com.xjx.kotlin.network.bean.UserInfoBean
 import kotlinx.coroutines.flow.Flow

@@ -1,7 +1,7 @@
 package com.xjx.kotlin.utils.zmq.big
 
 import android.text.TextUtils
-import com.android.apphelper2.utils.LogUtil
+import com.android.common.utils.LogUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

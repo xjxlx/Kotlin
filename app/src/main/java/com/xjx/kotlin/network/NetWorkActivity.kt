@@ -4,14 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import com.android.apphelper2.utils.httpclient.*
-import com.android.apphelper2.utils.httpclient.listener.HttpCallBackListener
-import com.android.apphelper2.utils.httpclient.test.HttpResponse
-import com.android.apphelper2.utils.httpclient.test.L6HomeRightBookListBean
-import com.android.apphelper2.utils.httpclient.test.TestApiService
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.DownCountTime
 import com.android.helper.utils.LogUtil
+import com.android.http.utils.client.HttpClient
+import com.android.http.utils.client.HttpResult
+import com.android.http.utils.client.RetrofitHelper
+import com.android.http.utils.listener.HttpCallBackListener
+import com.android.http.utils.test.HttpResponse
+import com.android.http.utils.test.L6HomeRightBookListBean
+import com.android.http.utils.test.TestApiService
 import com.xjx.kotlin.databinding.ActivityNetWorkBinding
 import com.xjx.kotlin.network.bean.UserInfoBean
 import com.xjx.kotlin.ui.activity.test.fx.TestFx1
@@ -35,8 +37,6 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
         RetrofitHelper.setBaseUrl("https://web.jollyeng.com/")
-        RetrofitHelper.addInterceptor(AutoInterceptor2())
-        RetrofitHelper.addInterceptor(HttpLogInterceptor2())
 
         val downCountTime = DownCountTime()
         downCountTime.setCountdown(5, 1000, object : DownCountTime.CallBack {
@@ -51,7 +51,6 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
 
         mBinding.btnStart.setOnClickListener {
-//            downCountTime.start()
 
             lifecycleScope.launch {
                 val unId = "o9RWl1EJPHolk8_7smU39k1-LqVs"

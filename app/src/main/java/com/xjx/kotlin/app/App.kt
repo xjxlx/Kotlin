@@ -6,12 +6,14 @@ import android.os.Process
 import android.provider.Settings
 import android.text.TextUtils
 import com.android.apphelper2.app.AppHelper2
-import com.android.apphelper2.utils.LogUtil
+import com.android.common.utils.LogUtil
 import com.android.helper.app.ApplicationInterface
 import com.android.helper.app.BaseApplication
 import com.android.helper.base.title.PageLayoutBuilder
 import com.android.helper.base.title.PageLayoutManager
 import com.android.helper.httpclient.AutoInterceptor
+import com.android.http.utils.client.HttpLogInterceptor
+import com.android.http.utils.client.RetrofitHelper
 import com.tencent.bugly.crashreport.CrashReport
 import com.xjx.kotlin.BuildConfig
 import com.xjx.kotlin.R
@@ -34,7 +36,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        AppHelper2.init(this, true, AppHelper2.Builder())
+        AppHelper2.init(this, AppHelper2.Builder())
 
         BaseApplication.getInstance()
             .setApplication(object : ApplicationInterface {
@@ -94,6 +96,9 @@ class App : Application() {
         }.onFailure {
             LogUtil.e(TAG, "init crash error: ${it.message}")
         }
+
+        RetrofitHelper.addInterceptor(AutoInterceptor())
+        RetrofitHelper.addInterceptor(HttpLogInterceptor())
 
         // init refresh
         RefreshManager.init(this)

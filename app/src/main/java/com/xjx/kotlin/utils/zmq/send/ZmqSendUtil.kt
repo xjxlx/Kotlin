@@ -1,6 +1,6 @@
 package com.xjx.kotlin.utils.zmq.send
 
-import com.android.apphelper2.utils.LogUtil
+import com.android.common.utils.LogUtil
 import com.xjx.kotlin.utils.zmq.TCP
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -33,5 +33,7 @@ include ':app'
 include ':apphelper'
 include ':apphelper2'
 include ':refresh'
+include ':http'
+include ':common'
 
 include ':model'

@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
-import com.android.apphelper2.utils.LogUtil
 import com.android.apphelper2.utils.LogWriteUtil
 import com.android.apphelper2.utils.permission.PermissionUtil
+import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityFlowCallBinding
 import kotlinx.coroutines.*

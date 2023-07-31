@@ -8,15 +8,13 @@ import com.android.apphelper2.base.BaseBindingTitleActivity
 import com.android.apphelper2.base.recycleview.BaseRecycleViewFragment
 import com.android.apphelper2.base.recycleview.BaseVH
 import com.android.apphelper2.utils.RecycleUtil
-import com.android.apphelper2.utils.httpclient.AutoInterceptor2
-import com.android.apphelper2.utils.httpclient.HttpClient
-import com.android.apphelper2.utils.httpclient.HttpLogInterceptor2
-import com.android.apphelper2.utils.httpclient.RetrofitHelper
-import com.android.apphelper2.utils.httpclient.listener.HttpCallBackListener
-import com.android.apphelper2.utils.httpclient.test.HttpResponse
-import com.android.apphelper2.utils.httpclient.test.L6HomeRightBookListBean
-import com.android.apphelper2.utils.httpclient.test.TestApiService
 import com.android.helper.utils.LogUtil
+import com.android.http.utils.client.HttpClient
+import com.android.http.utils.client.RetrofitHelper
+import com.android.http.utils.listener.HttpCallBackListener
+import com.android.http.utils.test.HttpResponse
+import com.android.http.utils.test.L6HomeRightBookListBean
+import com.android.http.utils.test.TestApiService
 import com.xjx.kotlin.databinding.ActivityNetWorkRefreshBinding
 import com.xjx.kotlin.databinding.ItemNetRefreshBinding
 import kotlinx.coroutines.launch
@@ -24,17 +22,31 @@ import kotlinx.coroutines.launch
 class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBinding>() {
 
     private val adapter: NetAdapter = NetAdapter()
+    private val mList: MutableList<String> = mutableListOf()
 
     override fun initData(savedInstanceState: Bundle?) {
         RetrofitHelper.setBaseUrl("https://web.jollyeng.com/")
-        RetrofitHelper.addInterceptor(AutoInterceptor2())
-        RetrofitHelper.addInterceptor(HttpLogInterceptor2())
 
         RecycleUtil.getInstance(this, mBinding.rvList)
             .setVertical()
             .setAdapter(adapter)
 
+//        object : RefreshUtil<String>() {
+//            override fun setNoMoreData(t: String): List<*> {
+//                return getCurrentData()
+//            }
+//        }.with(this, mBinding.brlLayout)
+//            .setCallBackListener(object : RefreshCallBack<String>() {
+//                override fun onSuccess(refreshUtil: RefreshUtil<String>, t: String) {
+//                }
+//
+//                override fun onError(e: Throwable) {
+//                }
+//            })
+//            .execute()
+
         mBinding.btnStart.setOnClickListener {
+            mList.clear()
             lifecycleScope.launch {
                 val unId = "o9RWl1EJPHolk8_7smU39k1-LqVs"
                 val suiJi = "newcL6_2"
@@ -45,6 +57,7 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
 
                 HttpClient.http<TestApiService, MutableMap<String, Any>, HttpResponse<L6HomeRightBookListBean>>({ getL6BookList(it) },
                     mParameters, object : HttpCallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
+
                         override fun onFailure(exception: Throwable) {
                             super.onFailure(exception)
                             LogUtil.e("sss", "error:${exception}")
@@ -52,6 +65,24 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
 
                         override fun onSuccess(t: HttpResponse<L6HomeRightBookListBean>) {
                             LogUtil.e("sss", t)
+                            t.data?.row2?.let {
+                                for (index in it.indices) {
+                                    val row2 = it[index]
+                                    row2?.let { row ->
+                                        row.content?.let { content ->
+                                            for (index2 in content.indices) {
+                                                val content1 = content[index2]
+                                                content1?.let { content11 ->
+                                                    content11.content_name?.let { name ->
+                                                        mList.add(name)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            adapter.setList(mList)
                         }
                     })
             }
