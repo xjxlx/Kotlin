@@ -8,6 +8,7 @@ import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityCoroutineMapBinding
 import com.xjx.kotlin.network.NetWorkActivity
+import com.xjx.kotlin.network.NetWorkRefreshActivity
 import com.xjx.kotlin.ui.activity.test.xc.*
 
 class CoroutineMapActivity : AppBaseBindingTitleActivity<ActivityCoroutineMapBinding>() {
@@ -21,10 +22,8 @@ class CoroutineMapActivity : AppBaseBindingTitleActivity<ActivityCoroutineMapBin
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        setonClickListener(
-            R.id.tv_item_xc, R.id.tv_item_xc_2, R.id.tv_item_xc_3, R.id.tv_item_xc_4, R.id.tv_item_xc_5,
-            R.id.tv_item_flow_call, R.id.tv_item_fz,
-        )
+        setonClickListener(R.id.tv_item_xc, R.id.tv_item_xc_2, R.id.tv_item_xc_3, R.id.tv_item_xc_4, R.id.tv_item_xc_5,
+            R.id.tv_item_flow_call, R.id.tv_item_fz, R.id.tv_item_refresh)
     }
 
     override fun onClick(v: View?) {
@@ -50,6 +49,9 @@ class CoroutineMapActivity : AppBaseBindingTitleActivity<ActivityCoroutineMapBin
             }
             R.id.tv_item_fz -> {
                 startActivity(NetWorkActivity::class.java)
+            }
+            R.id.tv_item_refresh -> {
+                startActivity(NetWorkRefreshActivity::class.java)
             }
         }
     }

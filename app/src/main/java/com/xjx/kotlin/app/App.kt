@@ -1,5 +1,6 @@
 package com.xjx.kotlin.app
 
+import RefreshManager
 import android.app.Application
 import android.os.Process
 import android.provider.Settings
@@ -93,6 +94,9 @@ class App : Application() {
         }.onFailure {
             LogUtil.e(TAG, "init crash error: ${it.message}")
         }
+
+        // init refresh
+        RefreshManager.init(this)
     }
 
     /**
