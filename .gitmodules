@@ -6,15 +6,4 @@
 	path = apphelper2
 	url = git@github.com:xjxlx/apphelper2.git
 
-[submodule "refresh"]
-	path = refresh
-	url = git@github.com:xjxlx/refresh.git
-
-[submodule "http"]
-	path = http
-	url = git@github.com:xjxlx/http.git
-
-[submodule "common"]
-	path = http
-	url = git@github.com:xjxlx/common.git
 
