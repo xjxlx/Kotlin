@@ -14,3 +14,7 @@
 	path = http
 	url = git@github.com:xjxlx/http.git
 
+[submodule "common"]
+	path = http
+	url = git@github.com:xjxlx/common.git
+
