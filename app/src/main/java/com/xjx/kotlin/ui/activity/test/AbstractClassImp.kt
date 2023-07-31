@@ -1,6 +1,6 @@
 package com.xjx.kotlin.ui.activity.test
 
-import com.android.helper.utils.LogUtil
+import com.android.common.utils.LogUtil
 
 /**
  * @author : 流星

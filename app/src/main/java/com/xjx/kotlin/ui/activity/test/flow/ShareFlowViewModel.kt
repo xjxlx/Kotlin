@@ -2,7 +2,7 @@ package com.xjx.kotlin.ui.activity.test.flow
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.helper.utils.LogUtil
+import com.android.common.utils.LogUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

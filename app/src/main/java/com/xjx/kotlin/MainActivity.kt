@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.utils.LogUtil
 import com.android.helper.utils.permission.RxPermissionsUtil
 import com.xjx.kotlin.databinding.ActivityMainBinding
 import com.xjx.kotlin.ui.activity.custom.CustomViewMapActivity

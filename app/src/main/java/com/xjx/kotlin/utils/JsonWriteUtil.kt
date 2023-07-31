@@ -7,8 +7,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.android.apphelper2.utils.DateUtil
-import com.android.apphelper2.utils.FileUtil
+import com.android.common.utils.DateUtil
+import com.android.common.utils.FileUtil
 import com.android.common.utils.LogUtil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.SendChannel

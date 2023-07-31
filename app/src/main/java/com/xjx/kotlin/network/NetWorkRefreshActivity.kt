@@ -8,7 +8,7 @@ import com.android.apphelper2.base.BaseBindingTitleActivity
 import com.android.apphelper2.base.recycleview.BaseRecycleViewFragment
 import com.android.apphelper2.base.recycleview.BaseVH
 import com.android.apphelper2.utils.RecycleUtil
-import com.android.helper.utils.LogUtil
+import com.android.common.utils.LogUtil
 import com.android.http.utils.client.HttpClient
 import com.android.http.utils.client.RetrofitHelper
 import com.android.http.utils.listener.HttpCallBackListener

@@ -3,8 +3,8 @@ package com.xjx.kotlin.ui.activity.test.xc
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityXc3Binding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

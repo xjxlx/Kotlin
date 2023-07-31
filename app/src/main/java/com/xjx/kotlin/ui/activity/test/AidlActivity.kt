@@ -12,8 +12,8 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.android.app.KeepAidlInterface
 import com.android.app.OnChangeListenerAidlInterface
+import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityAidlBinding
 
 class AidlActivity : AppBaseBindingTitleActivity<ActivityAidlBinding>() {

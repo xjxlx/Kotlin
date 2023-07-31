@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.util.Pair
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityFunBinding
 
@@ -13,7 +13,6 @@ class FunActivity : AppBaseBindingTitleActivity<ActivityFunBinding>() {
 
     var a: String? = null
     var b: String = "null"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

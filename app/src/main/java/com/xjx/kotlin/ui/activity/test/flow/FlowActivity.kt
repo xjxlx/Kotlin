@@ -8,8 +8,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.utils.LogUtil
 import com.android.helper.utils.ToastUtil
 import com.xjx.kotlin.databinding.ActivityFlowBinding
 import kotlinx.coroutines.delay

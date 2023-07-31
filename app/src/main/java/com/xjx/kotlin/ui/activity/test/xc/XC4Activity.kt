@@ -3,14 +3,13 @@ package com.xjx.kotlin.ui.activity.test.xc
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityXc4Binding
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
-import kotlinx.coroutines.channels.actor
 
 class XC4Activity : AppBaseBindingTitleActivity<ActivityXc4Binding>() {
 

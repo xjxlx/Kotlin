@@ -2,8 +2,7 @@ package com.xjx.kotlin.ui.activity.test.xc
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.helper.utils.LogUtil
-import kotlinx.coroutines.Job
+import com.android.common.utils.LogUtil
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

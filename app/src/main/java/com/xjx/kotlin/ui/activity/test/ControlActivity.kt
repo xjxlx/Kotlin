@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.FileUtil
-import com.android.helper.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityControlBinding
 import java.io.File
 

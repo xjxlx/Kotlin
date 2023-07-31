@@ -3,7 +3,7 @@ package com.xjx.kotlin.network.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.helper.utils.LogUtil
+import com.android.common.utils.LogUtil
 import com.android.http.utils.client.HttpResult
 import com.xjx.kotlin.network.ApiLogic.UserLogic
 import com.xjx.kotlin.network.bean.UserInfoBean

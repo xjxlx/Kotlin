@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.DownCountTime
-import com.android.helper.utils.LogUtil
 import com.android.http.utils.client.HttpClient
 import com.android.http.utils.client.HttpResult
 import com.android.http.utils.client.RetrofitHelper
