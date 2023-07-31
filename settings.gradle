@@ -32,8 +32,11 @@ rootProject.name = "Kotlin"
 include ':app'
 include ':apphelper'
 include ':apphelper2'
+include ':apphelper2:common'
+
 include ':refresh'
+
 include ':http'
-include ':common'
+include ':http:common'
 
 include ':model'

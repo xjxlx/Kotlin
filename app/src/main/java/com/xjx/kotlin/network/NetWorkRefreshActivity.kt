@@ -45,6 +45,22 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
 //            })
 //            .execute()
 
+//        object : RefreshUtil<String>() {
+//            override fun setNoMoreData(t: String): List<*> {
+//               return
+//            }
+//        }.apply {
+//            setCallBackListener(object : RefreshCallBack<String>() {
+//                override fun onSuccess(refreshUtil: RefreshUtil<String>, t: String) {
+//                }
+//
+//                override fun onError(e: Throwable) {
+//                }
+//            })
+//            setAutoRefresh(true)
+//            execute()
+//        }
+
         mBinding.btnStart.setOnClickListener {
             mList.clear()
             lifecycleScope.launch {

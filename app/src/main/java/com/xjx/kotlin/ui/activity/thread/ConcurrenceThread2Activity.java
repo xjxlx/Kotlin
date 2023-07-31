@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.android.common.utils.LogUtil;
+import com.android.helper.utils.LogUtil;
 import com.xjx.kotlin.R;
 
 import java.util.HashSet;

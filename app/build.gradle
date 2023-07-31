@@ -89,7 +89,6 @@ dependencies {
 
     implementation project(path: ':apphelper')
     implementation project(path: ':apphelper2')
-    implementation project(path: ':common')
     implementation project(path: ':http')
     implementation project(path: ':refresh')
 
