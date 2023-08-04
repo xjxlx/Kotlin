@@ -32,7 +32,8 @@ class ScoreSummarizeActivity : AppBaseBindingTitleActivity<ActivityScoreSummariz
                     mBinding.spvScore.setScore(70, 23)
                     mBinding.spvScore.setAnimationListener(object : AnimationListener {
                         override fun onEndAnimation() {
-                            mBinding.twvWrap.setExplain(70, "加油", "下次努力哦！", "呼吸时长足够，注意保持均匀的呼吸次数和平缓的心率，让情绪更稳定些效果更好哦！")
+                            mBinding.twvWrap.setExplain(70, "加油", "下次努力哦！",
+                                "情绪稳定，心率不错，注意呼吸节奏，呼气更缓慢持久、吸气更平稳绵长、呼吸转换时适当憋气效果更好哦！吸转换时适当憋气效果更好哦！")
                         }
                     })
                 }
