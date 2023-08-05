@@ -9,11 +9,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.ViewGroup
-import com.android.apphelper2.utils.ToastUtil
 import com.android.apphelper2.utils.permission.PermissionMultipleCallBackListener
 import com.android.apphelper2.utils.permission.PermissionUtil
 import com.android.common.utils.FileUtil
 import com.android.common.utils.LogUtil
+import com.android.common.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityRecordBinding
 import java.io.File

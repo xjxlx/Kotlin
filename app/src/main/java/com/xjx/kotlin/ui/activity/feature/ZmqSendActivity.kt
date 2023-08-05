@@ -9,7 +9,7 @@ import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.HandlerUtil
 import com.android.apphelper2.utils.NetworkUtil
-import com.android.apphelper2.utils.ToastUtil
+import com.android.common.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqCallBackListener

@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.HandlerUtil
-import com.android.apphelper2.utils.ToastUtil
 import com.android.apphelper2.utils.socket.SocketClientUtil
 import com.android.apphelper2.utils.socket.SocketListener
+import com.android.common.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivitySocketSendBinding
 import kotlinx.coroutines.Dispatchers
