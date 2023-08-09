@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.base.BaseBindingTitleActivity
-import com.android.apphelper2.base.recycleview.BaseRecycleViewFragment
+import com.android.apphelper2.base.recycleview.BaseRecycleViewFramework
 import com.android.apphelper2.base.recycleview.BaseVH
 import com.android.apphelper2.utils.RecycleUtil
 import com.android.http.utils.client.HttpClient
@@ -110,7 +110,7 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
         return "网络刷新列表"
     }
 
-    class NetAdapter : BaseRecycleViewFragment<String, NetAdapter.VH>() {
+    class NetAdapter : BaseRecycleViewFramework<String, NetAdapter.VH>() {
 
         class VH(binding: ItemNetRefreshBinding) : BaseVH(binding.root) {
             val tvContent = binding.tvContent
