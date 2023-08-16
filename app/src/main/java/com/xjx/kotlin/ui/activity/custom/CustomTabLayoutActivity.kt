@@ -53,7 +53,7 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
 
         val mItemTitleArray: Array<String> = arrayOf("线索", "需求", "商场111111", "我的", "我的")
         mBinding.tb.setItemBackgroundColor(Color.YELLOW)
-            .withViewPager2(mBinding.vp, mItemTitleArray)
+            .withViewPager2(mBinding.vp, mBinding.tbLayout)
     }
 
     override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityCustomTabLayoutBinding {
