@@ -28,6 +28,10 @@ class CustomViewMapActivity : AppBaseBindingTitleActivity<ActivityCustomViewMapB
         mBinding.tvItemScoreResult.setOnClickListener {
             startActivity(ScoreSummarizeActivity::class.java)
         }
+
+        mBinding.tvItemTablayout.setOnClickListener {
+            startActivity(CustomTabLayoutActivity::class.java)
+        }
     }
 
     override fun setTitleContent(): String {

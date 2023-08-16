@@ -62,22 +62,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
-            android:name=".network.NetWorkRefreshActivity"
-            android:exported="true">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
-        </activity>
-        <activity
-            android:name=".ui.activity.custom.ScoreSummarizeActivity"
+            android:name=".ui.activity.custom.CustomTabLayoutActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+        <activity
+            android:name=".network.NetWorkRefreshActivity"
+            android:exported="true">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".ui.activity.custom.ScoreSummarizeActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.activity.custom.CustomWrapTextViewActivity"
             android:exported="true" />
@@ -141,8 +144,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.activity.test.flow.FlowCallActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".ui.activity.test.xc.Xc5Activity"
             android:exported="true" />

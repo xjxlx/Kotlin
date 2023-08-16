@@ -40,6 +40,11 @@
             style="@style/click_item_style"
             android:text="分数总结" />
 
+        <TextView
+            android:id="@+id/tv_item_tablayout"
+            style="@style/click_item_style"
+            android:text="Tablayout" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
