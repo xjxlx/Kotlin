@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.custom.CustomTabLayoutActivity">
 
-    <com.android.apphelper2.widget.TabLayout
+    <com.android.apphelper2.widget.IndicatorView
         android:id="@+id/tb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

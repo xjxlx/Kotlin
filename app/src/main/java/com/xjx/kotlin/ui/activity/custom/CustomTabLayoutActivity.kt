@@ -1,5 +1,6 @@
 package com.xjx.kotlin.ui.activity.custom
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,7 +15,8 @@ import com.xjx.kotlin.ui.activity.fragments.ClueNeedFragment
 
 class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayoutBinding>() {
 
-    private val mTitleArray: Array<String> = arrayOf("item1", "item2", "item33333", "item")
+    //    private val mTitleArray: Array<String> = arrayOf("item1", "item2", "item33333", "item")
+    private val mTitleArray: Array<String> = arrayOf("线索", "需求", "商场111111", "我的", "我的")
 
     private val mFragmentList: MutableList<Fragment> = mutableListOf<Fragment>().apply {
         add(ClueClueFragment.newInstance())
@@ -33,6 +35,7 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
 //            .setupWithViewPager(mBinding.vp, mBinding.tbLayout)
 //
 
+
         // 1: add tab
         for (element in mTitleArray) {
             mBinding.tbLayout.addTab(mBinding.tbLayout.newTab()
@@ -48,8 +51,9 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
             }
         }).attach()
 
-        mBinding.tb.initData()
-        mBinding.tb.withViewPager2(mBinding.vp)
+        val mItemTitleArray: Array<String> = arrayOf("线索", "需求", "商场111111", "我的", "我的")
+        mBinding.tb.setItemBackgroundColor(Color.YELLOW)
+            .withViewPager2(mBinding.vp, mItemTitleArray)
     }
 
     override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityCustomTabLayoutBinding {
