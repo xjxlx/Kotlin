@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.custom.CustomTabLayoutActivity">
 
-    <com.android.apphelper2.widget.IndicatorView
+    <com.android.apphelper2.widget.TabLayout
         android:id="@+id/tb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -15,6 +15,7 @@
     <com.google.android.material.tabs.TabLayout
         android:layout_below="@+id/tb"
         android:id="@+id/tb_layout"
+        app:tabBackground="@color/teal_200"
         android:layout_marginTop="@dimen/dp_20"
         app:tabIndicatorFullWidth="false"
         android:layout_width="match_parent"
