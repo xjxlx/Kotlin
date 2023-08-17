@@ -9,20 +9,37 @@ import com.android.apphelper2.base.BaseBindingTitleActivity
 import com.android.apphelper2.widget.TabLayout
 import com.android.common.base.BaseViewPager2FragmentAdapter
 import com.xjx.kotlin.databinding.ActivityCustomTabLayoutBinding
-import com.xjx.kotlin.ui.activity.fragments.ClueClueFragment
 import com.xjx.kotlin.ui.activity.fragments.ClueNeedFragment
 
 class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayoutBinding>() {
 
-    // private val mTitleArray: Array<String> = arrayOf("item1", "item2", "item33333", "item")
-    private val mTitleArray: Array<String> = arrayOf("线索", "需求", "商场111111", "我的", "我的")
+    private val mFragmentList: MutableList<Fragment> by lazy {
+        return@lazy mutableListOf<Fragment>().apply {
+            add(ClueNeedFragment.newInstance("线索")
+                .apply {
+                    mTitleArray[0] = mContent
+                })
+            add(ClueNeedFragment.newInstance("需求")
+                .apply {
+                    mTitleArray[1] = mContent
+                })
+            add(ClueNeedFragment.newInstance("商城")
+                .apply {
+                    mTitleArray[2] = mContent
+                })
+            add(ClueNeedFragment.newInstance("我的")
+                .apply {
+                    mTitleArray[3] = mContent
+                })
+            add(ClueNeedFragment.newInstance("你的")
+                .apply {
+                    mTitleArray[4] = mContent
+                })
+        }
+    }
 
-    private val mFragmentList: MutableList<Fragment> = mutableListOf<Fragment>().apply {
-        add(ClueClueFragment.newInstance())
-        add(ClueNeedFragment.newInstance())
-        add(ClueNeedFragment.newInstance())
-        add(ClueNeedFragment.newInstance())
-        add(ClueClueFragment.newInstance())
+    private val mTitleArray: Array<String> by lazy {
+        return@lazy Array<String>(mFragmentList.size) { "" }
     }
 
     override fun initData(savedInstanceState: Bundle?) {
