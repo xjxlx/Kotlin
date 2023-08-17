@@ -34,7 +34,6 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
 //            .Build()
 //            .setupWithViewPager(mBinding.vp, mBinding.tbLayout)
 //
-
         // 1: add tab
         for (element in mTitleArray) {
             mBinding.tbLayout.addTab(mBinding.tbLayout.newTab()
