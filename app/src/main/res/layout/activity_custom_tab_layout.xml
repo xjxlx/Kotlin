@@ -9,7 +9,7 @@
 
     <com.android.apphelper2.widget.TabLayout
         android:id="@+id/tb"
-        android:background="@color/color_FF566B"
+        android:background="@color/color_BBBBBB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -17,7 +17,6 @@
         android:id="@+id/tb_layout"
         android:layout_width="400dp"
         android:layout_below="@+id/tb"
-        android:layout_marginTop="@dimen/dp_20"
         android:translationZ="1dp"
         android:layout_height="wrap_content"
         app:tabBackground="@color/teal_200"
