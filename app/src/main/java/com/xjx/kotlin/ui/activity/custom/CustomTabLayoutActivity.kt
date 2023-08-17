@@ -35,7 +35,6 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
 //            .setupWithViewPager(mBinding.vp, mBinding.tbLayout)
 //
 
-
         // 1: add tab
         for (element in mTitleArray) {
             mBinding.tbLayout.addTab(mBinding.tbLayout.newTab()
@@ -51,7 +50,7 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
             }
         }).attach()
 
-        val mItemTitleArray: Array<String> = arrayOf("线索", "需求", "商场111111", "我的", "我的")
+        val mItemTitleArray: Array<String> = arrayOf("线索", "需求", "商场111111", "我的")
         mBinding.tb.setItemBackgroundColor(Color.YELLOW)
             .withViewPager2(mBinding.vp, mBinding.tbLayout)
     }

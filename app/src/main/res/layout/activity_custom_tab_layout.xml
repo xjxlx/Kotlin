@@ -13,8 +13,9 @@
         android:layout_height="wrap_content" />
 
     <com.google.android.material.tabs.TabLayout
-        android:layout_marginTop="@dimen/dp_40"
+        android:layout_below="@+id/tb"
         android:id="@+id/tb_layout"
+        android:layout_marginTop="@dimen/dp_20"
         app:tabIndicatorFullWidth="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,6 +24,7 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp"
         android:layout_width="match_parent"
+        android:layout_below="@+id/tb_layout"
         android:layout_height="match_parent" />
 
 </RelativeLayout>
