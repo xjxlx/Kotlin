@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.android.apphelper2.base.BaseBindingTitleActivity
-import com.android.apphelper2.widget.TabLayout
 import com.android.common.base.BaseViewPager2FragmentAdapter
 import com.xjx.kotlin.databinding.ActivityCustomTabLayoutBinding
 import com.xjx.kotlin.ui.activity.fragments.ClueNeedFragment
@@ -34,11 +33,6 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
         mBinding.tb.setItemBackgroundColor(Color.YELLOW)
             .setItemSize(50F)
             .withViewPager2(mBinding.vp, mTitleArray)
-            .setSelectorListener(object : TabLayout.SelectorListener {
-                override fun onSelector(position: Int) {
-                    mBinding.vp.currentItem = position
-                }
-            })
     }
 
     override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityCustomTabLayoutBinding {
