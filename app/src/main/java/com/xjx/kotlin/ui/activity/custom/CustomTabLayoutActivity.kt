@@ -15,31 +15,16 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
 
     private val mFragmentList: MutableList<Fragment> by lazy {
         return@lazy mutableListOf<Fragment>().apply {
-            add(ClueNeedFragment.newInstance("线索")
-                .apply {
-                    mTitleArray[0] = mContent
-                })
-            add(ClueNeedFragment.newInstance("需求")
-                .apply {
-                    mTitleArray[1] = mContent
-                })
-            add(ClueNeedFragment.newInstance("商城")
-                .apply {
-                    mTitleArray[2] = mContent
-                })
-            add(ClueNeedFragment.newInstance("我的")
-                .apply {
-                    mTitleArray[3] = mContent
-                })
-            add(ClueNeedFragment.newInstance("你的")
-                .apply {
-                    mTitleArray[4] = mContent
-                })
+            add(ClueNeedFragment.newInstance("线索"))
+            add(ClueNeedFragment.newInstance("需求"))
+            add(ClueNeedFragment.newInstance("商城"))
+            add(ClueNeedFragment.newInstance("我的"))
+//            add(ClueNeedFragment.newInstance("你的"))
         }
     }
 
     private val mTitleArray: Array<String> by lazy {
-        return@lazy Array<String>(mFragmentList.size) { "" }
+        return@lazy arrayOf("线索", "需求", "商城", "我的")
     }
 
     override fun initData(savedInstanceState: Bundle?) {
