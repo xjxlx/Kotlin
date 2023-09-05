@@ -5,15 +5,15 @@ plugins {
 
 android {
     namespace = "com.xjx.kotlin"
-    compileSdk = Androids.compileSdkVersion
+    compileSdk = Config.compileSdkVersion
 
     defaultConfig {
         applicationId = "com.xjx.kotlin"
 
-        minSdk = Androids.minSdkVersion
-        targetSdk = Androids.targetSdkVersion
-        versionCode = Androids.versionCode
-        versionName = Androids.versionName
+        minSdk = Config.minSdkVersion
+        targetSdk = Config.targetSdkVersion
+        versionCode = Config.versionCode
+        versionName = Config.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
