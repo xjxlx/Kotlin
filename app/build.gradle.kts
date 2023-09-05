@@ -3,26 +3,17 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val configCompile = ${ rootProject }.ext.android
-
 android {
     namespace = "com.xjx.kotlin"
-
-//    compileSdkVersion configCompile.compileSdkVersion
-    // buildToolsVersion configCompile.buildToolsVersion
-    compileSdk(configCompile.compileSdkVersion)
+    compileSdk = Androids.compileSdkVersion
 
     defaultConfig {
         applicationId = "com.xjx.kotlin"
-//        minSdkVersion configCompile.minSdkVersion
-//        targetSdkVersion configCompile.targetSdkVersion
-//        versionCode configCompile.versionCode
-//        versionName configCompile.versionName
 
-        minSdk(configCompile.minSdkVersion)
-        targetSdk(configCompile.targetSdkVersion)
-        versionCode(configCompile.versionCode)
-        versionName(configCompile.versionName)
+        minSdk = Androids.minSdkVersion
+        targetSdk = Androids.targetSdkVersion
+        versionCode = Androids.versionCode
+        versionName = Androids.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -51,7 +42,7 @@ android {
 
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("config")
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
@@ -59,6 +50,7 @@ android {
         getByName("debug") {
             // 给applicationId添加后缀“.debug”
             // applicationIdSuffix ".debug"
+            // signingConfigs.getByName("debug")
             signingConfig = signingConfigs.getByName("test")
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -90,6 +82,7 @@ dependencies {
     implementation(project(":http"))
     implementation(project(":refresh"))
     implementation(project(":common"))
+//    implementation(project(':buildSrc'))
 
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("com.google.android.material:material:1.4.0")
@@ -184,3 +177,5 @@ dependencies {
 //        }
 //    }
 //}
+
+
