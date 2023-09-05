@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+@Suppress("UnstableApiUsage")
 android {
     namespace = "com.xjx.kotlin"
     compileSdk = Config.compileSdkVersion
@@ -23,6 +24,7 @@ android {
 
         buildConfigField("Boolean", "LogSwitch", "true")
     }
+
     signingConfigs {
         create("test") {
             // storeFile file("/Users/dasouche/StudioWorks/App/jks/apphelper.jks")
