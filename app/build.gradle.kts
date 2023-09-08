@@ -3,14 +3,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-@Suppress("UnstableApiUsage")
-android {
+@Suppress("UnstableApiUsage") android {
     namespace = "com.xjx.kotlin"
     compileSdk = Config.compileSdkVersion
 
     defaultConfig {
         applicationId = "com.xjx.kotlin"
-
         minSdk = Config.minSdkVersion
         targetSdk = Config.targetSdkVersion
         versionCode = Config.versionCode
@@ -46,7 +44,9 @@ android {
         getByName("release") {
             signingConfig = signingConfigs.getByName("config")
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            )
         }
 
         getByName("debug") {
@@ -55,7 +55,9 @@ android {
             // signingConfigs.getByName("debug")
             signingConfig = signingConfigs.getByName("test")
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
