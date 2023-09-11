@@ -1,8 +1,10 @@
 object Config {
-    const val compileSdkVersion = 31
-    const val buildToolsVersion = "30.0.3"
-    const val minSdkVersion = 30
-    const val targetSdkVersion = 30
+    const val compileSdk = 30
+    const val compileSdkVersion = "30"
+
+    const val buildToolsVersion = "29.0.2"
+    const val minSdkVersion = 24
+    const val targetSdkVersion = 29
     const val versionCode = 2
     const val versionName = "1.7"
 }
