@@ -1,6 +1,7 @@
 [versions]
 # app - version
 app = "7.4.1"
+agp = "7.4.1"
 org-jetbrains-kotlin-android = "1.8.10"
 com-android-library = "7.4.1"
 
@@ -108,7 +109,7 @@ refresh-footer-classics = { group = "io.github.scwang90", name = "refresh-footer
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "app" }
+com-android-library = { id = "com.android.library", version.ref = "agp" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
-com-android-library = { id = "com.android.library", version.ref = "com-android-library" }
 
 [bundles]

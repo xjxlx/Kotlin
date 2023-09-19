@@ -1,9 +1,9 @@
-plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+@Suppress("DSL_SCOPE_VIOLATION") plugins {
+    alias(libs.plugins.com.android.application)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
 }
 
-@Suppress("UnstableApiUsage") android {
+android {
     namespace = "com.xjx.kotlin"
     compileSdk = Config.compileSdk
 
