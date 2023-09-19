@@ -16,7 +16,7 @@ appcompat = "1.3.1"
 junit = "4.13.2"
 material = "1.4.0"
 espresso-core = "3.5.1"
-androidx-test-ext = "1.1.5"
+androidx-test-ext-junit = "1.1.5"
 kotlinx-coroutines-core = "1.6.4"
 constraintlayout = "2.1.4"
 core-ktx = "1.6.0"
@@ -38,14 +38,14 @@ gson = "2.10.1"
 # library - custom - version
 logger = "2.2.0"
 dimens = "1.3.0"
-retrofit = "2.9.0"
+retrofit2 = "2.9.0"
 converter-gson = "2.9.0"
 converter-scalars = "2.9.0"
 okhttp = "5.0.0-alpha.2"
 jeromq = "0.5.3"
 adapter-rxjava2 = "2.9.0"
-rxjava-2 = "2.2.21"
-rxjava-3 = "3.0.4"
+rxjava2 = "2.2.21"
+rxjava3 = "3.0.4"
 rxandroid = "2.1.1"
 eventbus = "3.2.0"
 rxpermissions = "0.12"
@@ -60,7 +60,7 @@ refresh-footer-classics = "2.0.6"
 [libraries]
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-test-ext = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
@@ -86,14 +86,14 @@ kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect" } # �
 # <---------custom--------->
 logger = { group = "com.orhanobut", name = "logger", version.ref = "logger" }
 dimens = { group = "com.github.xjxlx", name = "dimens", version.ref = "dimens" }
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit2" }
 converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converter-gson" } # 必要依赖，解析json字符所用
 converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "converter-scalars" }# 必要依赖，把数据转产成字符串使用
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }# okHttp的依赖
 jeromq = { group = "org.zeromq", name = "jeromq", version.ref = "jeromq" }
-rxjava-2 = { group = "io.reactivex.rxjava2", name = "rxjava", version.ref = "rxjava-2" }
+rxjava2 = { group = "io.reactivex.rxjava2", name = "rxjava", version.ref = "rxjava2" }
 adapter-rxjava2 = { group = "com.squareup.retrofit2", name = "adapter-rxjava2", version.ref = "adapter-rxjava2" }
-rxjava-3 = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava-3" }
+rxjava3 = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava3" }
 eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus" }
 rxpermissions = { group = "com.github.tbruyelle", name = "rxpermissions", version.ref = "rxpermissions" }
 rxandroid = { group = "io.reactivex.rxjava2", name = "rxandroid", version.ref = "rxandroid" }

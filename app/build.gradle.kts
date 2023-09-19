@@ -19,35 +19,35 @@ plugins {
             abiFilters += listOf("arm64-v8a", "x86_64")
         }
 
-//        buildConfigField("Boolean", "LogSwitch", "true")
+        buildConfigField("Boolean", "LogSwitch", "true")
     }
 
-//    signingConfigs {
-//        create("test") {
-//            // storeFile file("/Users/dasouche/StudioWorks/App/jks/apphelper.jks")
-//            storeFile = file("../jks/apphelper.jks")
-//            storePassword = "123456"
-//            keyPassword = "123456"
-//            keyAlias = "apphelper"
-//        }
-//        create("config") {
-//            // storeFile file("/Users/dasouche/StudioWorks/App/jks/apphelper.jks")
-//            storeFile = file("../jks/apphelper.jks")
-//            storePassword = "123456"
-//            keyAlias = "apphelper"
-//            keyPassword = "123456"
-//        }
-//    }
+    signingConfigs {
+        create("test") {
+            // storeFile file("/Users/dasouche/StudioWorks/App/jks/apphelper.jks")
+            storeFile = file("../jks/apphelper.jks")
+            storePassword = "123456"
+            keyPassword = "123456"
+            keyAlias = "apphelper"
+        }
+        create("config") {
+            // storeFile file("/Users/dasouche/StudioWorks/App/jks/apphelper.jks")
+            storeFile = file("../jks/apphelper.jks")
+            storePassword = "123456"
+            keyAlias = "apphelper"
+            keyPassword = "123456"
+        }
+    }
 
     buildTypes {
         release {
             isDebuggable = true
-//            signingConfig = signingConfigs.getByName("config")
+            signingConfig = signingConfigs.getByName("config")
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
-//            signingConfig = signingConfigs.getByName("test")
+            signingConfig = signingConfigs.getByName("test")
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
@@ -64,15 +64,9 @@ plugins {
     buildFeatures {
         viewBinding = true
     }
-
-    // ndk version
-//    ndkVersion = "21.4.7075529"
 }
 
 dependencies {
-    // implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    // implementation "androidx.core:core-ktx:1.2.0"
-
     implementation(project(":apphelper"))
     implementation(project(":apphelper2"))
     implementation(project(":http"))
