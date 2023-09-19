@@ -6,11 +6,14 @@ import androidx.fragment.app.FragmentActivity
 import com.android.apphelper2.utils.DebounceUtil
 import com.android.common.utils.LogUtil
 import com.android.common.utils.LogWriteUtil
-import com.xjx.kotlin.BuildConfig
 import com.xjx.kotlin.utils.JsonWriteUtil
 import com.xjx.kotlin.utils.zmq.TCP
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import org.zeromq.SocketType
 import org.zeromq.ZMQ
 import java.util.concurrent.atomic.AtomicBoolean
@@ -174,9 +177,9 @@ object ZmqUtil2 {
                         LogUtil.e(TAG, "reply : null")
                     }
                 }
-                if (BuildConfig.LogSwitch) {
-                    mJsonWrite?.sendEnd()
-                }
+//                if (BuildConfig.LogSwitch) {
+//                    mJsonWrite?.sendEnd()
+//                }
                 log("while break ...")
             }.onFailure {
                 log("loopData failure：:${it.message}")
@@ -221,20 +224,20 @@ object ZmqUtil2 {
         mWriter = LogWriteUtil("$TAG.txt")
         mWriter?.init(fragment)
 
-        if (BuildConfig.LogSwitch) {
-            mJsonWrite = JsonWriteUtil("json.txt")
-            mJsonWrite?.init(fragment)
-        }
+//        if (BuildConfig.LogSwitch) {
+//            mJsonWrite = JsonWriteUtil("json.txt")
+//            mJsonWrite?.init(fragment)
+//        }
     }
 
     fun initLog(activity: FragmentActivity) {
         mWriter = LogWriteUtil("$TAG.txt")
         mWriter?.init(activity)
 
-        if (BuildConfig.LogSwitch) {
-            mJsonWrite = JsonWriteUtil("json.txt")
-            mJsonWrite?.init(activity)
-        }
+//        if (BuildConfig.LogSwitch) {
+//            mJsonWrite = JsonWriteUtil("json.txt")
+//            mJsonWrite?.init(activity)
+//        }
         log("init log --->")
     }
 }

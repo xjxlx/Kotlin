@@ -3,21 +3,13 @@ package com.xjx.kotlin.network
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.base.BaseBindingTitleActivity
 import com.android.apphelper2.base.recycleview.BaseRecycleViewFramework
 import com.android.apphelper2.base.recycleview.BaseVH
 import com.android.apphelper2.utils.RecycleUtil
-import com.android.http.utils.client.HttpClient
 import com.android.http.utils.client.RetrofitHelper
-import com.android.http.utils.test.HttpResponse
-import com.android.http.utils.test.L6HomeRightBookListBean
-import com.android.http.utils.test.TestApiService
-import com.android.refresh.utils.CallBackListener
-import com.android.refresh.utils.RefreshUtil
 import com.xjx.kotlin.databinding.ActivityNetWorkRefreshBinding
 import com.xjx.kotlin.databinding.ItemNetRefreshBinding
-import kotlinx.coroutines.flow.Flow
 
 class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBinding>() {
 
@@ -41,24 +33,24 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
             mParameters["unid"] = unId
             mParameters["suiji"] = suiJi
 
-            object : RefreshUtil<HttpResponse<L6HomeRightBookListBean>>(lifecycleScope, mBinding.brlLayout) {
-                override suspend fun getApiService(): Flow<HttpResponse<L6HomeRightBookListBean>> {
-                    return HttpClient.http<TestApiService, MutableMap<String, Any>, HttpResponse<L6HomeRightBookListBean>>(
-                        { getL6BookList(it) }, mParameters)
-                }
-
-                override fun setMoreData(t: HttpResponse<L6HomeRightBookListBean>): List<*>? {
-                    return t.data?.row1
-                }
-            }.setCallBackListener(object : CallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
-                override fun onSuccess(refreshUtil: RefreshUtil<HttpResponse<L6HomeRightBookListBean>>,
-                                       t: HttpResponse<L6HomeRightBookListBean>) {
-                }
-
-                override fun onError(e: Throwable) {
-                }
-            })
-                .start()
+//            object : RefreshUtil<HttpResponse<L6HomeRightBookListBean>>(lifecycleScope, mBinding.brlLayout) {
+//                override suspend fun getApiService(): Flow<HttpResponse<L6HomeRightBookListBean>> {
+//                    return HttpClient.http<TestApiService, MutableMap<String, Any>, HttpResponse<L6HomeRightBookListBean>>(
+//                        { getL6BookList(it) }, mParameters)
+//                }
+//
+//                override fun setMoreData(t: HttpResponse<L6HomeRightBookListBean>): List<*>? {
+//                    return t.data?.row1
+//                }
+//            }.setCallBackListener(object : CallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
+//                override fun onSuccess(refreshUtil: RefreshUtil<HttpResponse<L6HomeRightBookListBean>>,
+//                                       t: HttpResponse<L6HomeRightBookListBean>) {
+//                }
+//
+//                override fun onError(e: Throwable) {
+//                }
+//            })
+//                .start()
 
 //            lifecycleScope.launch {
 //                val unId = "o9RWl1EJPHolk8_7smU39k1-LqVs"

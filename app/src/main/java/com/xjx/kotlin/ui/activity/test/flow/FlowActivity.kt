@@ -1,16 +1,14 @@
 package com.xjx.kotlin.ui.activity.test.flow
 
+//import androidx.lifecycle.repeatOnLifecycle
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
-import com.android.helper.utils.ToastUtil
 import com.xjx.kotlin.databinding.ActivityFlowBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -41,16 +39,17 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        lifecycleScope.launch {
-            // stateFlow 粘性的flow
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mStateFlow.stateFlow.collect {
-                    delay(2000)
-                    mBinding.tvContent.text = it.toString()
-                    LogUtil.e("收到  stateFlow : $it")
-                }
-            }
-        }
+//        lifecycleScope.launch {
+//            // stateFlow 粘性的flow
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                mStateFlow.stateFlow.collect {
+//                    delay(2000)
+//                    mBinding.tvContent.text = it.toString()
+//                    LogUtil.e("收到  stateFlow : $it")
+//                }
+//            }
+//        }
+
         // string stateFlow
 //        lifecycleScope.launch {
 //            mStateFlow.stringFlow.collect() {
@@ -155,12 +154,12 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
 
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mFlowViewModel.mStateFlow.collect() {
-                    LogUtil.e("viewModel", "result:---> $it")
-                    ToastUtil.show("" + it)
-                }
-            }
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                mFlowViewModel.mStateFlow.collect() {
+//                    LogUtil.e("viewModel", "result:---> $it")
+//                    ToastUtil.show("" + it)
+//                }
+//            }
         }
 
     }
