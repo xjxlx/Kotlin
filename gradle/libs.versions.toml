@@ -1,0 +1,114 @@
+[versions]
+# app - version
+app = "7.4.1"
+org-jetbrains-kotlin-android = "1.8.10"
+com-android-library = "7.4.1"
+
+# model - version
+compileSdks = "30"
+minSdk = "24"
+targetSdk = "30"
+versionCode = "2"
+versionName = "1.0.0"
+
+# library - system - version
+appcompat = "1.3.1"
+junit = "4.13.2"
+material = "1.4.0"
+espresso-core = "3.5.1"
+androidx-test-ext = "1.1.5"
+kotlinx-coroutines-core = "1.6.4"
+constraintlayout = "2.1.4"
+core-ktx = "1.6.0"
+recyclerview = "1.2.1"
+activity = "1.2.4"
+activity-ktx = "1.2.4"
+fragment-ktx = "1.2.5"
+lifecycle-runtime = "2.3.1"
+lifecycle-runtime-ktx = "2.3.1"
+lifecycle-livedata = "2.3.1"
+lifecycle-livedata-core = "2.3.1"
+lifecycle-livedata-ktx = "2.3.1"
+lifecycle-viewmodel = "2.3.1"
+lifecycle-viewmodel-ktx = "2.3.1"
+lifecycle-process = "2.3.1"
+lifecycle-service = "2.3.1"
+gson = "2.10.1"
+
+# library - custom - version
+logger = "2.2.0"
+dimens = "1.3.0"
+retrofit = "2.9.0"
+converter-gson = "2.9.0"
+converter-scalars = "2.9.0"
+okhttp = "5.0.0-alpha.2"
+jeromq = "0.5.3"
+adapter-rxjava2 = "2.9.0"
+rxjava-2 = "2.2.21"
+rxjava-3 = "3.0.4"
+rxandroid = "2.1.1"
+eventbus = "3.2.0"
+rxpermissions = "0.12"
+glide = "4.12.0"
+glide-compiler = "4.12.0"
+android-pickerview = "4.1.9"
+viewpager2 = "1.0.0"
+refresh-layout-kernel = "2.0.6"
+refresh-header-classics = "2.0.6"
+refresh-footer-classics = "2.0.6"
+
+[libraries]
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-ext = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext" }
+
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity-ktx" }
+fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment-ktx" }
+lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "lifecycle-runtime" }
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle-livedata" }
+lifecycle-livedata-core = { group = "androidx.lifecycle", name = "lifecycle-livedata-core", version.ref = "lifecycle-livedata-core" }
+lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle-livedata-ktx" }
+lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle-viewmodel" }
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel-ktx" }
+lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycle-process" }
+lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycle-service" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect" } # 反射
+
+# <---------custom--------->
+logger = { group = "com.orhanobut", name = "logger", version.ref = "logger" }
+dimens = { group = "com.github.xjxlx", name = "dimens", version.ref = "dimens" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converter-gson" } # 必要依赖，解析json字符所用
+converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "converter-scalars" }# 必要依赖，把数据转产成字符串使用
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }# okHttp的依赖
+jeromq = { group = "org.zeromq", name = "jeromq", version.ref = "jeromq" }
+rxjava-2 = { group = "io.reactivex.rxjava2", name = "rxjava", version.ref = "rxjava-2" }
+adapter-rxjava2 = { group = "com.squareup.retrofit2", name = "adapter-rxjava2", version.ref = "adapter-rxjava2" }
+rxjava-3 = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava-3" }
+eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus" }
+rxpermissions = { group = "com.github.tbruyelle", name = "rxpermissions", version.ref = "rxpermissions" }
+rxandroid = { group = "io.reactivex.rxjava2", name = "rxandroid", version.ref = "rxandroid" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide-compiler" }
+android-pickerview = { group = "com.contrarywind", name = "Android-PickerView", version.ref = "android-pickerview" } # 日历选择器
+viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
+refresh-layout-kernel = { group = "io.github.scwang90", name = "refresh-layout-kernel", version.ref = "refresh-layout-kernel" }
+refresh-header-classics = { group = "io.github.scwang90", name = "refresh-header-classics", version.ref = "refresh-header-classics" }
+refresh-footer-classics = { group = "io.github.scwang90", name = "refresh-footer-classics", version.ref = "refresh-footer-classics" }
+
+
+[plugins]
+com-android-application = { id = "com.android.application", version.ref = "app" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
+com-android-library = { id = "com.android.library", version.ref = "com-android-library" }
+
+[bundles]
