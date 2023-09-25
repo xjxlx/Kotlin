@@ -43,6 +43,9 @@ class FeatureMapActivity : AppBaseBindingTitleActivity<ActivityFeatureMapBinding
         mBinding.tvSocketResult.setOnClickListener {
             startActivity(SocketResultActivity::class.java)
         }
+        mBinding.tvRaf.setOnClickListener {
+
+        }
     }
 
     override fun onClick(v: View?) {
