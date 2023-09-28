@@ -1,4 +1,10 @@
 pluginManagement {
+
+    // 配置本地插件
+    plugins {
+        id("io.github.xjxlx.publish") version "1.0.0"
+    }
+
     repositories {
         maven { setUrl("https://maven.aliyun.com/repository/google") }
         maven { setUrl("https://maven.aliyun.com/repository/public") }
