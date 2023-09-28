@@ -1,7 +1,10 @@
 // 1：添加发布插件的依赖
 plugins {
+    // 使用 Gradle 发行版附带的 Java Gradle 插件开发插件来创作您的 Gradle 插件。
     id("java-gradle-plugin")
+    // 使用 Maven 发布插件为您的插件生成已发布的元数据
     id("maven-publish")
+    // 最新版本的插件发布插件可以在 Gradle 插件门户上找到。
     id("com.gradle.plugin-publish") version "1.0.0-rc-1"
 }
 
