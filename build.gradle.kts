@@ -6,6 +6,7 @@ buildscript {
         maven { setUrl("https://maven.aliyun.com/repository/gradle-plugin") }
         maven { setUrl("https://jitpack.io") }
         google()
+        mavenLocal() // 加载本地插件
         mavenCentral()
         gradlePluginPortal()
     }
