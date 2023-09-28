@@ -38,3 +38,4 @@ include(":http")
 include(":common")
 
 include(":model")
+include(":publish")
