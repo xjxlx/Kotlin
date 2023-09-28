@@ -1,4 +1,4 @@
-package com.android.helper.interfaces;
+package com.android.plugin.interfaces;
 
 import org.gradle.api.provider.Property;
 

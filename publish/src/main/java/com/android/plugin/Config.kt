@@ -1,4 +1,4 @@
-package com.android.helper.plugin
+package com.android.plugin
 
 object Config {
     const val compileSdk = 30

@@ -1,4 +1,4 @@
-package com.android.helper.utils;
+package com.android.plugin.utils;
 
 public class PrintlnUtil {
     public static void println(String content) {
