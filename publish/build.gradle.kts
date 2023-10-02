@@ -1,9 +1,11 @@
 // 1：添加发布插件的依赖
 plugins {
+//    id("com.android.library")
     // 使用 Gradle 发行版附带的 Java Gradle 插件开发插件来创作您的 Gradle 插件。
-    id("java-gradle-plugin")
+//    id("java-gradle-plugin")
     // 使用 Maven 发布插件为您的插件生成已发布的元数据
     id("maven-publish")
+    id("org.jetbrains.kotlin.jvm") // 用kotlin语言来开发
     // 最新版本的插件发布插件可以在 Gradle 插件门户上找到。
     id("com.gradle.plugin-publish") version "1.0.0-rc-1"
 }
@@ -27,7 +29,7 @@ pluginBundle {
  *      4:如果是要发布到gradle的门户网站上，需要使用io.github.{userName}作为域名
  */
 group = "io.github.xjxlx"
-version = "1.0.0"
+version = "1.0.1"
 
 // 4：配置发布插件的信息
 gradlePlugin {
@@ -63,4 +65,18 @@ publishing {
 dependencies {
     // gradle sdk
     implementation(gradleApi())
+}
+
+// 发布信息
+afterEvaluate {
+    publishing { // 发布配置
+        publications {// 发布内容
+            create<MavenPublication>("release") {// 注册一个名字为 release 的发布内容
+                from(components["java"])
+                groupId = "com.android.helper" // 唯一标识（通常为模块包名，也可以任意）
+                artifactId = "publish2" // 插件名称
+                version = "1.0.0"//  版本号
+            }
+        }
+    }
 }

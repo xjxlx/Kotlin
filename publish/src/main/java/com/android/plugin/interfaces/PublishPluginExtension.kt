@@ -1,20 +1,24 @@
-package com.android.plugin.interfaces;
+package com.android.plugin.interfaces
 
-import org.gradle.api.provider.Property;
+import org.gradle.api.provider.Property
 
-public interface PublishPluginExtension {
+abstract class PublishPluginExtension {
     /**
      * 组的名字
      */
-    Property<String> getGroupId();
-
+    abstract val groupId: Property<String>
     /**
      * 插件名称，必传参数
      */
-    Property<String> getArtifactId();
-
+    abstract val artifactId: Property<String>
     /**
      * 版本号，必传参数
      */
-    Property<String> getVersion();
+    abstract val version: Property<String>
+
+    init {
+        groupId.convention("com.android.helper")
+        artifactId.convention("publish")
+        version.convention("1.0.0")
+    }
 }
