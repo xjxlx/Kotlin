@@ -6,19 +6,19 @@ abstract class PublishPluginExtension {
     /**
      * 组的名字
      */
-    abstract val groupId: Property<String>
+    abstract val publishGroupId: Property<String>
     /**
      * 插件名称，必传参数
      */
-    abstract val artifactId: Property<String>
+    abstract val publishArtifactId: Property<String>
     /**
      * 版本号，必传参数
      */
-    abstract val version: Property<String>
+    abstract val publishVersion: Property<String>
 
     init {
-        groupId.convention("com.android.helper")
-        artifactId.convention("publish")
-        version.convention("1.0.0")
+        publishGroupId.convention("com.android.helper")
+        publishArtifactId.convention("publish")
+        publishVersion.convention("1.0.0")
     }
 }

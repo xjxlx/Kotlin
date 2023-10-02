@@ -29,7 +29,7 @@ pluginBundle {
  *      4:如果是要发布到gradle的门户网站上，需要使用io.github.{userName}作为域名
  */
 group = "io.github.xjxlx"
-version = "1.0.1"
+version = "1.0.2"
 
 // 4：配置发布插件的信息
 gradlePlugin {
@@ -42,7 +42,7 @@ gradlePlugin {
             // 简介
             description = "<Good human-readable description of what your plugin is about>"
             // 插件路径，必须是以全路径作为名称
-            implementationClass = "com.android.plugin.PublishPlugin"
+            implementationClass = "com.android.plugin.plugin.PublishPlugin"
         }
     }
 }
@@ -62,21 +62,22 @@ publishing {
 /**
  * 6：gradle的依赖
  */
+
 dependencies {
-    // gradle sdk
-    implementation(gradleApi())
+    implementation("com.android.tools.build:gradle-api:7.4.0")
+    implementation(gradleApi()) // gradle sdk
 }
 
 // 发布信息
-afterEvaluate {
-    publishing { // 发布配置
-        publications {// 发布内容
-            create<MavenPublication>("release") {// 注册一个名字为 release 的发布内容
-                from(components["java"])
-                groupId = "com.android.helper" // 唯一标识（通常为模块包名，也可以任意）
-                artifactId = "publish2" // 插件名称
-                version = "1.0.0"//  版本号
-            }
-        }
-    }
-}
+//afterEvaluate {
+//    publishing { // 发布配置
+//        publications {// 发布内容
+//            create<MavenPublication>("release") {// 注册一个名字为 release 的发布内容
+//                from(components["java"])
+//                groupId = "com.android.helper" // 唯一标识（通常为模块包名，也可以任意）
+//                artifactId = "publish2" // 插件名称
+//                version = "1.0.0"//  版本号
+//            }
+//        }
+//    }
+//}
