@@ -13,6 +13,7 @@ pluginManagement {
         maven { setUrl("https://jitpack.io") }
         gradlePluginPortal()
         google()
+        jcenter()
         mavenLocal()
         mavenCentral()
     }
@@ -31,6 +32,7 @@ dependencyResolutionManagement {
         maven { setUrl("https://maven.aliyun.com/repository/central") }
         maven { setUrl("https://jitpack.io") }
         google()
+        jcenter()
         mavenLocal()
         mavenCentral()
     }
