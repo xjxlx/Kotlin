@@ -1,10 +1,4 @@
 pluginManagement {
-
-    // 配置本地插件
-//    plugins {
-//        id("io.github.xjxlx.publish") version "1.0.2"
-//    }
-
     repositories {
         maven { setUrl("https://maven.aliyun.com/repository/google") }
         maven { setUrl("https://maven.aliyun.com/repository/public") }
@@ -20,9 +14,7 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-//    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
-
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         flatDir {
             dir("app/libs")
@@ -35,6 +27,25 @@ dependencyResolutionManagement {
         jcenter()
         mavenLocal()
         mavenCentral()
+        maven {
+            credentials {
+                username = "6123a7974e5db15d52e7a9d8"
+                password = "HsDc[dqcDfda"
+            }
+            setUrl("https://packages.aliyun.com/maven/repository/2131155-release-wH01IT/")
+        }
+        maven {
+            credentials {
+                username = "6123a7974e5db15d52e7a9d8"
+                password = "HsDc[dqcDfda"
+            }
+            setUrl("https://packages.aliyun.com/maven/repository/2131155-snapshot-mh62BC/")
+        }
+    }
+    versionCatalogs {
+        create("libs") {
+            from("com.android.version:catalog:1.0.0")
+        }
     }
 }
 

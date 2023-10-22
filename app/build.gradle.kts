@@ -1,18 +1,19 @@
 @Suppress("DSL_SCOPE_VIOLATION") plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    id("io.github.xjxlx.catalog")
 }
 
 android {
     namespace = "com.xjx.kotlin"
-    compileSdk = Config.compileSdk
+    compileSdk = libs.versions.compileSdks.get().toInt()
 
     defaultConfig {
         applicationId = "com.xjx.kotlin"
-        minSdk = Config.minSdk
-        targetSdk = Config.targetSdkVersion
-        versionCode = Config.versionCode
-        versionName = Config.versionName
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = 1
+        versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -44,12 +45,18 @@ android {
             isDebuggable = true
             signingConfig = signingConfigs.getByName("config")
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
         debug {
             signingConfig = signingConfigs.getByName("test")
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -73,35 +80,35 @@ dependencies {
     implementation(project(":refresh"))
     implementation(project(":common"))
 
-    implementation(Libs.appcompat)
-    implementation(Libs.material)
-    implementation(Libs.constraintlayout)
+    implementation(libs.appcompat)
+    implementation(libs.material)
+    implementation(libs.constraintlayout)
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
-    testImplementation(Libs.junit)
-    androidTestImplementation(Libs.androidx_junit)
-    androidTestImplementation(Libs.espresso_core)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.espresso.core)
 
-    implementation(Libs.viewpager2)
-    implementation(Libs.retrofit)
-    implementation(Libs.adapter_rxjava2)
-    implementation(Libs.converter_gson)
-    implementation(Libs.converter_scalars)
-    implementation(Libs.rxpermissions)
-    implementation(Libs.rxjava3)
+    implementation(libs.viewpager2)
+    implementation(libs.retrofit2)
+    implementation(libs.adapter.rxjava2)
+    implementation(libs.converter.gson)
+    implementation(libs.converter.scalars)
+    implementation(libs.rxpermissions)
+    implementation(libs.rxjava3)
 
-    implementation(Libs.kotlinx_coroutines_core)
-    implementation(Libs.lifecycle_runtime_ktx)
-    implementation(Libs.lifecycle_viewmodel_ktx)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
 
-    implementation(Libs.kotlin_reflect)
+    implementation(libs.kotlin.reflect)
 
     // 反射
-    implementation(Libs.activity_ktx)
-    implementation(Libs.fragment_ktx)
-    implementation(Libs.jeromq)
+    implementation(libs.activity.ktx)
+    implementation(libs.fragment.ktx)
+    implementation(libs.jeromq)
     implementation(files("libs/Cariad_CDA_AudioRecorder_release_202302031659.aar"))
 
     implementation("com.tencent.bugly:crashreport:latest.release")
