@@ -23,9 +23,6 @@ buildscript {
         classpath(kotlin("gradle-plugin", version = "1.7.0"))
         classpath("org.javassist:javassist:3.26.0-GA")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
-
-        classpath("io.github.xjxlx:publish:1.0.1")
-        classpath("io.github.xjxlx:catalog:1.0.1")
     }
 }
 
