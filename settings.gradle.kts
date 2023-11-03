@@ -4,10 +4,11 @@ pluginManagement {
         maven { setUrl("https://maven.aliyun.com/repository/public") }
         maven { setUrl("https://maven.aliyun.com/repository/central") }
         maven { setUrl("https://maven.aliyun.com/repository/gradle-plugin") }
+        maven { setUrl("https://plugins.gradle.org/m2/") }
         maven { setUrl("https://jitpack.io") }
+
         gradlePluginPortal()
         google()
-        jcenter()
         mavenLocal()
         mavenCentral()
     }
@@ -22,9 +23,10 @@ dependencyResolutionManagement {
         maven { setUrl("https://maven.aliyun.com/repository/public") }
         maven { setUrl("https://maven.aliyun.com/repository/google") }
         maven { setUrl("https://maven.aliyun.com/repository/central") }
+        maven { setUrl("https://plugins.gradle.org/m2/") }
+
         maven { setUrl("https://jitpack.io") }
         google()
-        jcenter()
         mavenLocal()
         mavenCentral()
         maven {
@@ -34,17 +36,10 @@ dependencyResolutionManagement {
             }
             setUrl("https://packages.aliyun.com/maven/repository/2131155-release-wH01IT/")
         }
-        maven {
-            credentials {
-                username = "6123a7974e5db15d52e7a9d8"
-                password = "HsDc[dqcDfda"
-            }
-            setUrl("https://packages.aliyun.com/maven/repository/2131155-snapshot-mh62BC/")
-        }
     }
     versionCatalogs {
         create("libs") {
-            from("com.android.version:catalog:1.0.0")
+            from("com.android:catalog:1.0.0")
         }
     }
 }
