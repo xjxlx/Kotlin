@@ -10,6 +10,7 @@ android {
     defaultConfig {
         applicationId = "com.xjx.kotlin"
         minSdk = libs.versions.minSdk.get().toInt()
+        //noinspection ExpiredTargetSdkVersion
         targetSdk = 28
         versionCode = 1
         versionName = "1.0.0"
@@ -108,7 +109,7 @@ dependencies {
     implementation(libs.activity.ktx)
     implementation(libs.fragment.ktx)
     implementation(libs.jeromq)
-    implementation(files("libs/Cariad_CDA_AudioRecorder_release_202302031659.aar"))
+    // implementation(files("libs/Cariad_CDA_AudioRecorder_release_202302031659.aar"))
 
     implementation("com.tencent.bugly:crashreport:latest.release")
 }
