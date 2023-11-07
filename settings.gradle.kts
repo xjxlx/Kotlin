@@ -3,9 +3,13 @@ pluginManagement {
         maven { setUrl("https://maven.aliyun.com/repository/google") }
         maven { setUrl("https://maven.aliyun.com/repository/public") }
         maven { setUrl("https://maven.aliyun.com/repository/central") }
-        maven { setUrl("https://maven.aliyun.com/repository/gradle-plugin") }
         maven { setUrl("https://plugins.gradle.org/m2/") }
-        maven { setUrl("https://jitpack.io") }
+        maven {
+            setUrl("https://jitpack.io")
+            content {
+                includeGroup("com.github.xjxlx")
+            }
+        }
 
         gradlePluginPortal()
         google()
@@ -25,7 +29,12 @@ dependencyResolutionManagement {
         maven { setUrl("https://maven.aliyun.com/repository/central") }
         maven { setUrl("https://plugins.gradle.org/m2/") }
 
-        maven { setUrl("https://jitpack.io") }
+        maven {
+            setUrl("https://jitpack.io")
+            content {
+                includeGroup("com.github.xjxlx")
+            }
+        }
         google()
         mavenLocal()
         mavenCentral()
@@ -39,7 +48,7 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from("com.android:catalog:1.0.0")
+            from("com.android:catalogs:1.0.0")
         }
     }
 }
