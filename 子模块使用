@@ -3,3 +3,9 @@
 
 2：更新
     git submodule update
+
+// 2：切换到master 分支
+    git submodule foreach --recursive "git checkout master"
+
+// 3: 更新
+    git submodule foreach "git pull origin master"
