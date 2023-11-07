@@ -5,11 +5,13 @@
 
 android {
     namespace = "com.xjx.kotlin"
-    compileSdk = libs.versions.compileSdks.get().toInt()
+    compileSdk = libs.versions.compileSdks.get()
+        .toInt()
 
     defaultConfig {
         applicationId = "com.xjx.kotlin"
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get()
+            .toInt()
         //noinspection ExpiredTargetSdkVersion
         targetSdk = 28
         versionCode = 1
@@ -45,18 +47,12 @@ android {
             isDebuggable = true
             signingConfig = signingConfigs.getByName("config")
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
             signingConfig = signingConfigs.getByName("test")
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
@@ -70,6 +66,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 

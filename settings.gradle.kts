@@ -4,12 +4,7 @@ pluginManagement {
         maven { setUrl("https://maven.aliyun.com/repository/public") }
         maven { setUrl("https://maven.aliyun.com/repository/central") }
         maven { setUrl("https://plugins.gradle.org/m2/") }
-        maven {
-            setUrl("https://jitpack.io")
-            content {
-                includeGroup("com.github.xjxlx")
-            }
-        }
+        maven { setUrl("https://jitpack.io") }
 
         gradlePluginPortal()
         google()
@@ -29,12 +24,7 @@ dependencyResolutionManagement {
         maven { setUrl("https://maven.aliyun.com/repository/central") }
         maven { setUrl("https://plugins.gradle.org/m2/") }
 
-        maven {
-            setUrl("https://jitpack.io")
-            content {
-                includeGroup("com.github.xjxlx")
-            }
-        }
+        maven { setUrl("https://jitpack.io") }
         google()
         mavenLocal()
         mavenCentral()
