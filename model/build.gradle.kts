@@ -1,5 +1,6 @@
 plugins {
-    id 'java-library'
+    id("java-library")
+    id("org.jetbrains.kotlin.jvm")
 }
 
 java {
@@ -8,5 +9,5 @@ java {
 }
 
 dependencies {
-    implementation 'org.zeromq:jeromq:0.5.3'
+    implementation("org.zeromq:jeromq:0.5.3")
 }
