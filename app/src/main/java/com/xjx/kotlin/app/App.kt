@@ -1,6 +1,6 @@
 package com.xjx.kotlin.app
 
-import RefreshManager
+import com.android.refresh.app.ApplicationManager
 import android.app.Application
 import android.os.Process
 import android.provider.Settings
@@ -101,7 +101,7 @@ class App : Application() {
         RetrofitHelper.addInterceptor(HttpLogInterceptor())
 
         // init refresh
-        RefreshManager.init(this)
+        ApplicationManager.init(this)
     }
 
     /**

@@ -12,12 +12,12 @@
         android:layout_height="wrap_content"
         android:text="开始" />
 
-    <com.android.helper.base.refresh.BaseRefreshLayout
+    <com.android.refresh.base.BaseRefreshLayout
         android:id="@+id/brl_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.android.helper.base.refresh.BaseRefreshHeader
+        <com.android.refresh.base.BaseRefreshHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -26,10 +26,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.android.helper.base.refresh.BaseRefreshFooter
+        <com.android.refresh.base.BaseRefreshFooter
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </com.android.helper.base.refresh.BaseRefreshLayout>
+    </com.android.refresh.base.BaseRefreshLayout>
 
 </RelativeLayout>
