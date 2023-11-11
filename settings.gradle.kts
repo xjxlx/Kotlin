@@ -52,3 +52,5 @@ include(":http")
 include(":common")
 
 include(":model")
+
+include(":http:common")
