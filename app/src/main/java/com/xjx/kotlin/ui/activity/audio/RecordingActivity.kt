@@ -1,5 +1,6 @@
 package com.xjx.kotlin.ui.activity.audio
 
+//import technology.cariad.cda.audiorecorder.AudioRecorder
 import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,14 +9,12 @@ import androidx.lifecycle.lifecycleScope
 import com.android.apphelper2.utils.NetworkUtil
 import com.android.apphelper2.utils.permission.PermissionMultipleCallBackListener
 import com.android.apphelper2.utils.permission.PermissionUtil
-import com.android.common.utils.GsonUtil
 import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityRecordingBinding
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-//import technology.cariad.cda.audiorecorder.AudioRecorder
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -95,7 +94,7 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
         mBinding.btnStart.setOnClickListener {
             permission.requestArray(arrayOf<String>(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 object : PermissionMultipleCallBackListener {
-                    override fun onCallBack(allGranted: Boolean, map: MutableMap<String, Boolean>) {
+                    override fun onCallBack(allGranted: Boolean, map: Map<String, Boolean>) {
                         if (allGranted) {
                             LogUtil.e(tag, "权限满足，开始录音！")
                             start()

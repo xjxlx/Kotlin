@@ -57,7 +57,7 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
         mPermission.requestArray(mPermissionArray, object : PermissionMultipleCallBackListener {
-            override fun onCallBack(allGranted: Boolean, map: MutableMap<String, Boolean>) {
+            override fun onCallBack(allGranted: Boolean, map: Map<String, Boolean>) {
                 if (allGranted) {
                     initVideo()
                 }
