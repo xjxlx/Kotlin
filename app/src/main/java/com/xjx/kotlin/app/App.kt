@@ -12,8 +12,8 @@ import com.android.helper.app.BaseApplication
 import com.android.helper.base.title.PageLayoutBuilder
 import com.android.helper.base.title.PageLayoutManager
 import com.android.helper.httpclient.AutoInterceptor
-import com.android.http.utils.client.HttpLogInterceptor
-import com.android.http.utils.client.RetrofitHelper
+import com.android.http.client.HttpLogInterceptor
+import com.android.http.client.RetrofitHelper
 import com.tencent.bugly.crashreport.CrashReport
 import com.xjx.kotlin.BuildConfig
 import com.xjx.kotlin.R

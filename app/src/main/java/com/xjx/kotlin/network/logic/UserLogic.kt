@@ -1,7 +1,7 @@
-package com.xjx.kotlin.network.ApiLogic
+package com.xjx.kotlin.network.logic
 
-import com.android.http.utils.client.HttpResult
-import com.android.http.utils.client.RetrofitHelper
+import com.android.http.client.HttpResult
+import com.android.http.client.RetrofitHelper
 import com.xjx.kotlin.network.ApiService
 import com.xjx.kotlin.network.bean.UserInfoBean
 

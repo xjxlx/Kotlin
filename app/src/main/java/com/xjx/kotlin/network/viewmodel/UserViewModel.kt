@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.common.utils.LogUtil
-import com.android.http.utils.client.HttpResult
-import com.xjx.kotlin.network.ApiLogic.UserLogic
+import com.android.http.client.HttpResult
 import com.xjx.kotlin.network.bean.UserInfoBean
+import com.xjx.kotlin.network.logic.UserLogic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
