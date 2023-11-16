@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.android.apphelper2.widget.ChartView
+    <com.android.common.widget.ChartView
         android:id="@+id/cv_chart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
 
-    <com.android.apphelper2.widget.ScoreProgressView
+    <com.android.common.widget.ScoreProgressView
         android:id="@+id/spv_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
 
-    <com.android.apphelper2.widget.TextWrapView
+    <com.android.common.widget.TextWrapView
         android:id="@+id/twv_wrap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

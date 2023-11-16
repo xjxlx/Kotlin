@@ -6,7 +6,7 @@
     android:background="@color/base_loading_text"
     tools:context=".ui.activity.custom.CustomWrapTextViewActivity">
 
-    <com.android.apphelper2.widget.TextWrapView
+    <com.android.common.widget.TextWrapView
         android:id="@+id/twv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

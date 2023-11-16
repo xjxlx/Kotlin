@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
-import com.android.apphelper2.utils.HandlerUtil
-import com.android.apphelper2.utils.NetworkUtil
+import com.android.common.utils.HandlerUtil
 import com.android.common.utils.LogUtil
+import com.android.common.utils.NetworkUtil
 import com.android.common.utils.ToastUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqReceiverBinding

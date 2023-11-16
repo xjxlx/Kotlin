@@ -3,10 +3,10 @@ package com.xjx.kotlin.network
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.base.recycleview.BaseRecycleViewFramework
 import com.android.common.base.recycleview.BaseVH
-import com.android.apphelper2.utils.RecycleUtil
-import com.android.common.base.BaseBindingTitleActivity
+import com.android.common.utils.RecycleUtil
 import com.android.http.client.RetrofitHelper
 import com.xjx.kotlin.databinding.ActivityNetWorkRefreshBinding
 import com.xjx.kotlin.databinding.ItemNetRefreshBinding

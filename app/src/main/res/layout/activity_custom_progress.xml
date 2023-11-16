@@ -6,7 +6,7 @@
     android:background="#202020"
     tools:context=".ui.activity.custom.CustomProgressActivity">
 
-    <com.android.apphelper2.widget.ScoreProgressView
+    <com.android.common.widget.ScoreProgressView
         android:id="@+id/spv_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

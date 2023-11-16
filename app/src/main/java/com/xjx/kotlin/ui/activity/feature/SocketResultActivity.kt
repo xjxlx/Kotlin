@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
-import com.android.apphelper2.utils.NetworkUtil
-import com.android.apphelper2.utils.socket.SocketListener
-import com.android.apphelper2.utils.socket.SocketServerUtil
+import com.android.common.utils.NetworkUtil
+import com.android.common.utils.socket.SocketListener
+import com.android.common.utils.socket.SocketServerUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivitySocketResultBinding
 import kotlinx.coroutines.Dispatchers
