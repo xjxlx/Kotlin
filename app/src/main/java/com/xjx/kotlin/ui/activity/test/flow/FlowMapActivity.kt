@@ -32,6 +32,7 @@ class FlowMapActivity : AppBaseBindingTitleActivity<ActivityFlowMapBinding>() {
             R.id.tv_item_flow -> {
                 startActivity(FlowActivity::class.java)
             }
+
             R.id.tv_item_flow_call -> {
                 startActivity(FlowCallActivity::class.java)
             }

@@ -7,10 +7,10 @@
     tools:context=".ui.activity.custom.ChartViewActivity">
 
     <com.android.common.widget.ChartView
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:id="@+id/cv_chart"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/dp_34" />
 

@@ -13,7 +13,6 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
 
-
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -26,7 +25,6 @@
         <item name="android:activityOpenExitAnimation">@anim/navigation_exit_animation</item>
         <item name="android:activityCloseEnterAnimation">@anim/navigation_pop_enter_animation</item>
         <item name="android:activityCloseExitAnimation">@anim/navigation_pop_exit_animation</item>
-
 
     </style>
 </resources>

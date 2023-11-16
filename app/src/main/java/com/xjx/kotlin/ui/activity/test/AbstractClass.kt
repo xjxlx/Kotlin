@@ -21,5 +21,4 @@ abstract class AbstractClass {
 
     // 定义抽象方法
     abstract fun absFun();
-
 }

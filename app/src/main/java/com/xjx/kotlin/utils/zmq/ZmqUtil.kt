@@ -35,7 +35,6 @@ class ZmqUtil {
         // true:open  false:close
         const val ZMQ_SWITCH = false
 
-
         fun bundledMessage(handler: Handler, msg: String): Message {
             val message: Message = handler.obtainMessage()
             val bundle = Bundle()

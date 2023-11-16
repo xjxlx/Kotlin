@@ -21,7 +21,8 @@ class CustomWrapTextViewActivity : AppBaseBindingTitleActivity<ActivityCustomWra
     override fun initData(savedInstanceState: Bundle?) {
         mBinding.btnStart.setOnClickListener {
             lifecycleScope.launch {
-                mBinding.twvContent.setExplain(20, "加油", "下次努力哦！", "呼吸时长足够，注意保持均匀的呼吸次数和平缓的心率，让情绪更稳定些效果更好哦！")
+                mBinding.twvContent.setExplain(20, "加油", "下次努力哦！",
+                    "呼吸时长足够，注意保持均匀的呼吸次数和平缓的心率，让情绪更稳定些效果更好哦！")
             }
         }
     }

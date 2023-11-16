@@ -34,6 +34,7 @@ class ThemeFinishLayout @JvmOverloads constructor(context: Context, attrs: Attri
                 childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(descWidth.toInt(), MeasureSpec.EXACTLY)
                 childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(descHeight.toInt(), MeasureSpec.EXACTLY)
             }
+
             else -> {
                 childHeightMeasureSpec = parentHeightMeasureSpec
                 childWidthMeasureSpec = parentWidthMeasureSpec

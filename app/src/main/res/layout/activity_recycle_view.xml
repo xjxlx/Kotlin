@@ -7,9 +7,9 @@
 
     <Button
         android:id="@+id/btn_gson"
-        android:text="GSON"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="GSON" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_list"

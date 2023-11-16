@@ -21,5 +21,4 @@ class SocketReceiver : BroadcastReceiver() {
             Toast.makeText(mContext, "接收到的Ip为:$ip", Toast.LENGTH_LONG).show();
         }
     }
-
 }

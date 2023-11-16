@@ -161,6 +161,5 @@ class FlowActivity : AppBaseBindingTitleActivity<ActivityFlowBinding>() {
 //                }
 //            }
         }
-
     }
 }

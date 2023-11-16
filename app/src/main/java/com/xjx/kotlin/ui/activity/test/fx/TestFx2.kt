@@ -39,5 +39,4 @@ class TestFx2 {
         // 此处可以获取到T的具体类型，所以可以省略到类型的class参数
         gson.fromJson(json, T::class.java)
     }
-
 }

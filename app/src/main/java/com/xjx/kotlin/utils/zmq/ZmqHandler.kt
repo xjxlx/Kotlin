@@ -10,7 +10,6 @@ class ZmqHandler(looper: Looper, private val messageListener: ZmqMessageListener
     override fun handleMessage(msg: Message) {
         super.handleMessage(msg)
 
-        msg.data.getString(message)
-            ?.let { messageListener.onMessageReceived(it) }
+        msg.data.getString(message)?.let { messageListener.onMessageReceived(it) }
     }
 }

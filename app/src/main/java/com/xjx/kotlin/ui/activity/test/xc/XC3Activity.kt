@@ -385,5 +385,4 @@ class XC3Activity : AppBaseBindingTitleActivity<ActivityXc3Binding>() {
             emit(i) // 发射下一个值
         }
     }.flowOn(Dispatchers.Default)
-
 }

@@ -40,8 +40,6 @@
             style="@style/click_item_style"
             android:text="数据转换" />
 
-
-
         <TextView
             android:id="@+id/tv_item_aidl"
             style="@style/click_item_style"

@@ -17,7 +17,6 @@ class FxActivity : AppBaseBindingTitleActivity<ActivityFxBinding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
     }
 
     fun <T : Comparable<T>> test(a: T, b: T): T {

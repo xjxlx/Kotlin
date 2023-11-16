@@ -21,7 +21,5 @@ class Person(var x: String) : InterfaceClass {
     }
 
     override fun show(p: String) {
-
     }
-
 }

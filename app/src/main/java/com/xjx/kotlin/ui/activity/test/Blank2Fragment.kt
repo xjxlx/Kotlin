@@ -1,10 +1,10 @@
 package com.xjx.kotlin.ui.activity.test
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.xjx.kotlin.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -31,8 +31,7 @@ class Blank2Fragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_blank2, container, false)
@@ -49,12 +48,12 @@ class Blank2Fragment : Fragment() {
          * @return A new instance of fragment Blank2Fragment.
          */
         // TODO: Rename and change types and number of parameters
-        @JvmStatic fun newInstance(param1: String, param2: String) =
-            Blank2Fragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) = Blank2Fragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_PARAM1, param1)
+                putString(ARG_PARAM2, param2)
             }
+        }
     }
 }

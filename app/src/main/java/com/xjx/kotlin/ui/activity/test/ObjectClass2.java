@@ -16,16 +16,16 @@ public class ObjectClass2 {
         Test.staticClass staticClass1 = new Test.staticClass();
     }
 
+    static class StaticClasss {
+        public void sssddd() {
+
+        }
+    }
+
     class InnerClass {
         public void sss() {
             ab = 1;
             isStop = false;
-        }
-    }
-
-    static class StaticClasss {
-        public void sssddd() {
-
         }
     }
 }

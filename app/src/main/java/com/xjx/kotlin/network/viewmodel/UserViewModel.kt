@@ -44,14 +44,10 @@ class UserViewModel : ViewModel() {
 //                }
 //        }
 
-
-
-
         viewModelScope.launch {
             flow<HttpResult<UserInfoBean>> {
                 UserLogic.getUser()
-            }
-                .transform {
+            }.transform {
                     val code = it.code
                     val data = it.data
                     val msg = it.msg
@@ -60,12 +56,9 @@ class UserViewModel : ViewModel() {
                     } else {
                         emit(msg)
                     }
-                }
-                .catch { error ->
+                }.catch { error ->
                     emit(error.message)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect {
+                }.flowOn(Dispatchers.IO).collect {
                     LogUtil.e("result ::: $it")
                     if (it is UserInfoBean) {
                         mUser.value = it

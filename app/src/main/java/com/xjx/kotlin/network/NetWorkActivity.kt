@@ -20,7 +20,8 @@ import com.xjx.kotlin.ui.activity.test.fx.TestFx1
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * 网络封装
@@ -82,8 +83,7 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
         TestFx1.main(null)
 
-        val format1: String = DateFormat.getDateTimeInstance()
-            .format(Date())
+        val format1: String = DateFormat.getDateTimeInstance().format(Date())
         val format = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CHINA).format(Date())
         LogUtil.e("dateFormat: $format1")
         LogUtil.e("dateFormat: $format")
@@ -136,5 +136,4 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
             return HttpResult()
         }
     }
-
 }

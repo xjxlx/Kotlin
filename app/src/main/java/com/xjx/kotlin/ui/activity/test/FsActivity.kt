@@ -68,7 +68,6 @@ class FsActivity : AppBaseBindingTitleActivity<ActivityFsBinding>() {
 
         getPerson2()
     }
-
 }
 
 class Student {
@@ -77,7 +76,6 @@ class Student {
     val test3 = false
 
     fun test1() {
-
     }
 
     fun test2(): String {
@@ -212,5 +210,4 @@ object ASS {
         }
         return instance
     }
-
 }

@@ -45,23 +45,23 @@ class App : Application() {
                     .setContentLayoutId(com.android.helper.R.id.fl_activity_content)
                     .setPlaceHolderLayoutId(com.android.helper.R.id.fl_placeholder)
                 PageLayoutManager.setGlobalTitleBar(builder)
-                }
+            }
 
-                override fun getApplication(): Application {
-                    return this@App
-                }
+            override fun getApplication(): Application {
+                return this@App
+            }
 
-                override fun isDebug(): Boolean {
-                    return BuildConfig.DEBUG
-                }
+            override fun isDebug(): Boolean {
+                return BuildConfig.DEBUG
+            }
 
-                override fun logTag(): String {
-                    return "AppHelper-kotlin"
-                }
+            override fun logTag(): String {
+                return "AppHelper-kotlin"
+            }
 
-                override fun getAppName(): String {
-                    return resources.getString(R.string.app_name)
-                }
+            override fun getAppName(): String {
+                return resources.getString(R.string.app_name)
+            }
 
             override fun getBaseUrl(): String {
                 return "http://api-zhgj-app.beixin.hi-cloud.net:8000/gateway-api/"

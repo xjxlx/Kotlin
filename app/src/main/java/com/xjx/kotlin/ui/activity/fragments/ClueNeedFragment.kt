@@ -21,8 +21,7 @@ class ClueNeedFragment : BaseBindingFragment<FragmentClueNeedBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
         mArguments?.let {
-            it.getString(KEY)
-                ?.let { content->
+            it.getString(KEY)?.let { content ->
                     mContent = content
                     mBinding.tvContent.text = mContent
                 }

@@ -9,11 +9,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.ViewGroup
-import com.android.common.utils.permission.PermissionMultipleCallBackListener
-import com.android.common.utils.permission.PermissionUtil
 import com.android.common.utils.FileUtil
 import com.android.common.utils.LogUtil
 import com.android.common.utils.ToastUtil
+import com.android.common.utils.permission.PermissionMultipleCallBackListener
+import com.android.common.utils.permission.PermissionUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityRecordBinding
 import java.io.File
@@ -107,8 +107,7 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
             return
         }
 
-        val parameters = mCamera!!.parameters
-        /*
+        val parameters = mCamera!!.parameters/*
          * 1：设置预览尺寸,因为预览的尺寸和最终是录制视频的尺寸无关，所以我们选取最大的数值
          * 2：获取手机支持的预览尺寸，这个一定不能随意去设置，某些手机不支持，一定会崩溃
          * 3：通常最大的是手机的分辨率，这样可以让预览画面尽可能清晰并且尺寸不变形，前提是TextureView的尺寸是全屏或者接近全屏

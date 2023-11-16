@@ -30,9 +30,7 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
         val adapter = BaseViewPager2FragmentAdapter(this.supportFragmentManager, this.lifecycle, mFragmentList)
         mBinding.vp.adapter = adapter
 
-        mBinding.tb.setItemBackgroundColor(Color.YELLOW)
-            .setItemSize(50F)
-            .withViewPager2(mBinding.vp, mTitleArray)
+        mBinding.tb.setItemBackgroundColor(Color.YELLOW).setItemSize(50F).withViewPager2(mBinding.vp, mTitleArray)
     }
 
     override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityCustomTabLayoutBinding {

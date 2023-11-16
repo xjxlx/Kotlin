@@ -15,9 +15,9 @@ import java.util.concurrent.Executors;
 
 public class ConcurrenceThread2Activity extends FragmentActivity {
 
-    private Boolean isPauseFlag = false;
     private final ExecutorService executorService = Executors.newFixedThreadPool(5);// 慢
     private final HashSet<String> mSet = new HashSet<String>();
+    private Boolean isPauseFlag = false;
     private String SOCKET_SERVICE = "socket-service";
 
     @Override
@@ -33,6 +33,21 @@ public class ConcurrenceThread2Activity extends FragmentActivity {
         findViewById(R.id.btn_pause).setOnClickListener(v -> pause());
 
         executorService.execute(new ExecutorRunnable(SOCKET_SERVICE));
+    }
+
+    private void start() {
+        isPauseFlag = false;
+        executorService.execute(new ExecutorRunnable("OBJ - 1"));
+        executorService.execute(new ExecutorRunnable("OBJ - 2"));
+        executorService.execute(new ExecutorRunnable("OBJ - 3"));
+        executorService.execute(new ExecutorRunnable("OBJ - 4"));
+    }
+
+    private void pause() {
+        isPauseFlag = true;
+        LogUtil.e(" 暂停了   当前的flag ---> pause : true");
+//        executorService.shutdown();
+        executorService.shutdown();
     }
 
     class ExecutorRunnable implements Runnable {
@@ -69,20 +84,5 @@ public class ConcurrenceThread2Activity extends FragmentActivity {
                 }
             }
         }
-    }
-
-    private void start() {
-        isPauseFlag = false;
-        executorService.execute(new ExecutorRunnable("OBJ - 1"));
-        executorService.execute(new ExecutorRunnable("OBJ - 2"));
-        executorService.execute(new ExecutorRunnable("OBJ - 3"));
-        executorService.execute(new ExecutorRunnable("OBJ - 4"));
-    }
-
-    private void pause() {
-        isPauseFlag = true;
-        LogUtil.e(" 暂停了   当前的flag ---> pause : true");
-//        executorService.shutdown();
-        executorService.shutdown();
     }
 }

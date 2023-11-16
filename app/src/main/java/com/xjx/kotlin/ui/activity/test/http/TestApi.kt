@@ -1,6 +1,5 @@
 package com.xjx.kotlin.ui.activity.test.http
 
-import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded

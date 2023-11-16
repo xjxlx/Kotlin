@@ -25,7 +25,6 @@ class ClasssActivity : AppBaseBindingTitleActivity<ActivityClasssBinding>() {
             it.a
         }
         //endregion
-
     }
 
     override fun setTitleContent(): String {
@@ -51,7 +50,6 @@ interface Api {
 // 必须实现
 class ImpApi : Api {
     override fun a() {
-
     }
 
     override fun b() {

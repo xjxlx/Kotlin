@@ -55,7 +55,6 @@ class FunActivity : AppBaseBindingTitleActivity<ActivityFunBinding>() {
 
     // 无返回值的函数
     fun test(key: String): Unit {
-
     }
 
     // 指定返回值类型

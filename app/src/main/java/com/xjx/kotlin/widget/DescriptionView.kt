@@ -43,15 +43,12 @@ class DescriptionView @JvmOverloads constructor(context: Context, attrs: Attribu
         // head
         paint.textSize = headTextSize
         paint.color = getScoreTitleTextColor(score)
-        canvas.drawText(resources.getString(getScoreTitleStringRes(score)), startPadding, 52 - (paint.descent()
-            .plus(paint.ascent())
-            .div(2F)), paint)
+        canvas.drawText(resources.getString(getScoreTitleStringRes(score)), startPadding,
+            52 - (paint.descent().plus(paint.ascent()).div(2F)), paint)
         // title
         paint.textSize = titleTextSize
         paint.color = titleTextColor
-        canvas.drawText(titleText, startPadding, 114.5F - (paint.descent()
-            .plus(paint.ascent())
-            .div(2F)), paint)
+        canvas.drawText(titleText, startPadding, 114.5F - (paint.descent().plus(paint.ascent()).div(2F)), paint)
         // des
         val textSize = calculationFontSize()
         logE("calculationFontSize = $textSize")

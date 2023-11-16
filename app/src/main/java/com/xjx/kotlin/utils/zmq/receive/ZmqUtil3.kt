@@ -50,8 +50,7 @@ class ZmqUtil3 {
                     log("start loop get data ---->")
                     mClientBufferedReader?.let { reader ->
                         var content = ""
-                        while (reader.readLine()
-                                .also { content = it } != null) {
+                        while (reader.readLine().also { content = it } != null) {
                             log("info: $content")
                             if (!mAtomicStatus.get()) {
                                 log("send --->")

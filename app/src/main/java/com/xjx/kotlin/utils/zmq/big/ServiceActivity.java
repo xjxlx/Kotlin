@@ -26,6 +26,7 @@ import java.util.UUID;
  */
 public class ServiceActivity extends AppCompatActivity {
 
+    int number = 0;
     private String tcp;
     private EditText et_ip;
     private TextView tv_content;
@@ -75,9 +76,6 @@ public class ServiceActivity extends AppCompatActivity {
     private void initZContext() {
         mContext = new ZContext(1);
     }
-
-
-    int number = 0;
 
     /**
      * 初始化TCP服务

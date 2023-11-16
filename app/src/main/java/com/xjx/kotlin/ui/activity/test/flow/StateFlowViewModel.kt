@@ -4,7 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.common.utils.LogUtil
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class StateFlowViewModel : ViewModel() {
@@ -37,8 +42,7 @@ class StateFlowViewModel : ViewModel() {
         }
     }
 
-    val flowConvertStateflow = flow.stateIn(
-        viewModelScope, // 指定的协程域
+    val flowConvertStateflow = flow.stateIn(viewModelScope, // 指定的协程域
         SharingStarted.WhileSubscribed(1000), // 指定的超时时间，这里指的是，在不超过指定时间内，不去停止flow，如果超过了就停止flow
         0 // 默认值
     )

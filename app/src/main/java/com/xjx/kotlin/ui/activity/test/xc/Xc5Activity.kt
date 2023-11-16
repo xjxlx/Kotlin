@@ -145,5 +145,4 @@ class Xc5Activity : AppBaseBindingTitleActivity<ActivityXc5Binding>() {
             }
         }
     }
-
 }

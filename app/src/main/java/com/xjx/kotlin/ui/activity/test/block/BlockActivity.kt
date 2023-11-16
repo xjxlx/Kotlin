@@ -59,8 +59,7 @@ class BlockActivity : AppBaseBindingTitleActivity<ActivityBlockBinding>() {
 
         fun test() {
             var list = listOf(1, 2, 3, 4, 5)
-             print(list.filter(::isOdd))
-
+            print(list.filter(::isOdd))
         }
     }
 }

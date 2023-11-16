@@ -39,6 +39,4 @@ class CurrentIpActivity : AppBaseBindingTitleActivity<ActivityCurrentIpBinding>(
             }
         }
     }
-
-
 }

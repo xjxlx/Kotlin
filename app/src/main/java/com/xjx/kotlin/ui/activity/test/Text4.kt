@@ -14,12 +14,13 @@ class Text4 {
     }
 
     var e: String? = null
-    var s1 :StringBuffer ?=null
-    var s2 :StringBuilder ?=null
+    var s1: StringBuffer? = null
+    var s2: StringBuilder? = null
 
     companion object {
 
-        @JvmStatic fun main(args: Array<String>) {
+        @JvmStatic
+        fun main(args: Array<String>) {
             test1()
         }
 

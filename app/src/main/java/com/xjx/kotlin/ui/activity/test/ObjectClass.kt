@@ -6,7 +6,6 @@ class Test {
     fun test() {
         val sss = ObjectClass2.StaticClasss()
         val innerClass = ObjectClass2().InnerClass()
-
     }
 
     companion object {
@@ -31,7 +30,6 @@ class Test {
         }
 
         fun dur(dur: Mission) {
-
         }
     }
 }

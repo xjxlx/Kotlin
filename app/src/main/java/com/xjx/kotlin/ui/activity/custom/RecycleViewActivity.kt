@@ -60,9 +60,7 @@ class RecycleViewActivity : AppBaseBindingTitleActivity<ActivityRecycleViewBindi
         }
 
 
-        RecycleUtil.getInstance(this, mBinding.rvList)
-            .setVertical()
-            .setAdapter(adapter)
+        RecycleUtil.getInstance(this, mBinding.rvList).setVertical().setAdapter(adapter)
 
         adapter.list = list
         mBinding.rvList.scrollToPosition(2)

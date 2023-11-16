@@ -19,9 +19,7 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
     override fun initData(savedInstanceState: Bundle?) {
         RetrofitHelper.setBaseUrl("https://web.jollyeng.com/")
 
-        RecycleUtil.getInstance(this, mBinding.rvList)
-            .setVertical()
-            .setAdapter(adapter)
+        RecycleUtil.getInstance(this, mBinding.rvList).setVertical().setAdapter(adapter)
 
         mBinding.btnStart.setOnClickListener {
             mList.clear()

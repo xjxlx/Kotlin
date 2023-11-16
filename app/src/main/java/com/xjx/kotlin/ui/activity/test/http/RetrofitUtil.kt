@@ -13,13 +13,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 object RetrofitUtil {
 
     fun <T> getApiService(service: Class<T>): T {
-        return Retrofit
-            .Builder()
-            .baseUrl("https://web.jollyeng.com/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
+        return Retrofit.Builder().baseUrl("https://web.jollyeng.com/").addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
             .create(service)
     }
 }

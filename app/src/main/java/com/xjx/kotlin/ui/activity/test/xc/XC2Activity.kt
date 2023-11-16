@@ -6,7 +6,21 @@ import android.view.ViewGroup
 import com.android.common.utils.LogUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityXc2Binding
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import kotlin.system.measureTimeMillis
 
 class XC2Activity : AppBaseBindingTitleActivity<ActivityXc2Binding>() {
@@ -56,7 +70,6 @@ class XC2Activity : AppBaseBindingTitleActivity<ActivityXc2Binding>() {
 //        GlobalScope.launch {
 //            test_CoroutineScope()
 //        }
-
     }
 
     private suspend fun test_CoroutineScope() {
@@ -197,5 +210,4 @@ class XC2Activity : AppBaseBindingTitleActivity<ActivityXc2Binding>() {
 
         }
     }
-
 }

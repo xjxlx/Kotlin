@@ -25,16 +25,15 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
         val flag = null
         when (flag) {
             null -> { // 新特性
-
             }
+
             1 -> {
-
             }
+
             2 -> {
-
             }
-            else -> { // default
 
+            else -> { // default
             }
         }
 
@@ -116,8 +115,7 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
         }
 
         // 过滤条件后返回一个新的数组
-        list2
-            .filter {
+        list2.filter {
                 LogUtil.e("ffff:$it")
                 it.toInt() > 5
             }.forEach {
@@ -132,14 +130,11 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
         }
 
         val path = "D:\\works\\StudioWorks\\Kotlin\\app\\build.gradle"
-        File(path).readText()
-            .toCharArray()
-            .filterNot { // 不包含的过滤
+        File(path).readText().toCharArray().filterNot { // 不包含的过滤
                 it.isWhitespace() // 空格
             }.forEach {
                 LogUtil.e("sss:" + it)
             }
-
     }
 
     inner class Person {
@@ -150,8 +145,6 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
         }
 
         public fun test() {
-
         }
     }
-
 }

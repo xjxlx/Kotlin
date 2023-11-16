@@ -5,9 +5,14 @@ import android.widget.Button
 import androidx.fragment.app.FragmentActivity
 import com.android.common.utils.LogUtil
 import com.xjx.kotlin.R
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 
 class TestConcurrenceThreadActivity : FragmentActivity() {
 

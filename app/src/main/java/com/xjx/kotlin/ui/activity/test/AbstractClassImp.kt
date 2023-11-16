@@ -22,7 +22,6 @@ open class AbstractClassImp : AbstractClass() {
         // 引用
         val kMutableProperty1 = Person::a
         LogUtil.e("" + kMutableProperty1)
-
     }
 }
 

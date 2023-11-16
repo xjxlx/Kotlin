@@ -9,7 +9,11 @@ import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityCoroutineMapBinding
 import com.xjx.kotlin.network.NetWorkActivity
 import com.xjx.kotlin.network.NetWorkRefreshActivity
-import com.xjx.kotlin.ui.activity.test.xc.*
+import com.xjx.kotlin.ui.activity.test.xc.XC2Activity
+import com.xjx.kotlin.ui.activity.test.xc.XC3Activity
+import com.xjx.kotlin.ui.activity.test.xc.XC4Activity
+import com.xjx.kotlin.ui.activity.test.xc.XCActivity
+import com.xjx.kotlin.ui.activity.test.xc.Xc5Activity
 
 class CoroutineMapActivity : AppBaseBindingTitleActivity<ActivityCoroutineMapBinding>() {
 
@@ -37,6 +41,7 @@ class CoroutineMapActivity : AppBaseBindingTitleActivity<ActivityCoroutineMapBin
             R.id.tv_item_xc_2 -> {
                 startActivity(XC2Activity::class.java)
             }
+
             R.id.tv_item_xc_3 -> {
                 startActivity(XC3Activity::class.java)
             }
@@ -44,12 +49,15 @@ class CoroutineMapActivity : AppBaseBindingTitleActivity<ActivityCoroutineMapBin
             R.id.tv_item_xc_4 -> {
                 startActivity(XC4Activity::class.java)
             }
+
             R.id.tv_item_xc_5 -> {
                 startActivity(Xc5Activity::class.java)
             }
+
             R.id.tv_item_fz -> {
                 startActivity(NetWorkActivity::class.java)
             }
+
             R.id.tv_item_refresh -> {
                 startActivity(NetWorkRefreshActivity::class.java)
             }

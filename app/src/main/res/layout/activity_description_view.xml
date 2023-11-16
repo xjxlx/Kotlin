@@ -15,9 +15,9 @@
         android:text="开始" />
 
     <com.xjx.kotlin.widget.ThemeFinishLayout
-        android:layout_width="wrap_content"
         android:id="@+id/v_dv"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

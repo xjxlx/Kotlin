@@ -10,5 +10,4 @@ class PersonImp : InterfaceClass {
     // 重写方法
     override fun show(p: String) {
     }
-
 }

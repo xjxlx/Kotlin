@@ -14,7 +14,6 @@ object Test33 {
 
     @JvmStatic
     fun main(args: Array<String>) {
-
     }
 
     public fun test() {

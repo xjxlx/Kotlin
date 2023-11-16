@@ -48,18 +48,12 @@ class ConvertDataActivity : AppBaseBindingTitleActivity<ActivityConvertDataBindi
             (a as String).length
         }
 
-        RxPermissionsUtil
-            .Builder(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
+        RxPermissionsUtil.Builder(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
             .setSinglePerMissionListener(object : SinglePermissionsCallBackListener {
                 override fun onRxPermissions(status: Int, permission: String?) {
                     LogUtil.e("权限： $status")
                 }
-            })
-            .build()
-            .startRequestPermission()
+            }).build().startRequestPermission()
 
         // 可变变量
         var a = 10;
@@ -80,9 +74,7 @@ class ConvertDataActivity : AppBaseBindingTitleActivity<ActivityConvertDataBindi
                 map["suiji"] = "newcL4"
                 map["version"] = "2"
 
-                testApi
-                    .getTestList(map)
-                    .enqueue(object : Callback<String> {
+                testApi.getTestList(map).enqueue(object : Callback<String> {
                         override fun onResponse(call: Call<String>, response: Response<String>) {
                             val toString = response.body().toString()
                             LogUtil.e("response ---> :$toString")

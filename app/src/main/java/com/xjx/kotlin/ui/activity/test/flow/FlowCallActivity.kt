@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
-import com.android.common.utils.permission.PermissionUtil
 import com.android.common.utils.LogUtil
 import com.android.common.utils.LogWriteUtil
+import com.android.common.utils.permission.PermissionUtil
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityFlowCallBinding
 import kotlinx.coroutines.*
@@ -120,5 +120,6 @@ class FlowCallActivity : AppBaseBindingTitleActivity<ActivityFlowCallBinding>() 
         super.onDestroy()
         mWrite.send("onDestroy")
     }
+
     data class Bean(var name: String, var age: Int) {}
 }

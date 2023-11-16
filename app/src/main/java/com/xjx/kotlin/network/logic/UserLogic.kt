@@ -13,14 +13,10 @@ import com.xjx.kotlin.network.bean.UserInfoBean
 object UserLogic {
 
     suspend fun getUser(): HttpResult<UserInfoBean> {
-        return RetrofitHelper
-            .create(ApiService::class.java)
-            .getUserInfo()
+        return RetrofitHelper.create(ApiService::class.java).getUserInfo()
     }
 
     suspend fun getUser2(name: String): HttpResult<UserInfoBean> {
-        return RetrofitHelper
-            .create(ApiService::class.java)
-            .getUserInfo()
+        return RetrofitHelper.create(ApiService::class.java).getUserInfo()
     }
 }

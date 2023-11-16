@@ -33,12 +33,9 @@ class FlowControlActivity : AppBaseBindingTitleActivity<ActivityFlowControlBindi
 
         // 1: 超时操作符
         lifecycleScope.launch {
-            mFlow.debounce(1000 * 5)
-                .collect {
+            mFlow.debounce(1000 * 5).collect {
                     LogUtil.e("debounce", "初始化数据！")
                 }
         }
     }
-
-
 }

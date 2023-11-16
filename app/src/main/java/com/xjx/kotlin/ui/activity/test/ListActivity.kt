@@ -79,13 +79,11 @@ class ListActivity : AppBaseBindingTitleActivity<ActivityListBinding>() {
 
         val pair1 = Pair("key1", 1)
         val pair2 = Pair("key2", 2)
-        val mutableMapOf1 = mutableMapOf(pair1,pair2)
+        val mutableMapOf1 = mutableMapOf(pair1, pair2)
 
         // Api >= 24 才可以使用
         mutableMapOf1.forEach { (key, value) ->
             LogUtil.e("key:$key value:$value")
         }
-
     }
-
 }
