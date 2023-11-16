@@ -46,7 +46,6 @@ dependencyResolutionManagement {
 rootProject.name = "Kotlin"
 include(":app")
 include(":apphelper")
-include(":apphelper2")
 include(":common")
 include(":http")
 include(":refresh")

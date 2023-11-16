@@ -4,7 +4,6 @@ import android.app.Application
 import android.os.Process
 import android.provider.Settings
 import android.text.TextUtils
-import com.android.apphelper2.app.AppHelper2
 import com.android.common.utils.LogUtil
 import com.android.helper.app.ApplicationInterface
 import com.android.helper.app.BaseApplication
@@ -34,9 +33,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        val builder1 = com.android.common.app.ApplicationManager.Builder()
-        AppHelper2.init(this, builder1)
+        val commonBuilder = com.android.common.app.ApplicationManager.Builder()
 
         BaseApplication.getInstance().setApplication(object : ApplicationInterface {
             override fun initApp() {
@@ -75,7 +72,7 @@ class App : Application() {
             }
 
             override fun getBuilder(): com.android.common.app.ApplicationManager.Builder {
-                return builder1
+                return commonBuilder
             }
         })
 

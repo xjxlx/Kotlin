@@ -5,13 +5,11 @@
 
 android {
     namespace = "com.xjx.kotlin"
-    compileSdk = libs.versions.compileSdks.get()
-        .toInt()
+    compileSdk = libs.versions.compileSdks.get().toInt()
 
     defaultConfig {
         applicationId = "com.xjx.kotlin"
-        minSdk = libs.versions.minSdk.get()
-            .toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
         //noinspection ExpiredTargetSdkVersion
         targetSdk = 28
         versionCode = 1
@@ -55,6 +53,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -73,7 +72,7 @@ android {
 
 dependencies {
     implementation(project(":apphelper"))
-    implementation(project(":apphelper2"))
+    // implementation(project(":apphelper2"))
     implementation(project(":http"))
     implementation(project(":refresh"))
     implementation(project(":common"))
@@ -81,7 +80,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation(libs.legacy.support.v4)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -96,18 +95,13 @@ dependencies {
     implementation(libs.converter.scalars)
     implementation(libs.rxpermissions)
     implementation(libs.rxjava3)
-
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
-
     implementation(libs.kotlin.reflect)
-
     // 反射
     implementation(libs.activity.ktx)
     implementation(libs.fragment.ktx)
     implementation(libs.jeromq)
-    // implementation(files("libs/Cariad_CDA_AudioRecorder_release_202302031659.aar"))
-
-    implementation("com.tencent.bugly:crashreport:latest.release")
+    implementation(libs.crashreport)
 }
