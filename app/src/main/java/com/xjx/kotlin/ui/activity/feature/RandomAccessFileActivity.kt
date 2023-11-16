@@ -4,9 +4,9 @@ import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.android.apphelper2.base.BaseBindingTitleActivity
 import com.android.apphelper2.utils.permission.PermissionCallBackListener
 import com.android.apphelper2.utils.permission.PermissionUtil
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
 import com.android.common.utils.RandomAccessFileUtil
 import com.xjx.kotlin.databinding.ActivityRandomAccessFileBinding

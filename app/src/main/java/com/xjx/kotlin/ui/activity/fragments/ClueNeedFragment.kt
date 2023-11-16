@@ -3,7 +3,7 @@ package com.xjx.kotlin.ui.activity.fragments
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.android.apphelper2.base.BaseBindingFragment
+import com.android.common.base.BaseBindingFragment
 import com.xjx.kotlin.databinding.FragmentClueNeedBinding
 
 class ClueNeedFragment : BaseBindingFragment<FragmentClueNeedBinding>() {

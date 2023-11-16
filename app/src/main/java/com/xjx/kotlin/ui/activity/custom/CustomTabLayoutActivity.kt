@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.android.apphelper2.base.BaseBindingTitleActivity
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.base.BaseViewPager2FragmentAdapter
 import com.xjx.kotlin.databinding.ActivityCustomTabLayoutBinding
 import com.xjx.kotlin.ui.activity.fragments.ClueNeedFragment

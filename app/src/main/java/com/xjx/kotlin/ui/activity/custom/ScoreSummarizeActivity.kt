@@ -3,7 +3,7 @@ package com.xjx.kotlin.ui.activity.custom
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.android.apphelper2.interfaces.AnimationListener
+import com.android.common.interfaces.AnimationListener
 import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityScoreSummarizeBinding
 
