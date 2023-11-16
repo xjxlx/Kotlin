@@ -3,8 +3,8 @@ package com.xjx.kotlin.network
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.android.apphelper2.base.recycleview.BaseRecycleViewFramework
-import com.android.apphelper2.base.recycleview.BaseVH
+import com.android.common.base.recycleview.BaseRecycleViewFramework
+import com.android.common.base.recycleview.BaseVH
 import com.android.apphelper2.utils.RecycleUtil
 import com.android.common.base.BaseBindingTitleActivity
 import com.android.http.client.RetrofitHelper
