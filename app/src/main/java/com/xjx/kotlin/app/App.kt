@@ -70,10 +70,6 @@ class App : Application() {
             override fun getInterceptors(): Array<Interceptor> {
                 return arrayOf(AutoInterceptor())
             }
-
-            override fun getBuilder(): com.android.common.app.ApplicationManager.Builder {
-                return commonBuilder
-            }
         })
 
         // init crash
