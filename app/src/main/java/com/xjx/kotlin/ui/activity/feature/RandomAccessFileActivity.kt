@@ -6,14 +6,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.common.utils.RandomAccessFileUtil
 import com.android.common.utils.permission.PermissionCallBackListener
 import com.android.common.utils.permission.PermissionUtil
 import com.xjx.kotlin.databinding.ActivityRandomAccessFileBinding
 
 class RandomAccessFileActivity : BaseBindingTitleActivity<ActivityRandomAccessFileBinding>() {
 
-    private val raf = RandomAccessFileUtil()
     private val permission = PermissionUtil.PermissionActivity(this)
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -27,7 +25,6 @@ class RandomAccessFileActivity : BaseBindingTitleActivity<ActivityRandomAccessFi
         mBinding.btnStart.setOnClickListener {
             val filesDir = mActivity.filesDir
             val path = filesDir.absolutePath + "/Test.txt"
-            raf.changeFile(path, "rw")
         }
     }
 
