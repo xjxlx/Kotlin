@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.android.common.base.BaseBindingTitleActivity
-import com.android.common.base.recycleview.BaseRecycleViewFramework
+import com.android.common.base.recycleview.BaseRecycleViewAdapter
 import com.android.common.base.recycleview.BaseVH
 import com.android.common.utils.RecycleUtil
 import com.android.http.client.RetrofitHelper
+import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityNetWorkRefreshBinding
 import com.xjx.kotlin.databinding.ItemNetRefreshBinding
 
@@ -108,7 +109,10 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
         return "网络刷新列表"
     }
 
-    class NetAdapter : BaseRecycleViewFramework<String, NetAdapter.VH>() {
+    class NetAdapter : BaseRecycleViewAdapter<String, NetAdapter.VH>() {
+        override fun createVH(viewType: Int): Int {
+            return R.layout.item_net_refresh
+        }
 
         class VH(binding: ItemNetRefreshBinding) : BaseVH(binding.root) {
             val tvContent = binding.tvContent
@@ -116,10 +120,6 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
 
         override fun onBindViewHolders(holder: VH, position: Int) {
             holder.tvContent.text = mList[position]
-        }
-
-        override fun createVH(viewType: Int, parent: ViewGroup): VH {
-            return VH(ItemNetRefreshBinding.inflate(mLayoutInflater, parent, false))
         }
     }
 }

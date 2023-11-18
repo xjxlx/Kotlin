@@ -5,13 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.FragmentActivity
 import com.android.common.base.BaseBindingTitleActivity
+import com.android.common.base.recycleview.BaseRecycleViewAdapter
 import com.android.common.base.recycleview.BaseVH
 import com.android.common.utils.GsonUtil
 import com.android.common.utils.LogUtil
-import com.android.helper.base.recycleview.BaseRecycleAdapter
-import com.android.helper.utils.RecycleUtil
+import com.android.common.utils.RecycleUtil
 import com.google.gson.Gson
 import com.xjx.kotlin.R
 import com.xjx.kotlin.bean.HttpRequest
@@ -20,10 +19,10 @@ import com.xjx.kotlin.databinding.ActivityRecycleViewBinding
 
 class RecycleViewActivity : BaseBindingTitleActivity<ActivityRecycleViewBinding>() {
 
-    val adapter by lazy {
-        return@lazy Adapter(this)
+    private val adapter by lazy {
+        return@lazy Adapter()
     }
-    val gson = Gson()
+    private val gson = Gson()
     //    private val gsonUtil: GsonUtil = GsonUtil()
 
     override fun getTitleContent(): String {
@@ -61,24 +60,20 @@ class RecycleViewActivity : BaseBindingTitleActivity<ActivityRecycleViewBinding>
         }
 
         RecycleUtil.getInstance(this, mBinding.rvList).setVertical().setAdapter(adapter)
-
-        adapter.list = list
+        adapter.setList(list)
         mBinding.rvList.scrollToPosition(2)
     }
 
     data class Student(var name: String = "", var age: Int = 0)
 
-    class Adapter(activity: FragmentActivity) : BaseRecycleAdapter<String, VH>(activity) {
-        override fun createViewHolder(inflate: View, viewType: Int): VH {
-            return VH(inflate)
-        }
+    class Adapter : BaseRecycleViewAdapter<String, VH>() {
 
-        override fun getLayout(viewType: Int): Int {
-            return R.layout.item_test_recycle
-        }
-
-        override fun onBindHolder(holder: VH, position: Int) {
+        override fun onBindViewHolders(holder: VH, position: Int) {
             holder.tv_content.text = mList[position]
+        }
+
+        override fun createVH(viewType: Int): Int {
+            return R.layout.item_test_recycle
         }
     }
 
