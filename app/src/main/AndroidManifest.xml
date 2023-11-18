@@ -23,6 +23,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <queries>
+
         <!-- 如果想要与其他的应用进行AIDL通信的话，需要在这里注册包名的信息 -->
         <package android:name="com.android.app.free.debug" />
         <package android:name="com.android.poc" />
@@ -49,8 +50,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.activity.feature.TestHttp1Activity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.feature.RandomAccessFileActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".ui.activity.custom.CustomTabLayoutActivity"
             android:exported="true">

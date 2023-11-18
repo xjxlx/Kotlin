@@ -23,15 +23,13 @@ class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>()
         setonClickListener(R.id.tv_item_recording_video)
 
         mBinding.tvItemZmqSend.setOnClickListener { startActivity(ZmqSendActivity::class.java) }
-
         mBinding.tvItemZmqReceive.setOnClickListener { startActivity(ZmqReceiverActivity::class.java) }
-
         mBinding.tvItemZmqTest.setOnClickListener { startActivity(ServiceActivity::class.java) }
-
         mBinding.tvItemCurrentIp.setOnClickListener { startActivity(CurrentIpActivity::class.java) }
         mBinding.tvSocketSend.setOnClickListener { startActivity(SocketSendActivity::class.java) }
         mBinding.tvSocketResult.setOnClickListener { startActivity(SocketResultActivity::class.java) }
         mBinding.tvRaf.setOnClickListener {}
+        mBinding.tvTestHttp1.setOnClickListener { startActivity(TestHttp1Activity::class.java) }
     }
 
     override fun onClick(v: View?) {
