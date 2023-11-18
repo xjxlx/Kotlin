@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityXc3Binding
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -27,6 +28,7 @@ class XC3Activity : BaseBindingTitleActivity<ActivityXc3Binding>() {
         return ActivityXc3Binding.inflate(inflater, container, true)
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun initData(savedInstanceState: Bundle?) {
 
         GlobalScope.launch {
