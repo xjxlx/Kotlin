@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import com.android.common.base.BaseBindingTitleActivity
+import com.android.common.base.recycleview.BaseVH
 import com.android.common.utils.GsonUtil
 import com.android.common.utils.LogUtil
-import com.android.helper.base.BaseVH
 import com.android.helper.base.recycleview.BaseRecycleAdapter
 import com.android.helper.utils.RecycleUtil
 import com.google.gson.Gson
