@@ -6,28 +6,28 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.NetworkUtil
 import com.android.common.utils.socket.SocketListener
 import com.android.common.utils.socket.SocketServerUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivitySocketResultBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBinding>() {
+class SocketResultActivity : BaseBindingTitleActivity<ActivitySocketResultBinding>() {
 
     private val socketUtil = SocketServerUtil()
     private val mNetWorkUtil: NetworkUtil by lazy {
         return@lazy NetworkUtil.instance.register()
     }
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "Socket - 接收端"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivitySocketResultBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivitySocketResultBinding {
         return ActivitySocketResultBinding.inflate(inflater, container, true)
     }
 
@@ -38,17 +38,13 @@ class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBin
         // 追踪 + 发送
         socketUtil.setTraceListener(object : SocketListener {
             override fun callBackListener(content: String) {
-                mBinding.tvSend.post {
-                    mBinding.tvSend.text = content
-                }
+                mBinding.tvSend.post { mBinding.tvSend.text = content }
             }
         })
 
         socketUtil.setResultListener(object : SocketListener {
             override fun callBackListener(content: String) {
-                mBinding.tvResult.post {
-                    mBinding.tvResult.text = content
-                }
+                mBinding.tvResult.post { mBinding.tvResult.text = content }
             }
         })
 
@@ -57,9 +53,7 @@ class SocketResultActivity : AppBaseBindingTitleActivity<ActivitySocketResultBin
 
             lifecycleScope.launch {
                 mNetWorkUtil.getIPAddress {
-                    mBinding.tvIp.post {
-                        mBinding.tvIp.text = "当前的ip:${it.ip} 当前wifi: ${it.ssid}"
-                    }
+                    mBinding.tvIp.post { mBinding.tvIp.text = "当前的ip:${it.ip} 当前wifi: ${it.ssid}" }
                 }
             }
         }

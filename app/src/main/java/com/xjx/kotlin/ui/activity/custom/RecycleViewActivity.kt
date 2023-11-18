@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.GsonUtil
 import com.android.common.utils.LogUtil
 import com.android.helper.base.BaseVH
 import com.android.helper.base.recycleview.BaseRecycleAdapter
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.RecycleUtil
 import com.google.gson.Gson
 import com.xjx.kotlin.R
@@ -18,18 +18,19 @@ import com.xjx.kotlin.bean.HttpRequest
 import com.xjx.kotlin.bean.ZmqBean
 import com.xjx.kotlin.databinding.ActivityRecycleViewBinding
 
-class RecycleViewActivity : AppBaseBindingTitleActivity<ActivityRecycleViewBinding>() {
+class RecycleViewActivity : BaseBindingTitleActivity<ActivityRecycleViewBinding>() {
+
     val adapter by lazy {
         return@lazy Adapter(this)
     }
     val gson = Gson()
-//    private val gsonUtil: GsonUtil = GsonUtil()
+    //    private val gsonUtil: GsonUtil = GsonUtil()
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "RecycleView"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityRecycleViewBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityRecycleViewBinding {
         return ActivityRecycleViewBinding.inflate(inflater, container, true)
     }
 
@@ -46,19 +47,18 @@ class RecycleViewActivity : AppBaseBindingTitleActivity<ActivityRecycleViewBindi
             val toJson = gson.toJson(http)
             LogUtil.e("json ", "json ---> $toJson")
 
-//            val type = object : TypeToken<HttpRequest<ZmqBean>>() {}.type
-//            val fromJson = gson.fromJson<HttpRequest<ZmqBean>>(toJson, type)
-//            LogUtil.e("fromJson ", "fromJson ---> $fromJson")
+            //            val type = object : TypeToken<HttpRequest<ZmqBean>>() {}.type
+            //            val fromJson = gson.fromJson<HttpRequest<ZmqBean>>(toJson, type)
+            //            LogUtil.e("fromJson ", "fromJson ---> $fromJson")
 
-//            val student = Student("zs", 19)
-//            val toJson = gson.toJson(student)
+            //            val student = Student("zs", 19)
+            //            val toJson = gson.toJson(student)
 
-//            val fromJson = gsonUtil.fromJson<Student>(toJson)
+            //            val fromJson = gsonUtil.fromJson<Student>(toJson)
 
             val fromJsonNested = GsonUtil.fromJsonNested<HttpRequest<ZmqBean>>(toJson)
             LogUtil.e("fromJson ", "fromJson ---> $fromJsonNested")
         }
-
 
         RecycleUtil.getInstance(this, mBinding.rvList).setVertical().setAdapter(adapter)
 

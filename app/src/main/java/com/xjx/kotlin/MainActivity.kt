@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.permission.RxPermissionsUtil
 import com.xjx.kotlin.databinding.ActivityMainBinding
 import com.xjx.kotlin.ui.activity.custom.CustomViewMapActivity
@@ -27,7 +27,11 @@ import com.xjx.kotlin.ui.activity.test.coroutine.CoroutineMapActivity
 import com.xjx.kotlin.ui.activity.test.flow.FlowMapActivity
 import com.xjx.kotlin.ui.activity.thread.ThreadMapActivity
 
-class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
+class MainActivity : BaseBindingTitleActivity<ActivityMainBinding>() {
+
+    override fun getTitleContent(): String {
+        return ""
+    }
 
     override fun initListener() {
         super.initListener()
@@ -38,16 +42,12 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val strings = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
         RxPermissionsUtil.Builder(this, *strings).setSinglePerMissionListener { permissionStatus: Int, permission: String? ->
-                LogUtil.e("permission:$permissionStatus")
-            }.build().startRequestPermission()
-    }
-
-    override fun setTitleContent(): String {
-        return ""
+            LogUtil.e("permission:$permissionStatus")
+        }.build().startRequestPermission()
     }
 
     override fun onClick(v: View?) {
@@ -119,7 +119,9 @@ class MainActivity : AppBaseBindingTitleActivity<ActivityMainBinding>() {
         }
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityMainBinding {
+    override fun getBinding(
+        inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean,
+    ): ActivityMainBinding {
         return ActivityMainBinding.inflate(inflater, container, true)
     }
 }

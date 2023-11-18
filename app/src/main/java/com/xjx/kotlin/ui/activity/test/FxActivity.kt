@@ -3,21 +3,20 @@ package com.xjx.kotlin.ui.activity.test
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.android.helper.base.title.AppBaseBindingTitleActivity
+import com.android.common.base.BaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityFxBinding
 
-class FxActivity : AppBaseBindingTitleActivity<ActivityFxBinding>() {
+class FxActivity : BaseBindingTitleActivity<ActivityFxBinding>() {
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "泛型"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityFxBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityFxBinding {
         return ActivityFxBinding.inflate(inflater, container, true)
     }
 
-    override fun initData(savedInstanceState: Bundle?) {
-    }
+    override fun initData(savedInstanceState: Bundle?) {}
 
     fun <T : Comparable<T>> test(a: T, b: T): T {
         val b1 = a > b
@@ -44,10 +43,10 @@ interface Book {
 
 class BookEnglish : Book {
     override fun getBook(): Book? {
-//        mListOut.add(BookChina())
-//        val bookStore = BookStore<BookChina>()
-//        val book = bookStore.getBook()
-//        mListOut.add(book)
+        //        mListOut.add(BookChina())
+        //        val bookStore = BookStore<BookChina>()
+        //        val book = bookStore.getBook()
+        //        mListOut.add(book)
 
         return null
     }
@@ -72,4 +71,3 @@ class Test2 {
         return book
     }
 }
-

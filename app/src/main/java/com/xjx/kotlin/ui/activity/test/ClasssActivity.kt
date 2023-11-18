@@ -3,11 +3,11 @@ package com.xjx.kotlin.ui.activity.test
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityClasssBinding
 
-class ClasssActivity : AppBaseBindingTitleActivity<ActivityClasssBinding>() {
+class ClasssActivity : BaseBindingTitleActivity<ActivityClasssBinding>() {
 
     var a: Int = 0
 
@@ -21,17 +21,15 @@ class ClasssActivity : AppBaseBindingTitleActivity<ActivityClasssBinding>() {
         // region 引用
         val kMutableProperty1 = Person::a
         LogUtil.e("" + kMutableProperty1)
-        person.let {
-            it.a
-        }
-        //endregion
+        person.let { it.a }
+        // endregion
     }
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "类"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityClasssBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityClasssBinding {
         return ActivityClasssBinding.inflate(inflater, container, true)
     }
 }
@@ -49,14 +47,11 @@ interface Api {
 
 // 必须实现
 class ImpApi : Api {
-    override fun a() {
-    }
+    override fun a() {}
 
-    override fun b() {
-    }
+    override fun b() {}
 
-    override fun c() {
-    }
+    override fun c() {}
 }
 
 // 必须实现

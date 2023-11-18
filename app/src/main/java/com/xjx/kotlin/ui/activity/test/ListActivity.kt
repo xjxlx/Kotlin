@@ -5,17 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityListBinding
 
-class ListActivity : AppBaseBindingTitleActivity<ActivityListBinding>() {
+class ListActivity : BaseBindingTitleActivity<ActivityListBinding>() {
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityListBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityListBinding {
         return ActivityListBinding.inflate(inflater, container, true)
     }
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "集合"
     }
 
@@ -82,8 +82,6 @@ class ListActivity : AppBaseBindingTitleActivity<ActivityListBinding>() {
         val mutableMapOf1 = mutableMapOf(pair1, pair2)
 
         // Api >= 24 才可以使用
-        mutableMapOf1.forEach { (key, value) ->
-            LogUtil.e("key:$key value:$value")
-        }
+        mutableMapOf1.forEach { (key, value) -> LogUtil.e("key:$key value:$value") }
     }
 }

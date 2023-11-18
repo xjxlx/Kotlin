@@ -3,8 +3,8 @@ package com.xjx.kotlin.ui.activity.test
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityFsBinding
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -14,16 +14,14 @@ import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
-/**
- * 反射
- */
-class FsActivity : AppBaseBindingTitleActivity<ActivityFsBinding>() {
+/** 反射 */
+class FsActivity : BaseBindingTitleActivity<ActivityFsBinding>() {
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "反射"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityFsBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityFsBinding {
         return ActivityFsBinding.inflate(inflater, container, true)
     }
 
@@ -40,9 +38,7 @@ class FsActivity : AppBaseBindingTitleActivity<ActivityFsBinding>() {
 
         // 3:获取所有的构造参数
         val constructors = kClass.constructors
-        constructors.forEach {
-            LogUtil.e("constructors:" + it)
-        }
+        constructors.forEach { LogUtil.e("constructors:" + it) }
 
         // 4:获取所有成员属性和方法，返回类型是Collection<KCallable<*>>,包括共有和私有
         val members = kClass.members
@@ -53,15 +49,11 @@ class FsActivity : AppBaseBindingTitleActivity<ActivityFsBinding>() {
 
         // 5:获取所有属性，包含共有和私有的
         val memberProperties = kClass.memberProperties
-        memberProperties.forEach {
-            LogUtil.e("memberProperties : " + it)
-        }
+        memberProperties.forEach { LogUtil.e("memberProperties : " + it) }
 
         // kClass.memberFunctions //获取所有函数
         val memberFunctions = kClass.memberFunctions
-        memberFunctions.forEach {
-            LogUtil.e("memberFunctions : " + it)
-        }
+        memberFunctions.forEach { LogUtil.e("memberFunctions : " + it) }
         val student2 = Student2("小明", 18, "北京市", "大学")
         val kotlinToMap = kotlinToMap(student2)
         LogUtil.e("map-----> " + kotlinToMap)
@@ -75,8 +67,7 @@ class Student {
     private var test2 = "test2"
     val test3 = false
 
-    fun test1() {
-    }
+    fun test1() {}
 
     fun test2(): String {
         return ""
@@ -90,7 +81,7 @@ fun <R> kotlinToMap(r: R): Map<String, Any>? {
     val memberProperties = kClass.memberProperties
     if (memberProperties.isNotEmpty()) {
         memberProperties.forEach {
-//            val params = it as KProperty<*>
+            //            val params = it as KProperty<*>
             // 获取key 的name
             val name = it.name
             // 获取key的value
@@ -109,9 +100,7 @@ fun getPerson2() {
     val kClass = Person2::class
     val createInstance = kClass.createInstance()
 
-    val keyName = kClass.memberProperties.find {
-        it.name == "name"
-    }
+    val keyName = kClass.memberProperties.find { it.name == "name" }
     if (keyName != null) {
         val name = keyName.name
         val call = keyName.call(createInstance)
@@ -120,17 +109,15 @@ fun getPerson2() {
 
         LogUtil.e("name:$name  value: $call  get: $get")
 
-        //判断参数是否为可变的，是否为var
+        // 判断参数是否为可变的，是否为var
         if (keyName is KMutableProperty<*>) {
-            //修改属性值，调用setter方法
+            // 修改属性值，调用setter方法
             keyName.setter.call(createInstance, "zhangsan")
         }
 
-        //获取到printName方法，有可能为null
-        val funKClass = kClass.memberFunctions.find {
-            it.name == "printName"
-        }
-        //方法执行
+        // 获取到printName方法，有可能为null
+        val funKClass = kClass.memberFunctions.find { it.name == "printName" }
+        // 方法执行
         funKClass?.call(createInstance)
 
         // 获取主构造器
@@ -163,7 +150,7 @@ class Person2 {
 }
 
 //
-//class FileUtils {
+// class FileUtils {
 //
 //    companion object {
 //        private var INSTANCE: FileUtils? = null
@@ -181,7 +168,7 @@ class Person2 {
 //        }
 //
 //    }
-//}
+// }
 
 class FileUtil {
     companion object {

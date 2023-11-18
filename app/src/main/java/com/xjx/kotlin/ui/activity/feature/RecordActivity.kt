@@ -9,17 +9,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.ViewGroup
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.FileUtil
 import com.android.common.utils.LogUtil
 import com.android.common.utils.ToastUtil
 import com.android.common.utils.permission.PermissionMultipleCallBackListener
 import com.android.common.utils.permission.PermissionUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityRecordBinding
 import java.io.File
 import java.io.IOException
 
-class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
+class RecordActivity : BaseBindingTitleActivity<ActivityRecordBinding>() {
 
     private val mPermission = PermissionUtil.PermissionActivity(this)
     private val mPermissionArray: Array<String> =
@@ -47,11 +47,11 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
     private val isPause // 是否暂停的状态
             = false
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "录制视频"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityRecordBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityRecordBinding {
         return ActivityRecordBinding.inflate(inflater, container, true)
     }
 
@@ -64,12 +64,8 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
             }
         })
 
-        mBinding.btnStart.setOnClickListener {
-            startRecorder()
-        }
-        mBinding.btnStop.setOnClickListener {
-            stop()
-        }
+        mBinding.btnStart.setOnClickListener { startRecorder() }
+        mBinding.btnStop.setOnClickListener { stop() }
     }
 
     private fun initVideo() {
@@ -78,9 +74,9 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
             override fun surfaceCreated(holder: SurfaceHolder) {
                 LogUtil.e(tag, "surfaceCreated!")
                 // 初始化摄像头
-                initCamera();
+                initCamera()
                 // 初始化录制
-                initMediaRecorder();
+                initMediaRecorder()
             }
 
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -92,22 +88,22 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
             }
         })
         // 屏幕常亮
-        mSurfaceHolder.setKeepScreenOn(true);
+        mSurfaceHolder.setKeepScreenOn(true)
     }
 
     private fun initCamera() {
         if (mCamera != null) { // 避免重复性的去创建摄像机，否则会崩溃
             return
         }
-        mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+        mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT)
         // 检测是否有摄像头
         if (mCamera == null) {
-            ToastUtil.show("您的设备没有摄像头，暂时无法使用");
+            ToastUtil.show("您的设备没有摄像头，暂时无法使用")
             LogUtil.e(tag, "您的设备没有摄像头，暂时无法使用!")
             return
         }
 
-        val parameters = mCamera!!.parameters/*
+        val parameters = mCamera!!.parameters /*
          * 1：设置预览尺寸,因为预览的尺寸和最终是录制视频的尺寸无关，所以我们选取最大的数值
          * 2：获取手机支持的预览尺寸，这个一定不能随意去设置，某些手机不支持，一定会崩溃
          * 3：通常最大的是手机的分辨率，这样可以让预览画面尽可能清晰并且尺寸不变形，前提是TextureView的尺寸是全屏或者接近全屏
@@ -115,29 +111,29 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
         // 使用推荐的尺寸去处理
         sizeForVideo = parameters.preferredPreviewSizeForVideo
         if (sizeForVideo != null) {
-            LogUtil.e(tag, "size:--->推荐尺寸的宽高为：width：" + sizeForVideo?.width + "  height--->:" + sizeForVideo!!.height);
+            LogUtil.e(tag, "size:--->推荐尺寸的宽高为：width：" + sizeForVideo?.width + "  height--->:" + sizeForVideo!!.height)
             // 设置预览的尺寸
-            //设置图片尺寸  就拿预览尺寸作为图片尺寸,其实他们基本上是一样的
-            parameters.setPreviewSize(sizeForVideo!!.width, sizeForVideo!!.height);
+            // 设置图片尺寸  就拿预览尺寸作为图片尺寸,其实他们基本上是一样的
+            parameters.setPreviewSize(sizeForVideo!!.width, sizeForVideo!!.height)
         }
 
-        //缩短Recording启动时间
-        parameters.setRecordingHint(true);
+        // 缩短Recording启动时间
+        parameters.setRecordingHint(true)
 
         //   是否支持影像稳定能力，支持则开启
         if (parameters.isVideoStabilizationSupported()) {
-            parameters.setVideoStabilization(true);
+            parameters.setVideoStabilization(true)
         }
 
         // 寻找合适的尺寸，避免录制异常
-        setCameraParameters(parameters);
+        setCameraParameters(parameters)
 
-        mCamera?.setDisplayOrientation(90);
+        mCamera?.setDisplayOrientation(90)
         // 预览摄像机
         mCamera?.setPreviewDisplay(mSurfaceHolder)
         mCamera?.startPreview()
         // 解锁摄像机
-        mCamera?.unlock();
+        mCamera?.unlock()
     }
 
     private fun initMediaRecorder() {
@@ -152,15 +148,15 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
 
             // mMediaRecorder.setCamera(camera);之前是需要将摄像头解除锁定 camera.unlock()
             mediaRecorder?.setCamera(mCamera)
-            mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.DEFAULT) //设置音频输入源
-            mediaRecorder?.setVideoSource(MediaRecorder.VideoSource.DEFAULT) //设置视频输入源
+            mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.DEFAULT) // 设置音频输入源
+            mediaRecorder?.setVideoSource(MediaRecorder.VideoSource.DEFAULT) // 设置视频输入源
 
-            //设置视频的摄像头角度 只会改变录制的视频角度
+            // 设置视频的摄像头角度 只会改变录制的视频角度
             mediaRecorder?.setOrientationHint(270)
-            //设置记录会话的最大持续时间（毫秒）
+            // 设置记录会话的最大持续时间（毫秒）
             mediaRecorder?.setMaxDuration(5 * 1000)
             // mediaRecorder.setPreviewDisplay(surfaceHolder.getSurface());
-            //设置最大录制的大小2M 单位，字节
+            // 设置最大录制的大小2M 单位，字节
             mediaRecorder?.setMaxFileSize(2 * 1024 * 1024)
 
             // 设置录制完成后视频的封装格式THREE_GPP为3gp.MPEG_4为mp4  如果使用了setProfile（）方法的话，那么这里就不能设置，否则就会导致崩溃
@@ -171,7 +167,7 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
             /*
              * 1:设置视频尺寸，通常搭配码率一起使用，可调整视频清晰度
              * 2:此处一定不要胡乱设置，某些机型上不支持的话，会直接崩溃掉，最好直接用系统推荐的尺寸去处理
-             */if (sizeForVideo != null) {
+             */ if (sizeForVideo != null) {
                 // 设置视频的尺寸
                 if (mPhoneWidth == 0 && mPhoneHeight == 0) {
                     mPhoneWidth = sizeForVideo!!.width
@@ -181,8 +177,9 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
 
                 // 设置尺寸的大小
                 // mediaRecorder.setVideoSize(mPhoneWidth, mPhoneHeight);
-                //设置比特率,比特率是每一帧所含的字节流数量,比特率越大每帧字节越大,画面就越清晰,算法一般是 5 * 选择分辨率宽 * 选择分辨率高,一般可以调整5-10,比特率过大也会报错
-                //  mediaRecorder.setVideoEncodingBitRate(sizeForVideo.width * sizeForVideo.height);//设置视频的比特率
+                // 设置比特率,比特率是每一帧所含的字节流数量,比特率越大每帧字节越大,画面就越清晰,算法一般是 5 * 选择分辨率宽 * 选择分辨率高,一般可以调整5-10,比特率过大也会报错
+                //  mediaRecorder.setVideoEncodingBitRate(sizeForVideo.width *
+                // sizeForVideo.height);//设置视频的比特率
             }
 
             // 设置录制文件的保存路径
@@ -207,24 +204,24 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
             LogUtil.e(tag, "机型适配错误")
         } finally {
             if (isParameters) {
-                //如果机型适配错误 查找合适的size
+                // 如果机型适配错误 查找合适的size
                 val previewSizes = parameters.supportedPreviewSizes
                 var w = 720
                 var h = 480
                 if (!previewSizes.isEmpty()) {
                     val size = previewSizes[mPositionParameters]
                     w = size.width
-                    h = mPhoneHeight //不赋值高
+                    h = mPhoneHeight // 不赋值高
                 }
                 mPhoneWidth = w
                 LogUtil.e(tag, "机型适配错误后选定的尺寸$w:$h")
                 parameters.setPreviewSize(w, h)
                 mPositionParameters++
-                //集合不为空
+                // 集合不为空
                 if (previewSizes.isNotEmpty() && mPositionParameters < previewSizes!!.size) {
                     setCameraParameters(parameters)
                 } else {
-                    //为空走一次就行了
+                    // 为空走一次就行了
                     if (mPositionParameters === 1) {
                         setCameraParameters(parameters)
                     }
@@ -251,7 +248,7 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
             mediaRecorder.setProfile(profile)
             val videoBitRate = profile.videoBitRate
             // 此处必须设置，如果使用原生的profile设置的话，录制的大小很容易超过预设的值，导致录制时间不够
-            mediaRecorder.setVideoEncodingBitRate(sizeForVideo!!.width * sizeForVideo!!.height) //设置视频的比特率
+            mediaRecorder.setVideoEncodingBitRate(sizeForVideo!!.width * sizeForVideo!!.height) // 设置视频的比特率
         }
     }
 
@@ -260,8 +257,8 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
         if (!isRecording) {
             try {
                 if (mediaRecorder != null) {
-                    mediaRecorder!!.prepare() //准备
-                    mediaRecorder!!.start() //开启
+                    mediaRecorder!!.prepare() // 准备
+                    mediaRecorder!!.start() // 开启
                 }
                 isRecording = true
             } catch (e: IOException) {
@@ -270,9 +267,7 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
         }
     }
 
-    /**
-     * 停止录像
-     */
+    /** 停止录像 */
     private fun stop() {
         LogUtil.e(tag, "stop")
         if (isRecording) {
@@ -311,9 +306,7 @@ class RecordActivity : AppBaseBindingTitleActivity<ActivityRecordBinding>() {
         }
     }
 
-    /**
-     * 释放录像机
-     */
+    /** 释放录像机 */
     private fun releaseRecorder() {
         LogUtil.e("releaseRecorder")
         if (isRecording) {

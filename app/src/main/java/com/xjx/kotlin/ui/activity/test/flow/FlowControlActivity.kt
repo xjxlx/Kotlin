@@ -4,22 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityFlowControlBinding
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
-class FlowControlActivity : AppBaseBindingTitleActivity<ActivityFlowControlBinding>() {
+class FlowControlActivity : BaseBindingTitleActivity<ActivityFlowControlBinding>() {
 
     private val mFlow: MutableSharedFlow<Boolean> = MutableSharedFlow()
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "Flow 操作符"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityFlowControlBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityFlowControlBinding {
         return ActivityFlowControlBinding.inflate(inflater, container, true)
     }
 
@@ -32,10 +32,6 @@ class FlowControlActivity : AppBaseBindingTitleActivity<ActivityFlowControlBindi
         }
 
         // 1: 超时操作符
-        lifecycleScope.launch {
-            mFlow.debounce(1000 * 5).collect {
-                    LogUtil.e("debounce", "初始化数据！")
-                }
-        }
+        lifecycleScope.launch { mFlow.debounce(1000 * 5).collect { LogUtil.e("debounce", "初始化数据！") } }
     }
 }

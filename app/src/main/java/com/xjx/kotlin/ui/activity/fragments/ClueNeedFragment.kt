@@ -12,19 +12,15 @@ class ClueNeedFragment : BaseBindingFragment<FragmentClueNeedBinding>() {
     companion object {
         private const val KEY = "content"
         @JvmStatic
-        fun newInstance(content: String) = ClueNeedFragment().apply {
-            arguments = Bundle().apply {
-                putString(KEY, content)
-            }
-        }
+        fun newInstance(content: String) = ClueNeedFragment().apply { arguments = Bundle().apply { putString(KEY, content) } }
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         mArguments?.let {
             it.getString(KEY)?.let { content ->
-                    mContent = content
-                    mBinding.tvContent.text = mContent
-                }
+                mContent = content
+                mBinding.tvContent.text = mContent
+            }
         }
     }
 

@@ -4,25 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import com.android.helper.base.title.AppBaseBindingTitleActivity
+import com.android.common.base.BaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityDescriptionViewBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class DescriptionViewActivity : AppBaseBindingTitleActivity<ActivityDescriptionViewBinding>() {
+class DescriptionViewActivity : BaseBindingTitleActivity<ActivityDescriptionViewBinding>() {
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "文字描述的View"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityDescriptionViewBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityDescriptionViewBinding {
         return ActivityDescriptionViewBinding.inflate(inflater, container, true)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         mBinding.btnStart.setOnClickListener {
-
             lifecycleScope.launch {
                 delay(2000)
 

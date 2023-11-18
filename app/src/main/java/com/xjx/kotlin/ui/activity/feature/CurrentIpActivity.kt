@@ -5,19 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
 import com.android.common.utils.NetworkUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityCurrentIpBinding
 import kotlinx.coroutines.launch
 
-class CurrentIpActivity : AppBaseBindingTitleActivity<ActivityCurrentIpBinding>() {
+class CurrentIpActivity : BaseBindingTitleActivity<ActivityCurrentIpBinding>() {
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "当前的ip"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityCurrentIpBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityCurrentIpBinding {
         return ActivityCurrentIpBinding.inflate(inflater, container, true)
     }
 

@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.ToastUtil
 import com.android.helper.utils.permission.RxPermissionsUtil
 import com.android.helper.utils.permission.SinglePermissionsCallBackListener
@@ -19,19 +19,16 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 
-/**
- * 1：数据转化
- * 2：网络请求
- */
-
+/** 1：数据转化 2：网络请求 */
 const val aaa = 1
 
-class ConvertDataActivity : AppBaseBindingTitleActivity<ActivityConvertDataBinding>() {
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityConvertDataBinding {
+class ConvertDataActivity : BaseBindingTitleActivity<ActivityConvertDataBinding>() {
+
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityConvertDataBinding {
         return ActivityConvertDataBinding.inflate(inflater, container, true)
     }
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "数据转换"
     }
 
@@ -56,9 +53,9 @@ class ConvertDataActivity : AppBaseBindingTitleActivity<ActivityConvertDataBindi
             }).build().startRequestPermission()
 
         // 可变变量
-        var a = 10;
+        var a = 10
         // 只读变量，某种程度上可以当做常量使用
-        val b = 3;
+        val b = 3
     }
 
     override fun onClick(v: View?) {
@@ -75,26 +72,25 @@ class ConvertDataActivity : AppBaseBindingTitleActivity<ActivityConvertDataBindi
                 map["version"] = "2"
 
                 testApi.getTestList(map).enqueue(object : Callback<String> {
-                        override fun onResponse(call: Call<String>, response: Response<String>) {
-                            val toString = response.body().toString()
-                            LogUtil.e("response ---> :$toString")
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        val toString = response.body().toString()
+                        LogUtil.e("response ---> :$toString")
 
-                            // 设置目录位置
-                            val filesDir = this@ConvertDataActivity.filesDir
-                            // 根据文件File的路径，设置一个在该文件夹路径下的新文件
-                            File(filesDir, "abc.txt")
-                                // 写入文本数据
-                                .writeText(toString, Charsets.UTF_8)
+                        // 设置目录位置
+                        val filesDir = this@ConvertDataActivity.filesDir
+                        // 根据文件File的路径，设置一个在该文件夹路径下的新文件
+                        File(filesDir, "abc.txt")
+                            // 写入文本数据
+                            .writeText(toString, Charsets.UTF_8)
 
-                            ToastUtil.show("文件读写完毕！")
-                        }
+                        ToastUtil.show("文件读写完毕！")
+                    }
 
-                        override fun onFailure(call: Call<String>, t: Throwable) {
-                            LogUtil.e("onFailure ---> :" + t.message)
-                        }
-                    })
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        LogUtil.e("onFailure ---> :" + t.message)
+                    }
+                })
             }
         }
     }
 }
-

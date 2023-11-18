@@ -12,11 +12,11 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.android.app.KeepAidlInterface
 import com.android.app.OnChangeListenerAidlInterface
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityAidlBinding
 
-class AidlActivity : AppBaseBindingTitleActivity<ActivityAidlBinding>() {
+class AidlActivity : BaseBindingTitleActivity<ActivityAidlBinding>() {
 
     private lateinit var mKeepIntent: Intent
 
@@ -31,9 +31,7 @@ class AidlActivity : AppBaseBindingTitleActivity<ActivityAidlBinding>() {
             LogUtil.e("ServiceConnection ---> ")
             // 固定写法
             val keepAidlInterface = KeepAidlInterface.Stub.asInterface(service)
-            keepAidlInterface?.let {
-                it.setOnChangeListener(listener)
-            }
+            keepAidlInterface?.let { it.setOnChangeListener(listener) }
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
@@ -54,11 +52,11 @@ class AidlActivity : AppBaseBindingTitleActivity<ActivityAidlBinding>() {
         mBinding.tvAidl.text = "结果：$bindService"
     }
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "AIDL 调用"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityAidlBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityAidlBinding {
         return ActivityAidlBinding.inflate(inflater, container, true)
     }
 

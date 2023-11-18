@@ -3,17 +3,17 @@ package com.xjx.kotlin.ui.activity.custom
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.interfaces.AnimationListener
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityScoreSummarizeBinding
 
-class ScoreSummarizeActivity : AppBaseBindingTitleActivity<ActivityScoreSummarizeBinding>() {
+class ScoreSummarizeActivity : BaseBindingTitleActivity<ActivityScoreSummarizeBinding>() {
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "分数综合"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityScoreSummarizeBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityScoreSummarizeBinding {
         return ActivityScoreSummarizeBinding.inflate(inflater, container, true)
     }
 
@@ -39,7 +39,7 @@ class ScoreSummarizeActivity : AppBaseBindingTitleActivity<ActivityScoreSummariz
                 }
             })
 
-            this.getExternalFilesDir("");
+            this.getExternalFilesDir("")
         }
     }
 }

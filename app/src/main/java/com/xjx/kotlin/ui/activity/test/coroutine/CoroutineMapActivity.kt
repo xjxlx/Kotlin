@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.android.helper.base.title.AppBaseBindingTitleActivity
+import com.android.common.base.BaseBindingTitleActivity
 import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityCoroutineMapBinding
 import com.xjx.kotlin.network.NetWorkActivity
@@ -15,13 +15,13 @@ import com.xjx.kotlin.ui.activity.test.xc.XC4Activity
 import com.xjx.kotlin.ui.activity.test.xc.XCActivity
 import com.xjx.kotlin.ui.activity.test.xc.Xc5Activity
 
-class CoroutineMapActivity : AppBaseBindingTitleActivity<ActivityCoroutineMapBinding>() {
+class CoroutineMapActivity : BaseBindingTitleActivity<ActivityCoroutineMapBinding>() {
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "协程集合"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityCoroutineMapBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityCoroutineMapBinding {
         return ActivityCoroutineMapBinding.inflate(inflater, container, true)
     }
 

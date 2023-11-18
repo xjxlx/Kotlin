@@ -1,16 +1,16 @@
 package com.xjx.kotlin.ui.activity.audio
 
-//import technology.cariad.cda.audiorecorder.AudioRecorder
+// import technology.cariad.cda.audiorecorder.AudioRecorder
 import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
 import com.android.common.utils.NetworkUtil
 import com.android.common.utils.permission.PermissionMultipleCallBackListener
 import com.android.common.utils.permission.PermissionUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityRecordingBinding
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
@@ -22,7 +22,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.CoroutineContext
 
-class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>() {
+class RecordingActivity : BaseBindingTitleActivity<ActivityRecordingBinding>() {
 
     private val tag = "Recording :"
     private val delayTime = 10000
@@ -30,7 +30,9 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO)
     }
-    private val mPauseFlag: AtomicBoolean by lazy { return@lazy AtomicBoolean() }
+    private val mPauseFlag: AtomicBoolean by lazy {
+        return@lazy AtomicBoolean()
+    }
     private val mMutex = Mutex()
     private val permission: PermissionUtil.PermissionActivity = PermissionUtil.PermissionActivity(this@RecordingActivity)
     private val mNetworkUtil: NetworkUtil by lazy {
@@ -47,11 +49,11 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
         return@lazy newSingleThreadContext("Control")
     }
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "Recording"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityRecordingBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityRecordingBinding {
         return ActivityRecordingBinding.inflate(inflater, container, true)
     }
 
@@ -61,9 +63,7 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
         mBinding.btnCreate.setOnClickListener {
             // register()
             lifecycleScope.launch {
-                mNetworkUtil.getSingleIpAddress {
-                    LogUtil.e(NetworkUtil.TAG, "getSingleIpAddress: $it")
-                }
+                mNetworkUtil.getSingleIpAddress { LogUtil.e(NetworkUtil.TAG, "getSingleIpAddress: $it") }
             }
         }
 
@@ -84,9 +84,7 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
         mBinding.btnResume.setOnClickListener {
             // resume()
             lifecycleScope.launch {
-                val connectedHttp = mNetworkUtil.isConnectedHttp {
-                    LogUtil.e(NetworkUtil.TAG, "connectedHttp: $it")
-                }
+                val connectedHttp = mNetworkUtil.isConnectedHttp { LogUtil.e(NetworkUtil.TAG, "connectedHttp: $it") }
             }
         }
 
@@ -106,9 +104,7 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
         }
 
         // 停止
-        mBinding.btnEnd.setOnClickListener {
-            stop()
-        }
+        mBinding.btnEnd.setOnClickListener { stop() }
     }
 
     private fun resume() {
@@ -131,14 +127,14 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
 
     private fun register() {
         mScope.launch(context = mCoroutineControlContext) {
-//            val create = AudioRecorder.create()
-//            LogUtil.e(tag, "录音文件创建成功 ：$create  ，thread: ${Thread.currentThread().name}")
+            //            val create = AudioRecorder.create()
+            //            LogUtil.e(tag, "录音文件创建成功 ：$create  ，thread: ${Thread.currentThread().name}")
         }
     }
 
     private fun unregister() {
         mScope.launch(context = mCoroutineControlContext) {
-//            AudioRecorder.delete()
+            //            AudioRecorder.delete()
             LogUtil.e(tag, "录音文件解绑成功，thread: ${Thread.currentThread().name}")
         }
     }
@@ -156,7 +152,7 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
             }
 
             LogUtil.e(tag, "开始录音 ，thread: ${Thread.currentThread().name}")
-//            AudioRecorder.startRecording()
+            //            AudioRecorder.startRecording()
 
             withContext(mCoroutineRecordingContext) {
                 LogUtil.e(tag, "开始采集数据 ，thread: ${Thread.currentThread().name}")
@@ -169,15 +165,17 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
                 try {
                     while (true) {
                         if (!mPauseFlag.get()) {
-//                            val streamRead = AudioRecorder.streamRead(audioData, frameCount, delayTime)
+                            //                            val streamRead = AudioRecorder.streamRead(audioData,
+                            // frameCount, delayTime)
                             //  //因为Cariad audio用两个byte来表示一路（共有7路音频数据）数据，所以每14个取前两个数据
-//                            LogUtil.e(tag, "streamRead ---> $streamRead  audioData：${GsonUtil.toJson(audioData)}")
-//                            for (i in 0 until streamRead) {
-//                                list.add(audioData[i * 14])
-//                                list.add(audioData[i * 14 + 1])
-//                                list.add(audioData[i * 14 + 2])
-//                                list.add(audioData[i * 14 + 3])
-//                            }
+                            //                            LogUtil.e(tag, "streamRead ---> $streamRead
+                            // audioData：${GsonUtil.toJson(audioData)}")
+                            //                            for (i in 0 until streamRead) {
+                            //                                list.add(audioData[i * 14])
+                            //                                list.add(audioData[i * 14 + 1])
+                            //                                list.add(audioData[i * 14 + 2])
+                            //                                list.add(audioData[i * 14 + 3])
+                            //                            }
                             if (list.size >= cacheSize) {
                                 if (!mPauseFlag.get()) {
                                     writeFile(list, fos)
@@ -199,15 +197,13 @@ class RecordingActivity : AppBaseBindingTitleActivity<ActivityRecordingBinding>(
             fos.write(toByteArray)
             fos.flush()
             LogUtil.e("写入数据成功！")
-        }.onFailure {
-            LogUtil.e("写入数据异常：${it.message}")
-        }
+        }.onFailure { LogUtil.e("写入数据异常：${it.message}") }
     }
 
     private fun stop() {
         pause()
         mScope.launch(context = mCoroutineControlContext) {
-//            AudioRecorder.stopRecording()
+            //            AudioRecorder.stopRecording()
             LogUtil.e(tag, "停止录音 ，thread: ${Thread.currentThread().name}")
         }
     }

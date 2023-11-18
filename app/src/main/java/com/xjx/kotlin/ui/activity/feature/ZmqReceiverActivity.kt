@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.HandlerUtil
 import com.android.common.utils.LogUtil
 import com.android.common.utils.NetworkUtil
 import com.android.common.utils.ToastUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqReceiverBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqCallBackListener
 import com.xjx.kotlin.utils.zmq.big.ZmqUtil
@@ -21,7 +21,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBinding>() {
+class ZmqReceiverActivity : BaseBindingTitleActivity<ActivityZmqReceiverBinding>() {
 
     private var mJob: Job? = null
     private val mHandler: HandlerUtil = HandlerUtil()
@@ -29,11 +29,11 @@ class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBindi
         return@lazy NetworkUtil.instance.register()
     }
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "ZMQ-接收端"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityZmqReceiverBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityZmqReceiverBinding {
         return ActivityZmqReceiverBinding.inflate(inflater, container, true)
     }
 
@@ -88,18 +88,14 @@ class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBindi
 
         // 查看IP
         mBinding.btnIp.setOnClickListener {
-            lifecycleScope.launch {
-                mNetWorkUtil.getIPAddress { ip ->
-                    mBinding.etIp.setText(ip.ip)
-                }
-            }
+            lifecycleScope.launch { mNetWorkUtil.getIPAddress { ip -> mBinding.etIp.setText(ip.ip) } }
         }
 
         // 初始化
         mBinding.btnServiceBind.setOnClickListener {
             val ip = mBinding.etIp.text
             val tcp = "tcp://$ip:${ZmqUtil.PORT}"
-//            val tcp = "tcp://localhost:${ZmqUtil6.port}"
+            //            val tcp = "tcp://localhost:${ZmqUtil6.port}"
             if (TextUtils.isEmpty(ip)) {
                 ToastUtil.show("ip 不能为空！")
                 return@setOnClickListener
@@ -109,10 +105,7 @@ class ZmqReceiverActivity : AppBaseBindingTitleActivity<ActivityZmqReceiverBindi
         }
 
         // 关闭
-        mBinding.btnServiceClose.setOnClickListener {
-            ZmqUtil.releaseReceiver()
-        }
-
+        mBinding.btnServiceClose.setOnClickListener { ZmqUtil.releaseReceiver() }
 
         mBinding.btnSend.setOnClickListener {
             mJob = lifecycleScope.launch(Dispatchers.IO) {

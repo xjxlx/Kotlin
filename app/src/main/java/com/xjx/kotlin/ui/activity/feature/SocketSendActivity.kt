@@ -7,29 +7,29 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.HandlerUtil
 import com.android.common.utils.ToastUtil
 import com.android.common.utils.socket.SocketClientUtil
 import com.android.common.utils.socket.SocketListener
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivitySocketSendBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SocketSendActivity : AppBaseBindingTitleActivity<ActivitySocketSendBinding>() {
+class SocketSendActivity : BaseBindingTitleActivity<ActivitySocketSendBinding>() {
 
     private val socketUtil = SocketClientUtil()
     private val mHandler: HandlerUtil by lazy {
         return@lazy HandlerUtil()
     }
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "Socket - 发送端"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivitySocketSendBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivitySocketSendBinding {
         return ActivitySocketSendBinding.inflate(inflater, container, true)
     }
 
@@ -75,9 +75,7 @@ class SocketSendActivity : AppBaseBindingTitleActivity<ActivitySocketSendBinding
             socketUtil.initClientSocket(ip)
         }
 
-        mBinding.btnClose.setOnClickListener {
-            socketUtil.stop()
-        }
+        mBinding.btnClose.setOnClickListener { socketUtil.stop() }
 
         mBinding.btnSend.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {

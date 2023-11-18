@@ -18,7 +18,7 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
             add(ClueNeedFragment.newInstance("需求"))
             add(ClueNeedFragment.newInstance("商城"))
             add(ClueNeedFragment.newInstance("我的"))
-//            add(ClueNeedFragment.newInstance("你的"))
+            //            add(ClueNeedFragment.newInstance("你的"))
         }
     }
 
@@ -33,7 +33,11 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
         mBinding.tb.setItemBackgroundColor(Color.YELLOW).setItemSize(50F).withViewPager2(mBinding.vp, mTitleArray)
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityCustomTabLayoutBinding {
+    override fun getBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean,
+    ): ActivityCustomTabLayoutBinding {
         return ActivityCustomTabLayoutBinding.inflate(inflater, container, true)
     }
 

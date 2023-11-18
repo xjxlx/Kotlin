@@ -3,11 +3,11 @@ package com.xjx.kotlin.ui.activity.test
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityTestArrayBinding
 
-class TestArrayActivity : AppBaseBindingTitleActivity<ActivityTestArrayBinding>() {
+class TestArrayActivity : BaseBindingTitleActivity<ActivityTestArrayBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
         val intArrayOf = intArrayOf(1, 2, 3)
@@ -23,14 +23,10 @@ class TestArrayActivity : AppBaseBindingTitleActivity<ActivityTestArrayBinding>(
         }
 
         // forEach遍历，不到角标
-        intArrayOf.forEach { item ->
-            LogUtil.e("foreach:$item")
-        }
+        intArrayOf.forEach { item -> LogUtil.e("foreach:$item") }
 
         // forEach遍历，带角标
-        intArrayOf.forEachIndexed { index, item ->
-            LogUtil.e("foreach: index:$index item:$item")
-        }
+        intArrayOf.forEachIndexed { index, item -> LogUtil.e("foreach: index:$index item:$item") }
 
         // 打印数组中的内容
         val contentToString = intArrayOf.contentToString()
@@ -75,11 +71,11 @@ class TestArrayActivity : AppBaseBindingTitleActivity<ActivityTestArrayBinding>(
         }
     }
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "数组"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityTestArrayBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityTestArrayBinding {
         return ActivityTestArrayBinding.inflate(inflater)
     }
 }

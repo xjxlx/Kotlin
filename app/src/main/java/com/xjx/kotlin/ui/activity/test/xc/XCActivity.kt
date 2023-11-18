@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityXcactivityBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -24,16 +24,16 @@ import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.system.measureTimeMillis
 
-class XCActivity : AppBaseBindingTitleActivity<ActivityXcactivityBinding>() {
+class XCActivity : BaseBindingTitleActivity<ActivityXcactivityBinding>() {
     private var TAG = "XC"
     private lateinit var launchTestAsynchronous: Job
     private var viewModel: TestVM? = null
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "协程"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityXcactivityBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityXcactivityBinding {
         return ActivityXcactivityBinding.inflate(inflater, container, true)
     }
 
@@ -45,12 +45,8 @@ class XCActivity : AppBaseBindingTitleActivity<ActivityXcactivityBinding>() {
                 TAG = "test-asynchronous"
                 LogUtil.e(TAG, "asynchronous launch ...")
                 val measureTimeMillis = measureTimeMillis {
-                    val async1 = async {
-                        testAsynchronous1()
-                    }
-                    val async2 = async {
-                        testAsynchronous2()
-                    }
+                    val async1 = async { testAsynchronous1() }
+                    val async2 = async { testAsynchronous2() }
                     LogUtil.e(TAG, "asynchronous launch --- result ---> ${async1.await()} --- ${async2.await()}")
                 }
                 LogUtil.e(TAG, "asynchronous launch --- time --->  $measureTimeMillis")
@@ -62,140 +58,139 @@ class XCActivity : AppBaseBindingTitleActivity<ActivityXcactivityBinding>() {
         viewModel = ViewModelProvider(this).get(TestVM::class.java)
 
         //         1:构建全局的协程
-//        GlobalScope.launch() {
-//            LogUtil.e(TAG, "1: 我是默认线程的 --- 全局的协程，默认线程： Thread: " + Thread.currentThread().name)
-//            // 1.1 :非阻塞的挂起函数，不会阻塞线程，但是会挂起协程，并且智能在协程中使用
-//            delay(1000)
-//            LogUtil.e(TAG, "1: 我是默认线程的 --- 全局的协程！ --- hello")
-//        }
+        //        GlobalScope.launch() {
+        //            LogUtil.e(TAG, "1: 我是默认线程的 --- 全局的协程，默认线程： Thread: " +
+        // Thread.currentThread().name)
+        //            // 1.1 :非阻塞的挂起函数，不会阻塞线程，但是会挂起协程，并且智能在协程中使用
+        //            delay(1000)
+        //            LogUtil.e(TAG, "1: 我是默认线程的 --- 全局的协程！ --- hello")
+        //        }
 
-//        // 2：全局协程 --- 指定线程
-//        GlobalScope.launch(Dispatchers.Main) {
-//            LogUtil.e(TAG, "2: 我是指定线程的全局协程！ Thread :" + Thread.currentThread().name)
-//        }
+        //        // 2：全局协程 --- 指定线程
+        //        GlobalScope.launch(Dispatchers.Main) {
+        //            LogUtil.e(TAG, "2: 我是指定线程的全局协程！ Thread :" + Thread.currentThread().name)
+        //        }
 
-//        // 3：全局协程 --- 指定线程
-//        GlobalScope.launch(Dispatchers.Unconfined) {
-//            LogUtil.e(TAG, "3: 我是指定线程的全局协程！ Thread :" + Thread.currentThread().name)
-//        }
+        //        // 3：全局协程 --- 指定线程
+        //        GlobalScope.launch(Dispatchers.Unconfined) {
+        //            LogUtil.e(TAG, "3: 我是指定线程的全局协程！ Thread :" + Thread.currentThread().name)
+        //        }
 
-//        // 4: 构建一个阻塞的协程
-//        runBlocking {
-//            LogUtil.e(TAG, "4: 构建阻塞的协程 ！ Thread :" + Thread.currentThread().name)
-//            delay(3000)
-//            LogUtil.e(TAG, "4.1 : 阻塞协程的等待")
-//        }
+        //        // 4: 构建一个阻塞的协程
+        //        runBlocking {
+        //            LogUtil.e(TAG, "4: 构建阻塞的协程 ！ Thread :" + Thread.currentThread().name)
+        //            delay(3000)
+        //            LogUtil.e(TAG, "4.1 : 阻塞协程的等待")
+        //        }
 
-//        GlobalScope.launch(Dispatchers.Main) {
-//            LogUtil.e("~~~~~~~~~~》》》》》：我是线程：！！！")
-//            withContext(Dispatchers.IO) {
-//                delay(1000)
-//                LogUtil.e("~~~~~~~~~~》》》》》：异步线程：！！！")
-//            }
-//            LogUtil.e("~~~~~~~~~~》》》》》：我是线程 ---> 结果：！！！")
-//        }
+        //        GlobalScope.launch(Dispatchers.Main) {
+        //            LogUtil.e("~~~~~~~~~~》》》》》：我是线程：！！！")
+        //            withContext(Dispatchers.IO) {
+        //                delay(1000)
+        //                LogUtil.e("~~~~~~~~~~》》》》》：异步线程：！！！")
+        //            }
+        //            LogUtil.e("~~~~~~~~~~》》》》》：我是线程 ---> 结果：！！！")
+        //        }
 
         // cancel kotlin coroutines
-//        GlobalScope.launch(Dispatchers.Main) {
-//            val job = GlobalScope.launch(Dispatchers.Default) {
-//                repeat(10) {
-//                    LogUtil.e("cancel", "xxxix - $it")
-//                    delay(500)
-//                }
-//            }
-//            delay(2000)
-//            // job.cancel()
-//            LogUtil.e("cancel", "xxxix - job wait")
-//            job.join()
-//            LogUtil.e("cancel", "xxxix - job finish")
-//        }
+        //        GlobalScope.launch(Dispatchers.Main) {
+        //            val job = GlobalScope.launch(Dispatchers.Default) {
+        //                repeat(10) {
+        //                    LogUtil.e("cancel", "xxxix - $it")
+        //                    delay(500)
+        //                }
+        //            }
+        //            delay(2000)
+        //            // job.cancel()
+        //            LogUtil.e("cancel", "xxxix - job wait")
+        //            job.join()
+        //            LogUtil.e("cancel", "xxxix - job finish")
+        //        }
 
         // time out or null
-//        val jobTimeOutNull = GlobalScope.launch(Dispatchers.Main) {
-//            TAG = "null or time out "
-//            LogUtil.e(TAG, "time out null launch ...")
-//            val timeOut = timeOutOrNull()
-//            LogUtil.e(TAG, "time out null result ---> $timeOut")
-//        }
-//        jobTimeOutNull.cancel()
+        //        val jobTimeOutNull = GlobalScope.launch(Dispatchers.Main) {
+        //            TAG = "null or time out "
+        //            LogUtil.e(TAG, "time out null launch ...")
+        //            val timeOut = timeOutOrNull()
+        //            LogUtil.e(TAG, "time out null result ---> $timeOut")
+        //        }
+        //        jobTimeOutNull.cancel()
 
         // time out
-//        GlobalScope.launch {
-//            TAG = "time out "
-//            LogUtil.e(TAG, "time out launch --->")
-//
-//            val timeout = timeout()
-//            LogUtil.e(TAG, "time out ---> $timeout")
-//        }
+        //        GlobalScope.launch {
+        //            TAG = "time out "
+        //            LogUtil.e(TAG, "time out launch --->")
+        //
+        //            val timeout = timeout()
+        //            LogUtil.e(TAG, "time out ---> $timeout")
+        //        }
 
         // test synchronization
-//        val launchSynchronization = GlobalScope.launch {
-//            TAG = "test synchronization"
-//            LogUtil.e(TAG, "synchronization launch ...")
-//            val measureTimeMillis = measureTimeMillis {
-//                val testSynchronization1 = testSynchronization1()
-//                val testSynchronization2 = testSynchronization2()
-//                LogUtil.e(TAG, "synchronization launch --- result ---> $testSynchronization1 --- $testSynchronization2")
-//            }
-//            LogUtil.e(TAG, "synchronization launch --- measureTimeMillis ---> $measureTimeMillis")
-//        }
-//        launchSynchronization.cancel()
+        //        val launchSynchronization = GlobalScope.launch {
+        //            TAG = "test synchronization"
+        //            LogUtil.e(TAG, "synchronization launch ...")
+        //            val measureTimeMillis = measureTimeMillis {
+        //                val testSynchronization1 = testSynchronization1()
+        //                val testSynchronization2 = testSynchronization2()
+        //                LogUtil.e(TAG, "synchronization launch --- result ---> $testSynchronization1
+        // --- $testSynchronization2")
+        //            }
+        //            LogUtil.e(TAG, "synchronization launch --- measureTimeMillis --->
+        // $measureTimeMillis")
+        //        }
+        //        launchSynchronization.cancel()
 
-        /**
-         * activity / fragment 的扩展
-         */
-        lifecycleScope.launch {
-
-        }
+        /** activity / fragment 的扩展 */
+        lifecycleScope.launch {}
 
         // test run blocking
-//        TAG = " run - block - ing"
-//        runBlocking {
-//            LogUtil.e(TAG, "run block ing launch ... ")
-//            val millis = measureTimeMillis {
-//                delay(1000)
-//            }
-//            LogUtil.e(TAG, "run block ing result ...> time: $millis")
-//        }
+        //        TAG = " run - block - ing"
+        //        runBlocking {
+        //            LogUtil.e(TAG, "run block ing launch ... ")
+        //            val millis = measureTimeMillis {
+        //                delay(1000)
+        //            }
+        //            LogUtil.e(TAG, "run block ing result ...> time: $millis")
+        //        }
 
         // test join
-//        GlobalScope.launch {
-//            TAG = " test - join "
-//
-//            LogUtil.e(TAG, "run join launch ... ")
-//
-//            val job1 = GlobalScope.launch {
-//                repeat(70) {
-//                    LogUtil.e(TAG, "run join repeat - 1 ... $it")
-//                }
-//            }
-//
-//            val job2 = GlobalScope.launch {
-//                repeat(30) {
-//                    LogUtil.e(TAG, "run join repeat - 2 ... $it")
-//                }
-//            }
-//
-//            LogUtil.e(TAG, "run join start join ... ")
-//            job1.join()
-//            job2.join()
-//            LogUtil.e(TAG, "run join finish  ... ")
-//        }
+        //        GlobalScope.launch {
+        //            TAG = " test - join "
+        //
+        //            LogUtil.e(TAG, "run join launch ... ")
+        //
+        //            val job1 = GlobalScope.launch {
+        //                repeat(70) {
+        //                    LogUtil.e(TAG, "run join repeat - 1 ... $it")
+        //                }
+        //            }
+        //
+        //            val job2 = GlobalScope.launch {
+        //                repeat(30) {
+        //                    LogUtil.e(TAG, "run join repeat - 2 ... $it")
+        //                }
+        //            }
+        //
+        //            LogUtil.e(TAG, "run join start join ... ")
+        //            job1.join()
+        //            job2.join()
+        //            LogUtil.e(TAG, "run join finish  ... ")
+        //        }
 
         // test_zyy
-//        TAG = " test_zyy "
-//        test_zyy_1()
+        //        TAG = " test_zyy "
+        //        test_zyy_1()
 
-//        TAG = " test_zyy -2 "
-//        test_zyy_2()
+        //        TAG = " test_zyy -2 "
+        //        test_zyy_2()
 
-//        TAG = " test_zyy - 3 "
-//        test_zyy_3()
+        //        TAG = " test_zyy - 3 "
+        //        test_zyy_3()
 
         TAG = " test_zyy - 5 "
-//        test_zyy_4()
+        //        test_zyy_4()
 
-//        test_xc_5()
+        //        test_xc_5()
         viewModel?.test()
     }
 

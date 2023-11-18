@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.DownCountTime
 import com.android.http.client.HttpClient
 import com.android.http.client.HttpResult
@@ -23,16 +23,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * 网络封装
- */
-class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
+/** 网络封装 */
+class NetWorkActivity : BaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityNetWorkBinding {
-        return ActivityNetWorkBinding.inflate(inflater, container, true)
-    }
-
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "网络封装"
     }
 
@@ -50,9 +44,7 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
             }
         })
 
-
         mBinding.btnStart.setOnClickListener {
-
             lifecycleScope.launch {
                 val unId = "o9RWl1EJPHolk8_7smU39k1-LqVs"
                 val suiJi = "newcL6_2"
@@ -74,12 +66,8 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
                     })
             }
         }
-        mBinding.btnPause.setOnClickListener {
-            downCountTime.pause()
-        }
-        mBinding.btnResume.setOnClickListener {
-            downCountTime.resume()
-        }
+        mBinding.btnPause.setOnClickListener { downCountTime.pause() }
+        mBinding.btnResume.setOnClickListener { downCountTime.resume() }
 
         TestFx1.main(null)
 
@@ -107,23 +95,27 @@ class NetWorkActivity : AppBaseBindingTitleActivity<ActivityNetWorkBinding>() {
         block(b)
     }
 
-    fun <T, U> myApply2(block: T.(U) -> HttpResult<U>, b: Int) {
-    }
+    fun <T, U> myApply2(block: T.(U) -> HttpResult<U>, b: Int) {}
 
-    fun <T, F> myApply3(block: T.(F) -> HttpResult<F>, b: F) {
+    fun <T, F> myApply3(block: T.(F) -> HttpResult<F>, b: F) {}
+
+    override fun getBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean,
+    ): ActivityNetWorkBinding {
+        return ActivityNetWorkBinding.inflate(inflater, container, true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val user = User()
-//
-//        http<ApiService, Int, UserInfoBean>({
-//            getUserInfo2(it)
-//        }, 3)
+        //
+        //        http<ApiService, Int, UserInfoBean>({
+        //            getUserInfo2(it)
+        //        }, 3)
 
-        user.apply4<User, Int, UserInfoBean>({
-            test2(it)
-        }, 34)
+        user.apply4<User, Int, UserInfoBean>({ test2(it) }, 34)
     }
 
     private fun <T, P, R> T.apply4(block: T.(P) -> HttpResult<R>, p: P) {

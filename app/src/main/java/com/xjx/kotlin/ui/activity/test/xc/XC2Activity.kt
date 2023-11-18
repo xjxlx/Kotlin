@@ -3,8 +3,8 @@ package com.xjx.kotlin.ui.activity.test.xc
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityXc2Binding
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineStart
@@ -23,16 +23,16 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlin.system.measureTimeMillis
 
-class XC2Activity : AppBaseBindingTitleActivity<ActivityXc2Binding>() {
+class XC2Activity : BaseBindingTitleActivity<ActivityXc2Binding>() {
 
     private var TAG = "XC - 2 "
     private val mainScope = MainScope()
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "协程 - 2"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityXc2Binding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityXc2Binding {
         return ActivityXc2Binding.inflate(inflater, container, true)
     }
 
@@ -67,9 +67,9 @@ class XC2Activity : AppBaseBindingTitleActivity<ActivityXc2Binding>() {
         // test_coroutineName()
 
         // test coroutine scope
-//        GlobalScope.launch {
-//            test_CoroutineScope()
-//        }
+        //        GlobalScope.launch {
+        //            test_CoroutineScope()
+        //        }
     }
 
     private suspend fun test_CoroutineScope() {
@@ -155,8 +155,8 @@ class XC2Activity : AppBaseBindingTitleActivity<ActivityXc2Binding>() {
                 val async1 = async(start = CoroutineStart.LAZY) { doSomethingUsefulOne() }
                 val async2 = async(start = CoroutineStart.LAZY) { doSomethingUsefulTwo() }
                 // 如果async 设置了惰性启动，则会在 .await() 的时候，或者 .start()的时候，才会去启动
-//                async1.start()
-//                async2.start()
+                //                async1.start()
+                //                async2.start()
                 LogUtil.e(TAG, "test_async ---> " + async1.await() + " --- " + async2.await())
             }
             LogUtil.e(TAG, "test_async --->  time : $time")
@@ -202,12 +202,8 @@ class XC2Activity : AppBaseBindingTitleActivity<ActivityXc2Binding>() {
 
     private fun test_Dispatchers() {
 
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.IO) {}
 
-        }
-
-        GlobalScope.launch(newSingleThreadContext("")) {
-
-        }
+        GlobalScope.launch(newSingleThreadContext("")) {}
     }
 }

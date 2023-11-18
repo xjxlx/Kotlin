@@ -3,25 +3,23 @@ package com.xjx.kotlin.ui.activity.test.block
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityBlockBinding
 
-class BlockActivity : AppBaseBindingTitleActivity<ActivityBlockBinding>() {
+class BlockActivity : BaseBindingTitleActivity<ActivityBlockBinding>() {
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "Block 语法"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityBlockBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityBlockBinding {
         return ActivityBlockBinding.inflate(inflater, container, true)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         // 无参 无返回
-        testBlockNoArguments {
-            LogUtil.e("it ----> " + it)
-        }
+        testBlockNoArguments { LogUtil.e("it ----> " + it) }
 
         test4 { x, y ->
             return@test4 x + y
@@ -35,7 +33,7 @@ class BlockActivity : AppBaseBindingTitleActivity<ActivityBlockBinding>() {
         block("abc")
     }
 
-    //kotlin
+    // kotlin
     private fun test4(block: (x: Int, y: Int) -> Int) {
         val result = block(1, 2)
         LogUtil.e("result :$result")

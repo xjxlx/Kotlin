@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.HandlerUtil
 import com.android.common.utils.NetworkUtil
 import com.android.common.utils.ToastUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityZmqSenderBinding
 import com.xjx.kotlin.utils.zmq.big.ZmqCallBackListener
 import com.xjx.kotlin.utils.zmq.big.ZmqUtil
@@ -18,18 +18,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ZmqSendActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() {
+class ZmqSendActivity : BaseBindingTitleActivity<ActivityZmqSenderBinding>() {
 
     private val mHandler: HandlerUtil = HandlerUtil()
     private val mNetWorkUtil: NetworkUtil by lazy {
         return@lazy NetworkUtil.instance.register()
     }
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "Zmq发送端"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityZmqSenderBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityZmqSenderBinding {
         return ActivityZmqSenderBinding.inflate(inflater, container, true)
     }
 
@@ -84,11 +84,7 @@ class ZmqSendActivity : AppBaseBindingTitleActivity<ActivityZmqSenderBinding>() 
 
         // 检查IP
         mBinding.btnIp.setOnClickListener {
-            lifecycleScope.launch {
-                mNetWorkUtil.getIPAddress { ip ->
-                    mBinding.tvIp.setText(ip.ip)
-                }
-            }
+            lifecycleScope.launch { mNetWorkUtil.getIPAddress { ip -> mBinding.tvIp.setText(ip.ip) } }
         }
 
         mBinding.btnReceiver.setOnClickListener {

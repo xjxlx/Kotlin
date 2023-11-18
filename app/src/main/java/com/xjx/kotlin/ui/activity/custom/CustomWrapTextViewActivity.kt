@@ -4,17 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import com.android.helper.base.title.AppBaseBindingTitleActivity
+import com.android.common.base.BaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityCustomWrapTextViewBinding
 import kotlinx.coroutines.launch
 
-class CustomWrapTextViewActivity : AppBaseBindingTitleActivity<ActivityCustomWrapTextViewBinding>() {
+class CustomWrapTextViewActivity : BaseBindingTitleActivity<ActivityCustomWrapTextViewBinding>() {
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "自动换行View"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityCustomWrapTextViewBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityCustomWrapTextViewBinding {
         return ActivityCustomWrapTextViewBinding.inflate(inflater, container, true)
     }
 

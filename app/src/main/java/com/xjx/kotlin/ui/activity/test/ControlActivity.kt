@@ -4,19 +4,19 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.android.helper.utils.FileUtil
 import com.xjx.kotlin.databinding.ActivityControlBinding
 import java.io.File
 
-class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
+class ControlActivity : BaseBindingTitleActivity<ActivityControlBinding>() {
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "操作符"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityControlBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityControlBinding {
         return ActivityControlBinding.inflate(inflater, container, true)
     }
 
@@ -27,23 +27,20 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
             null -> { // 新特性
             }
 
-            1 -> {
-            }
+            1 -> {}
 
-            2 -> {
-            }
+            2 -> {}
 
             else -> { // default
             }
         }
 
-        val a = 3;
-        val b = 4;
+        val a = 3
+        val b = 4
         if (a == 3) {
-
         }
-        if (a.equals(b)) {
 
+        if (a.equals(b)) {
         }
 
         val arrayList = ArrayList<String>()
@@ -65,12 +62,12 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
             }
         }
 
-//        run loop@{
-//            listOf(1, 2, 3, 4, 5).forEach {
-//                if (it == 3) return@loop // 从传入 run 的 lambda 表达式非局部返回
-//                LogUtil.e("list: it --->$it")
-//            }
-//        }
+        //        run loop@{
+        //            listOf(1, 2, 3, 4, 5).forEach {
+        //                if (it == 3) return@loop // 从传入 run 的 lambda 表达式非局部返回
+        //                LogUtil.e("list: it --->$it")
+        //            }
+        //        }
 
         listOf(1, 2, 3, 4, 5).forEach loop@{
             if (it < 3) return@loop // 从传入 run 的 lambda 表达式非局部返回
@@ -80,19 +77,13 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
         print(" done with nested loop")
 
         var person = Person()
-        person.let {
-            it.age = 3
-        }
+        person.let { it.age = 3 }
         LogUtil.e("person -> let:$person")
 
-        person.run {
-            name = "zs"
-        }
+        person.run { name = "zs" }
         LogUtil.e("person -> run:$person")
 
-        val also = person.also {
-            it.age
-        }
+        val also = person.also { it.age }
 
         val apply = person.apply {
             age = 20
@@ -100,9 +91,7 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
         }.test()
 
         val numbers = mutableListOf("one", "two", "three")
-        numbers.also {
-            LogUtil.e("在列表添加新元素: $it")
-        }.add("four")
+        numbers.also { LogUtil.e("在列表添加新元素: $it") }.add("four")
 
         val appFilesPath = FileUtil.getInstance().getSdTypePublicPath(Environment.DIRECTORY_DOWNLOADS)
 
@@ -116,25 +105,18 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
 
         // 过滤条件后返回一个新的数组
         list2.filter {
-                LogUtil.e("ffff:$it")
-                it.toInt() > 5
-            }.forEach {
-                LogUtil.e("filter ---> $it")
-            }
-
+            LogUtil.e("ffff:$it")
+            it.toInt() > 5
+        }.forEach { LogUtil.e("filter ---> $it") }
 
         list2.map {
             return@map it.toInt() * 2
-        }.forEach {
-            LogUtil.e("m:$it")
-        }
+        }.forEach { LogUtil.e("m:$it") }
 
         val path = "D:\\works\\StudioWorks\\Kotlin\\app\\build.gradle"
         File(path).readText().toCharArray().filterNot { // 不包含的过滤
-                it.isWhitespace() // 空格
-            }.forEach {
-                LogUtil.e("sss:" + it)
-            }
+            it.isWhitespace() // 空格
+        }.forEach { LogUtil.e("sss:" + it) }
     }
 
     inner class Person {
@@ -144,7 +126,6 @@ class ControlActivity : AppBaseBindingTitleActivity<ActivityControlBinding>() {
             return "Person(name='$name', age=$age)"
         }
 
-        public fun test() {
-        }
+        public fun test() {}
     }
 }

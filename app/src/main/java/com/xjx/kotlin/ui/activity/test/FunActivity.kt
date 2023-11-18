@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.util.Pair
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
-import com.android.helper.base.title.AppBaseBindingTitleActivity
 import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityFunBinding
 
-class FunActivity : AppBaseBindingTitleActivity<ActivityFunBinding>() {
+class FunActivity : BaseBindingTitleActivity<ActivityFunBinding>() {
 
     var a: String? = null
     var b: String = "null"
@@ -17,9 +17,7 @@ class FunActivity : AppBaseBindingTitleActivity<ActivityFunBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fun)
-//        ConvertDataActivity.aaa
-
-        aaa
+        //        ConvertDataActivity.aaa
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -45,17 +43,16 @@ class FunActivity : AppBaseBindingTitleActivity<ActivityFunBinding>() {
         tz.getParams("")
     }
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "函数"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityFunBinding {
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityFunBinding {
         return ActivityFunBinding.inflate(inflater, container, true)
     }
 
     // 无返回值的函数
-    fun test(key: String): Unit {
-    }
+    fun test(key: String): Unit {}
 
     // 指定返回值类型
     fun test1(key: Int): Int {

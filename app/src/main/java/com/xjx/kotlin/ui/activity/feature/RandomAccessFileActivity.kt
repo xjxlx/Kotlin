@@ -25,9 +25,8 @@ class RandomAccessFileActivity : BaseBindingTitleActivity<ActivityRandomAccessFi
         permission.request(Manifest.permission.READ_EXTERNAL_STORAGE)
 
         mBinding.btnStart.setOnClickListener {
-
             val filesDir = mActivity.filesDir
-            val path = filesDir.absolutePath + "/Test.txt";
+            val path = filesDir.absolutePath + "/Test.txt"
             raf.changeFile(path, "rw")
         }
     }

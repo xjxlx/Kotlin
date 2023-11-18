@@ -31,64 +31,72 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
             mParameters["unid"] = unId
             mParameters["suiji"] = suiJi
 
-//            object : RefreshUtil<HttpResponse<L6HomeRightBookListBean>>(lifecycleScope, mBinding.brlLayout) {
-//                override suspend fun getApiService(): Flow<HttpResponse<L6HomeRightBookListBean>> {
-//                    return HttpClient.http<TestApiService, MutableMap<String, Any>, HttpResponse<L6HomeRightBookListBean>>(
-//                        { getL6BookList(it) }, mParameters)
-//                }
-//
-//                override fun setMoreData(t: HttpResponse<L6HomeRightBookListBean>): List<*>? {
-//                    return t.data?.row1
-//                }
-//            }.setCallBackListener(object : CallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
-//                override fun onSuccess(refreshUtil: RefreshUtil<HttpResponse<L6HomeRightBookListBean>>,
-//                                       t: HttpResponse<L6HomeRightBookListBean>) {
-//                }
-//
-//                override fun onError(e: Throwable) {
-//                }
-//            })
-//                .start()
+            //            object : RefreshUtil<HttpResponse<L6HomeRightBookListBean>>(lifecycleScope,
+            // mBinding.brlLayout) {
+            //                override suspend fun getApiService():
+            // Flow<HttpResponse<L6HomeRightBookListBean>> {
+            //                    return HttpClient.http<TestApiService, MutableMap<String, Any>,
+            // HttpResponse<L6HomeRightBookListBean>>(
+            //                        { getL6BookList(it) }, mParameters)
+            //                }
+            //
+            //                override fun setMoreData(t: HttpResponse<L6HomeRightBookListBean>): List<*>?
+            // {
+            //                    return t.data?.row1
+            //                }
+            //            }.setCallBackListener(object :
+            // CallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
+            //                override fun onSuccess(refreshUtil:
+            // RefreshUtil<HttpResponse<L6HomeRightBookListBean>>,
+            //                                       t: HttpResponse<L6HomeRightBookListBean>) {
+            //                }
+            //
+            //                override fun onError(e: Throwable) {
+            //                }
+            //            })
+            //                .start()
 
-//            lifecycleScope.launch {
-//                val unId = "o9RWl1EJPHolk8_7smU39k1-LqVs"
-//                val suiJi = "newcL6_2"
-//                val mParameters = mutableMapOf<String, Any>()
-//                mParameters["service"] = "App.App2022.GetBook"
-//                mParameters["unid"] = unId
-//                mParameters["suiji"] = suiJi
-//
-//                HttpClient.http<TestApiService, MutableMap<String, Any>, HttpResponse<L6HomeRightBookListBean>>({ getL6BookList(it) },
-//                    mParameters, object : HttpCallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
-//
-//                        override fun onFailure(exception: Throwable) {
-//                            super.onFailure(exception)
-//                            LogUtil.e("sss", "error:${exception}")
-//                        }
-//
-//                        override fun onSuccess(t: HttpResponse<L6HomeRightBookListBean>) {
-//                            LogUtil.e("sss", t)
-//                            t.data?.row2?.let {
-//                                for (index in it.indices) {
-//                                    val row2 = it[index]
-//                                    row2?.let { row ->
-//                                        row.content?.let { content ->
-//                                            for (index2 in content.indices) {
-//                                                val content1 = content[index2]
-//                                                content1?.let { content11 ->
-//                                                    content11.content_name?.let { name ->
-//                                                        mList.add(name)
-//                                                    }
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                            adapter.setList(mList)
-//                        }
-//                    })
-//            }
+            //            lifecycleScope.launch {
+            //                val unId = "o9RWl1EJPHolk8_7smU39k1-LqVs"
+            //                val suiJi = "newcL6_2"
+            //                val mParameters = mutableMapOf<String, Any>()
+            //                mParameters["service"] = "App.App2022.GetBook"
+            //                mParameters["unid"] = unId
+            //                mParameters["suiji"] = suiJi
+            //
+            //                HttpClient.http<TestApiService, MutableMap<String, Any>,
+            // HttpResponse<L6HomeRightBookListBean>>({ getL6BookList(it) },
+            //                    mParameters, object :
+            // HttpCallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
+            //
+            //                        override fun onFailure(exception: Throwable) {
+            //                            super.onFailure(exception)
+            //                            LogUtil.e("sss", "error:${exception}")
+            //                        }
+            //
+            //                        override fun onSuccess(t: HttpResponse<L6HomeRightBookListBean>) {
+            //                            LogUtil.e("sss", t)
+            //                            t.data?.row2?.let {
+            //                                for (index in it.indices) {
+            //                                    val row2 = it[index]
+            //                                    row2?.let { row ->
+            //                                        row.content?.let { content ->
+            //                                            for (index2 in content.indices) {
+            //                                                val content1 = content[index2]
+            //                                                content1?.let { content11 ->
+            //                                                    content11.content_name?.let { name ->
+            //                                                        mList.add(name)
+            //                                                    }
+            //                                                }
+            //                                            }
+            //                                        }
+            //                                    }
+            //                                }
+            //                            }
+            //                            adapter.setList(mList)
+            //                        }
+            //                    })
+            //            }
         }
     }
 

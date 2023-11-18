@@ -4,16 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.android.helper.base.title.AppBaseBindingTitleActivity
+import com.android.common.base.BaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityChartViewBinding
 
-class ChartViewActivity : AppBaseBindingTitleActivity<ActivityChartViewBinding>() {
+class ChartViewActivity : BaseBindingTitleActivity<ActivityChartViewBinding>() {
 
-    override fun setTitleContent(): String {
+    override fun getTitleContent(): String {
         return "图表view"
     }
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityChartViewBinding {
+    override fun getBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean,
+    ): ActivityChartViewBinding {
         return ActivityChartViewBinding.inflate(inflater, container, true)
     }
 
