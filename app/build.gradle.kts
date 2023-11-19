@@ -68,6 +68,14 @@ android {
         buildConfig = true
         aidl = true
     }
+
+    configurations.all {
+        resolutionStrategy {
+            force(libs.recyclerview)
+            force(libs.okhttp3)
+            force(libs.rxjava2)
+        }
+    }
 }
 
 dependencies {
