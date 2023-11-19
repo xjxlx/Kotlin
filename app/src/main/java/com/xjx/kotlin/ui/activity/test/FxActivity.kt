@@ -19,7 +19,7 @@ class FxActivity : BaseBindingTitleActivity<ActivityFxBinding>() {
     override fun initData(savedInstanceState: Bundle?) {}
 
     fun <T : Comparable<T>> test(a: T, b: T): T {
-        val b1 = a > b
+        a > b
         TODO()
     }
 

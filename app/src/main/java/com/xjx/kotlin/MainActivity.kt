@@ -45,7 +45,7 @@ class MainActivity : BaseBindingTitleActivity<ActivityMainBinding>() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val strings = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-        RxPermissionsUtil.Builder(this, *strings).setSinglePerMissionListener { permissionStatus: Int, permission: String? ->
+        RxPermissionsUtil.Builder(this, *strings).setSinglePerMissionListener { permissionStatus: Int, _: String? ->
             LogUtil.e("permission:$permissionStatus")
         }.build().startRequestPermission()
     }

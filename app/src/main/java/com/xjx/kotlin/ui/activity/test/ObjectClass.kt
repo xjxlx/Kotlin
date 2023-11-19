@@ -4,8 +4,8 @@ class Test {
 
     var abc: Int = 0
     fun test() {
-        val sss = ObjectClass2.StaticClasss()
-        val innerClass = ObjectClass2().InnerClass()
+        ObjectClass2.StaticClasss()
+        ObjectClass2().InnerClass()
     }
 
     companion object {

@@ -16,7 +16,7 @@ object UserLogic {
         return RetrofitHelper.create(ApiService::class.java).getUserInfo()
     }
 
-    suspend fun getUser2(name: String): HttpResult<UserInfoBean> {
+    suspend fun getUser2(): HttpResult<UserInfoBean> {
         return RetrofitHelper.create(ApiService::class.java).getUserInfo()
     }
 }

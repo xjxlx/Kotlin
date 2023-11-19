@@ -110,16 +110,16 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
     }
 
     class NetAdapter : BaseRecycleViewAdapter<String, NetAdapter.VH>() {
+        override fun bindViewHolder(holder: VH, position: Int) {
+            holder.tvContent.text = mList[position]
+        }
+
         override fun createVH(viewType: Int): Int {
             return R.layout.item_net_refresh
         }
 
         class VH(binding: ItemNetRefreshBinding) : BaseVH(binding.root) {
             val tvContent = binding.tvContent
-        }
-
-        override fun onBindViewHolders(holder: VH, position: Int) {
-            holder.tvContent.text = mList[position]
         }
     }
 }

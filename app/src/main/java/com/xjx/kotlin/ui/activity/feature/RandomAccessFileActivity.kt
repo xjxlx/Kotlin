@@ -24,7 +24,7 @@ class RandomAccessFileActivity : BaseBindingTitleActivity<ActivityRandomAccessFi
 
         mBinding.btnStart.setOnClickListener {
             val filesDir = mActivity.filesDir
-            val path = filesDir.absolutePath + "/Test.txt"
+            filesDir.absolutePath + "/Test.txt"
         }
     }
 

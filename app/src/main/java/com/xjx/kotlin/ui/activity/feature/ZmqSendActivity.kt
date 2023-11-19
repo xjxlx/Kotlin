@@ -101,7 +101,7 @@ class ZmqSendActivity : BaseBindingTitleActivity<ActivityZmqSenderBinding>() {
 
             lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
-                    val send = ZmqUtil.sendClient()
+                    ZmqUtil.sendClient()
                     delay(100)
                 }
             }
@@ -109,7 +109,7 @@ class ZmqSendActivity : BaseBindingTitleActivity<ActivityZmqSenderBinding>() {
         mBinding.btnSend.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
                 repeat(Int.MAX_VALUE) {
-                    val send = ZmqUtil.sendClient()
+                    ZmqUtil.sendClient()
                     delay(100)
                 }
             }

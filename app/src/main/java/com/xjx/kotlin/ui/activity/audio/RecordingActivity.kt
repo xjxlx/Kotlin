@@ -84,7 +84,7 @@ class RecordingActivity : BaseBindingTitleActivity<ActivityRecordingBinding>() {
         mBinding.btnResume.setOnClickListener {
             // resume()
             lifecycleScope.launch {
-                val connectedHttp = mNetworkUtil.isConnectedHttp { LogUtil.e(NetworkUtil.TAG, "connectedHttp: $it") }
+                mNetworkUtil.isConnectedHttp { LogUtil.e(NetworkUtil.TAG, "connectedHttp: $it") }
             }
         }
 
@@ -156,7 +156,7 @@ class RecordingActivity : BaseBindingTitleActivity<ActivityRecordingBinding>() {
 
             withContext(mCoroutineRecordingContext) {
                 LogUtil.e(tag, "开始采集数据 ，thread: ${Thread.currentThread().name}")
-                val audioData = ByteArray(frameCount * 7 * 2)
+                ByteArray(frameCount * 7 * 2)
                 val list: ArrayList<Byte> = arrayListOf()
                 // 本地的最大缓存数据量
                 val cacheSize: Int = 8 * frameCount * 2

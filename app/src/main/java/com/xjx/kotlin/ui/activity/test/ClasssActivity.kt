@@ -34,7 +34,7 @@ class ClasssActivity : BaseBindingTitleActivity<ActivityClasssBinding>() {
     }
 }
 
-class A(var a: Int, val b: String, c: Boolean) {
+class A(var a: Int, val b: String) {
     // a 和 b 是全局可见的参数
     // c 是构造方法和 init块内可见
 }

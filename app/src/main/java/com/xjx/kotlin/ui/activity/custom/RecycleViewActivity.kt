@@ -67,8 +67,7 @@ class RecycleViewActivity : BaseBindingTitleActivity<ActivityRecycleViewBinding>
     data class Student(var name: String = "", var age: Int = 0)
 
     class Adapter : BaseRecycleViewAdapter<String, VH>() {
-
-        override fun onBindViewHolders(holder: VH, position: Int) {
+        override fun bindViewHolder(holder: VH, position: Int) {
             holder.tv_content.text = mList[position]
         }
 

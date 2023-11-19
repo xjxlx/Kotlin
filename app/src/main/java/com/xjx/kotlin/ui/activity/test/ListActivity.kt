@@ -49,7 +49,7 @@ class ListActivity : BaseBindingTitleActivity<ActivityListBinding>() {
         }
 
         // 不可变set集合
-        val of = setOf<String>("张三", "李四")
+        setOf<String>("张三", "李四")
         // 可变set集合
         val mutableSetOf = mutableSetOf<String>()
         mutableListOf.add("1")

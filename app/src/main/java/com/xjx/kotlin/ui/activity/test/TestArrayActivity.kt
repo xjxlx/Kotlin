@@ -45,7 +45,7 @@ class TestArrayActivity : BaseBindingTitleActivity<ActivityTestArrayBinding>() {
         LogUtil.e("集合中是否不包含 5：${5 !in intArrayOf}")
 
         // 创建可变数组
-        val arrayOf = arrayOf("1")
+        arrayOf("1")
 
         // 创建指定大小的不可见数组
         val array = Array(4) { it + 1 }

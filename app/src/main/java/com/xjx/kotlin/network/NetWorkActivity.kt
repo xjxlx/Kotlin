@@ -35,8 +35,8 @@ class NetWorkActivity : BaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
         val downCountTime = DownCountTime()
         downCountTime.setCountdown(5, 1000, object : DownCountTime.CallBack {
-            override fun onTick(count: Long, current: Long) {
-                LogUtil.e("DOWN--- ", "current: " + current + " count: " + count)
+            override fun onTick(current: Long, countdown: Long) {
+                LogUtil.e("DOWN--- ", "current: $countdown count: $current")
             }
 
             override fun onFinish() {
@@ -95,10 +95,6 @@ class NetWorkActivity : BaseBindingTitleActivity<ActivityNetWorkBinding>() {
         block(b)
     }
 
-    fun <T, U> myApply2(block: T.(U) -> HttpResult<U>, b: Int) {}
-
-    fun <T, F> myApply3(block: T.(F) -> HttpResult<F>, b: F) {}
-
     override fun getBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -115,7 +111,7 @@ class NetWorkActivity : BaseBindingTitleActivity<ActivityNetWorkBinding>() {
         //            getUserInfo2(it)
         //        }, 3)
 
-        user.apply4<User, Int, UserInfoBean>({ test2(it) }, 34)
+        user.apply4<User, Int, UserInfoBean>({ test2() }, 34)
     }
 
     private fun <T, P, R> T.apply4(block: T.(P) -> HttpResult<R>, p: P) {
@@ -124,7 +120,7 @@ class NetWorkActivity : BaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
     class User {
         var name = "张三"
-        fun test2(agt: Int): HttpResult<UserInfoBean> {
+        fun test2(): HttpResult<UserInfoBean> {
             return HttpResult()
         }
     }

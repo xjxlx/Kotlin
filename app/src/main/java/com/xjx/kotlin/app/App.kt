@@ -33,7 +33,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val commonBuilder = com.android.common.app.ApplicationManager.Builder()
+        com.android.common.app.ApplicationManager.Builder()
 
         BaseApplication.getInstance().setApplication(object : ApplicationInterface {
             override fun initApp() {

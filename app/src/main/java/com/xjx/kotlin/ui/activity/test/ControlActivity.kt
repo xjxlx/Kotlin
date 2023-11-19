@@ -43,12 +43,12 @@ class ControlActivity : BaseBindingTitleActivity<ActivityControlBinding>() {
         if (a.equals(b)) {
         }
 
-        val arrayList = ArrayList<String>()
-        val arrayListOf = arrayListOf<String>()
-        val arrayOf = arrayOf(3)
+        ArrayList<String>()
+        arrayListOf<String>()
+        arrayOf(3)
 
-        val mapOf = mapOf<String, String>()
-        val hashMapOf = hashMapOf<String, String>()
+        mapOf<String, String>()
+        hashMapOf<String, String>()
 
         val list1 = arrayListOf<String>()
         for (item in 0..10) {
@@ -83,9 +83,9 @@ class ControlActivity : BaseBindingTitleActivity<ActivityControlBinding>() {
         person.run { name = "zs" }
         LogUtil.e("person -> run:$person")
 
-        val also = person.also { it.age }
+        person.also { it.age }
 
-        val apply = person.apply {
+        person.apply {
             age = 20
             name = "ss"
         }.test()

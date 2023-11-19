@@ -44,7 +44,7 @@ class FsActivity : BaseBindingTitleActivity<ActivityFsBinding>() {
         val members = kClass.members
         members.forEach {
             LogUtil.e("members: " + it)
-            val name = it.name
+            it.name
         }
 
         // 5:获取所有属性，包含共有和私有的
@@ -124,7 +124,7 @@ fun getPerson2() {
         val constructors = kClass.primaryConstructor
         constructors?.let {
             // 获取所有的参数
-            val parameters = it.parameters.map { p ->
+            it.parameters.map { p ->
                 // 参数的类型是否为空
                 p.type.isMarkedNullable
             }

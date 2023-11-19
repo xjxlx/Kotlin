@@ -25,9 +25,9 @@ class FunActivity : BaseBindingTitleActivity<ActivityFunBinding>() {
         LogUtil.e(test5.toString())
 
         // a 强转为不为空的类型，可能会报异常
-        val length = a!!.length
+        a!!.length
         // a 如果为空，则后面不执行
-        val length1 = a?.length
+        a?.length
 
         // 多返回类型解构
         val (c, d, e) = test5()
@@ -52,12 +52,7 @@ class FunActivity : BaseBindingTitleActivity<ActivityFunBinding>() {
     }
 
     // 无返回值的函数
-    fun test(key: String): Unit {}
-
-    // 指定返回值类型
-    fun test1(key: Int): Int {
-        return 1
-    }
+    fun test(): Unit {}
 
     // 任意类型的函数
     fun test2(): Any {

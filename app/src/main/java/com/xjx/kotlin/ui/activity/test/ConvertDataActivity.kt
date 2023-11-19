@@ -53,9 +53,7 @@ class ConvertDataActivity : BaseBindingTitleActivity<ActivityConvertDataBinding>
             }).build().startRequestPermission()
 
         // 可变变量
-        var a = 10
         // 只读变量，某种程度上可以当做常量使用
-        val b = 3
     }
 
     override fun onClick(v: View?) {
