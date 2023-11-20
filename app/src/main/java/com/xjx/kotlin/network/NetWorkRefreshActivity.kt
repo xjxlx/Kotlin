@@ -2,7 +2,9 @@ package com.xjx.kotlin.network
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.base.recycleview.BaseRecycleViewAdapter
 import com.android.common.base.recycleview.BaseVH
@@ -10,7 +12,6 @@ import com.android.common.utils.RecycleUtil
 import com.android.http.client.RetrofitHelper
 import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityNetWorkRefreshBinding
-import com.xjx.kotlin.databinding.ItemNetRefreshBinding
 
 class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBinding>() {
 
@@ -110,16 +111,16 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
     }
 
     class NetAdapter : BaseRecycleViewAdapter<String, NetAdapter.VH>() {
-        override fun bindViewHolder(holder: VH, position: Int) {
+        class VH(view: View) : BaseVH(view) {
+            val tvContent = view.findViewById<TextView>(R.id.tv_content)
+        }
+
+        override fun bindHolder(holder: VH, position: Int) {
             holder.tvContent.text = mList[position]
         }
 
-        override fun createVH(viewType: Int): Int {
-            return R.layout.item_net_refresh
-        }
-
-        class VH(binding: ItemNetRefreshBinding) : BaseVH(binding.root) {
-            val tvContent = binding.tvContent
+        override fun createVH(inflater: LayoutInflater, parent: ViewGroup, viewType: Int): VH {
+            return VH(inflater.inflate(R.layout.item_net_refresh, parent, false))
         }
     }
 }

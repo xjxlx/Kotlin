@@ -67,12 +67,13 @@ class RecycleViewActivity : BaseBindingTitleActivity<ActivityRecycleViewBinding>
     data class Student(var name: String = "", var age: Int = 0)
 
     class Adapter : BaseRecycleViewAdapter<String, VH>() {
-        override fun bindViewHolder(holder: VH, position: Int) {
+
+        override fun bindHolder(holder: VH, position: Int) {
             holder.tv_content.text = mList[position]
         }
 
-        override fun createVH(viewType: Int): Int {
-            return R.layout.item_test_recycle
+        override fun createVH(inflater: LayoutInflater, parent: ViewGroup, viewType: Int): VH {
+            return VH(inflater.inflate(R.layout.item_test_recycle, parent, false))
         }
     }
 
