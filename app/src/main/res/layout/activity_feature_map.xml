@@ -61,6 +61,12 @@
             android:text="测试Http-1"
             android:visibility="visible" />
 
+        <TextView
+            android:id="@+id/tv_test_gsy_play"
+            style="@style/click_item_style"
+            android:text="测试Gsyplay"
+            android:visibility="visible" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

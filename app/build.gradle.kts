@@ -116,6 +116,8 @@ dependencies {
     implementation(libs.jeromq)
     implementation(libs.crashreport)
 
+    implementation(libs.player)
+
     implementation("com.airbnb.android:lottie:6.2.0") {
         exclude(group = "androidx.fragment", module = "fragment")
         exclude(group = "androidx.fragment-ktx", module = "fragment")

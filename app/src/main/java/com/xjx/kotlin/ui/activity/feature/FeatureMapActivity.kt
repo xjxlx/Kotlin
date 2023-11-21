@@ -30,6 +30,7 @@ class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>()
         mBinding.tvSocketResult.setOnClickListener { startActivity(SocketResultActivity::class.java) }
         mBinding.tvRaf.setOnClickListener {}
         mBinding.tvTestHttp1.setOnClickListener { startActivity(TestHttp1Activity::class.java) }
+        mBinding.tvTestGsyPlay.setOnClickListener { startActivity(GsyPlayerActivity::class.java) }
     }
 
     override fun onClick(v: View?) {
