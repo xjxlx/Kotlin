@@ -49,10 +49,10 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lav_1"
-        android:layout_width="@dimen/dp_300"
-        android:layout_height="@dimen/dp_300"
+        android:layout_width="360px"
+        android:layout_height="360px"
         android:layout_centerInParent="true"
         android:background="@color/black"
-        app:lottie_rawRes="@raw/sl" />
+        app:lottie_rawRes="@raw/breath_in" />
 
 </RelativeLayout>
