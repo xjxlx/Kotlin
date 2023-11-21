@@ -50,6 +50,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.activity.animations.AnimationJsonActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.animations.AnimationMapActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.feature.TestHttp1Activity"
             android:exported="false" />
         <activity

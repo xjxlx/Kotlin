@@ -10,6 +10,7 @@ import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
 import com.android.helper.utils.permission.RxPermissionsUtil
 import com.xjx.kotlin.databinding.ActivityMainBinding
+import com.xjx.kotlin.ui.activity.animations.AnimationMapActivity
 import com.xjx.kotlin.ui.activity.custom.CustomViewMapActivity
 import com.xjx.kotlin.ui.activity.feature.FeatureMapActivity
 import com.xjx.kotlin.ui.activity.test.AidlActivity
@@ -38,7 +39,7 @@ class MainActivity : BaseBindingTitleActivity<ActivityMainBinding>() {
         setonClickListener(R.id.tv_item_test_viewpager2, R.id.tv_item_array, R.id.tv_item_list, R.id.tv_item_fun, R.id.tv_item_class,
             R.id.tv_item_convert_data, R.id.tv_item_xc, R.id.tv_item_aidl, R.id.tv_item_control, R.id.tv_item_fx, R.id.tv_item_fs,
             R.id.tv_item_flow, R.id.tv_item_block, R.id.tv_item_custom_view, R.id.tv_item_thread, R.id.tv_item_function,
-            R.id.tv_item_flow_map, R.id.tv_item_coroutine_map)
+            R.id.tv_item_flow_map, R.id.tv_item_coroutine_map, R.id.tv_item_animation_map)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -115,6 +116,10 @@ class MainActivity : BaseBindingTitleActivity<ActivityMainBinding>() {
 
             R.id.tv_item_coroutine_map -> {
                 startActivity(CoroutineMapActivity::class.java)
+            }
+
+            R.id.tv_item_animation_map -> {
+                startActivity(AnimationMapActivity::class.java)
             }
         }
     }

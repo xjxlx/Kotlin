@@ -92,6 +92,9 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.8.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     testImplementation(libs.junit)
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
@@ -112,4 +115,19 @@ dependencies {
     implementation(libs.fragment.ktx)
     implementation(libs.jeromq)
     implementation(libs.crashreport)
+
+    implementation("com.airbnb.android:lottie:6.2.0") {
+        exclude(group = "androidx.fragment", module = "fragment")
+        exclude(group = "androidx.fragment-ktx", module = "fragment")
+        exclude(group = "androidx.activity", module = "activity")
+        exclude(group = "androidx.activity-ktx", module = "activity")
+
+        exclude(group = "androidx.appcompat", module = "appcompat-resources")
+        exclude(group = "androidx.appcompat", module = "appcompat")
+        exclude(group = "androidx.emoji2", module = "emoji2-views-helper")
+        exclude(group = "androidx.emoji2", module = "emoji2")
+        exclude(group = "androidx.core", module = "core-ktx")
+        exclude(group = "androidx.core", module = "core")
+        exclude(group = "androidx.annotation", module = "annotation-experimental")
+    }
 }
