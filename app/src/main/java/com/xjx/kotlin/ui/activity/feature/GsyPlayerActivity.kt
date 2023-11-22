@@ -75,6 +75,6 @@ class GsyPlayerActivity : BaseBindingTitleActivity<ActivityGsyPlayerBinding>() {
                 videoPlayer.startWindowFullscreen(this@GsyPlayerActivity, true, true)
             })
 
-        mBinding.root.addView(inflate)
+        mBinding.flContent.addView(inflate)
     }
 }
