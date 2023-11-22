@@ -5,11 +5,13 @@
 
 android {
     namespace = "com.xjx.kotlin"
-    compileSdk = libs.versions.compileSdks.get().toInt()
+    compileSdk = libs.versions.compileSdks.get()
+        .toInt()
 
     defaultConfig {
         applicationId = "com.xjx.kotlin"
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get()
+            .toInt()
         //noinspection ExpiredTargetSdkVersion
         targetSdk = 28
         versionCode = 1
