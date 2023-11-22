@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/icon_item_title_bg">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/line1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.21" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/line2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.79" />
+
+    <ImageView
+        android:id="@+id/iv_today_video_title_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dp_29"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_item_video_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="72:17"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toRightOf="@+id/line1"
+        app:layout_constraintRight_toLeftOf="@+id/line2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0" />
+
+    <TextView
+        android:id="@+id/tv_video_title_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="今日视频"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_25"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_today_video_title_bg"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="@+id/iv_today_video_title_bg"
+        app:layout_constraintRight_toRightOf="@+id/iv_today_video_title_bg"
+        app:layout_constraintTop_toTopOf="@+id/iv_today_video_title_bg"
+        app:layout_constraintVertical_bias="0.4" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/dp_21"
+        android:layout_marginTop="@dimen/dp_28"
+        android:layout_marginRight="@dimen/dp_21"
+        android:background="@drawable/icon_item_video_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="332:305"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_today_video_title_bg"
+        app:layout_constraintVertical_bias="0">
+
+        <com.android.helper.player.app.BaseBuddyVideoPlayer
+            android:id="@+id/iv_today_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_new_course_detial_image2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_today_video_click_music_work"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/iv_today_video_click_music_work"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <TextView
+            android:id="@+id/tv_today_video_music_work_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点击查看歌词"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_today_video_click_music_work"
+            app:layout_constraintHorizontal_bias="0.65"
+            app:layout_constraintLeft_toLeftOf="@+id/iv_today_video_click_music_work"
+            app:layout_constraintRight_toRightOf="@+id/iv_today_video_click_music_work"
+            app:layout_constraintTop_toTopOf="@+id/iv_today_video_click_music_work"
+            app:layout_constraintVertical_bias="0.42" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--歌词-->
+    <RelativeLayout
+        android:id="@+id/rl_music_work"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_21"
+        android:layout_marginRight="@dimen/dp_21"
+        android:background="@drawable/icon_today_video_music_work_bg"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_content"
+        app:layout_constraintVertical_bias="0">
+
+        <TextView
+            android:id="@+id/tv_today_video_music_work"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_40"
+            android:layout_marginBottom="@dimen/dp_30"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:text="1231313131313213213213213131313131313131313131313131313131313131325465465464656132132132131313132131313213213213213213213131313213213213213213216213213213213213213213132132132132131321321313131313132131331313131313131313131313131313131313313131313131313131313131313 "
+            android:textSize="@dimen/sp_16" />
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
