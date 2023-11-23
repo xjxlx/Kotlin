@@ -107,6 +107,14 @@
                 android:layout_weight="1"
                 android:text="倒计时" />
 
+            <Button
+                android:id="@+id/bt1_animation_single"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_weight="1"
+                android:text="单个动画" />
+
         </LinearLayout>
 
     </LinearLayout>
@@ -118,7 +126,7 @@
         android:layout_height="@dimen/dp_360"
         android:layout_centerInParent="true"
         app:lottie_cacheComposition="true"
-        app:lottie_rawRes="@raw/breath_in_2" />
+        app:lottie_rawRes="@raw/breath_in_4" />
 
     <!--        lottie_cacheStrategy-->
 
@@ -158,5 +166,13 @@
         android:layout_centerInParent="true"
         android:visibility="invisible"
         app:lottie_rawRes="@raw/downtime" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_6"
+        android:layout_width="@dimen/dp_360"
+        android:layout_height="@dimen/dp_360"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        app:lottie_rawRes="@raw/breath_in_4" />
 
 </RelativeLayout>

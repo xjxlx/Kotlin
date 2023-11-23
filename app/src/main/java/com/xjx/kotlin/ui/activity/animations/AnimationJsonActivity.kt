@@ -34,6 +34,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
             mBinding.lav2.visibility = View.INVISIBLE
             mBinding.lav3.visibility = View.INVISIBLE
             mBinding.lav4.visibility = View.INVISIBLE
+            mBinding.lav5.visibility = View.INVISIBLE
+            mBinding.lav6.visibility = View.INVISIBLE
 
             mBinding.lav1.playAnimation()
 
@@ -101,6 +103,17 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.bt1AnimationDjs.setOnClickListener {
             animationListener4()
         }
+
+        /** 单个动画 **/
+        mBinding.bt1AnimationSingle.setOnClickListener {
+            mBinding.lav1.visibility = View.INVISIBLE
+            mBinding.lav2.visibility = View.INVISIBLE
+            mBinding.lav3.visibility = View.INVISIBLE
+            mBinding.lav4.visibility = View.INVISIBLE
+            mBinding.lav5.visibility = View.INVISIBLE
+            mBinding.lav6.visibility = View.VISIBLE
+            mBinding.lav6.playAnimation()
+        }
     }
 
     override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityAnimationJsonBinding {
@@ -112,6 +125,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.lav2.cancelAnimation()
         mBinding.lav3.cancelAnimation()
         mBinding.lav4.cancelAnimation()
+        mBinding.lav5.cancelAnimation()
+        mBinding.lav6.cancelAnimation()
     }
 
     /**
@@ -123,6 +138,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.lav2.visibility = View.INVISIBLE
         mBinding.lav3.visibility = View.INVISIBLE
         mBinding.lav4.visibility = View.INVISIBLE
+        mBinding.lav5.visibility = View.INVISIBLE
+        mBinding.lav6.visibility = View.INVISIBLE
         mBinding.lav1.playAnimation()
 
         mBinding.lav1.addAnimatorListener(object : Animator.AnimatorListener {
@@ -136,6 +153,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
                 mBinding.lav2.visibility = View.VISIBLE
                 mBinding.lav3.visibility = View.INVISIBLE
                 mBinding.lav4.visibility = View.INVISIBLE
+                mBinding.lav5.visibility = View.INVISIBLE
+                mBinding.lav6.visibility = View.INVISIBLE
                 mBinding.lav2.playAnimation()
             }
 
@@ -156,6 +175,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
                 mBinding.lav2.visibility = View.INVISIBLE
                 mBinding.lav3.visibility = View.VISIBLE
                 mBinding.lav4.visibility = View.INVISIBLE
+                mBinding.lav5.visibility = View.INVISIBLE
+                mBinding.lav6.visibility = View.INVISIBLE
                 mBinding.lav3.playAnimation()
             }
 
@@ -175,6 +196,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
                 mBinding.lav2.visibility = View.INVISIBLE
                 mBinding.lav3.visibility = View.INVISIBLE
                 mBinding.lav4.visibility = View.VISIBLE
+                mBinding.lav5.visibility = View.INVISIBLE
+                mBinding.lav6.visibility = View.INVISIBLE
                 mBinding.lav4.playAnimation()
             }
 
@@ -193,6 +216,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
                 mBinding.lav2.visibility = View.INVISIBLE
                 mBinding.lav3.visibility = View.INVISIBLE
                 mBinding.lav4.visibility = View.INVISIBLE
+                mBinding.lav5.visibility = View.INVISIBLE
+                mBinding.lav6.visibility = View.INVISIBLE
 
                 mBinding.lav1.playAnimation()
             }
@@ -213,6 +238,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.lav2.visibility = View.INVISIBLE
         mBinding.lav3.visibility = View.INVISIBLE
         mBinding.lav4.visibility = View.INVISIBLE
+        mBinding.lav5.visibility = View.INVISIBLE
+        mBinding.lav6.visibility = View.INVISIBLE
         mBinding.lav1.playAnimation()
 
         mBinding.lav1.addAnimatorListener(object : Animator.AnimatorListener {
@@ -226,6 +253,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
                 mBinding.lav2.visibility = View.INVISIBLE
                 mBinding.lav3.visibility = View.VISIBLE
                 mBinding.lav4.visibility = View.INVISIBLE
+                mBinding.lav5.visibility = View.INVISIBLE
+                mBinding.lav6.visibility = View.INVISIBLE
                 mBinding.lav3.playAnimation()
             }
 
@@ -265,6 +294,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
                 mBinding.lav2.visibility = View.INVISIBLE
                 mBinding.lav3.visibility = View.INVISIBLE
                 mBinding.lav4.visibility = View.INVISIBLE
+                mBinding.lav5.visibility = View.INVISIBLE
+                mBinding.lav6.visibility = View.INVISIBLE
                 mBinding.lav1.playAnimation()
             }
 
@@ -303,6 +334,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.lav2.visibility = View.INVISIBLE
         mBinding.lav3.visibility = View.INVISIBLE
         mBinding.lav4.visibility = View.INVISIBLE
+        mBinding.lav5.visibility = View.INVISIBLE
+        mBinding.lav6.visibility = View.INVISIBLE
         mBinding.lav1.playAnimation()
 
         mBinding.lav1.addAnimatorListener(object : Animator.AnimatorListener {
@@ -316,6 +349,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
                 mBinding.lav2.visibility = View.VISIBLE
                 mBinding.lav3.visibility = View.INVISIBLE
                 mBinding.lav4.visibility = View.INVISIBLE
+                mBinding.lav5.visibility = View.INVISIBLE
+                mBinding.lav6.visibility = View.INVISIBLE
                 mBinding.lav2.playAnimation()
             }
 
@@ -336,6 +371,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
                 mBinding.lav2.visibility = View.INVISIBLE
                 mBinding.lav3.visibility = View.VISIBLE
                 mBinding.lav4.visibility = View.INVISIBLE
+                mBinding.lav5.visibility = View.INVISIBLE
+                mBinding.lav6.visibility = View.INVISIBLE
                 mBinding.lav3.playAnimation()
             }
 
@@ -355,6 +392,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
                 mBinding.lav2.visibility = View.INVISIBLE
                 mBinding.lav3.visibility = View.INVISIBLE
                 mBinding.lav4.visibility = View.INVISIBLE
+                mBinding.lav5.visibility = View.INVISIBLE
+                mBinding.lav6.visibility = View.INVISIBLE
                 mBinding.lav1.playAnimation()
             }
 
@@ -374,6 +413,8 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.lav2.visibility = View.INVISIBLE
         mBinding.lav3.visibility = View.INVISIBLE
         mBinding.lav4.visibility = View.INVISIBLE
+        mBinding.lav5.visibility = View.INVISIBLE
+        mBinding.lav6.visibility = View.INVISIBLE
         mBinding.lav1.playAnimation()
 
         mBinding.lav1.addAnimatorListener(object : Animator.AnimatorListener {
@@ -407,6 +448,7 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.lav3.visibility = View.INVISIBLE
         mBinding.lav4.visibility = View.INVISIBLE
         mBinding.lav5.visibility = View.VISIBLE
+        mBinding.lav6.visibility = View.INVISIBLE
         mBinding.lav5.playAnimation()
 
         mBinding.lav1.addAnimatorListener(object : Animator.AnimatorListener {
