@@ -126,7 +126,7 @@
         android:layout_height="@dimen/dp_360"
         android:layout_centerInParent="true"
         app:lottie_cacheComposition="true"
-        app:lottie_rawRes="@raw/breath_in_4" />
+        app:lottie_rawRes="@raw/breath_in_11_24" />
 
     <!--        lottie_cacheStrategy-->
 
@@ -138,7 +138,7 @@
         android:layout_centerInParent="true"
         android:visibility="invisible"
         app:lottie_cacheComposition="true"
-        app:lottie_rawRes="@raw/breath_in_h" />
+        app:lottie_rawRes="@raw/breath_in_h_11_24" />
 
     <!--    呼气-->
     <com.airbnb.lottie.LottieAnimationView
@@ -148,7 +148,7 @@
         android:layout_centerInParent="true"
         android:visibility="invisible"
         app:lottie_cacheComposition="true"
-        app:lottie_rawRes="@raw/breath_out" />
+        app:lottie_rawRes="@raw/breath_out_11_24" />
 
     <!--    呼气屏气-->
     <com.airbnb.lottie.LottieAnimationView
@@ -157,7 +157,7 @@
         android:layout_height="@dimen/dp_360"
         android:layout_centerInParent="true"
         app:lottie_cacheComposition="true"
-        app:lottie_rawRes="@raw/breath_out_h" />
+        app:lottie_rawRes="@raw/breath_out_h_11_24" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lav_5"
@@ -165,7 +165,7 @@
         android:layout_height="@dimen/dp_360"
         android:layout_centerInParent="true"
         android:visibility="invisible"
-        app:lottie_rawRes="@raw/downtime" />
+        app:lottie_rawRes="@raw/djs_11_24" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lav_6"
