@@ -1,25 +1,25 @@
-@Suppress("DSL_SCOPE_VIOLATION") plugins {
+@Suppress("DSL_SCOPE_VIOLATION") //  Remove once KTIJ-19369 is fixed
+plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
 }
 
 android {
     namespace = "com.xjx.kotlin"
-    compileSdk = libs.versions.compileSdks.get()
-        .toInt()
+    compileSdk = libs.versions.compileSdks.get().toInt()
 
     defaultConfig {
         applicationId = "com.xjx.kotlin"
-        minSdk = libs.versions.minSdk.get()
-            .toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
         //noinspection ExpiredTargetSdkVersion
-        targetSdk = 28
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64")
+            //noinspection ChromeOsAbiSupport
+            abiFilters += listOf("arm64-v8a","x86", "x86_64")
         }
 
         buildConfigField("Boolean", "LogSwitch", "true")
