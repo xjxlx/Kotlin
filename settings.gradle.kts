@@ -36,7 +36,7 @@ dependencyResolutionManagement {
             setUrl("https://packages.aliyun.com/maven/repository/2131155-release-wH01IT/")
         }
     }
-    
+
     versionCatalogs {
         create("libs") {
             from("com.android:catalogs:1.0.0")
