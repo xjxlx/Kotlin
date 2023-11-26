@@ -6,20 +6,23 @@ plugins {
 
 android {
     namespace = "com.xjx.kotlin"
-    compileSdk = libs.versions.compileSdks.get().toInt()
+    compileSdk = libs.versions.compileSdks.get()
+        .toInt()
 
     defaultConfig {
         applicationId = "com.xjx.kotlin"
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get()
+            .toInt()
         //noinspection ExpiredTargetSdkVersion
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get()
+            .toInt()
         versionCode = 1
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
             //noinspection ChromeOsAbiSupport
-            abiFilters += listOf("arm64-v8a","x86", "x86_64")
+            abiFilters += listOf("arm64-v8a", "x86", "x86_64")
         }
 
         buildConfigField("Boolean", "LogSwitch", "true")
@@ -82,7 +85,6 @@ android {
 
 dependencies {
     implementation(project(":apphelper"))
-    // implementation(project(":apphelper2"))
     implementation(project(":http"))
     implementation(project(":refresh"))
     implementation(project(":common"))
@@ -94,18 +96,15 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.8.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     testImplementation(libs.junit)
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
-
     implementation(libs.viewpager2)
-    implementation(libs.retrofit2)
-    implementation(libs.adapter.rxjava2)
-    implementation(libs.converter.gson)
-    implementation(libs.converter.scalars)
+    // implementation(libs.retrofit2)
+    // implementation(libs.retrofit2.adapter.rxjava2)
+    // implementation(libs.retrofit2.converter.gson)
+    // implementation(libs.retrofit2.converter.scalars)
+
     implementation(libs.rxpermissions)
     implementation(libs.rxjava3)
     implementation(libs.kotlinx.coroutines.core)
@@ -117,7 +116,6 @@ dependencies {
     implementation(libs.fragment.ktx)
     implementation(libs.jeromq)
     implementation(libs.crashreport)
-
     implementation(libs.player)
 
     implementation("com.airbnb.android:lottie:6.2.0") {
