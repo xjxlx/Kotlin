@@ -85,25 +85,17 @@ android {
 
 dependencies {
     implementation(project(":apphelper"))
-    implementation(project(":http"))
     implementation(project(":refresh"))
+    implementation(project(":http"))
     implementation(project(":common"))
 
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
     implementation(libs.legacy.support.v4)
-    implementation(libs.appcompat)
-    implementation(libs.material)
-    implementation(libs.constraintlayout)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.viewpager2)
-    // implementation(libs.retrofit2)
-    // implementation(libs.retrofit2.adapter.rxjava2)
-    // implementation(libs.retrofit2.converter.gson)
-    // implementation(libs.retrofit2.converter.scalars)
 
     implementation(libs.rxpermissions)
     implementation(libs.rxjava3)
