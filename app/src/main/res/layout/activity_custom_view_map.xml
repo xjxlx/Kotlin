@@ -18,12 +18,14 @@
         <TextView
             android:id="@+id/tv_item_recycleview"
             style="@style/click_item_style"
-            android:text="测试RecycleView" />
+            android:text="测试RecycleView"
+            android:textColor="#546E7A" />
 
         <TextView
             android:id="@+id/tv_item_chart"
             style="@style/click_item_style"
-            android:text="自定义图表View" />
+            android:text="自定义图表View"
+            android:textColor="#546E7A" />
 
         <TextView
             android:id="@+id/tv_item_score_progress"
@@ -44,6 +46,11 @@
             android:id="@+id/tv_item_tablayout"
             style="@style/click_item_style"
             android:text="Tablayout" />
+
+        <TextView
+            android:id="@+id/tv_item_test_bitmap"
+            style="@style/click_item_style"
+            android:text="测试绘制Bitmap" />
 
     </LinearLayout>
 

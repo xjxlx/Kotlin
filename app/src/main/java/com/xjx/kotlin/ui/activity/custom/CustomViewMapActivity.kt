@@ -24,9 +24,11 @@ class CustomViewMapActivity : BaseBindingTitleActivity<ActivityCustomViewMapBind
         mBinding.tvItemScoreResult.setOnClickListener {
             startActivity(ScoreSummarizeActivity::class.java)
         }
-
         mBinding.tvItemTablayout.setOnClickListener {
             startActivity(CustomTabLayoutActivity::class.java)
+        }
+        mBinding.tvItemTestBitmap.setOnClickListener {
+            startActivity(CustomBitmapActivity::class.java)
         }
     }
 
