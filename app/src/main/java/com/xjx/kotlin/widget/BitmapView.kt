@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import androidx.appcompat.content.res.AppCompatResources
 import com.android.common.base.BaseView
+import com.android.common.utils.LogUtil
 import com.xjx.kotlin.R
 
 class BitmapView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet) : BaseView(context, attributeSet, 0) {
@@ -26,7 +27,10 @@ class BitmapView @JvmOverloads constructor(context: Context, attributeSet: Attri
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
+        LogUtil.e("bitmap:$mRoundBitmap")
         mRoundBitmap?.let {
+            LogUtil.e("bitmap2:$mRoundBitmap")
             canvas.drawBitmap(it, 0F, 0F, null)
         }
     }

@@ -50,6 +50,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.activity.kotlin.KotlinMapActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.custom.CustomBitmapActivity"
             android:exported="false" />
         <activity

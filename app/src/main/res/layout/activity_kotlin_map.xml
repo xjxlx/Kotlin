@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.activity.kotlin.KotlinMapActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_item_array"
+            style="@style/click_item_style"
+            android:text="数组" />
+
+        <TextView
+            android:id="@+id/tv_item_list"
+            style="@style/click_item_style"
+            android:text="集合" />
+
+        <TextView
+            android:id="@+id/tv_item_fun"
+            style="@style/click_item_style"
+            android:text="方法" />
+
+        <TextView
+            android:id="@+id/tv_item_class"
+            style="@style/click_item_style"
+            android:text="类" />
+
+        <TextView
+            android:id="@+id/tv_item_convert_data"
+            style="@style/click_item_style"
+            android:text="数据转换" />
+
+        <TextView
+            android:id="@+id/tv_item_control"
+            style="@style/click_item_style"
+            android:text="操作符" />
+
+        <TextView
+            android:id="@+id/tv_item_fx"
+            style="@style/click_item_style"
+            android:text="泛型" />
+
+        <TextView
+            android:id="@+id/tv_item_fs"
+            style="@style/click_item_style"
+            android:text="反射" />
+
+        <TextView
+            android:id="@+id/tv_item_block"
+            style="@style/click_item_style"
+            android:text="Block 语法" />
+
+        <TextView
+            android:id="@+id/tv_item_flow_map"
+            style="@style/click_item_style"
+            android:text="Flow 集合" />
+
+        <TextView
+            android:id="@+id/tv_item_coroutine_map"
+            style="@style/click_item_style"
+            android:text="协程 集合" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

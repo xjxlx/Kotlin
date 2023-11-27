@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import com.android.common.base.BaseBindingTitleActivity
 import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityFeatureMapBinding
+import com.xjx.kotlin.ui.activity.test.AidlActivity
+import com.xjx.kotlin.ui.activity.test.ViewPager2Activity
+import com.xjx.kotlin.ui.activity.thread.ThreadMapActivity
 import com.xjx.kotlin.utils.zmq.big.ServiceActivity
 
 class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>() {
@@ -22,6 +25,9 @@ class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>()
     override fun initData(savedInstanceState: Bundle?) {
         setonClickListener(R.id.tv_item_recording_video)
 
+        mBinding.tvItemTestViewpager2.setOnClickListener {
+            startActivity(ViewPager2Activity::class.java)
+        }
         mBinding.tvItemZmqSend.setOnClickListener { startActivity(ZmqSendActivity::class.java) }
         mBinding.tvItemZmqReceive.setOnClickListener { startActivity(ZmqReceiverActivity::class.java) }
         mBinding.tvItemZmqTest.setOnClickListener { startActivity(ServiceActivity::class.java) }
@@ -31,6 +37,8 @@ class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>()
         mBinding.tvRaf.setOnClickListener {}
         mBinding.tvTestHttp1.setOnClickListener { startActivity(TestHttp1Activity::class.java) }
         mBinding.tvTestGsyPlay.setOnClickListener { startActivity(GsyPlayerActivity::class.java) }
+        mBinding.tvItemThread.setOnClickListener { startActivity(ThreadMapActivity::class.java) }
+        mBinding.tvItemAidl.setOnClickListener { startActivity(AidlActivity::class.java) }
     }
 
     override fun onClick(v: View?) {

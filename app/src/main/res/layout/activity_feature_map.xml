@@ -67,6 +67,20 @@
             android:text="测试Gsyplay"
             android:visibility="visible" />
 
+        <TextView
+            android:id="@+id/tv_item_test_viewpager2"
+            style="@style/click_item_style"
+            android:text="测试ViewPager2" />
+
+        <TextView
+            android:id="@+id/tv_item_thread"
+            style="@style/click_item_style"
+            android:text="thread" />
+
+        <TextView
+            android:id="@+id/tv_item_aidl"
+            style="@style/click_item_style"
+            android:text="Aild调用" />
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
