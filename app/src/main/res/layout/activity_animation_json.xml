@@ -167,12 +167,52 @@
         android:visibility="invisible"
         app:lottie_rawRes="@raw/djs_11_24" />
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lav_6"
-        android:layout_width="@dimen/dp_360"
-        android:layout_height="@dimen/dp_360"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"
-        app:lottie_rawRes="@raw/breath_in_4" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lav_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/sing_tree" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lav_61"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/sing_tree" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lav_62"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/sing_tree" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lav_63"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/sing_tree" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lav_64"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/sing_tree" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lav_65"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/sing_tree" />
+    </LinearLayout>
 
 </RelativeLayout>

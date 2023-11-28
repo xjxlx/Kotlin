@@ -113,6 +113,11 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
             mBinding.lav5.visibility = View.INVISIBLE
             mBinding.lav6.visibility = View.VISIBLE
             mBinding.lav6.playAnimation()
+            mBinding.lav61.playAnimation()
+            mBinding.lav62.playAnimation()
+            mBinding.lav63.playAnimation()
+            mBinding.lav64.playAnimation()
+            mBinding.lav65.playAnimation()
         }
     }
 
@@ -470,5 +475,11 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
             override fun onAnimationRepeat(animation: Animator) {
             }
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cancelAll()
+        mBinding.lav6.cancelAnimation()
     }
 }
