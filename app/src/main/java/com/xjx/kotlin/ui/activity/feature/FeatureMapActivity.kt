@@ -36,6 +36,7 @@ class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>()
         mBinding.tvSocketResult.setOnClickListener { startActivity(SocketResultActivity::class.java) }
         mBinding.tvRaf.setOnClickListener {}
         mBinding.tvTestHttp1.setOnClickListener { startActivity(TestHttp1Activity::class.java) }
+        mBinding.tvTestHttp2.setOnClickListener { startActivity(TestHttp2Activity::class.java) }
         mBinding.tvTestGsyPlay.setOnClickListener { startActivity(GsyPlayerActivity::class.java) }
         mBinding.tvItemThread.setOnClickListener { startActivity(ThreadMapActivity::class.java) }
         mBinding.tvItemAidl.setOnClickListener { startActivity(AidlActivity::class.java) }

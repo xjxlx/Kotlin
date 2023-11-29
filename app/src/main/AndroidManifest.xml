@@ -50,15 +50,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.activity.feature.TestHttp2Activity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.kotlin.KotlinMapActivity"
             android:exported="true" />
         <activity
             android:name=".ui.activity.custom.CustomBitmapActivity"
             android:exported="true">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".ui.activity.feature.GsyPlayerActivity"
@@ -81,9 +85,7 @@
             android:exported="true" />
         <activity
             android:name=".network.NetWorkRefreshActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".ui.activity.custom.ScoreSummarizeActivity"
             android:exported="true" />
@@ -193,6 +195,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
