@@ -30,6 +30,9 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
 
     private val adapter: NetAdapter = NetAdapter()
     private val mList: MutableList<String> = mutableListOf()
+    private val mApi: TestApiService by lazy {
+        return@lazy HttpClient.getApi()
+    }
 
     override fun initData(savedInstanceState: Bundle?) {
         RetrofitHelper.setBaseUrl("https://web.jollyeng.com/")
@@ -48,58 +51,58 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
 
             object : RefreshUtil<HttpResponse<L6HomeRightBookListBean>>(lifecycleScope, mBinding.brlLayout) {
                 override suspend fun getApiService(): Flow<HttpResponse<L6HomeRightBookListBean>> {
-                    return HttpClient.http<TestApiService, MutableMap<String, Any>, HttpResponse<L6HomeRightBookListBean>>({ getL6BookList(it) }, mParameters)
+                    return HttpClient.HttpClientFlow.http({ mApi.getL6BookList(it) }, mParameters)
                 }
 
                 override fun setMoreData(t: HttpResponse<L6HomeRightBookListBean>): List<*>? {
-                                return t.data?.row1
-                            }
-                        }
-                .setCallBackListener(object : CallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
-                            override fun onSuccess(refreshUtil: RefreshUtil<HttpResponse<L6HomeRightBookListBean>>, t: HttpResponse<L6HomeRightBookListBean>) {
-                            }
+                    return t.data?.row1
+                }
+            }.setCallBackListener(object : CallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
+                override fun onSuccess(refreshUtil: RefreshUtil<HttpResponse<L6HomeRightBookListBean>>, t: HttpResponse<L6HomeRightBookListBean>) {
+                }
 
-                            override fun onError(e: Throwable) {
-                            }
-                        }).start()
+                override fun onError(e: Throwable) {
+                }
+            }).start()
 
-                        lifecycleScope.launch {
-                            val unId = "o9RWl1EJPHolk8_7smU39k1-LqVs"
-                            val suiJi = "newcL6_2"
-                            val mParameters = mutableMapOf<String, Any>()
-                            mParameters["service"] = "App.App2022.GetBook"
-                            mParameters["unid"] = unId
-                            mParameters["suiji"] = suiJi
 
-                            HttpClient.http<TestApiService, MutableMap<String, Any>, HttpResponse<L6HomeRightBookListBean>>({ getL6BookList(it) }, mParameters, object : HttpCallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
-                                    override fun onFailure(exception: Throwable) {
-                                        super.onFailure(exception)
-                                        LogUtil.e("sss", "error:${exception}")
-                                    }
+            lifecycleScope.launch {
+                val unId = "o9RWl1EJPHolk8_7smU39k1-LqVs"
+                val suiJi = "newcL6_2"
+                val mParameters = mutableMapOf<String, Any>()
+                mParameters["service"] = "App.App2022.GetBook"
+                mParameters["unid"] = unId
+                mParameters["suiji"] = suiJi
 
-                                    override fun onSuccess(t: HttpResponse<L6HomeRightBookListBean>) {
-                                        LogUtil.e("sss", t)
-                                        t.data?.row2?.let {
-                                            for (index in it.indices) {
-                                                val row2 = it[index]
-                                                row2?.let { row ->
-                                                    row.content?.let { content ->
-                                                        for (index2 in content.indices) {
-                                                            val content1 = content[index2]
-                                                            content1?.let { content11 ->
-                                                                content11.content_name?.let { name ->
-                                                                    mList.add(name)
-                                                                }
-                                                            }
-                                                        }
-                                                    }
+                HttpClient.httpCoroutine<MutableMap<String, Any>, HttpResponse<L6HomeRightBookListBean>>({ mApi.getL6BookList(it) }, mParameters, object : HttpCallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
+                    override fun onFailure(exception: Throwable) {
+                        super.onFailure(exception)
+                        LogUtil.e("sss", "error:${exception}")
+                    }
+
+                    override fun onSuccess(t: HttpResponse<L6HomeRightBookListBean>) {
+                        LogUtil.e("sss", t)
+                        t.data?.row2?.let {
+                            for (index in it.indices) {
+                                val row2 = it[index]
+                                row2?.let { row ->
+                                    row.content?.let { content ->
+                                        for (index2 in content.indices) {
+                                            val content1 = content[index2]
+                                            content1?.let { content11 ->
+                                                content11.content_name?.let { name ->
+                                                    mList.add(name)
                                                 }
                                             }
                                         }
-                                        adapter.setList(mList)
                                     }
-                                })
+                                }
+                            }
                         }
+                        adapter.setList(mList)
+                    }
+                })
+            }
         }
     }
 
@@ -116,10 +119,10 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
             val tvContent = view.findViewById<TextView>(R.id.tv_content)
         }
 
-        class VhBinding(binding:ItemNetRefreshBinding):BaseBindingVH<ItemNetRefreshBinding>(binding)
+        class VhBinding(binding: ItemNetRefreshBinding) : BaseBindingVH<ItemNetRefreshBinding>(binding)
 
         override fun bindHolder(holder: VhBinding, position: Int) {
-           holder.binding.tvContent
+            holder.binding.tvContent
         }
 
 //        override fun bindHolder(holder: VH2, position: Int) {
@@ -128,7 +131,7 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
 
         override fun createVH(inflater: LayoutInflater, parent: ViewGroup, viewType: Int): VhBinding {
 //            return VH(inflater.inflate(R.layout.item_net_refresh, parent, false))
-            return VhBinding(ItemNetRefreshBinding.inflate(inflater,parent,false))
+            return VhBinding(ItemNetRefreshBinding.inflate(inflater, parent, false))
         }
     }
 }

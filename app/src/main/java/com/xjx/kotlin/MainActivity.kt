@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import com.android.common.base.BaseBindingTitleActivity
-import com.android.common.utils.LogUtil
 import com.android.helper.utils.permission.RxPermissionsUtil
 import com.xjx.kotlin.databinding.ActivityMainBinding
 import com.xjx.kotlin.ui.activity.animations.AnimationMapActivity
@@ -30,12 +29,9 @@ class MainActivity : BaseBindingTitleActivity<ActivityMainBinding>() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val strings = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-        RxPermissionsUtil.Builder(this, *strings)
-            .setSinglePerMissionListener { permissionStatus: Int, _: String? ->
-                LogUtil.e("permission:$permissionStatus")
-            }
-            .build()
-            .startRequestPermission()
+        RxPermissionsUtil.Builder(this, *strings).setSinglePerMissionListener { permissionStatus: Int, _: String? ->
+            // LogUtil.e("permission:$permissionStatus")
+        }.build().startRequestPermission()
 
         mBinding.tvItemKotlin.setOnClickListener {
             startActivity(KotlinMapActivity::class.java)

@@ -26,6 +26,10 @@ import java.util.Locale
 /** 网络封装 */
 class NetWorkActivity : BaseBindingTitleActivity<ActivityNetWorkBinding>() {
 
+    private val mApi: TestApiService by lazy {
+        return@lazy RetrofitHelper.create<TestApiService>()
+    }
+
     override fun getTitleContent(): String {
         return "网络封装"
     }
@@ -53,17 +57,16 @@ class NetWorkActivity : BaseBindingTitleActivity<ActivityNetWorkBinding>() {
                 mParameters["unid"] = unId
                 mParameters["suiji"] = suiJi
 
-                HttpClient.http<TestApiService, MutableMap<String, Any>, HttpResponse<L6HomeRightBookListBean>>({ getL6BookList(it) },
-                    mParameters, object : HttpCallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
-                        override fun onFailure(exception: Throwable) {
-                            super.onFailure(exception)
-                            LogUtil.e("sss", "error:${exception}")
-                        }
+                HttpClient.httpCoroutine({ mApi.getL6BookList(it) }, mParameters, object : HttpCallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
+                    override fun onSuccess(t: HttpResponse<L6HomeRightBookListBean>) {
+                        LogUtil.e("sss", t)
+                    }
 
-                        override fun onSuccess(t: HttpResponse<L6HomeRightBookListBean>) {
-                            LogUtil.e("sss", t)
-                        }
-                    })
+                    override fun onFailure(exception: Throwable) {
+                        super.onFailure(exception)
+                        LogUtil.e("sss", "error:${exception}")
+                    }
+                })
             }
         }
         mBinding.btnPause.setOnClickListener { downCountTime.pause() }
