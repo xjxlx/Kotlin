@@ -9,7 +9,14 @@ import androidx.annotation.Nullable;
 
 import com.android.common.base.BaseBindingTitleActivity;
 import com.android.helper.utils.ToastUtil;
+import com.android.http.client.HttpClient;
+import com.android.http.test.TestApiService;
 import com.xjx.kotlin.databinding.ActivityTestHttp2Binding;
+
+import java.util.HashMap;
+
+import kotlin.coroutines.Continuation;
+import kotlin.coroutines.CoroutineContext;
 
 public class TestHttp2Activity extends BaseBindingTitleActivity<ActivityTestHttp2Binding> {
 
@@ -18,6 +25,23 @@ public class TestHttp2Activity extends BaseBindingTitleActivity<ActivityTestHttp
         mBinding.btStart.setOnClickListener(v -> {
             ToastUtil.show("网络测试");
             //                ToastUtil.show("网络测试");
+            TestApiService api = HttpClient.getApi(TestApiService.class);
+            // getL6BookList3
+            HashMap<String, Object> map = new HashMap<>();
+            //            api.getL6BookList3()
+
+            api.getL6BookList3(map, new Continuation<String>() {
+                @NonNull
+                @Override
+                public CoroutineContext getContext() {
+                    return null;
+                }
+
+                @Override
+                public void resumeWith(@NonNull Object o) {
+
+                }
+            });
         });
     }
 
