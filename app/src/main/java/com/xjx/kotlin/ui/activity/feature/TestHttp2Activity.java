@@ -8,38 +8,55 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.common.base.BaseBindingTitleActivity;
-import com.android.helper.utils.ToastUtil;
+import com.android.common.utils.LogUtil;
 import com.android.http.client.HttpClient;
+import com.android.http.client.RetrofitHelper;
+import com.android.http.listener.HttpCallBackListener;
+import com.android.http.test.HttpResponse;
+import com.android.http.test.L6HomeRightBookListBean;
 import com.android.http.test.TestApiService;
 import com.xjx.kotlin.databinding.ActivityTestHttp2Binding;
 
 import java.util.HashMap;
 
-import kotlin.coroutines.Continuation;
-import kotlin.coroutines.CoroutineContext;
-
 public class TestHttp2Activity extends BaseBindingTitleActivity<ActivityTestHttp2Binding> {
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        mBinding.btStart.setOnClickListener(v -> {
-            ToastUtil.show("网络测试");
-            //                ToastUtil.show("网络测试");
-            TestApiService api = HttpClient.getApi(TestApiService.class);
-            // getL6BookList3
-            HashMap<String, Object> map = new HashMap<>();
-            //            api.getL6BookList3()
+        RetrofitHelper.setBaseUrl("https://web.jollyeng.com/");
+        TestApiService api = HttpClient.getApi(TestApiService.class);
 
-            api.getL6BookList3(map, new Continuation<String>() {
-                @NonNull
+        String unId = "o9RWl1EJPHolk8_7smU39k1-LqVs";
+        String suiJi = "newcL6_2";
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("service", "App.App2022.GetBook");
+        map.put("unid", unId);
+        map.put("suiji", suiJi);
+
+        mBinding.btStart.setOnClickListener(v -> {
+            //            HttpClient.http(api.getL6BookListJava(map), new HttpCallBackListener<String>() {
+            //                @Override
+            //                public void onSuccess(String s) {
+            //                    LogUtil.e("http-java:" + s);
+            //                }
+
+            //                @Override
+            //                public void onFailure(@NonNull Throwable exception) {
+            //                    super.onFailure(exception);
+            //                    LogUtil.e("http-java:error:" + exception.getMessage());
+            //                }
+            //            });
+
+            HttpClient.http(api.getL6BookListJava(map), new HttpCallBackListener<HttpResponse<L6HomeRightBookListBean>>() {
                 @Override
-                public CoroutineContext getContext() {
-                    return null;
+                public void onSuccess(HttpResponse<L6HomeRightBookListBean> result) {
+                    LogUtil.e("http-java:" + result);
                 }
 
                 @Override
-                public void resumeWith(@NonNull Object o) {
-
+                public void onFailure(@NonNull Throwable exception) {
+                    super.onFailure(exception);
+                    LogUtil.e("http-java:error:" + exception.getMessage());
                 }
             });
         });
