@@ -51,7 +51,7 @@ class NetWorkRefreshActivity : BaseBindingTitleActivity<ActivityNetWorkRefreshBi
 
             object : RefreshUtil<HttpResponse<L6HomeRightBookListBean>>(lifecycleScope, mBinding.brlLayout) {
                 override suspend fun getApiService(): Flow<HttpResponse<L6HomeRightBookListBean>> {
-                    return HttpClient.HttpClientFlow.http({ mApi.getL6BookList(it) }, mParameters)
+                    return HttpClient.Flow.http({ mApi.getL6BookList(it) }, mParameters)
                 }
 
                 override fun setMoreData(t: HttpResponse<L6HomeRightBookListBean>): List<*>? {
