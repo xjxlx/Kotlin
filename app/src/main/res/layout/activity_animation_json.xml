@@ -176,8 +176,9 @@
             android:id="@+id/lav_6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:lottie_autoPlay="true"
             app:lottie_loop="false"
-            app:lottie_rawRes="@raw/sing_tree" />
+            app:lottie_rawRes="@raw/cj" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lav_61"
