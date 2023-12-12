@@ -176,7 +176,8 @@
             android:id="@+id/lav_6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:lottie_autoPlay="true"
+            android:visibility="gone"
+            app:lottie_autoPlay="false"
             app:lottie_loop="false"
             app:lottie_rawRes="@raw/cj" />
 
@@ -187,33 +188,6 @@
             app:lottie_loop="false"
             app:lottie_rawRes="@raw/sing_tree" />
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lav_62"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:lottie_loop="false"
-            app:lottie_rawRes="@raw/sing_tree" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lav_63"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:lottie_loop="false"
-            app:lottie_rawRes="@raw/sing_tree" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lav_64"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:lottie_loop="false"
-            app:lottie_rawRes="@raw/sing_tree" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lav_65"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:lottie_loop="false"
-            app:lottie_rawRes="@raw/sing_tree" />
     </LinearLayout>
 
 </RelativeLayout>

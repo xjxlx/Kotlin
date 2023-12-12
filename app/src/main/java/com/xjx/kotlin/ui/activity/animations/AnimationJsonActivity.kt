@@ -26,7 +26,6 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
         /** 开始 **/
         mBinding.bt1Start.setOnClickListener {
             // mBinding.lav1.setAnimation(R.raw.breath_in)
@@ -114,10 +113,6 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
             mBinding.lav6.visibility = View.VISIBLE
             mBinding.lav6.playAnimation()
             mBinding.lav61.playAnimation()
-            mBinding.lav62.playAnimation()
-            mBinding.lav63.playAnimation()
-            mBinding.lav64.playAnimation()
-            mBinding.lav65.playAnimation()
         }
     }
 
