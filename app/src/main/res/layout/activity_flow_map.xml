@@ -5,20 +5,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.activity.test.flow.FlowMapActivity">
-
+    
     <TextView
         android:id="@+id/tv_item_flow_f"
         style="@style/click_item_style"
         android:text="Flow操作符" />
-
+    
     <TextView
         android:id="@+id/tv_item_flow"
         style="@style/click_item_style"
         android:text="Flow" />
-
+    
     <TextView
         android:id="@+id/tv_item_flow_call"
         style="@style/click_item_style"
         android:text="FlowCall" />
-
+    
+    <TextView
+        android:id="@+id/tv_item_test_mutable_flow"
+        style="@style/click_item_style"
+        android:text="测试 mutableFlow " />
 </androidx.appcompat.widget.LinearLayoutCompat>

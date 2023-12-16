@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    
     <uses-feature
         android:name="android.hardware.type.automotive"
         android:required="true" />
-
+    
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -21,24 +21,21 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取网络状态改变的权限 -->
     <!-- 如果需要获取ssid，需要定位信息 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <queries>
-
         <!-- 如果想要与其他的应用进行AIDL通信的话，需要在这里注册包名的信息 -->
         <package android:name="com.android.app.free.debug" />
         <package android:name="com.android.poc" />
     </queries>
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
+    
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.CAPTURE_AUDIO_OUTPUT"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.CAMERA" />
-
+    
     <application
         android:name=".app.App"
         android:allowBackup="true"
@@ -50,6 +47,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.activity.test.flow.TestMutableFlowActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.feature.TestHttp2Activity"
             android:exported="false" />
         <activity
@@ -58,7 +58,6 @@
         <activity
             android:name=".ui.activity.custom.CustomBitmapActivity"
             android:exported="true">
-
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
@@ -85,7 +84,7 @@
             android:exported="true" />
         <activity
             android:name=".network.NetWorkRefreshActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".ui.activity.custom.ScoreSummarizeActivity"
             android:exported="true" />
@@ -173,7 +172,7 @@
             android:name=".ui.activity.test.AidlActivity"
             android:enabled="true"
             android:exported="true" />
-
+        
         <receiver
             android:name=".ui.activity.test.SocketReceiver"
             android:enabled="true"
@@ -182,7 +181,7 @@
                 <action android:name="com.xjx.test" />
             </intent-filter>
         </receiver>
-
+        
         <activity android:name=".ui.activity.test.xc.XCActivity" />
         <activity android:name=".ui.activity.test.ConvertDataActivity" />
         <activity android:name=".ui.activity.test.ViewPager2Activity" />
@@ -195,10 +194,8 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
