@@ -7,34 +7,52 @@ import androidx.lifecycle.lifecycleScope
 import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityTestMutableFlowBinding
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class TestMutableFlowActivity : BaseBindingTitleActivity<ActivityTestMutableFlowBinding>() {
 
-	private val mStateFlow: MutableStateFlow<Int> = MutableStateFlow(0)
+	private var count = 1
+	val mSharedFlow2: MutableSharedFlow<Int> = MutableStateFlow(0)
 
 	override fun getTitleContent(): String {
 		return "测试mutableFlow"
 	}
 
-	override fun getBinding(
-		inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean
-	): ActivityTestMutableFlowBinding {
+	override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityTestMutableFlowBinding {
 		return ActivityTestMutableFlowBinding.inflate(inflater, container, true)
 	}
 
 	override fun initData(savedInstanceState: Bundle?) {
+		val dataManager = DataManager()
+
 		lifecycleScope.launch {
-			mStateFlow.collect {
-				LogUtil.e("collect:${it}")
+			dataManager.mSharedFlow.collect {
+				LogUtil.e("flow", "shared - collect:${it}")
+			}
+
+			mSharedFlow2.collect() {
+				LogUtil.e("flow", "shared - 2 - collect:${it}")
 			}
 		}
-		var a = 1
+
 		mBinding.btnSend.setOnClickListener {
-			lifecycleScope.launch {
-				mStateFlow.emit(a)
-			}
+			count++
+			LogUtil.e("flow", "shared - send:${count}")
+			// dataManager.sendData(count)
+//			dataManager.mSharedFlow.tryEmit(count)
+
+			mSharedFlow2.tryEmit(count)
+		}
+	}
+
+	class DataManager {
+		val mSharedFlow: MutableSharedFlow<Int> = MutableStateFlow(0)
+
+		// 发送数据
+		fun sendData(data: Int) {
+			mSharedFlow.tryEmit(data)
 		}
 	}
 }
