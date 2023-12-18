@@ -12,20 +12,16 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-
         <!-- Customize your theme here. -->
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:fitsSystemWindows">true</item>
-
         <item name="android:activityOpenEnterAnimation">@anim/navigation_enter_animation</item>
         <item name="android:activityOpenExitAnimation">@anim/navigation_exit_animation</item>
         <item name="android:activityCloseEnterAnimation">@anim/navigation_pop_enter_animation</item>
         <item name="android:activityCloseExitAnimation">@anim/navigation_pop_exit_animation</item>
-
         <!--标志，允许您禁用窗口的启动画面。默认值为false;如果设置为true，系统在实际实例显示给用户之前永远不能使用窗口的主题来显示启动画面。-->
         <item name="android:windowDisablePreview">true</item>
     </style>
