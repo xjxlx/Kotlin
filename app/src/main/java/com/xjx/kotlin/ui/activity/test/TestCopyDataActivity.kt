@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.android.common.base.BaseBindingTitleActivity
+import com.android.common.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityTestCopyDataBinding
 
 class TestCopyDataActivity : BaseBindingTitleActivity<ActivityTestCopyDataBinding>() {
@@ -17,5 +18,30 @@ class TestCopyDataActivity : BaseBindingTitleActivity<ActivityTestCopyDataBindin
 	}
 
 	override fun initData(savedInstanceState: Bundle?) {
+		val list = mutableListOf("1", Test(3, 4))
+		LogUtil.e("list:${list}")
+
+		val toMutableList = list.toMutableList()
+		val get = toMutableList[1] as Test
+		get.a = 33333
+		LogUtil.e("list -1:${list}")
+		LogUtil.e("list -1 list:${toMutableList}")
+
+		val toList = list.toList()
+		val test = toList[1] as Test
+		val clone = test.clone()
+		clone.a = 22
+		LogUtil.e("list - 2:${list}")
+		LogUtil.e("list - 2:toList:${toList}")
+	}
+
+	data class Test(var a: Int, var b: Int) : Cloneable {
+		public override fun clone(): Test {
+			return super.clone() as Test
+		}
+
+		override fun toString(): String {
+			return "Test(a=$a, b=$b)"
+		}
 	}
 }
