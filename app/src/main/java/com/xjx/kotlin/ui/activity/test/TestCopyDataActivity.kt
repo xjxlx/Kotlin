@@ -28,9 +28,7 @@ class TestCopyDataActivity : BaseBindingTitleActivity<ActivityTestCopyDataBindin
 		LogUtil.e("list -1 list:${toMutableList}")
 
 		val toList = list.toList()
-		val test = toList[1] as Test
-		val clone = test.clone()
-		clone.a = 22
+		(toList[1] as Test).clone().a = 666
 		LogUtil.e("list - 2:${list}")
 		LogUtil.e("list - 2:toList:${toList}")
 	}
