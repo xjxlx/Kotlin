@@ -18,19 +18,15 @@ class TestCopyDataActivity : BaseBindingTitleActivity<ActivityTestCopyDataBindin
 	}
 
 	override fun initData(savedInstanceState: Bundle?) {
-		val list = mutableListOf("1", Test(3, 4))
-		LogUtil.e("list:${list}")
+		val test = Test(3, 45)
+		LogUtil.e("list:${test}")
 
-		val toMutableList = list.toMutableList()
-		val get = toMutableList[1] as Test
-		get.a = 33333
-		LogUtil.e("list -1:${list}")
-		LogUtil.e("list -1 list:${toMutableList}")
-
-		val toList = list.toList()
-		(toList[1] as Test).clone().a = 666
-		LogUtil.e("list - 2:${list}")
-		LogUtil.e("list - 2:toList:${toList}")
+		val clone = test.clone()
+		clone.a = 666
+		val copy = test.copy()
+		copy.a = 777
+		LogUtil.e("list - clone:${clone}")
+		LogUtil.e("list - copy:${copy}")
 	}
 
 	data class Test(var a: Int, var b: Int) : Cloneable {
