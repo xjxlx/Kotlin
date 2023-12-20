@@ -8,21 +8,24 @@ import com.xjx.kotlin.databinding.ActivityAnimationMapBinding
 
 class AnimationMapActivity : BaseBindingTitleActivity<ActivityAnimationMapBinding>() {
 
-    override fun getTitleContent(): String {
-        return "动画集合"
-    }
+	override fun getTitleContent(): String {
+		return "动画集合"
+	}
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityAnimationMapBinding {
-        return ActivityAnimationMapBinding.inflate(inflater, container, true)
-    }
+	override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityAnimationMapBinding {
+		return ActivityAnimationMapBinding.inflate(inflater, container, true)
+	}
 
-    override fun initListener() {
-        super.initListener()
-        mBinding.tvJson.setOnClickListener {
-            startActivity(AnimationJsonActivity::class.java)
-        }
-    }
+	override fun initListener() {
+		super.initListener()
+		mBinding.tvJson.setOnClickListener {
+			startActivity(AnimationJsonActivity::class.java)
+		}
+		mBinding.tvTestAnimator.setOnClickListener {
+			startActivity(TestAnimatorActivity::class.java)
+		}
+	}
 
-    override fun initData(savedInstanceState: Bundle?) {
-    }
+	override fun initData(savedInstanceState: Bundle?) {
+	}
 }

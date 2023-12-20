@@ -6,10 +6,14 @@
     android:orientation="vertical"
     tools:context=".ui.activity.animations.AnimationMapActivity"
     tools:ignore="MissingDefaultResource">
-
+    
     <TextView
         android:id="@+id/tv_json"
         style="@style/click_item_style"
         android:text="json动画" />
-
+    
+    <TextView
+        android:id="@+id/tv_test_animator"
+        style="@style/click_item_style"
+        android:text="测试动画" />
 </LinearLayout>

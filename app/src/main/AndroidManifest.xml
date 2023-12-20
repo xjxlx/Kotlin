@@ -47,6 +47,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.activity.animations.TestAnimatorActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.test.TestCopyDataActivity"
             android:exported="false" />
         <activity
