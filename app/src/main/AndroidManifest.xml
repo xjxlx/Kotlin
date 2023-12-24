@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
     
     <uses-feature
         android:name="android.hardware.type.automotive"
-        android:required="true" />
+        android:required="true"
+        />
     
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
+        tools:ignore="ScopedStorage"
+        />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
+        tools:ignore="QueryAllPackagesPermission"
+        />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 获取WIFI信息状态的权限 -->
@@ -28,12 +33,14 @@
     </queries>
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="false"
+        />
     
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.CAPTURE_AUDIO_OUTPUT"
-        tools:ignore="ProtectedPermissions" />
+        tools:ignore="ProtectedPermissions"
+        />
     <uses-permission android:name="android.permission.CAMERA" />
     
     <application
@@ -45,33 +52,36 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Kotlin">
+        android:theme="@style/Theme.Kotlin"
+        >
         <activity
             android:name=".ui.activity.custom.CustomLineActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.animations.TestAnimatorActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.test.TestCopyDataActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.test.flow.TestMutableFlowActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.feature.TestHttp2Activity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.kotlin.KotlinMapActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.custom.CustomBitmapActivity"
-            android:exported="true">
+            android:exported="true"
+            >
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
@@ -80,40 +90,52 @@
         <activity
             android:name=".ui.activity.feature.GsyPlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.animations.AnimationJsonActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.animations.AnimationMapActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.feature.TestHttp1Activity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.feature.RandomAccessFileActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.custom.CustomTabLayoutActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".network.NetWorkRefreshActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.custom.ScoreSummarizeActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.custom.CustomWrapTextViewActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.custom.CustomProgressActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.test.coroutine.CoroutineMapActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.custom.ChartViewActivity"
-            android:exported="true">
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -121,66 +143,86 @@
         </activity>
         <activity
             android:name=".ui.activity.feature.SocketResultActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.feature.SocketSendActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.feature.CurrentIpActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.feature.ZmqSendActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.feature.ZmqReceiverActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.test.flow.FlowControlActivity"
             android:exported="false"
-            tools:ignore="WrongManifestParent" />
+            tools:ignore="WrongManifestParent"
+            />
         <activity
             android:name=".ui.activity.test.flow.FlowMapActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.feature.RecordActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.feature.FeatureMapActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.audio.RecordingActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.thread.ConcurrenceThread2Activity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.thread.TestConcurrenceThreadActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.thread.ThreadMapActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.custom.RecycleViewActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.custom.CustomViewMapActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.custom.DescriptionViewActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.activity.test.flow.FlowCallActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.test.xc.Xc5Activity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".ui.activity.test.flow.FlowActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity android:name=".ui.activity.test.block.BlockActivity" />
         <activity
             android:name=".network.NetWorkActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity android:name=".ui.activity.test.xc.XC4Activity" />
         <activity android:name=".ui.activity.test.xc.XC3Activity" />
         <activity android:name=".ui.activity.test.xc.XC2Activity" />
@@ -190,12 +232,14 @@
         <activity
             android:name=".ui.activity.test.AidlActivity"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            />
         
         <receiver
             android:name=".ui.activity.test.SocketReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="com.xjx.test" />
             </intent-filter>
@@ -210,7 +254,8 @@
         <activity android:name=".ui.activity.test.TestArrayActivity" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
