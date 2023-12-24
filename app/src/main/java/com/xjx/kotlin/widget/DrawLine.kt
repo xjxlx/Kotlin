@@ -32,14 +32,13 @@ class DrawLine(context: Context, attrs: AttributeSet) : View(context, attrs) {
 		super.onDraw(canvas)
 
 		// 绘制直线
-//		drawRoundRect
-		path.moveTo(100f, 100f)
-//		path.lineTo(100f, 300f)
-		val rect = RectF(100f, 100f, 150f, 300f)
-		val radii = floatArrayOf(25f, 25f, 25f, 25f, 0f, 0f, 0f, 0f)
-		path.addRoundRect(rect, radii, Path.Direction.CW)
-		path.moveTo(100f, 330f)
-		path.lineTo(100f, 500f)
+		val rect1 = RectF(100f, 100f, 150f, 300f)
+		val radii1 = floatArrayOf(25f, 25f, 25f, 25f, 0f, 0f, 0f, 0f)
+		path.addRoundRect(rect1, radii1, Path.Direction.CW)
+
+		val rect2 = RectF(100f, 350f, 150f, 500f)
+		val radii2 = floatArrayOf(0f, 0f, 0f, 0f, 25f, 25f, 25f, 25f)
+		path.addRoundRect(rect2, radii2, Path.Direction.CW)
 
 //		canvas.drawLine(100f, 100f, 200f, 100f, paint1)
 //		canvas.drawLine(200f, 100f, 520f, 100f, paint2)
