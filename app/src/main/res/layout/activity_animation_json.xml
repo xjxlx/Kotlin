@@ -7,24 +7,24 @@
     android:background="@color/black"
     android:orientation="vertical"
     tools:context=".ui.activity.animations.AnimationJsonActivity">
-
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
+            
             <Button
                 android:id="@+id/bt1_start"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="开始" />
-
+            
             <Button
                 android:id="@+id/bt1_cancel"
                 android:layout_width="0dp"
@@ -33,19 +33,19 @@
                 android:layout_weight="1"
                 android:text="取消所有" />
         </LinearLayout>
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
+            
             <Button
                 android:id="@+id/bt1_pause"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="暂停" />
-
+            
             <Button
                 android:id="@+id/bt1_resume"
                 android:layout_width="0dp"
@@ -54,14 +54,14 @@
                 android:layout_weight="1"
                 android:text="重新开始" />
         </LinearLayout>
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
             android:gravity="center"
             android:orientation="horizontal">
-
+            
             <Button
                 android:id="@+id/bt1_animation_all"
                 android:layout_width="0dp"
@@ -69,7 +69,7 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_weight="1"
                 android:text="全部" />
-
+            
             <Button
                 android:id="@+id/bt1_animation_fx"
                 android:layout_width="0dp"
@@ -77,7 +77,7 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_weight="1"
                 android:text="风箱" />
-
+            
             <Button
                 android:id="@+id/bt1_animation_qlml"
                 android:layout_width="0dp"
@@ -85,7 +85,7 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_weight="1"
                 android:text="清理脉络" />
-
+            
             <Button
                 android:id="@+id/bt1_animation_sg"
                 android:layout_width="0dp"
@@ -94,11 +94,11 @@
                 android:layout_weight="1"
                 android:text="圣光" />
         </LinearLayout>
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
+            
             <Button
                 android:id="@+id/bt1_animation_djs"
                 android:layout_width="0dp"
@@ -106,7 +106,7 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_weight="1"
                 android:text="倒计时" />
-
+            
             <Button
                 android:id="@+id/bt1_animation_single"
                 android:layout_width="0dp"
@@ -114,11 +114,8 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_weight="1"
                 android:text="单个动画" />
-
         </LinearLayout>
-
     </LinearLayout>
-
     <!--    吸气-->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lav_1"
@@ -127,9 +124,7 @@
         android:layout_centerInParent="true"
         app:lottie_cacheComposition="true"
         app:lottie_rawRes="@raw/breath_in_11_24" />
-
     <!--        lottie_cacheStrategy-->
-
     <!--    吸气屏气-->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lav_2"
@@ -139,7 +134,6 @@
         android:visibility="invisible"
         app:lottie_cacheComposition="true"
         app:lottie_rawRes="@raw/breath_in_h_11_24" />
-
     <!--    呼气-->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lav_3"
@@ -149,7 +143,6 @@
         android:visibility="invisible"
         app:lottie_cacheComposition="true"
         app:lottie_rawRes="@raw/breath_out_11_24" />
-
     <!--    呼气屏气-->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lav_4"
@@ -158,36 +151,34 @@
         android:layout_centerInParent="true"
         app:lottie_cacheComposition="true"
         app:lottie_rawRes="@raw/breath_out_h_11_24" />
-
+    
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lav_5"
         android:layout_width="@dimen/dp_360"
         android:layout_height="@dimen/dp_360"
         android:layout_centerInParent="true"
         android:visibility="invisible"
-        app:lottie_rawRes="@raw/djs_11_24" />
-
+        app:lottie_rawRes="@raw/theme_background_wjy" />
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
+        
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lav_6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
             app:lottie_autoPlay="false"
-            app:lottie_loop="false"
-            app:lottie_rawRes="@raw/cj" />
-
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/theme_background_dc" />
+        
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lav_61"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:lottie_loop="false"
+            app:lottie_loop="true"
             app:lottie_rawRes="@raw/sing_tree" />
-
     </LinearLayout>
-
 </RelativeLayout>
