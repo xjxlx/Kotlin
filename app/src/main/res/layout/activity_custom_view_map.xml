@@ -4,54 +4,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activity.custom.CustomViewMapActivity">
-
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
+        
         <TextView
             android:id="@+id/tv_item_description"
             style="@style/click_item_style"
             android:text="文字描述" />
-
+        
         <TextView
             android:id="@+id/tv_item_recycleview"
             style="@style/click_item_style"
             android:text="测试RecycleView"
             android:textColor="#546E7A" />
-
+        
         <TextView
             android:id="@+id/tv_item_chart"
             style="@style/click_item_style"
             android:text="自定义图表View"
             android:textColor="#546E7A" />
-
+        
         <TextView
             android:id="@+id/tv_item_score_progress"
             style="@style/click_item_style"
             android:text="自定义总和评分进度条" />
-
+        
         <TextView
             android:id="@+id/tv_item_text_wrap"
             style="@style/click_item_style"
             android:text="文字换行" />
-
+        
         <TextView
             android:id="@+id/tv_item_score_result"
             style="@style/click_item_style"
             android:text="分数总结" />
-
+        
         <TextView
             android:id="@+id/tv_item_tablayout"
             style="@style/click_item_style"
             android:text="Tablayout" />
-
+        
         <TextView
             android:id="@+id/tv_item_test_bitmap"
             style="@style/click_item_style"
             android:text="测试绘制Bitmap" />
-
+        
+        <TextView
+            android:id="@+id/tv_item_test_line"
+            style="@style/click_item_style"
+            android:text="测试绘制Line" />
     </LinearLayout>
-
 </androidx.core.widget.NestedScrollView>
