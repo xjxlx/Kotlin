@@ -71,13 +71,30 @@ class DrawLine(context: Context, attrs: AttributeSet) : View(context, attrs) {
 //		path.lineTo(300f, 120f)
 //		path.lineTo(320f, 120f)
 
-		val saveLayer = canvas.saveLayer(rectF, paint1)
-		path1.addRoundRect(rectF, radii, Path.Direction.CW)
-		flag = true
-		canvas.drawPath(path1, paint1)
-		canvas.restoreToCount(saveLayer)
+//		val saveLayer = canvas.saveLayer(rectF, paint1)
+//		path1.addRoundRect(rectF, radii, Path.Direction.CW)
+//		flag = true
+//		canvas.drawPath(path1, paint1)
+//		canvas.restoreToCount(saveLayer)
+
+		val startX = 100f
+		val startY = 100f
+		val endX = 400f
+		val endY = 100f
+		val cornerRadius = 20f
+
+		// 绘制直角部分
+		canvas.drawLine(startX, startY, endX - cornerRadius, endY, paint)
+
+		// 绘制圆角部分
+		path.reset()
+		path.moveTo(endX - cornerRadius, endY)
+		path.arcTo(RectF(endX - 2 * cornerRadius, endY - cornerRadius, endX, endY + cornerRadius), 270f, 180f, false)
+		canvas.drawPath(path, paint)
 	}
 
+	private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+	private val path = Path()
 	fun ch1z() {
 		invalidate()
 	}

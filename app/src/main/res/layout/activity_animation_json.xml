@@ -172,7 +172,7 @@
             android:visibility="gone"
             app:lottie_autoPlay="false"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/theme_background_dc" />
+            app:lottie_rawRes="@raw/theme_background_sm" />
         
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lav_61"
