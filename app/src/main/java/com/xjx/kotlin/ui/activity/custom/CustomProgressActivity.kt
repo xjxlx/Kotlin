@@ -11,29 +11,29 @@ import kotlinx.coroutines.launch
 
 class CustomProgressActivity : BaseBindingTitleActivity<ActivityCustomProgressBinding>() {
 
-    override fun getTitleContent(): String {
-        return "综合评分"
-    }
+	override fun getTitleContent(): String {
+		return "综合评分"
+	}
 
-    override fun getBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean,
-    ): ActivityCustomProgressBinding {
-        return ActivityCustomProgressBinding.inflate(inflater, container, true)
-    }
+	override fun getBinding(
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		attachToRoot: Boolean,
+	): ActivityCustomProgressBinding {
+		return ActivityCustomProgressBinding.inflate(inflater, container, true)
+	}
 
-    override fun initData(savedInstanceState: Bundle?) {
+	override fun initData(savedInstanceState: Bundle?) {
 
-        mBinding.btnStart.setOnClickListener {
-            mBinding.spvScore.reset()
+		mBinding.btnStart.setOnClickListener {
+			mBinding.spvScore.reset()
 
-            var value = mBinding.etNumber.text.toString()
-            if (TextUtils.isEmpty(value)) {
-                value = "0"
-            }
-            val toFloat = value.toInt()
-            lifecycleScope.launch { mBinding.spvScore.setScore(toFloat, 23) }
-        }
-    }
+			var value = mBinding.etNumber.text.toString()
+			if (TextUtils.isEmpty(value)) {
+				value = "0"
+			}
+			val toFloat = value.toInt()
+			lifecycleScope.launch { mBinding.spvScore.setScore(this@CustomProgressActivity, toFloat, 23) }
+		}
+	}
 }
