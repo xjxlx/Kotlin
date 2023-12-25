@@ -19,7 +19,7 @@ class ScoreSummarizeActivity : BaseBindingTitleActivity<ActivityScoreSummarizeBi
 	}
 
 	override fun initData(savedInstanceState: Bundle?) {
-		mBinding.spvScore.init(this, 50)
+		mBinding.spvScore.init(this, 40)
 		mBinding.cvChart.init(this)
 
 		mBinding.btnStart.setOnClickListener {
