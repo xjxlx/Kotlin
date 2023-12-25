@@ -19,6 +19,9 @@ class ScoreSummarizeActivity : BaseBindingTitleActivity<ActivityScoreSummarizeBi
 	}
 
 	override fun initData(savedInstanceState: Bundle?) {
+		mBinding.spvScore.init(this, 93)
+		mBinding.cvChart.init(this)
+
 		mBinding.btnStart.setOnClickListener {
 			mBinding.spvScore.reset()
 			mBinding.twvWrap.reset()
@@ -30,7 +33,7 @@ class ScoreSummarizeActivity : BaseBindingTitleActivity<ActivityScoreSummarizeBi
 
 			mBinding.cvChart.setAnimationListener(object : AnimationListener {
 				override fun onEndAnimation() {
-					mBinding.spvScore.setScore(this@ScoreSummarizeActivity, 93, 41)
+					mBinding.spvScore.setScore(93, 41)
 					mBinding.spvScore.setAnimationListener(object : AnimationListener {
 						override fun onEndAnimation() {
 							mBinding.twvWrap.setExplain(70, "加油", "下次努力哦！",

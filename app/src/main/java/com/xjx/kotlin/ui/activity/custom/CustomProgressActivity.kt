@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import com.android.common.base.BaseBindingTitleActivity
 import com.xjx.kotlin.databinding.ActivityCustomProgressBinding
-import kotlinx.coroutines.launch
 
 class CustomProgressActivity : BaseBindingTitleActivity<ActivityCustomProgressBinding>() {
 
@@ -24,16 +22,15 @@ class CustomProgressActivity : BaseBindingTitleActivity<ActivityCustomProgressBi
 	}
 
 	override fun initData(savedInstanceState: Bundle?) {
-
+		mBinding.spvScore.init(this, 90)
 		mBinding.btnStart.setOnClickListener {
 			mBinding.spvScore.reset()
-
 			var value = mBinding.etNumber.text.toString()
 			if (TextUtils.isEmpty(value)) {
 				value = "0"
 			}
 			val toFloat = value.toInt()
-			lifecycleScope.launch { mBinding.spvScore.setScore(this@CustomProgressActivity, toFloat, 23) }
+			mBinding.spvScore.setScore(toFloat, 23)
 		}
 	}
 }

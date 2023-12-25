@@ -19,6 +19,7 @@ class ChartViewActivity : BaseBindingTitleActivity<ActivityChartViewBinding>() {
 
 	override fun initData(savedInstanceState: Bundle?) {
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+		mBinding.cvChart.init(this)
 
 		mBinding.btnChart.setOnClickListener {
 			val bottomArray = floatArrayOf(0.6f, 0.3f, 0.2f, 0.1f, 0.4f)
