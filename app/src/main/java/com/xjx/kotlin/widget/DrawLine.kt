@@ -1,5 +1,6 @@
 package com.xjx.kotlin.widget
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -22,7 +23,9 @@ class DrawLine(context: Context, attrs: AttributeSet) : View(context, attrs) {
 	}
 	private val path1 = Path()
 	private val path2 = Path()
-	private var chzx = false
+
+	private val rectF = RectF(100F, 100F, 150F, 300F)
+	private val radii = floatArrayOf(0F, 0F, 0F, 0F, 25F, 25F, 25F, 25F)
 
 	override fun onDraw(canvas: Canvas) {
 		super.onDraw(canvas)
@@ -43,20 +46,20 @@ class DrawLine(context: Context, attrs: AttributeSet) : View(context, attrs) {
 //		canvas.drawRect(RectF(0f, 0f, 100f, 100f), paint1)
 
 		// 绘制直线
-		if (chzx) {
-			val save = canvas.save()
-			val rect1 = RectF(100F, 100F, 150F, 300F)
-			val radii1 = floatArrayOf(25f, 25f, 25f, 25f, 0f, 0f, 0f, 0f)
-			path1.addRoundRect(rect1, radii1, Path.Direction.CW)
-			canvas.drawPath(path1, paint1)
-			paint1.color = Color.GREEN
-			canvas.restoreToCount(save)
-		}
-
-		val rect2 = RectF(100F, 350F, 150F, 500F)
-		val radii2 = floatArrayOf(0F, 0F, 0F, 0F, 25F, 25F, 25F, 25F)
-		path2.addRoundRect(rect2, radii2, Path.Direction.CW)
-		canvas.drawPath(path2, paint1)
+//		if (chzx) {
+//			val save = canvas.save()
+//			val rect1 = RectF(100F, 100F, 150F, 300F)
+//			val radii1 = floatArrayOf(25f, 25f, 25f, 25f, 0f, 0f, 0f, 0f)
+//			path1.addRoundRect(rect1, radii1, Path.Direction.CW)
+//			canvas.drawPath(path1, paint1)
+//			paint1.color = Color.GREEN
+//			canvas.restoreToCount(save)
+//		}
+//
+//		val rect2 = RectF(100F, 350F, 150F, 500F)
+//		val radii2 = floatArrayOf(0F, 0F, 0F, 0F, 25F, 25F, 25F, 25F)
+//		path2.addRoundRect(rect2, radii2, Path.Direction.CW)
+//		canvas.drawPath(path2, paint1)
 
 //		canvas.drawLine(100f, 100f, 200f, 100f, paint1)
 
@@ -67,15 +70,33 @@ class DrawLine(context: Context, attrs: AttributeSet) : View(context, attrs) {
 //		path.moveTo(300f, 100f)
 //		path.lineTo(300f, 120f)
 //		path.lineTo(320f, 120f)
+
+		val saveLayer = canvas.saveLayer(rectF, paint1)
+		path1.addRoundRect(rectF, radii, Path.Direction.CW)
+		flag = true
+		canvas.drawPath(path1, paint1)
+		canvas.restoreToCount(saveLayer)
 	}
 
 	fun ch1z() {
-		chzx = true
 		invalidate()
 	}
 
 	fun ch1f() {
-		chzx = false
 		invalidate()
+	}
+
+	private var flag = false
+	fun animator() {
+		flag = false
+		ValueAnimator.ofFloat(0F, 1F).also {
+			it.duration = 3000L
+			it.addUpdateListener { value ->
+				val animatorValue = value.animatedValue as Float
+				rectF.bottom += animatorValue
+				invalidate()
+			}
+			it.start()
+		}
 	}
 }
