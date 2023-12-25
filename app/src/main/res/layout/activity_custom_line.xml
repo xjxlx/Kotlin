@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.custom.CustomLineActivity">
     
     <com.xjx.kotlin.widget.DrawLine
+        android:id="@+id/dl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@color/teal_200" />
+    
+    <Button
+        android:id="@+id/btn_fl1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="正向" />
+    
+    <Button
+        android:id="@+id/btn_fl2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_20"
+        android:layout_toRightOf="@+id/btn_fl1"
+        android:text="反向" />
 </RelativeLayout>

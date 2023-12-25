@@ -17,5 +17,11 @@ class CustomLineActivity : BaseBindingTitleActivity<ActivityCustomLineBinding>()
 	}
 
 	override fun initData(savedInstanceState: Bundle?) {
+		mBinding.btnFl1.setOnClickListener {
+			mBinding.dl.ch1z()
+		}
+		mBinding.btnFl2.setOnClickListener {
+			mBinding.dl.ch1f()
+		}
 	}
 }
