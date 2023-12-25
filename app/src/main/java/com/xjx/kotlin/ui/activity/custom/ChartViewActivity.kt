@@ -22,7 +22,7 @@ class ChartViewActivity : BaseBindingTitleActivity<ActivityChartViewBinding>() {
 
 		mBinding.btnChart.setOnClickListener {
 			val bottomArray = floatArrayOf(0.6f, 0.3f, 0.2f, 0.1f, 0.4f)
-			val topArray = floatArrayOf(1f, 0.3f, 0.5f, 0.7f, 0.6f)
+			val topArray = floatArrayOf(1f, 0.4f, 0.5f, 0.7f, 0.6f)
 			val scoreArray = intArrayOf(20, 30, 50, 20, 83)
 			mBinding.cvChart.setChartArray(bottomArray, topArray, scoreArray)
 		}
