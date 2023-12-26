@@ -21,6 +21,7 @@ class ScoreSummarizeActivity : BaseBindingTitleActivity<ActivityScoreSummarizeBi
 	override fun initData(savedInstanceState: Bundle?) {
 		mBinding.spvScore.init(this, 40)
 		mBinding.cvChart.init(this)
+		mBinding.twvWrap.init(this)
 
 		mBinding.btnStart.setOnClickListener {
 			mBinding.spvScore.reset()
@@ -36,7 +37,7 @@ class ScoreSummarizeActivity : BaseBindingTitleActivity<ActivityScoreSummarizeBi
 					mBinding.spvScore.setScore(93, 41)
 					mBinding.spvScore.setAnimationListener(object : AnimationListener {
 						override fun onEndAnimation() {
-							mBinding.twvWrap.setExplain(70, "加油", "下次努力哦！",
+							mBinding.twvWrap.setExplain("加油",
 								"情绪稳定，心率不错，注意呼吸节奏，呼气更缓慢持久、吸气更平稳绵长、呼吸转换时适当憋气效果更好哦！吸转换时适当憋气效果更好哦！")
 						}
 					})
