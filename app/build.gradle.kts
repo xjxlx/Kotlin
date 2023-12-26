@@ -109,6 +109,6 @@ dependencies {
 	implementation(libs.jeromq)
 	implementation(libs.crashreport)
 	implementation(libs.player)
-
+	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 	implementation("com.airbnb.android:lottie:6.2.0")
 }

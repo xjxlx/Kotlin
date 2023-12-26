@@ -3,6 +3,9 @@ package com.xjx.kotlin.ui.activity.test.flow
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
@@ -14,36 +17,57 @@ import kotlinx.coroutines.launch
 class TestMutableFlowActivity : BaseBindingTitleActivity<ActivityTestMutableFlowBinding>() {
 
 	private var count = 1
-	val mSharedFlow2: MutableSharedFlow<Int> = MutableStateFlow(0)
+	private val mSharedFlow2: MutableSharedFlow<Int> = MutableStateFlow(0)
+
+	private val TAG = "FLOW"
+	private val mLiveData: MutableLiveData<Int> = MutableLiveData<Int>()
+	private var mCount = 0
 
 	override fun getTitleContent(): String {
 		return "测试mutableFlow"
 	}
 
-	override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityTestMutableFlowBinding {
+	override fun getBinding(inflater: LayoutInflater, container: ViewGroup?,
+		attachToRoot: Boolean): ActivityTestMutableFlowBinding {
 		return ActivityTestMutableFlowBinding.inflate(inflater, container, true)
 	}
 
 	override fun initData(savedInstanceState: Bundle?) {
 		val dataManager = DataManager()
 
-		lifecycleScope.launch {
-			dataManager.mSharedFlow.collect {
-				LogUtil.e("flow", "shared - collect:${it}")
+		mLiveData.observe(this, object : Observer<Int> {
+			override fun onChanged(value: Int) {
+				LogUtil.e(TAG, "value1：$value")
 			}
-
-			mSharedFlow2.collect() {
-				LogUtil.e("flow", "shared - 2 - collect:${it}")
+		})
+		mLiveData.observe(this, object : Observer<Int> {
+			override fun onChanged(value: Int) {
+				LogUtil.e(TAG, "value2：$value")
+			}
+		})
+		mLiveData.observe(this, object : Observer<Int> {
+			override fun onChanged(value: Int) {
+				LogUtil.e(TAG, "value3：$value")
+			}
+		})
+		lifecycleScope.launch {
+			mLiveData.asFlow().collect() {
+				LogUtil.e(TAG, "value-flow-1：$it")
+			}
+		}
+		lifecycleScope.launch {
+			mLiveData.asFlow().collect() {
+				LogUtil.e(TAG, "value-flow-2：$it")
+			}
+		}
+		lifecycleScope.launch {
+			mLiveData.asFlow().collect() {
+				LogUtil.e(TAG, "value-flow-3：$it")
 			}
 		}
 
-		mBinding.btnSend.setOnClickListener {
-			count++
-			LogUtil.e("flow", "shared - send:${count}")
-			// dataManager.sendData(count)
-//			dataManager.mSharedFlow.tryEmit(count)
-
-			mSharedFlow2.tryEmit(count)
+		mBinding.btnSendLiveData.setOnClickListener {
+			mLiveData.value = mCount++
 		}
 	}
 
