@@ -22,6 +22,8 @@ class TestMutableFlowActivity : BaseBindingTitleActivity<ActivityTestMutableFlow
 	private val TAG = "FLOW"
 	private val mLiveData: MutableLiveData<Int> = MutableLiveData<Int>()
 	private var mCount = 0
+	private val mStateFlow: MutableStateFlow<Data> = MutableStateFlow(Data())
+	private var mEntity: Data = Data()
 
 	override fun getTitleContent(): String {
 		return "测试mutableFlow"
@@ -65,9 +67,19 @@ class TestMutableFlowActivity : BaseBindingTitleActivity<ActivityTestMutableFlow
 				LogUtil.e(TAG, "value-flow-3：$it")
 			}
 		}
+		lifecycleScope.launch {
+			mStateFlow.collect {
+				LogUtil.e("state-flow-:$it")
+			}
+		}
 
 		mBinding.btnSendLiveData.setOnClickListener {
 			mLiveData.value = mCount++
+		}
+
+		mBinding.btnSendStateData.setOnClickListener {
+			mEntity.finishFlag += 1
+			mStateFlow.value = mEntity.clone()
 		}
 	}
 
@@ -77,6 +89,25 @@ class TestMutableFlowActivity : BaseBindingTitleActivity<ActivityTestMutableFlow
 		// 发送数据
 		fun sendData(data: Int) {
 			mSharedFlow.tryEmit(data)
+		}
+	}
+
+	class Data : Cloneable {
+		var finishFlag = 1
+		var dataType: DataType = DataType()
+		override fun toString(): String {
+			return "Data(finishFlag=$finishFlag, dataType=$dataType)"
+		}
+
+		public override fun clone(): Data {
+			return super.clone() as Data
+		}
+	}
+
+	class DataType {
+		var type: Int = 0
+		override fun toString(): String {
+			return "DataType(type=$type)"
 		}
 	}
 }
