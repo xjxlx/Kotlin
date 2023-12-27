@@ -18,7 +18,6 @@ class TestMutableFlowActivity : BaseBindingTitleActivity<ActivityTestMutableFlow
 
 	private var count = 1
 	private val mSharedFlow2: MutableSharedFlow<Int> = MutableStateFlow(0)
-
 	private val TAG = "FLOW"
 	private val mLiveData: MutableLiveData<Int> = MutableLiveData<Int>()
 	private var mCount = 0
@@ -79,13 +78,13 @@ class TestMutableFlowActivity : BaseBindingTitleActivity<ActivityTestMutableFlow
 
 		mBinding.btnSendStateData.setOnClickListener {
 			mEntity.finishFlag += 1
-			mStateFlow.value = mEntity.clone()
+			mStateFlow.value = mEntity
 		}
 	}
 
 	class DataManager {
-		val mSharedFlow: MutableSharedFlow<Int> = MutableStateFlow(0)
 
+		val mSharedFlow: MutableSharedFlow<Int> = MutableStateFlow(0)
 		// 发送数据
 		fun sendData(data: Int) {
 			mSharedFlow.tryEmit(data)
@@ -93,6 +92,7 @@ class TestMutableFlowActivity : BaseBindingTitleActivity<ActivityTestMutableFlow
 	}
 
 	class Data : Cloneable {
+
 		var finishFlag = 1
 		var dataType: DataType = DataType()
 		override fun toString(): String {
@@ -105,6 +105,7 @@ class TestMutableFlowActivity : BaseBindingTitleActivity<ActivityTestMutableFlow
 	}
 
 	class DataType {
+
 		var type: Int = 0
 		override fun toString(): String {
 			return "DataType(type=$type)"
