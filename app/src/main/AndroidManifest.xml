@@ -21,11 +21,14 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取网络状态改变的权限 -->
     <!-- 如果需要获取ssid，需要定位信息 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
     <queries>
+        
         <!-- 如果想要与其他的应用进行AIDL通信的话，需要在这里注册包名的信息 -->
         <package android:name="com.android.app.free.debug" />
         <package android:name="com.android.poc" />
     </queries>
+    
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -46,6 +49,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
+        <activity
+            android:name=".ui.activity.custom.CustomBannerActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activity.custom.CustomLineActivity"
             android:exported="true" />
@@ -198,8 +204,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

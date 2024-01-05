@@ -56,5 +56,10 @@
             android:id="@+id/tv_item_test_line"
             style="@style/click_item_style"
             android:text="测试绘制Line" />
+        
+        <TextView
+            android:id="@+id/tv_item_banner"
+            style="@style/click_item_style"
+            android:text="Banner" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
