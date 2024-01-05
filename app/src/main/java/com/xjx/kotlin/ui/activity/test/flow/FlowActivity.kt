@@ -29,7 +29,6 @@ class FlowActivity : BaseBindingTitleActivity<ActivityFlowBinding>() {
     //    private val mSharedFlow2 = MutableStateFlow("1")
     private val mFlowViewModel: FlowViewModel by viewModels()
     private var mNumber = 0
-
     override fun getTitleContent(): String {
         return "Flow 的使用"
     }
