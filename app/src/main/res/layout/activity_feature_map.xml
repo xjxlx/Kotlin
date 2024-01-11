@@ -1,96 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activity.feature.FeatureMapActivity">
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        
+
         <TextView
             android:id="@+id/tv_item_recording_video"
             style="@style/click_item_style"
             android:text="录制视频"
             android:visibility="gone" />
-        
+
         <TextView
             android:id="@+id/tv_item_zmq_send"
             style="@style/click_item_style"
             android:text="Zmq发送端" />
-        
+
         <TextView
             android:id="@+id/tv_item_zmq_receive"
             style="@style/click_item_style"
             android:text="Zmq接收端" />
-        
+
         <TextView
             android:id="@+id/tv_item_zmq_test"
             style="@style/click_item_style"
             android:text="Zmq - Test"
             android:visibility="gone" />
-        
+
         <TextView
             android:id="@+id/tv_item_current_ip"
             style="@style/click_item_style"
             android:text="当前的ip地址" />
-        
+
         <TextView
             android:id="@+id/tv_socket_send"
             style="@style/click_item_style"
             android:text="Socket-发送端"
             android:visibility="visible" />
-        
+
         <TextView
             android:id="@+id/tv_socket_result"
             style="@style/click_item_style"
             android:text="Socket-接收端"
             android:visibility="visible" />
-        
+
         <TextView
             android:id="@+id/tv_raf"
             style="@style/click_item_style"
             android:text="随机读写流"
             android:visibility="visible" />
-        
+
         <TextView
             android:id="@+id/tv_test_http1"
             style="@style/click_item_style"
             android:text="测试Http-1"
             android:visibility="visible" />
-        
+
         <TextView
             android:id="@+id/tv_test_http2"
             style="@style/click_item_style"
             android:text="测试Http-2"
             android:visibility="visible" />
-        
+
         <TextView
             android:id="@+id/tv_test_gsy_play"
             style="@style/click_item_style"
             android:text="测试Gsyplay"
             android:visibility="visible" />
-        
+
         <TextView
             android:id="@+id/tv_item_test_viewpager2"
             style="@style/click_item_style"
             android:text="测试ViewPager2" />
-        
+
         <TextView
             android:id="@+id/tv_item_thread"
             style="@style/click_item_style"
             android:text="thread" />
-        
+
         <TextView
             android:id="@+id/tv_item_aidl"
             style="@style/click_item_style"
             android:text="Aild调用" />
-        
+
         <TextView
             android:id="@+id/tv_item_copy"
             style="@style/click_item_style"
             android:text="测试拷贝" />
+
+        <TextView
+            android:id="@+id/tv_item_dimens"
+            style="@style/click_item_style"
+            android:text="SW适配" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
