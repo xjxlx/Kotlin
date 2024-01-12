@@ -25,6 +25,10 @@ class DimensActivity : BaseBindingTitleActivity<ActivityDimensBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
         mBinding.btnDimens.setOnClickListener {
+            val screenWidth1 = ScreenUtil.getScreenWidth(this)
+            val px2sp = ConvertUtil.px2sp(screenWidth1)
+            val px2dp = ConvertUtil.px2dp(screenWidth1)
+
             val screenWidth = ScreenUtil.getScreenWidth(this@DimensActivity)
             val wdp = ConvertUtil.px2dp(screenWidth)
             val screenHeight = ScreenUtil.getScreenHeight(this@DimensActivity)
@@ -32,7 +36,8 @@ class DimensActivity : BaseBindingTitleActivity<ActivityDimensBinding>() {
 
             val smallScreenWidthDp = DimensUtil.getSmallScreenWidthDp(this@DimensActivity)
             val screenMinWidth = DimensUtil.getScreenMinWidth(this@DimensActivity)
-            val content = "wdp:[$wdp]  hdp:[$hdp]\r\n\r\nsmallScreenWidthDp:$smallScreenWidthDp \r\n\n$screenMinWidth"
+            val content = "wdp:[$wdp]  hdp:[$hdp]\r\n\r\nsmallScreenWidthDp:$smallScreenWidthDp \r\n\n$screenMinWidth" +
+                    "\r\n\r\nscreenWidth:$screenWidth1 px2sp:$px2sp px2dp:$px2dp"
             mBinding.tvDimens.text = content
         }
     }
