@@ -44,6 +44,7 @@ class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>()
         mBinding.tvItemCopy.setOnClickListener { startActivity(TestCopyDataActivity::class.java) }
         mBinding.tvItemDimens.setOnClickListener { startActivity(DimensActivity::class.java) }
         mBinding.tvItemTestAdbs.setOnClickListener { startActivity(AdbActivity::class.java) }
+        mBinding.tvItemTestConvert.setOnClickListener { startActivity(ConvertDpActivity::class.java) }
     }
 
     override fun onClick(v: View?) {

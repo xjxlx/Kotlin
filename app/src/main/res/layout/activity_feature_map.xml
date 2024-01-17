@@ -103,5 +103,10 @@
             android:id="@+id/tv_item_test_adbs"
             style="@style/click_item_style"
             android:text="测试adb" />
+
+        <TextView
+            android:id="@+id/tv_item_test_convert"
+            style="@style/click_item_style"
+            android:text="测试dp转换" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
