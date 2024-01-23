@@ -52,24 +52,13 @@
         android:theme="@style/Theme.Kotlin">
         <activity
             android:name=".ui.activity.feature.ConvertDpActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ui.activity.feature.AdbActivity"
             android:exported="true" />
         <activity
             android:name=".ui.activity.feature.DimensActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
         <activity android:name=".ui.activity.custom.CustomBannerActivity" />
         <activity
             android:name=".ui.activity.custom.CustomLineActivity"
