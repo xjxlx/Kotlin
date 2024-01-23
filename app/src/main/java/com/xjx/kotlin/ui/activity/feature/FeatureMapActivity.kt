@@ -45,6 +45,7 @@ class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>()
         mBinding.tvItemDimens.setOnClickListener { startActivity(DimensActivity::class.java) }
         mBinding.tvItemTestAdbs.setOnClickListener { startActivity(AdbActivity::class.java) }
         mBinding.tvItemTestConvert.setOnClickListener { startActivity(ConvertDpActivity::class.java) }
+        mBinding.tvItemTestColor.setOnClickListener { startActivity(ColorConvertActivity::class.java) }
     }
 
     override fun onClick(v: View?) {

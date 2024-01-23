@@ -108,5 +108,10 @@
             android:id="@+id/tv_item_test_convert"
             style="@style/click_item_style"
             android:text="测试dp转换" />
+
+        <TextView
+            android:id="@+id/tv_item_test_color"
+            style="@style/click_item_style"
+            android:text="测试颜色过渡" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
