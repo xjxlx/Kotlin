@@ -26,18 +26,16 @@ class DimensActivity : BaseBindingTitleActivity<ActivityDimensBinding>() {
     override fun initData(savedInstanceState: Bundle?) {
         mBinding.btnDimens.setOnClickListener {
             val screenWidth1 = ScreenUtil.getScreenWidth(this)
-            val px2sp = ConvertUtil.px2sp(screenWidth1.toFloat())
-            val px2dp = ConvertUtil.px2dp(screenWidth1.toFloat())
 
             val screenWidth = ScreenUtil.getScreenWidth(this@DimensActivity)
-            val wdp = ConvertUtil.px2dp(screenWidth.toFloat())
+            val wdp = ConvertUtil.px2dp(this, screenWidth.toFloat())
             val screenHeight = ScreenUtil.getScreenHeight(this@DimensActivity)
-            val hdp = ConvertUtil.px2dp(screenHeight.toFloat())
+            val hdp = ConvertUtil.px2dp(this, screenHeight.toFloat())
 
             val smallScreenWidthDp = DimensUtil.getSmallScreenWidthDp(this@DimensActivity)
             val screenMinWidth = DimensUtil.getScreenMinWidth(this@DimensActivity)
-            val content = "wdp:[$wdp]  hdp:[$hdp]\r\n\r\nsmallScreenWidthDp:$smallScreenWidthDp \r\n\n$screenMinWidth" +
-                    "\r\n\r\nscreenWidth:$screenWidth1 px2sp:$px2sp px2dp:$px2dp"
+            val content =
+                "wdp:[$wdp]  hdp:[$hdp]\r\n\r\nsmallScreenWidthDp:$smallScreenWidthDp \r\n\n$screenMinWidth" + "\r\n\r\nscreenWidth:$screenWidth1"
             mBinding.tvDimens.text = content
         }
     }
