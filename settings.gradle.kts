@@ -52,3 +52,4 @@ include(":http")
 include(":refresh")
 
 include(":model")
+include(":compose")
