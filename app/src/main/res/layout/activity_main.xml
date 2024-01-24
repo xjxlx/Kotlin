@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,6 +30,11 @@
             android:id="@+id/tv_item_animation_map"
             style="@style/click_item_style"
             android:text="动画 集合" />
+
+        <TextView
+            android:id="@+id/tv_item_compose"
+            style="@style/click_item_style"
+            android:text="Compose集合" />
 
     </LinearLayout>
 

@@ -51,6 +51,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.activity.compose.ComposeMapActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.feature.ColorConvertActivity"
             android:exported="true" />
         <activity

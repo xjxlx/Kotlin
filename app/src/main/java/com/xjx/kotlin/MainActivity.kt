@@ -10,6 +10,7 @@ import com.android.common.base.BaseBindingTitleActivity
 import com.android.helper.utils.permission.RxPermissionsUtil
 import com.xjx.kotlin.databinding.ActivityMainBinding
 import com.xjx.kotlin.ui.activity.animations.AnimationMapActivity
+import com.xjx.kotlin.ui.activity.compose.ComposeMapActivity
 import com.xjx.kotlin.ui.activity.custom.CustomViewMapActivity
 import com.xjx.kotlin.ui.activity.feature.FeatureMapActivity
 import com.xjx.kotlin.ui.activity.kotlin.KotlinMapActivity
@@ -22,7 +23,9 @@ class MainActivity : BaseBindingTitleActivity<ActivityMainBinding>() {
 
     override fun initListener() {
         super.initListener()
-        setonClickListener(R.id.tv_item_xc, R.id.tv_item_flow, R.id.tv_item_custom_view, R.id.tv_item_function, R.id.tv_item_animation_map)
+        setonClickListener(
+            R.id.tv_item_xc, R.id.tv_item_flow, R.id.tv_item_custom_view, R.id.tv_item_function, R.id.tv_item_animation_map
+        )
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -51,6 +54,10 @@ class MainActivity : BaseBindingTitleActivity<ActivityMainBinding>() {
 
             R.id.tv_item_animation_map -> {
                 startActivity(AnimationMapActivity::class.java)
+            }
+
+            R.id.tv_item_compose -> {
+                startActivity(ComposeMapActivity::class.java)
             }
         }
     }
