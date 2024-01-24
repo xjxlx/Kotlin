@@ -24,7 +24,12 @@ class MainActivity : BaseBindingTitleActivity<ActivityMainBinding>() {
     override fun initListener() {
         super.initListener()
         setonClickListener(
-            R.id.tv_item_xc, R.id.tv_item_flow, R.id.tv_item_custom_view, R.id.tv_item_function, R.id.tv_item_animation_map
+            R.id.tv_item_xc,
+            R.id.tv_item_flow,
+            R.id.tv_item_custom_view,
+            R.id.tv_item_function,
+            R.id.tv_item_animation_map,
+            R.id.tv_item_compose
         )
     }
 
