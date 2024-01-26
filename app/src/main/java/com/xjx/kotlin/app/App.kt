@@ -4,7 +4,6 @@ import android.app.Application
 import android.os.Process
 import android.provider.Settings
 import android.text.TextUtils
-import com.android.common.utils.AutoSizeUtil
 import com.android.common.utils.LogUtil
 import com.android.helper.app.ApplicationInterface
 import com.android.helper.app.BaseApplication
@@ -34,7 +33,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        AutoSizeUtil.init(this)
+        // AutoSizeUtil.init(this)
 
         com.android.common.app.ApplicationManager.Builder()
 

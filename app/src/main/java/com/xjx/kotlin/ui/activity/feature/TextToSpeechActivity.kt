@@ -9,7 +9,6 @@ import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityTextToSpeechBinding
 import java.util.Locale
-import kotlin.math.log
 
 class TextToSpeechActivity : BaseBindingTitleActivity<ActivityTextToSpeechBinding>() {
 
@@ -17,17 +16,15 @@ class TextToSpeechActivity : BaseBindingTitleActivity<ActivityTextToSpeechBindin
     private val tag = "TTS"
     private var mSpeech: TextToSpeech? = null
 
-    private var listener = object : TextToSpeech.OnInitListener {
-        override fun onInit(status: Int) {
-            if (TextToSpeech.SUCCESS == status) {
-                LogUtil.e(tag, "init  success !")
-                val language = mSpeech?.setLanguage(Locale.CHINA)
-                if (language == TextToSpeech.LANG_MISSING_DATA || language == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    LogUtil.e(tag, "数据丢失或者不支持！")
-                }
-            } else {
-                LogUtil.e(tag, "init  error !")
+    private var listener = TextToSpeech.OnInitListener { status ->
+        if (TextToSpeech.SUCCESS == status) {
+            LogUtil.e(tag, "init  success !")
+            val language = mSpeech?.setLanguage(Locale.CHINA)
+            if (language == TextToSpeech.LANG_MISSING_DATA || language == TextToSpeech.LANG_NOT_SUPPORTED) {
+                LogUtil.e(tag, "数据丢失或者不支持！")
             }
+        } else {
+            LogUtil.e(tag, "init  error !")
         }
     }
 
@@ -42,7 +39,7 @@ class TextToSpeechActivity : BaseBindingTitleActivity<ActivityTextToSpeechBindin
     override fun initData(savedInstanceState: Bundle?) {
         mSpeech = TextToSpeech(this, listener)
 
-        val content = " hello world"
+        val content = "做的不错，非常好"
 
         mBinding.btnCheck.setOnClickListener {
             checkTTSEngine()
@@ -54,30 +51,29 @@ class TextToSpeechActivity : BaseBindingTitleActivity<ActivityTextToSpeechBindin
     }
 
     private fun textToSpeech(content: String) {
-        mSpeech?.setPitch(1.2f);    // 语调范围从0.5到2.0
-        mSpeech?.setSpeechRate(0.8f);    // 语速范围从0.1到2.0
-        mSpeech?.setPitch(0.0f);// 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
-
+        // mSpeech?.setPitch(1.2f);    // 语调范围从0.5到2.0
+        // mSpeech?.setSpeechRate(0.8f);    // 语速范围从0.1到2.0
+        mSpeech?.setPitch(1.0f);// 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
         mSpeech?.speak(content, TextToSpeech.QUEUE_FLUSH, null, "123")
     }
 
     private fun checkTTSEngine() {
-        LogUtil.e(tag,"checkTTSEngine")
+        LogUtil.e(tag, "checkTTSEngine")
         val checkIntent = Intent()
         checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA)
         startActivityForResult(checkIntent, MY_TTS_CHECK_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        LogUtil.e(tag,"onActivityResult")
+        LogUtil.e(tag, "onActivityResult")
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == MY_TTS_CHECK_CODE) {
-            LogUtil.e(tag,"onActivityResult --->success")
+            LogUtil.e(tag, "onActivityResult --->success")
             if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                 mSpeech = TextToSpeech(this, listener)
             } else {
                 // 设置默认的语音引擎
-                LogUtil.e(tag,"onActivityResult --->set default tts ")
+                LogUtil.e(tag, "onActivityResult --->set default tts ")
                 val installIntent = Intent()
                 installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA)
                 installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
