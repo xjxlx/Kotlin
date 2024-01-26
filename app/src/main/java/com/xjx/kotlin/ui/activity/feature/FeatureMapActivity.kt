@@ -46,6 +46,7 @@ class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>()
         mBinding.tvItemTestAdbs.setOnClickListener { startActivity(AdbActivity::class.java) }
         mBinding.tvItemTestConvert.setOnClickListener { startActivity(ConvertDpActivity::class.java) }
         mBinding.tvItemTestColor.setOnClickListener { startActivity(ColorConvertActivity::class.java) }
+        mBinding.tvItemTextSpeech.setOnClickListener { startActivity(TextToSpeechActivity::class.java) }
     }
 
     override fun onClick(v: View?) {
