@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
+    <!--textToSpeech-->
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
@@ -57,13 +58,7 @@
         android:theme="@style/Theme.Kotlin">
         <activity
             android:name=".ui.activity.feature.TextToSpeechActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ui.activity.compose.ComposeMapActivity"
             android:exported="false" />

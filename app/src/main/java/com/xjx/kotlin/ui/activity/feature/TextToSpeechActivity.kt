@@ -59,8 +59,16 @@ class TextToSpeechActivity : BaseBindingTitleActivity<ActivityTextToSpeechBindin
 
     private fun checkTTSEngine() {
         LogUtil.e(tag, "checkTTSEngine")
+        val areDefaultsEnforced = mSpeech?.areDefaultsEnforced()
+        LogUtil.e(tag, "areDefaultsEnforced:$areDefaultsEnforced")
+        val defaultEngine = mSpeech?.getDefaultEngine()
+        LogUtil.e(tag, "defaultEngine:$defaultEngine")
+        val engines = mSpeech?.getEngines()
+        LogUtil.e(tag, "engines:$engines")
+
         val checkIntent = Intent()
         checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA)
+        checkIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivityForResult(checkIntent, MY_TTS_CHECK_CODE)
     }
 
