@@ -65,10 +65,15 @@ android {
         jvmTarget = "1.8"
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
+
     buildFeatures {
         viewBinding = true
         buildConfig = true
         aidl = true
+        compose = true
     }
 
     configurations.all {
@@ -76,6 +81,12 @@ android {
             force(libs.recyclerview)
             force(libs.okhttp3)
             force(libs.rxjava2)
+        }
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 }
@@ -111,6 +122,13 @@ dependencies {
     implementation(libs.player)
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("com.airbnb.android:lottie:6.2.0")
+
+    // compose 依赖
+    implementation("androidx.activity:activity-compose:1.7.0") // 使用compose activity
+    implementation("androidx.compose.material3:material3") // compose 的组件
+    implementation("androidx.compose.ui:ui-graphics") // UI颜色的依赖
+    implementation("androidx.compose.ui:ui-tooling:1.6.2") // 工具
+    implementation("androidx.compose.ui:ui:1.6.2") // 布局的Ui
 
     // debugImplementation("com.squareup.leakcanary:leakcanary-android:2.13")
     // implementation("me.jessyan:autosize:1.2.1")
