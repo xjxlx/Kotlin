@@ -11,4 +11,5 @@
     <string name="theme_fragment_prepare">请跟随语音提示准备</string>
     <string name="theme_fragment_start_inhale">开始吸气</string>
     <string name="theme_fragment_hold_breath">屏住呼吸</string>
+    <string name="title_activity_compose_test1">ComposeTest1Activity</string>
 </resources>
