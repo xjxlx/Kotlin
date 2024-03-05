@@ -130,15 +130,17 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     // compose 依赖
     implementation("androidx.activity:activity-compose:1.7.0")// 使用compose activity
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")// UI颜色的依赖
-    implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3") // compose 的组件
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")// 工具
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // 预览工具
+    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-tooling")// 工具
 
     // debugImplementation("com.squareup.leakcanary:leakcanary-android:2.13")
     // implementation("me.jessyan:autosize:1.2.1")
