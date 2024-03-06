@@ -18,14 +18,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.common.R
-import com.android.common.utils.ToastUtil
 
 @Preview
 @Composable
-fun Title() {
+fun Title(@PreviewParameter(Provider::class) title: TitleParameter) {
     Row(
         modifier = Modifier
             .background(Color.Black)
@@ -38,7 +39,7 @@ fun Title() {
                 .fillMaxHeight()
                 .width(50.dp)
                 .clickable {
-                    ToastUtil.show("1111")
+                    title.onClose()
                 }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
         ) {
             Icon(painter = painterResource(id = R.mipmap.icon_base_title_back), contentDescription = "", tint = Color.White)
@@ -53,21 +54,34 @@ fun Title() {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "compose", style = TextStyle(fontSize = 18.sp, color = Color.White)
+                text = "${title.title}", style = TextStyle(fontSize = 18.sp, color = Color.White)
             )
         }
 
         // right title
         Row(
-            modifier = Modifier.fillMaxHeight(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            modifier = Modifier
+                .fillMaxHeight()
+                .clickable {
+                    title.onRightClick()
+                }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "ediText",
+                text = "${title.rightTitle}",
                 style = TextStyle(fontSize = 18.sp, color = Color.White),
                 modifier = Modifier.padding(5.dp, 0.dp, 5.dp, 0.dp)
             )
         }
     }
+}
+
+data class TitleParameter(val title: String, val onClose: () -> Unit, val rightTitle: String, val onRightClick: () -> Unit)
+class Provider : PreviewParameterProvider<TitleParameter> {
+    private val parameter = TitleParameter("", { }, "", {})
+    override val values: Sequence<TitleParameter>
+        get() {
+            return listOf(parameter).asSequence()
+        }
+    override val count: Int
+        get() = 1
 }
