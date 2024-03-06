@@ -33,6 +33,7 @@ fun Title(@PreviewParameter(Provider::class) title: TitleParameter) {
             .fillMaxWidth()
             .height(50.dp)
     ) {
+
         // back icon
         Row(
             modifier = Modifier
@@ -54,7 +55,7 @@ fun Title(@PreviewParameter(Provider::class) title: TitleParameter) {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "${title.title}", style = TextStyle(fontSize = 18.sp, color = Color.White)
+                text = title.title, style = TextStyle(fontSize = 18.sp, color = Color.White)
             )
         }
 
@@ -67,7 +68,7 @@ fun Title(@PreviewParameter(Provider::class) title: TitleParameter) {
                 }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "${title.rightTitle}",
+                text = title.rightTitle,
                 style = TextStyle(fontSize = 18.sp, color = Color.White),
                 modifier = Modifier.padding(5.dp, 0.dp, 5.dp, 0.dp)
             )
