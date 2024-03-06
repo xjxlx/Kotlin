@@ -56,7 +56,7 @@ fun Title() {
                     )
                 }
 
-                // right title
+                // right title ---》
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
