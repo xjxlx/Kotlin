@@ -75,9 +75,12 @@ fun Title(@PreviewParameter(Provider::class) title: TitleParameter) {
     }
 }
 
-data class TitleParameter(val title: String, val onClose: () -> Unit, val rightTitle: String, val onRightClick: () -> Unit)
+data class TitleParameter @JvmOverloads constructor(
+    val title: String, val onClose: () -> Unit, val rightTitle: String = "", val onRightClick: () -> Unit = {}
+)
+
 class Provider : PreviewParameterProvider<TitleParameter> {
-    private val parameter = TitleParameter("", { }, "", {})
+    private val parameter = TitleParameter("", {})
     override val values: Sequence<TitleParameter>
         get() {
             return listOf(parameter).asSequence()
