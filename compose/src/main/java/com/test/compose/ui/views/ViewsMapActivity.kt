@@ -1,42 +1,15 @@
 package com.test.compose.ui.views
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.test.compose.base.BaseActivity
-import com.test.compose.ui.theme.KotlinTheme
+import com.test.compose.base.BaseTitleActivity
 
-class ViewsMapActivity : BaseActivity() {
+class ViewsMapActivity : BaseTitleActivity() {
 
-    override fun initView(savedInstanceState: Bundle?) {
-        setContent {
-            KotlinTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
-                }
-            }
-        }
+    override fun getTitleContent(): String {
+        return "底部导航栏"
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!", modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    KotlinTheme {
-        Greeting("Android")
+    @Composable
+    override fun InitTitleView() {
     }
 }
