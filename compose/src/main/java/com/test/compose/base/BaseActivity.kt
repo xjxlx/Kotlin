@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.test.compose.ui.theme.KotlinTheme
 
 abstract class BaseActivity : ComponentActivity() {
@@ -23,7 +24,7 @@ abstract class BaseActivity : ComponentActivity() {
             KotlinTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    InitView(savedInstanceState = savedInstanceState)
+                    InitView()
                 }
             }
         }
@@ -31,8 +32,9 @@ abstract class BaseActivity : ComponentActivity() {
 
     open fun beforeInitView() {}
 
+    @Preview
     @Composable
-    abstract fun InitView(savedInstanceState: Bundle?)
+    abstract fun InitView()
 
     fun startActivity(cls: Class<out Activity>) {
         startActivity(Intent(this, cls))

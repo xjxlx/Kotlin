@@ -1,6 +1,5 @@
 package com.test.compose.base
 
-import android.os.Bundle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -12,7 +11,7 @@ import com.test.compose.widget.TitleParameter
 abstract class BaseTitleActivity : BaseActivity() {
 
     @Composable
-    override fun InitView(savedInstanceState: Bundle?) {
+    override fun InitView() {
         Column(Modifier.fillMaxSize()) {
             val titleContent = getTitleContent()
             Title(TitleParameter(titleContent, { onBackPressed() }))
