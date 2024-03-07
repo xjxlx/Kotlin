@@ -1,9 +1,9 @@
 package com.test.compose
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,14 +26,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.test.compose.base.BaseActivity
 import com.test.compose.ui.theme.KotlinTheme
+import com.test.compose.ui.views.ViewsMapActivity
 import com.test.compose.widget.Title
 import com.test.compose.widget.TitleParameter
 
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initView(savedInstanceState: Bundle?) {
         setContent {
             KotlinTheme {
                 // A surface container using the 'background' color from the theme
@@ -54,31 +55,31 @@ class MainActivity : ComponentActivity() {
         ) {
             // title
             Title(TitleParameter("Compose集合", { finish() }))
-
-            val scrollState = rememberScrollState()
             Column(
                 Modifier
                     .fillMaxWidth()
                     .weight(1F)
-                    .verticalScroll(scrollState)
+                    .verticalScroll(rememberScrollState())
             ) {
-                Items(title = "views")
+                Items(title = "views") {
+                    startActivity(ViewsMapActivity::class.java)
+                }
             }
         }
     }
 
     @Composable
-    fun Items(title: String) {
+    fun Items(title: String, onclick: () -> Unit) {
         // 增加间距
         Spacer(modifier = Modifier.height(5.dp))
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(66.dp)
-                .background(Color.Blue),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+                .background(Color.Blue)
+                .clickable {
+                    onclick()
+                }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = title,
