@@ -58,14 +58,11 @@ class MainActivity : ComponentActivity() {
             val scrollState = rememberScrollState()
             Column(
                 Modifier
-                    .background(Color.Yellow)
                     .fillMaxWidth()
                     .weight(1F)
                     .verticalScroll(scrollState)
             ) {
-                for (index in 0..20) {
-                    Items(title = "$index")
-                }
+                Items(title = "views")
             }
         }
     }
