@@ -28,6 +28,7 @@ buildscript {
     alias(libs.plugins.com.android.library) apply false
     alias(libs.plugins.org.jetbrains.kotlin.jvm) apply false
     // id("org.jetbrains.kotlin.android") version "1.8.10" apply false
-    alias(libs.plugins.org.jetbrains.kotlin.android) apply false
+    // alias(libs.plugins.org.jetbrains.kotlin.android) apply false
+    id("org.jetbrains.kotlin.android") version "1.9.0" apply false
 }
 true

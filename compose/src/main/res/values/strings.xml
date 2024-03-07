@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">compose</string>
     <string name="title_activity_views_map">ViewsMapActivity</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
 </resources>
