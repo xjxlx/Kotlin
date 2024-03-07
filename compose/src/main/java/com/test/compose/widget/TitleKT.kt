@@ -1,4 +1,4 @@
-package com.test.compose.view
+package com.test.compose.widget
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

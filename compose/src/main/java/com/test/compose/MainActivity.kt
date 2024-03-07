@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.test.compose.ui.theme.KotlinTheme
-import com.test.compose.view.Title
-import com.test.compose.view.TitleParameter
+import com.test.compose.widget.Title
+import com.test.compose.widget.TitleParameter
 
 class MainActivity : ComponentActivity() {
 
