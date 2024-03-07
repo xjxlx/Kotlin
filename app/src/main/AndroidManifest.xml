@@ -55,22 +55,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
-        <!--        <activity-->
-        <!--            android:name=".ui.activity.compose.ComposeTest1Activity"-->
-        <!--            android:exported="true"-->
-        <!--            android:label="@string/title_activity_compose_test1"-->
-        <!--            android:theme="@style/Theme.Kotlin">-->
-        <!--        </activity>-->
-        <!--        -->
         <activity
             android:name=".ui.activity.feature.TextToSpeechActivity"
             android:exported="true" />
-        <activity android:name=".ui.activity.compose.ComposeMapActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.activity.compose.ComposeMapActivity" />
         <activity
             android:name=".ui.activity.feature.ColorConvertActivity"
             android:exported="true" />
