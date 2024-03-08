@@ -43,13 +43,25 @@ class NavigationActivity : BaseTitleActivity() {
         return "Navigation"
     }
 
+    /**
+     * 注意事项：
+     *  1：startDestination 和 第一个页面，必须route 路径保持一致
+     *  2：composable 标注的 route ,必须和跳转过来的路径保持一致，如果有参数，则必修声明，不然会报错
+     *  3：声明composable的 接收：route
+     *          格式："${Route.ROUTE_FIRST}/{key}"
+     *          route = "${Route.ROUTE_FIRST}/{${Parameter.NAME}}"
+     *  4：发送 跳转的方式：
+     *     带基本参数的跳转，格式为："${Route.ID}/参数的具体值"
+     *     navController.navigate("${Route.ROUTE_THIRD}/$name")
+     */
     @Composable
     override fun InitTitleView() {
         val navController = rememberNavController()  //导航控制器
-        NavHost(navController = navController, startDestination = Route.ROUTE_FIRST, //启始页
+        NavHost(
+            navController = navController, startDestination = "${Route.ROUTE_FIRST}/{${Parameter.NAME}}", //启始页
             builder = {
                 // 1: navigation的无参数跳转
-                composable(route = Route.ROUTE_FIRST) { //route: 表示路由名称，跳转时需要
+                composable(route = "${Route.ROUTE_FIRST}/{${Parameter.NAME}}") { //route: 表示路由名称，跳转时需要
                     FirstScreen {
                         // 跳转时候，不需要额外的参数，直接写跳转的路径
                         navController.navigate(Route.ROUTE_SECOND)
@@ -99,7 +111,7 @@ class NavigationActivity : BaseTitleActivity() {
                         "string:$string"
                     }
                     FourScreen(content) {
-                        navController.navigate(Route.ROUTE_FIRST)
+                        navController.navigate("${Route.ROUTE_FIRST}/${content}")
                     }
                 }
             })
