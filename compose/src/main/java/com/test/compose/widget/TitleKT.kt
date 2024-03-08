@@ -26,7 +26,7 @@ import com.android.common.R
 
 @Preview
 @Composable
-fun Title(@PreviewParameter(Provider::class) title: TitleParameter) {
+fun Title(@PreviewParameter(ProviderTitle::class) title: TitleParameter) {
     Row(
         modifier = Modifier
             .background(Color.Black)
@@ -80,7 +80,7 @@ data class TitleParameter @JvmOverloads constructor(
     val title: String, val onClose: () -> Unit, val rightTitle: String = "", val onRightClick: () -> Unit = {}
 )
 
-class Provider : PreviewParameterProvider<TitleParameter> {
+class ProviderTitle : PreviewParameterProvider<TitleParameter> {
     private val parameter = TitleParameter("", {})
     override val values: Sequence<TitleParameter>
         get() {
