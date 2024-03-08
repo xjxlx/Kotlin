@@ -32,7 +32,9 @@ class ViewsMapActivity : BaseTitleActivity() {
     @Composable
     override fun InitTitleView() {
         Column {
-            Items(TextParameter(text = "底部导航栏", onClick = { startActivity(NavigationActivity::class.java) }))
+            Items(TextParameter(text = "导航跳转", onClick = { startActivity(NavigationActivity::class.java) }))
+            Items(TextParameter(text = "顶部导航栏", onClick = { startActivity(TopAppBarActivity::class.java) }))
+            Items(TextParameter(text = "底部导航栏", onClick = { startActivity(BottomBarActivity::class.java) }))
         }
     }
 
