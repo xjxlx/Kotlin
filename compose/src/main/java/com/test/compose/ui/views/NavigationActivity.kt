@@ -11,10 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.android.common.utils.ToastUtil
+import com.android.common.utils.LogUtil
 import com.google.gson.Gson
 import com.test.compose.base.BaseTitleActivity
 import java.io.Serializable
@@ -54,6 +55,7 @@ class NavigationActivity : BaseTitleActivity() {
      *     带基本参数的跳转，格式为："${Route.ID}/参数的具体值"
      *     navController.navigate("${Route.ROUTE_THIRD}/$name")
      */
+    @Preview
     @Composable
     override fun InitTitleView() {
         val navController = rememberNavController()  //导航控制器
@@ -112,6 +114,9 @@ class NavigationActivity : BaseTitleActivity() {
                     }
                     FourScreen(content) {
                         navController.navigate("${Route.ROUTE_FIRST}/${content}")
+
+                        // 返回上个界面
+                        navController.popBackStack()
                     }
                 }
             })
@@ -126,6 +131,7 @@ class NavigationActivity : BaseTitleActivity() {
             horizontalAlignment = Alignment.CenterHorizontally,  //横向居中
             verticalArrangement = Arrangement.Center,  //纵向居中
         ) {
+            LogUtil.e("FirstScreen")
             Text(text = "这是第一个界面")
             Button(onClick = { navigateTo.invoke() }) {
                 Text(text = "跳转到第二页")
@@ -142,6 +148,7 @@ class NavigationActivity : BaseTitleActivity() {
             horizontalAlignment = Alignment.CenterHorizontally,  //横向居中
             verticalArrangement = Arrangement.Center,  //纵向居中
         ) {
+            LogUtil.e("SecondScreen")
             Text(text = "这是第二个界面 传递的参数为:$name")
             Button(onClick = { navigateTo.invoke() }) {
                 Text(text = "跳转到第三页")
@@ -158,6 +165,7 @@ class NavigationActivity : BaseTitleActivity() {
             horizontalAlignment = Alignment.CenterHorizontally,  //横向居中
             verticalArrangement = Arrangement.Center,  //纵向居中
         ) {
+            LogUtil.e("ThirdScreen")
             Text(text = "这是第三个界面，接收第三个界面的参数位：: $value")
             Button(onClick = { navigateTo.invoke() }) {
                 Text(text = "跳转到第四页")
@@ -174,7 +182,7 @@ class NavigationActivity : BaseTitleActivity() {
             horizontalAlignment = Alignment.CenterHorizontally,  //横向居中
             verticalArrangement = Arrangement.Center,  //纵向居中
         ) {
-            ToastUtil.show(content)
+            LogUtil.e("FourScreen")
             Text(text = "这是第四个界面 内容: $content")
             Button(onClick = { navigateTo.invoke() }) {
                 Text(text = "回到第一页")
