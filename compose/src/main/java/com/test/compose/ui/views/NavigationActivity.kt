@@ -15,9 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.android.common.base.compose.BaseTitleActivity
 import com.android.common.utils.LogUtil
 import com.google.gson.Gson
-import com.test.compose.base.BaseTitleActivity
 import java.io.Serializable
 
 class NavigationActivity : BaseTitleActivity() {

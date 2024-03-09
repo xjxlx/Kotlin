@@ -3,4 +3,7 @@
     <string name="title_activity_views_map">ViewsMapActivity</string>
     <string name="title_activity_navigation">NavigationActivity</string>
     <string name="title_activity_top_app_bar">TopAppBarActivity</string>
+    <string name="title_activity_bottom_app_bar2">BottomAppBar2Activity</string>
+    <string name="title_activity_status_bar_color">StatusBarColorActivity</string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>

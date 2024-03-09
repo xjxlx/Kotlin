@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.test.compose.base.BaseTitleActivity
+import com.android.common.base.compose.BaseTitleActivity
 import com.test.compose.ui.views.ViewsMapActivity
 
 class MainActivity : BaseTitleActivity() {

@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import com.test.compose.base.BaseTitleActivity
+import com.android.common.base.compose.BaseTitleActivity
 
 class TopAppBarActivity : BaseTitleActivity() {
 

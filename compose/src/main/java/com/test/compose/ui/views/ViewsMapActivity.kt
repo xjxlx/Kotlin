@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.test.compose.base.BaseTitleActivity
+import com.android.common.base.compose.BaseTitleActivity
 import com.test.compose.parameters.ProviderText
 import com.test.compose.parameters.TextParameter
 
@@ -32,9 +32,11 @@ class ViewsMapActivity : BaseTitleActivity() {
     @Composable
     override fun InitTitleView() {
         Column {
+            Items(TextParameter(text = "状态栏颜色", onClick = { startActivity(StatusBarColorActivity::class.java) }))
             Items(TextParameter(text = "导航跳转", onClick = { startActivity(NavigationActivity::class.java) }))
             Items(TextParameter(text = "顶部导航栏", onClick = { startActivity(TopAppBarActivity::class.java) }))
             Items(TextParameter(text = "底部导航栏", onClick = { startActivity(BottomBarActivity::class.java) }))
+//            Items(TextParameter(text = "底部导航栏2", onClick = { startActivity(BottomAppBar2Activity::class.java) }))
         }
     }
 

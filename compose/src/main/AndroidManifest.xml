@@ -10,6 +10,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
+            android:name=".ui.views.TestActivity"
+            android:exported="false"
+            android:label="@string/title_activity_test"
+            android:theme="@style/Theme.Kotlin" />
+        <activity
+            android:name=".ui.views.StatusBarColorActivity"
+            android:exported="false"
+            android:label="@string/title_activity_status_bar_color"
+            android:theme="@style/Theme.Kotlin" />
+        <activity
+            android:name=".ui.views.BottomAppBar2Activity"
+            android:exported="false"
+            android:label="@string/title_activity_bottom_app_bar2"
+            android:theme="@style/Theme.Kotlin" />
+        <activity
             android:name=".ui.views.TopAppBarActivity"
             android:exported="false"
             android:label="@string/title_activity_top_app_bar"
