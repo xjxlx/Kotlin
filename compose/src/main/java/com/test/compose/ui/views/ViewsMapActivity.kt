@@ -36,6 +36,7 @@ class ViewsMapActivity : BaseTitleActivity() {
             Items(TextParameter(text = "导航跳转", onClick = { startActivity(NavigationActivity::class.java) }))
             Items(TextParameter(text = "顶部导航栏", onClick = { startActivity(TopAppBarActivity::class.java) }))
             Items(TextParameter(text = "底部导航栏", onClick = { startActivity(BottomBarActivity::class.java) }))
+            Items(TextParameter(text = "ExpandableListView", onClick = { startActivity(ExpandableListViewActivity::class.java) }))
 //            Items(TextParameter(text = "底部导航栏2", onClick = { startActivity(BottomAppBar2Activity::class.java) }))
         }
     }

@@ -10,9 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin">
         <activity
-            android:name=".ui.views.TestActivity"
+            android:name=".ui.views.ExpandableListViewActivity"
             android:exported="false"
-            android:label="@string/title_activity_test"
+            android:label="@string/title_activity_expandable_list_view"
             android:theme="@style/Theme.Kotlin" />
         <activity
             android:name=".ui.views.StatusBarColorActivity"
