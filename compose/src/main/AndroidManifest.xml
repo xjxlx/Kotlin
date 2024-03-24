@@ -10,6 +10,8 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.Kotlin">
         <activity
+                android:name=".ui.function.FunctionMapActivity"/>
+        <activity
                 android:name=".ui.views.ExpandableListViewActivity"
                 android:exported="false"
                 android:label="@string/title_activity_expandable_list_view"
