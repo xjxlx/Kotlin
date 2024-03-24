@@ -2,51 +2,46 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:name=".app.App"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.Kotlin">
+            android:name=".app.App"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/Theme.Kotlin">
         <activity
-            android:name=".ui.views.ExpandableListViewActivity"
-            android:exported="false"
-            android:label="@string/title_activity_expandable_list_view"
-            android:theme="@style/Theme.Kotlin" />
+                android:name=".ui.views.ExpandableListViewActivity"
+                android:exported="false"
+                android:label="@string/title_activity_expandable_list_view"
+                android:theme="@style/Theme.Kotlin"/>
         <activity
-            android:name=".ui.views.StatusBarColorActivity"
-            android:exported="false"
-            android:label="@string/title_activity_status_bar_color"
-            android:theme="@style/Theme.Kotlin" />
+                android:name=".ui.views.StatusBarColorActivity"
+                android:exported="false"
+                android:label="@string/title_activity_status_bar_color"
+                android:theme="@style/Theme.Kotlin"/>
         <activity
-            android:name=".ui.views.BottomAppBar2Activity"
-            android:exported="false"
-            android:label="@string/title_activity_bottom_app_bar2"
-            android:theme="@style/Theme.Kotlin" />
+                android:name=".ui.views.TopAppBarActivity"
+                android:exported="false"
+                android:label="@string/title_activity_top_app_bar"
+                android:theme="@style/Theme.Kotlin"/>
         <activity
-            android:name=".ui.views.TopAppBarActivity"
-            android:exported="false"
-            android:label="@string/title_activity_top_app_bar"
-            android:theme="@style/Theme.Kotlin" />
+                android:name=".ui.views.BottomBarActivity"
+                android:exported="false"/>
         <activity
-            android:name=".ui.views.BottomBarActivity"
-            android:exported="false" />
+                android:name=".ui.views.NavigationActivity"
+                android:exported="false"
+                android:label="@string/title_activity_navigation"/>
         <activity
-            android:name=".ui.views.NavigationActivity"
-            android:exported="false"
-            android:label="@string/title_activity_navigation" />
+                android:name=".ui.views.ViewsMapActivity"
+                android:exported="false"
+                android:label="@string/title_activity_views_map"/>
         <activity
-            android:name=".ui.views.ViewsMapActivity"
-            android:exported="false"
-            android:label="@string/title_activity_views_map" />
-        <activity
-            android:name=".ui.MainActivity"
-            android:exported="true">
+                android:name=".ui.MainActivity"
+                android:screenOrientation="fullSensor"
+                android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>
