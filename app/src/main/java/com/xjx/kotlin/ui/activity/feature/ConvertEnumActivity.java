@@ -19,7 +19,7 @@ public class ConvertEnumActivity extends BaseBindingTitleActivity<ActivityConver
           @Override
           public void onClick(View v) {
             try {
-              EnumUtil.convert(Date.class);
+              EnumUtil.convert(TargetEnum.class, OriginEnum.class);
             } catch (Exception e) {
               LogUtil.e("convert:" + e.getMessage());
             }

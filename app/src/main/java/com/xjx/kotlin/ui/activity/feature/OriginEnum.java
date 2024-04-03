@@ -1,6 +1,6 @@
 package com.xjx.kotlin.ui.activity.feature;
 
-public enum Date {
+public enum OriginEnum {
   YEAR("year"),
   MONTH("month"),
   DAY("day"),
@@ -10,7 +10,7 @@ public enum Date {
 
   private final String date;
 
-  Date(String date) {
+  OriginEnum(String date) {
     this.date = date;
   }
 }
