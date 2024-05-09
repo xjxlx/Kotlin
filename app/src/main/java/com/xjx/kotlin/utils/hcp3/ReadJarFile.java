@@ -1,21 +1,81 @@
 package com.xjx.kotlin.utils.hcp3;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class ReadJarFile {
-  private final String basePath = "java/com/xjx/kotlin/utils/hcp3/jar/";
-  private final List<String> jarPathArray = new ArrayList<>();
-  private final String localFilePath = "technology.cariad.vehiclecontrolmanager.TestBean";
-  private final String jarClassPath =
-      "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject";
 
-  public static Class<?> readJar(List<String> jarArrayPath, String className) {
+  private static final List<String> jarPathArray = new ArrayList<>();
+  private static final String BASE_PATH = "src/main/java/com/xjx/kotlin/utils/hcp3/jar/";
+  private static final String LOCAL_PATH = "technology.cariad.vehiclecontrolmanager.TestBean";
+  private static final String JAR_PATH =
+      "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject";
+  private static final String JAR_PATH2 =
+      "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObjectImpl";
+
+  private static final String TARGET_JAR_PATH = BASE_PATH + "mib_rsi_android.jar";
+  private static final String TARGET_NODE_PATH = "de/esolutions/fw/rudi/viwi/service/hvac/v3";
+  private static final String[] IGNORE_METHOD_ARRAY =
+      new String[] {
+        "listQuery",
+        "listQueryWith",
+        "uuid",
+        "uuidString",
+        "uri",
+        "uriString",
+        "isGeneralSettingObject",
+        "nonExpandedEquals"
+      };
+
+  /**
+   * @return 返回指定JAR包中，指定targetPath 目录下所有object的集合
+   */
+  public static List<String> readObjectClassName() {
+    List<String> fileNames = new ArrayList<>();
+    try {
+      // 打开Jar文件
+      JarFile jarFile = new JarFile(TARGET_JAR_PATH);
+      // 获取Jar包中的所有文件和目录条目
+      Enumeration<JarEntry> entries = jarFile.entries();
+      while (entries.hasMoreElements()) {
+        JarEntry entry = entries.nextElement();
+        String entryName = entry.getName();
+        // 收集指定路径下的所有文件名称
+        if (entryName.startsWith(TARGET_NODE_PATH)) {
+          if (entryName.contains(".class")) {
+            String splitClassName = entryName.split(".class")[0];
+            if (((splitClassName.endsWith("Object")) || (splitClassName.endsWith("Enum")))
+                && (splitClassName.contains("/"))) {
+              String replaceName = splitClassName.replace("/", ".");
+              fileNames.add(replaceName);
+            }
+          }
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println("读取指定列表中Object列表失败：" + e.getMessage());
+    }
+    return fileNames;
+  }
+
+  /**
+   * @param jarArrayPath JAR包的集合，里面存着所有引用的JAR包
+   * @param className 指定的class类名
+   * @param listObject 指定节点下所有的Object或者Enum的对象集合
+   * @return 返回指定class类型的Class对象
+   */
+  public static Class<?> readJar(
+      List<String> jarArrayPath, String className, List<String> listObject) {
     try {
       URL[] urls = new URL[jarArrayPath.size()];
       for (int i = 0; i < jarArrayPath.size(); i++) {
@@ -25,9 +85,16 @@ public class ReadJarFile {
       URLClassLoader classLoader = new URLClassLoader(urls, null);
       // 加载需要的类
       classLoader.loadClass("de.esolutions.fw.rudi.core.locators.IResourceLocator");
-      classLoader.loadClass("de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject");
-      classLoader.loadClass("de.esolutions.fw.rudi.viwi.service.hvac.v3.ValueControlObject");
-      classLoader.loadClass("de.esolutions.fw.rudi.viwi.service.hvac.v3.FlavourCartridgeObject");
+      classLoader.loadClass("de.esolutions.fw.rudi.core.IPath");
+
+      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwElement");
+      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwPrimitive");
+      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwObject");
+      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.ObjectKey");
+      for (int i = 0; i < listObject.size(); i++) {
+        classLoader.loadClass(listObject.get(i));
+      }
+
       Class<?> jarClass = classLoader.loadClass(className);
       // 关闭ClassLoader释放资源
       classLoader.close();
@@ -51,21 +118,61 @@ public class ReadJarFile {
     }
   }
 
+  private static Set<String> getMethods(Class<?> clazz) {
+    Set<String> memberVariables = new HashSet<>();
+    try {
+      if (clazz != null) {
+        // 将数组转换为集合
+        Set<String> listIgnoreMethod = new HashSet<>(Arrays.asList(IGNORE_METHOD_ARRAY));
+        Set<Method> methods = new HashSet<>(Arrays.asList(clazz.getDeclaredMethods()));
+
+        for (Method method : methods) {
+          String methodName = method.getName();
+          String resultMethodName = "";
+          if (listIgnoreMethod.contains(methodName)) {
+            continue;
+          }
+          if (methodName.startsWith("get")) {
+            String splitGetName = methodName.split("get")[1];
+            resultMethodName =
+                splitGetName.substring(0, 1).toLowerCase() + splitGetName.substring(1);
+
+            memberVariables.add(resultMethodName);
+
+            Type genericReturnType = method.getGenericReturnType();
+            String typeName = genericReturnType.getTypeName();
+
+            System.out.println("key: " + resultMethodName + "  typeName: " + typeName);
+          }
+        }
+      }
+      System.out.println("反射获取到的属性：" + memberVariables.size());
+    } catch (Exception e) {
+      System.out.println("反射属性异常：" + e.getMessage());
+    }
+
+    return memberVariables;
+  }
+
   private static Set<String> getMemberVariables(Class<?> clazz) {
     Set<String> memberVariables = new HashSet<>();
     try {
       if (clazz != null) {
-        for (Method method : clazz.getDeclaredMethods()) {
-          String name = method.getName();
-          Type genericReturnType = method.getGenericReturnType();
-          String typeName = null;
-          if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-            typeName = genericReturnType.getTypeName();
+        // 将数组转换为集合
+        Set<Field> Fields = new HashSet<>(Arrays.asList(clazz.getDeclaredFields()));
+        for (Field field : Fields) {
+          field.setAccessible(true);
+          String type = field.getGenericType().getTypeName();
+
+          String methodName = field.getName();
+          if (methodName.startsWith("KEY_")) {
+            String claN = field.getDeclaringClass().getName();
+            System.out.println("反射获取到的属性：" + methodName + " --->" + type);
+            memberVariables.add(methodName);
           }
-          System.out.println("反射获取到的方法名字：[" + name + "]  typeName: [" + typeName + " ]");
         }
       }
-      System.out.println("反射获取到的属性：" + memberVariables);
+      System.out.println("反射获取到的属性：" + memberVariables.size());
     } catch (Exception e) {
       System.out.println("反射属性异常：" + e.getMessage());
     }
@@ -103,24 +210,30 @@ public class ReadJarFile {
 
   public void execute() {
     try {
-      jarPathArray.add(basePath + "fw_rudi_android_stapi.jar");
-      jarPathArray.add(basePath + "fw_comm_android_stapi.jar");
-      jarPathArray.add(basePath + "fw_comm_android_support.jar");
-      jarPathArray.add(basePath + "fw_rsi_android_stapi.jar");
-      jarPathArray.add(basePath + "fw_rsi_rx2_android_support.jar");
-      jarPathArray.add(basePath + "fw_rudi_android_support.jar");
-      jarPathArray.add(basePath + "fw_util_android_stapi.jar");
-      jarPathArray.add(basePath + "fw_util_android_support.jar");
-      jarPathArray.add(basePath + "mib_rsi_android.jar");
+      jarPathArray.add(BASE_PATH + "fw_comm_android_stapi.jar");
+      jarPathArray.add(BASE_PATH + "fw_comm_android_support.jar");
+      jarPathArray.add(BASE_PATH + "fw_rsi_android_stapi.jar");
+      jarPathArray.add(BASE_PATH + "fw_rsi_rx2_android_support.jar");
+      jarPathArray.add(BASE_PATH + "fw_rudi_android_stapi.jar");
+      jarPathArray.add(BASE_PATH + "fw_rudi_android_support.jar");
+      jarPathArray.add(BASE_PATH + "fw_util_android_stapi.jar");
+      jarPathArray.add(BASE_PATH + "fw_util_android_support.jar");
+      jarPathArray.add(TARGET_JAR_PATH);
 
-      Class<?> jarClass = readJar(jarPathArray, jarClassPath);
-      Class<?> targetClass = readLocalClass(localFilePath);
-      Set<String> jarMemberVariables = getMemberVariables(jarClass);
-      Set<String> targetMemberVariables = getMemberVariables(targetClass);
+      // 1：读取指定目标节点下所有的object集合
+      List<String> objectList = readObjectClassName();
 
-      boolean success =
-          writeVariable(jarMemberVariables, targetMemberVariables, jarClass, targetClass);
-      System.out.println("write data success:" + success);
+      // 2：读取
+      Class<?> jarClass = readJar(jarPathArray, JAR_PATH2, objectList);
+
+      Class<?> targetClass = readLocalClass(LOCAL_PATH);
+
+      //      Set<String> jarMemberVariables = getMethods(jarClass);
+      Set<String> targetMemberVariables = getMemberVariables(jarClass);
+
+      //      boolean success =
+      //          writeVariable(jarMemberVariables, targetMemberVariables, jarClass, targetClass);
+      //      System.out.println("write data success:" + success);
     } catch (Exception e) {
       System.out.println("write data error!");
     }
