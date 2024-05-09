@@ -224,7 +224,7 @@ public class ReadJarFile {
       List<String> objectList = readObjectClassName();
 
       // 2：读取
-      Class<?> jarClass = readJar(jarPathArray, JAR_PATH2, objectList);
+      Class<?> jarClass = readJar(jarPathArray, JAR_PATH, objectList);
 
       Class<?> targetClass = readLocalClass(LOCAL_PATH);
 
