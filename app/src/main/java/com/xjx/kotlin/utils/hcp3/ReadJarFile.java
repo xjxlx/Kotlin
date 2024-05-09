@@ -228,8 +228,8 @@ public class ReadJarFile {
 
       Class<?> targetClass = readLocalClass(LOCAL_PATH);
 
-      //      Set<String> jarMemberVariables = getMethods(jarClass);
-      Set<String> targetMemberVariables = getMemberVariables(jarClass);
+      Set<String> jarMemberVariables = getMethods(jarClass);
+      //      Set<String> targetMemberVariables = getMemberVariables(jarClass);
 
       //      boolean success =
       //          writeVariable(jarMemberVariables, targetMemberVariables, jarClass, targetClass);
