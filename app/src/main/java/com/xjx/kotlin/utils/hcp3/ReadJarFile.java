@@ -1,4 +1,4 @@
-package com.xjx.kotlin.utils.hcp3.jar;
+package com.xjx.kotlin.utils.hcp3;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -9,7 +9,7 @@ import java.net.URLClassLoader;
 import java.util.*;
 
 public class ReadJarFile {
-  private final String basePath = "libs/cluster46/";
+  private final String basePath = "java/com/xjx/kotlin/utils/hcp3/jar/";
   private final List<String> jarPathArray = new ArrayList<>();
   private final String localFilePath = "technology.cariad.vehiclecontrolmanager.TestBean";
   private final String jarClassPath =
@@ -58,8 +58,10 @@ public class ReadJarFile {
         for (Method method : clazz.getDeclaredMethods()) {
           String name = method.getName();
           Type genericReturnType = method.getGenericReturnType();
-          String typeName = genericReturnType.getTypeName();
-
+          String typeName = null;
+          if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            typeName = genericReturnType.getTypeName();
+          }
           System.out.println("反射获取到的方法名字：[" + name + "]  typeName: [" + typeName + " ]");
         }
       }
