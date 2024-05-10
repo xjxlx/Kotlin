@@ -145,4 +145,6 @@ dependencies {
 
     // debugImplementation("com.squareup.leakcanary:leakcanary-android:2.13")
     // implementation("me.jessyan:autosize:1.2.1")
+
+    implementation("org.javassist:javassist:3.29.2-GA")
 }
