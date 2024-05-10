@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -24,17 +24,6 @@ public class ReadJarFile {
 
   private static final String TARGET_JAR_PATH = BASE_PATH + "mib_rsi_android.jar";
   private static final String TARGET_NODE_PATH = "de/esolutions/fw/rudi/viwi/service/hvac/v3";
-  private static final String[] IGNORE_METHOD_ARRAY =
-      new String[] {
-        "listQuery",
-        "listQueryWith",
-        "uuid",
-        "uuidString",
-        "uri",
-        "uriString",
-        "isGeneralSettingObject",
-        "nonExpandedEquals"
-      };
 
   /**
    * @return 返回指定JAR包中，指定targetPath 目录下所有object的集合
@@ -118,40 +107,48 @@ public class ReadJarFile {
     }
   }
 
-  private static Set<String> getMethods(Class<?> clazz) {
-    Set<String> memberVariables = new HashSet<>();
+  private static Map<String, String> getMethods(Class<?> clazz) {
+    Map<String, String> methodMap = new HashMap<>();
     try {
       if (clazz != null) {
         // 将数组转换为集合
-        Set<String> listIgnoreMethod = new HashSet<>(Arrays.asList(IGNORE_METHOD_ARRAY));
         Set<Method> methods = new HashSet<>(Arrays.asList(clazz.getDeclaredMethods()));
 
         for (Method method : methods) {
           String methodName = method.getName();
           String resultMethodName = "";
-          if (listIgnoreMethod.contains(methodName)) {
-            continue;
-          }
+          String resultMethodRunType = "";
+          // 1： 必须是以get开头的方法
           if (methodName.startsWith("get")) {
-            String splitGetName = methodName.split("get")[1];
-            resultMethodName =
-                splitGetName.substring(0, 1).toLowerCase() + splitGetName.substring(1);
+            // 2：过滤掉桥接方法和合成方法
+            if (!method.isBridge() && !method.isSynthetic()) {
+              // 3:去掉get并转换首字母为小写
+              String splitGetName = methodName.split("get")[1];
+              resultMethodName =
+                  splitGetName.substring(0, 1).toLowerCase() + splitGetName.substring(1);
 
-            memberVariables.add(resultMethodName);
-
-            Type genericReturnType = method.getGenericReturnType();
-            String typeName = genericReturnType.getTypeName();
-
-            System.out.println("key: " + resultMethodName + "  typeName: " + typeName);
+              // 4:获取方法的返回类型
+              Type returnType = method.getGenericReturnType();
+              if (returnType instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) returnType;
+                Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+                if (actualTypeArguments.length > 0) {
+                  resultMethodRunType = actualTypeArguments[0].getTypeName();
+                }
+              }
+              System.out.println(
+                  "method [" + resultMethodName + "] type:[" + resultMethodRunType + "]");
+              methodMap.put(resultMethodName, "");
+            }
           }
         }
       }
-      System.out.println("反射获取到的属性：" + memberVariables.size());
+      System.out.println("反射获取到的属性：" + methodMap.size());
     } catch (Exception e) {
       System.out.println("反射属性异常：" + e.getMessage());
     }
 
-    return memberVariables;
+    return methodMap;
   }
 
   private static Set<String> getMemberVariables(Class<?> clazz) {
@@ -227,8 +224,7 @@ public class ReadJarFile {
       Class<?> jarClass = readJar(jarPathArray, JAR_PATH, objectList);
 
       Class<?> targetClass = readLocalClass(LOCAL_PATH);
-
-      Set<String> jarMemberVariables = getMethods(jarClass);
+      Map<String, String> methods = getMethods(jarClass);
       //      Set<String> targetMemberVariables = getMemberVariables(jarClass);
 
       //      boolean success =
