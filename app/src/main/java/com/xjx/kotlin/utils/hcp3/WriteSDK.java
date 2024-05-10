@@ -54,11 +54,15 @@ public class WriteSDK {
       CtConstructor constructor = CtNewConstructor.make(paramTypes, null, cls);
       // 设置构造方法的修饰符为protected
       constructor.setModifiers(Modifier.PROTECTED);
-      // 设置构造函数的函数体
-      //      constructor.setBody("super($1);");
-      // 添加构造函数到类中
+      // 构建方法体
+      String body =
+          "{\n"
+              + " super($1);\n"
+              + // 调用父类的构造方法
+              "    this.age = $1.getEcoModeAutomatic().orElse(null);"
+              + "}";
+      constructor.setBody(body);
       cls.addConstructor(constructor);
-
       // 9：保存这个对象到文件中
       cls.writeFile(targetFolderPath);
       System.out.println("Custom type field added successfully.");

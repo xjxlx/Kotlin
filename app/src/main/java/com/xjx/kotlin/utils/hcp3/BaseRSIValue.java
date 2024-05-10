@@ -1,10 +1,7 @@
 package com.xjx.kotlin.utils.hcp3;
 
+import androidx.annotation.NonNull;
 
 public abstract class BaseRSIValue {
-  //  protected BaseRSIValue(@NonNull XObject object) {
-  //    this.name = object.getName();
-  //    this.uri = object.getUri();
-  //    this.id = object.getId();
-  //  }
+  protected BaseRSIValue(@NonNull XObject object) {}
 }

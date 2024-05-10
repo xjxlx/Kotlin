@@ -17,6 +17,7 @@ class ExampleUnitTest {
 
         val hashMap = HashMap<String, String>()
         hashMap["name"] = type
+        hashMap["age"] = "java.lang.String"
         WriteSDK.writeEntity(targetFolderPath, hashMap, type)
 
 //        Write2.main()
