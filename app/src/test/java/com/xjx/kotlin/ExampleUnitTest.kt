@@ -1,6 +1,6 @@
 package com.xjx.kotlin
 
-import com.xjx.kotlin.utils.hcp3.ReadJarFile
+import com.xjx.kotlin.utils.hcp3.WriteSDK
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -12,14 +12,14 @@ import org.junit.Test
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        val file = "com.xjx.kotlin.Bean"
+        val targetFolderPath = "./src/test"
         val type = "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject"
 
-        val readJarFile = ReadJarFile()
-        readJarFile.execute()
+        val hashMap = HashMap<String, String>()
+        hashMap["name"] = type
+        WriteSDK.writeEntity(targetFolderPath, hashMap, type)
 
-//        WriteSDK.writeEntity(file, "name", type, type)
-
+//        Write2.main()
         assertEquals(4, 2 + 2)
     }
 }
