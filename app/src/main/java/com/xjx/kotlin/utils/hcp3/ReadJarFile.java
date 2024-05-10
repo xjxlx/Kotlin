@@ -124,8 +124,8 @@ public class ReadJarFile {
   /**
    * @return 4：返回指定class的方法以及方法的泛型
    */
-  private static Map<String, String> getMethods(Class<?> clazz, String tag) {
-    Map<String, String> methodMap = new HashMap<>();
+  private static LinkedHashSet<JarBean> getMethods(Class<?> clazz, String tag) {
+    LinkedHashSet<JarBean> set = new LinkedHashSet<>();
     try {
       if (clazz != null) {
         // 将数组转换为集合
@@ -155,33 +155,35 @@ public class ReadJarFile {
               }
               System.out.println(
                   "method [" + resultMethodName + "] type:[" + resultMethodRunType + "]");
-              methodMap.put(resultMethodName, "");
+              JarBean bean = new JarBean();
+              bean.setAttribute(resultMethodName);
+              bean.setMethodType(resultMethodRunType);
+              bean.setMethod(methodName);
+              set.add(bean);
             }
           }
         }
       }
-      System.out.println("[" + tag + "]" + "反射获取到的属性：" + methodMap.size());
+      System.out.println("[" + tag + "]" + "反射获取到的属性：" + set.size());
     } catch (Exception e) {
       System.out.println("[" + tag + "]" + "反射属性异常：" + e.getMessage());
     }
-    return methodMap;
+    return set;
   }
 
   /**
-   * @param jarMethodMap jar包中的变量集合
-   * @param targetMethodMap 本地类中变量的集合
+   * @param jarMethodSet jar包中的变量集合
+   * @param targetMethodSet 本地类中变量的集合
    * @return 检测是否需要写入属性
    */
   private static boolean checkNeedWriteVariable(
-      Map<String, String> jarMethodMap, Map<String, String> targetMethodMap) {
-    if (jarMethodMap.size() != targetMethodMap.size()) {
+      LinkedHashSet<JarBean> jarMethodSet, LinkedHashSet<JarBean> targetMethodSet) {
+    if (jarMethodSet.size() != targetMethodSet.size()) {
       System.out.println("本地数据和jar包数据不相同，需要重新写入数据！");
       return false;
     } else {
       System.out.println("本地数据和jar包数据相同，需要对比数据内容是否相同！");
-      Set<String> jarSet = jarMethodMap.keySet();
-      Set<String> targetSet = targetMethodMap.keySet();
-      return jarSet.equals(targetSet);
+      return jarMethodSet.equals(targetMethodSet);
     }
   }
 
@@ -213,10 +215,10 @@ public class ReadJarFile {
       // 2：读取Jar包中指定的class类
       Class<?> jarClass = readJar(JAR_OBJECT_PATH, objectList);
       Class<?> targetClass = readLocalClass(LOCAL_PATH);
-      Map<String, String> jarMethods = getMethods(jarClass, "JAR");
-      Map<String, String> targetMethods = getMethods(targetClass, "Local");
+      LinkedHashSet<JarBean> jarSet = getMethods(jarClass, "JAR");
+      LinkedHashSet<JarBean> localSet = getMethods(targetClass, "Local");
 
-      boolean needWriteVariable = checkNeedWriteVariable(jarMethods, targetMethods);
+      boolean needWriteVariable = checkNeedWriteVariable(jarSet, localSet);
       if (needWriteVariable) {
         System.out.println("不需要写入属性！");
       } else {
