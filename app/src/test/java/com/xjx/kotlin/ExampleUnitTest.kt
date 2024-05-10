@@ -1,5 +1,6 @@
 package com.xjx.kotlin
 
+import com.xjx.kotlin.utils.hcp3.WriteSDK
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
