@@ -1,6 +1,6 @@
 package com.xjx.kotlin
 
-import com.xjx.kotlin.utils.hcp3.WriteSDK
+import com.xjx.kotlin.utils.hcp3.ReadJarFile
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -15,7 +15,11 @@ class ExampleUnitTest {
         val file = "com.xjx.kotlin.Bean"
         val type = "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject"
 
-        WriteSDK.writeEntity(file, "name", type, type)
+        val readJarFile = ReadJarFile()
+        readJarFile.execute()
+
+//        WriteSDK.writeEntity(file, "name", type, type)
+
         assertEquals(4, 2 + 2)
     }
 }

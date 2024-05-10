@@ -14,12 +14,13 @@ import javassist.*;
 
 public class ReadJarFile {
 
-  private static final List<String> jarPathArray = new ArrayList<>();
-  private static final String BASE_PATH = "src/main/java/com/xjx/kotlin/utils/hcp3/jar/";
-  private static final String TARGET_JAR_PATH = BASE_PATH + "mib_rsi_android.jar";
+  private static final String BASE_JAR_PATH = "src/main/java/com/xjx/kotlin/utils/hcp3/jar/";
+
+  private static final String TARGET_JAR_NAME = "mib_rsi_android.jar";
+  private static final String TARGET_JAR_PATH = BASE_JAR_PATH + TARGET_JAR_NAME;
 
   private static final String TARGET_NODE_PATH = "de/esolutions/fw/rudi/viwi/service/hvac/v3";
-  private static final String JAR_PATH =
+  private static final String JAR_OBJECT_PATH =
       "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject";
   private static final String LOCAL_PATH = "com.xjx.kotlin.utils.hcp3.Bean";
 
@@ -61,21 +62,25 @@ public class ReadJarFile {
    * @return 2：返回指定jar包中目标class类型的Class对象
    */
   public static Class<?> readJar(String className, List<String> listObject) {
-    jarPathArray.add(BASE_PATH + "fw_comm_android_stapi.jar");
-    jarPathArray.add(BASE_PATH + "fw_comm_android_support.jar");
-    jarPathArray.add(BASE_PATH + "fw_rsi_android_stapi.jar");
-    jarPathArray.add(BASE_PATH + "fw_rsi_rx2_android_support.jar");
-    jarPathArray.add(BASE_PATH + "fw_rudi_android_stapi.jar");
-    jarPathArray.add(BASE_PATH + "fw_rudi_android_support.jar");
-    jarPathArray.add(BASE_PATH + "fw_util_android_stapi.jar");
-    jarPathArray.add(BASE_PATH + "fw_util_android_support.jar");
-    jarPathArray.add(TARGET_JAR_PATH);
+    String[] jarArray =
+        new String[] {
+          "fw_comm_android_stapi.jar",
+          "fw_comm_android_support.jar",
+          "fw_rsi_android_stapi.jar",
+          "fw_rsi_rx2_android_support.jar",
+          "fw_rudi_android_stapi.jar",
+          "fw_rudi_android_support.jar",
+          "fw_util_android_stapi.jar",
+          "fw_util_android_support.jar",
+          TARGET_JAR_NAME
+        };
 
     try {
-      URL[] urls = new URL[jarPathArray.size()];
-      for (int i = 0; i < jarPathArray.size(); i++) {
-        urls[i] = new File(jarPathArray.get(i)).toURI().toURL();
+      URL[] urls = new URL[jarArray.length];
+      for (int i = 0; i < jarArray.length; i++) {
+        urls[i] = new File(BASE_JAR_PATH + jarArray[i]).toURI().toURL();
       }
+
       // 创建URLClassLoader来加载依赖的JAR包
       URLClassLoader classLoader = new URLClassLoader(urls, null);
       // 加载需要的类
@@ -119,7 +124,7 @@ public class ReadJarFile {
   /**
    * @return 4：返回指定class的方法以及方法的泛型
    */
-  private static Map<String, String> getMethods(Class<?> clazz) {
+  private static Map<String, String> getMethods(Class<?> clazz, String tag) {
     Map<String, String> methodMap = new HashMap<>();
     try {
       if (clazz != null) {
@@ -155,48 +160,29 @@ public class ReadJarFile {
           }
         }
       }
-      System.out.println("反射获取到的属性：" + methodMap.size());
+      System.out.println("[" + tag + "]" + "反射获取到的属性：" + methodMap.size());
     } catch (Exception e) {
-      System.out.println("反射属性异常：" + e.getMessage());
+      System.out.println("[" + tag + "]" + "反射属性异常：" + e.getMessage());
     }
-
     return methodMap;
   }
 
-  private static boolean writeVariable(
+  /**
+   * @param jarMethodMap jar包中的变量集合
+   * @param targetMethodMap 本地类中变量的集合
+   * @return 检测是否需要写入属性
+   */
+  private static boolean checkNeedWriteVariable(
       Map<String, String> jarMethodMap, Map<String, String> targetMethodMap) {
-
-    List<String> deleteList = new ArrayList<>();
-    // 1:先判断是否本地文件中有的数据，Jar文件中没有数据
-    for (Map.Entry<String, String> entry : targetMethodMap.entrySet()) {
-      String key = entry.getKey();
-      if (!jarMethodMap.containsKey(key)) {
-        deleteList.add(key);
-      }
+    if (jarMethodMap.size() != targetMethodMap.size()) {
+      System.out.println("本地数据和jar包数据不相同，需要重新写入数据！");
+      return false;
+    } else {
+      System.out.println("本地数据和jar包数据相同，需要对比数据内容是否相同！");
+      Set<String> jarSet = jarMethodMap.keySet();
+      Set<String> targetSet = targetMethodMap.keySet();
+      return jarSet.equals(targetSet);
     }
-    // 2：删除本地数据 todo
-    Map<String, String> addMap = new HashMap<>();
-    // 3:匹配jar和本地的集合，如果jar的集合中有本地集合中没有的数据，则添加到本地临时集合中
-    for (Map.Entry<String, String> entry : jarMethodMap.entrySet()) {
-      String key = entry.getKey();
-      String value = entry.getValue();
-      if (!targetMethodMap.containsKey(key)) {
-        addMap.put(key, value);
-      }
-    }
-    // 4:添加本地数据
-    try {
-      for (Map.Entry<String, String> entry : addMap.entrySet()) {
-        String key = entry.getKey();
-        String value = entry.getValue();
-        write(key, value);
-      }
-      return true;
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.out.println("write date error!");
-    }
-    return false;
   }
 
   public static void write(String key, String type) {
@@ -222,19 +208,20 @@ public class ReadJarFile {
 
   public void execute() {
     try {
-
       // 1：读取指定目标节点下所有的object集合
       List<String> objectList = readObjectClassName();
-
       // 2：读取Jar包中指定的class类
-      Class<?> jarClass = readJar(JAR_PATH, objectList);
-
+      Class<?> jarClass = readJar(JAR_OBJECT_PATH, objectList);
       Class<?> targetClass = readLocalClass(LOCAL_PATH);
-      Map<String, String> jarMethods = getMethods(jarClass);
-      Map<String, String> targetMethods = getMethods(targetClass);
+      Map<String, String> jarMethods = getMethods(jarClass, "JAR");
+      Map<String, String> targetMethods = getMethods(targetClass, "Local");
 
-      boolean success = writeVariable(jarMethods, targetMethods);
-      System.out.println("write data success:" + success);
+      boolean needWriteVariable = checkNeedWriteVariable(jarMethods, targetMethods);
+      if (needWriteVariable) {
+        System.out.println("不需要写入属性！");
+      } else {
+        System.out.println("需要写入属性！");
+      }
     } catch (Exception e) {
       System.out.println("write data error!");
     }
