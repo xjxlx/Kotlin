@@ -2,7 +2,6 @@ package com.xjx.kotlin.utils.hcp3;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -11,24 +10,23 @@ import java.net.URLClassLoader;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import javassist.*;
 
 public class ReadJarFile {
 
   private static final List<String> jarPathArray = new ArrayList<>();
   private static final String BASE_PATH = "src/main/java/com/xjx/kotlin/utils/hcp3/jar/";
-  private static final String LOCAL_PATH = "technology.cariad.vehiclecontrolmanager.TestBean";
+  private static final String TARGET_JAR_PATH = BASE_PATH + "mib_rsi_android.jar";
+
+  private static final String TARGET_NODE_PATH = "de/esolutions/fw/rudi/viwi/service/hvac/v3";
   private static final String JAR_PATH =
       "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject";
-  private static final String JAR_PATH2 =
-      "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObjectImpl";
-
-  private static final String TARGET_JAR_PATH = BASE_PATH + "mib_rsi_android.jar";
-  private static final String TARGET_NODE_PATH = "de/esolutions/fw/rudi/viwi/service/hvac/v3";
+  private static final String LOCAL_PATH = "com.xjx.kotlin.utils.hcp3.Bean";
 
   /**
-   * @return 返回指定JAR包中，指定targetPath 目录下所有object的集合
+   * @return 1：返回指定JAR包中，指定targetPath 目录下所有object和Enum的集合的名字
    */
-  public static List<String> readObjectClassName() {
+  private static List<String> readObjectClassName() {
     List<String> fileNames = new ArrayList<>();
     try {
       // 打开Jar文件
@@ -58,17 +56,25 @@ public class ReadJarFile {
   }
 
   /**
-   * @param jarArrayPath JAR包的集合，里面存着所有引用的JAR包
    * @param className 指定的class类名
    * @param listObject 指定节点下所有的Object或者Enum的对象集合
-   * @return 返回指定class类型的Class对象
+   * @return 2：返回指定jar包中目标class类型的Class对象
    */
-  public static Class<?> readJar(
-      List<String> jarArrayPath, String className, List<String> listObject) {
+  public static Class<?> readJar(String className, List<String> listObject) {
+    jarPathArray.add(BASE_PATH + "fw_comm_android_stapi.jar");
+    jarPathArray.add(BASE_PATH + "fw_comm_android_support.jar");
+    jarPathArray.add(BASE_PATH + "fw_rsi_android_stapi.jar");
+    jarPathArray.add(BASE_PATH + "fw_rsi_rx2_android_support.jar");
+    jarPathArray.add(BASE_PATH + "fw_rudi_android_stapi.jar");
+    jarPathArray.add(BASE_PATH + "fw_rudi_android_support.jar");
+    jarPathArray.add(BASE_PATH + "fw_util_android_stapi.jar");
+    jarPathArray.add(BASE_PATH + "fw_util_android_support.jar");
+    jarPathArray.add(TARGET_JAR_PATH);
+
     try {
-      URL[] urls = new URL[jarArrayPath.size()];
-      for (int i = 0; i < jarArrayPath.size(); i++) {
-        urls[i] = new File(jarArrayPath.get(i)).toURI().toURL();
+      URL[] urls = new URL[jarPathArray.size()];
+      for (int i = 0; i < jarPathArray.size(); i++) {
+        urls[i] = new File(jarPathArray.get(i)).toURI().toURL();
       }
       // 创建URLClassLoader来加载依赖的JAR包
       URLClassLoader classLoader = new URLClassLoader(urls, null);
@@ -80,8 +86,8 @@ public class ReadJarFile {
       classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwPrimitive");
       classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwObject");
       classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.ObjectKey");
-      for (int i = 0; i < listObject.size(); i++) {
-        classLoader.loadClass(listObject.get(i));
+      for (String s : listObject) {
+        classLoader.loadClass(s);
       }
 
       Class<?> jarClass = classLoader.loadClass(className);
@@ -96,6 +102,9 @@ public class ReadJarFile {
     }
   }
 
+  /**
+   * @return 3：读取本地的文件，获取class类型文件
+   */
   public static Class<?> readLocalClass(String className) {
     try {
       Class<?> targetClass = Class.forName(className);
@@ -107,6 +116,9 @@ public class ReadJarFile {
     }
   }
 
+  /**
+   * @return 4：返回指定class的方法以及方法的泛型
+   */
   private static Map<String, String> getMethods(Class<?> clazz) {
     Map<String, String> methodMap = new HashMap<>();
     try {
@@ -151,85 +163,78 @@ public class ReadJarFile {
     return methodMap;
   }
 
-  private static Set<String> getMemberVariables(Class<?> clazz) {
-    Set<String> memberVariables = new HashSet<>();
-    try {
-      if (clazz != null) {
-        // 将数组转换为集合
-        Set<Field> Fields = new HashSet<>(Arrays.asList(clazz.getDeclaredFields()));
-        for (Field field : Fields) {
-          field.setAccessible(true);
-          String type = field.getGenericType().getTypeName();
-
-          String methodName = field.getName();
-          if (methodName.startsWith("KEY_")) {
-            String claN = field.getDeclaringClass().getName();
-            System.out.println("反射获取到的属性：" + methodName + " --->" + type);
-            memberVariables.add(methodName);
-          }
-        }
-      }
-      System.out.println("反射获取到的属性：" + memberVariables.size());
-    } catch (Exception e) {
-      System.out.println("反射属性异常：" + e.getMessage());
-    }
-
-    return memberVariables;
-  }
-
   private static boolean writeVariable(
-      Set<String> jarVariable,
-      Set<String> targetVariable,
-      Class<?> jarClass,
-      Class<?> targetClass) {
-    try {
-      if (jarVariable.size() > targetVariable.size()) {
-        Set<String> extraVariables = new HashSet<>(jarVariable);
-        extraVariables.removeAll(targetVariable);
-        // 将多余的成员变量复制到文件 B 中去
-        for (String variable : extraVariables) {
-          Field field = jarClass.getDeclaredField(variable);
-          field.setAccessible(true);
-          Object value = field.get(null); // 静态变量，传入 null
-          Field fieldB = targetClass.getDeclaredField(variable);
-          fieldB.setAccessible(true);
-          fieldB.set(null, value); // 静态变量，传入 null
-          System.out.println("Copied variable " + variable + " from class A to class B");
-        }
-      } else {
-        System.out.println("No extra member variables found in class jar");
+      Map<String, String> jarMethodMap, Map<String, String> targetMethodMap) {
+
+    List<String> deleteList = new ArrayList<>();
+    // 1:先判断是否本地文件中有的数据，Jar文件中没有数据
+    for (Map.Entry<String, String> entry : targetMethodMap.entrySet()) {
+      String key = entry.getKey();
+      if (!jarMethodMap.containsKey(key)) {
+        deleteList.add(key);
       }
+    }
+    // 2：删除本地数据 todo
+    Map<String, String> addMap = new HashMap<>();
+    // 3:匹配jar和本地的集合，如果jar的集合中有本地集合中没有的数据，则添加到本地临时集合中
+    for (Map.Entry<String, String> entry : jarMethodMap.entrySet()) {
+      String key = entry.getKey();
+      String value = entry.getValue();
+      if (!targetMethodMap.containsKey(key)) {
+        addMap.put(key, value);
+      }
+    }
+    // 4:添加本地数据
+    try {
+      for (Map.Entry<String, String> entry : addMap.entrySet()) {
+        String key = entry.getKey();
+        String value = entry.getValue();
+        write(key, value);
+      }
+      return true;
     } catch (Exception e) {
+      e.printStackTrace();
       System.out.println("write date error!");
     }
     return false;
   }
 
+  public static void write(String key, String type) {
+    try {
+      // 创建类池
+      ClassPool classPool = ClassPool.getDefault();
+      // 设置类路径，指定要修改的类所在的路径
+      classPool.insertClassPath("com.xjx.kotlin.utils.hcp3");
+      // 加载类
+      CtClass ctClass = classPool.get("com.xjx.kotlin.utils.hcp3.Bean");
+      // 创建新属性，并指定类型
+      CtField newField = new CtField(classPool.get(type), key, ctClass);
+      // 添加新的属性
+      ctClass.addField(newField);
+      // 保存修改后的类文件
+      ctClass.writeFile("com.xjx.kotlin.utils.hcp3");
+      System.out.println("Field added successfully.");
+    } catch (NotFoundException | CannotCompileException | IOException e) {
+      e.printStackTrace();
+      System.err.println("An error occurred: " + e.getMessage());
+    }
+  }
+
   public void execute() {
     try {
-      jarPathArray.add(BASE_PATH + "fw_comm_android_stapi.jar");
-      jarPathArray.add(BASE_PATH + "fw_comm_android_support.jar");
-      jarPathArray.add(BASE_PATH + "fw_rsi_android_stapi.jar");
-      jarPathArray.add(BASE_PATH + "fw_rsi_rx2_android_support.jar");
-      jarPathArray.add(BASE_PATH + "fw_rudi_android_stapi.jar");
-      jarPathArray.add(BASE_PATH + "fw_rudi_android_support.jar");
-      jarPathArray.add(BASE_PATH + "fw_util_android_stapi.jar");
-      jarPathArray.add(BASE_PATH + "fw_util_android_support.jar");
-      jarPathArray.add(TARGET_JAR_PATH);
 
       // 1：读取指定目标节点下所有的object集合
       List<String> objectList = readObjectClassName();
 
-      // 2：读取
-      Class<?> jarClass = readJar(jarPathArray, JAR_PATH, objectList);
+      // 2：读取Jar包中指定的class类
+      Class<?> jarClass = readJar(JAR_PATH, objectList);
 
       Class<?> targetClass = readLocalClass(LOCAL_PATH);
-      Map<String, String> methods = getMethods(jarClass);
-      //      Set<String> targetMemberVariables = getMemberVariables(jarClass);
+      Map<String, String> jarMethods = getMethods(jarClass);
+      Map<String, String> targetMethods = getMethods(targetClass);
 
-      //      boolean success =
-      //          writeVariable(jarMemberVariables, targetMemberVariables, jarClass, targetClass);
-      //      System.out.println("write data success:" + success);
+      boolean success = writeVariable(jarMethods, targetMethods);
+      System.out.println("write data success:" + success);
     } catch (Exception e) {
       System.out.println("write data error!");
     }
