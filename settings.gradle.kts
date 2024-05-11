@@ -53,3 +53,4 @@ include(":refresh")
 
 include(":model")
 include(":compose")
+include(":hcp3")

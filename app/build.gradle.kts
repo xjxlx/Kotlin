@@ -96,6 +96,8 @@ android {
 }
 
 dependencies {
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
     implementation(project(":apphelper"))
     implementation(project(":refresh"))
     implementation(project(":http"))
@@ -146,5 +148,7 @@ dependencies {
     // debugImplementation("com.squareup.leakcanary:leakcanary-android:2.13")
     // implementation("me.jessyan:autosize:1.2.1")
 
-    implementation("org.javassist:javassist:3.29.2-GA")
+    // implementation("org.javassist:javassist:3.29.2-GA")
+    // 用于生成代码的依赖
+    implementation("com.squareup:javapoet:1.13.0")
 }

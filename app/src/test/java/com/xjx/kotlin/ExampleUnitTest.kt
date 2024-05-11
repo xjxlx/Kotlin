@@ -2,9 +2,9 @@ package com.xjx.kotlin
 
 import com.xjx.kotlin.utils.hcp3.JarBean
 import com.xjx.kotlin.utils.hcp3.WriteSDK
-import org.junit.Assert.assertEquals
+import com.xjx.kotlin.utils.hcp3.WriteSdk2
+import junit.framework.TestCase.assertEquals
 import org.junit.Test
-import kotlin.collections.linkedSetOf
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -14,20 +14,24 @@ import kotlin.collections.linkedSetOf
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        val targetFolderPath = "./src/test"
+        val targetFolderPath = "./src/main/java/com/xjx/kotlin/utils/hcp3"
+//        com.xjx.kotlin.utils.hcp3
         val type = "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject"
+//        method [aC] typeName: [java.util.Optional<de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject>]
+//        GenericType:[de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject]
 
-//        val hashMap = HashMap<String, String>()
-//        hashMap["name"] = type
-//        hashMap["age"] = "java.lang.String"
-//        LinkedHashSet<JarBean> beanSet
         val linkedSetOf = linkedSetOf<JarBean>()
         val jarBean = JarBean()
         jarBean.method = "getAC"
-        jarBean.attribute = "ac"
-        jarBean.methodType = "de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject"
+        jarBean.attribute = "aC"
+        jarBean.methodGenericityType = "de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject"
+        jarBean.methodType = "java.util.Optional<de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject>"
+        jarBean.objectName = "SwitchControlObject"
         linkedSetOf.add(jarBean)
         WriteSDK.writeEntity(targetFolderPath, linkedSetOf, type)
+
+        val write = WriteSdk2()
+        write.write()
 
 //        val readJarFile = ReadJarFile()
 //        readJarFile.execute()
