@@ -7,7 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.lang.model.element.Modifier;
 
-public class DT {
+public class GenerateUtil {
+
   public static void main(String[] args) throws IOException {
     MethodSpec main =
         MethodSpec.methodBuilder("main")
@@ -23,9 +24,8 @@ public class DT {
             .addMethod(main)
             .build();
 
-    JavaFile javaFile = JavaFile.builder("com.example.helloworld", helloWorld).build();
-    File file = new File("/hcp3/com/android/hcp3/temp");
-    //    javaFile.writeTo(System.out);
+    JavaFile javaFile = JavaFile.builder("generate", helloWorld).build();
+    File file = new File("hcp3/src/main/java/com/android/hcp3");
     javaFile.writeTo(file);
   }
 }
