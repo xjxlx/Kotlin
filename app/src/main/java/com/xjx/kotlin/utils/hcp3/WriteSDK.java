@@ -52,11 +52,15 @@ public class WriteSDK {
           bodyBuffer
               .append("this.")
               .append(bean.getAttribute())
-              .append("= $1.")
+              .append(" = $1.")
               .append(bean.getMethod())
               .append("()")
+              .append(".map(")
+              .append(bean.getObjectName())
+              .append("::new)")
               .append(".orElse(null);");
         }
+        // this.aqiValue = object.getAqiValue().map(ValueIndicationEntity::new).orElse(null);
       }
 
       // 4：添加构造方法
@@ -67,16 +71,11 @@ public class WriteSDK {
       CtConstructor constructor = CtNewConstructor.make(paramTypes, null, cls);
       // 设置构造方法的修饰符为protected
       constructor.setModifiers(Modifier.PROTECTED);
-      // 构建方法体
-      //      String body =
-      //          "{\n"
-      //              + " super($1);\n"
-      //              + // 调用父类的构造方法
-      //              "    this.age = $1.getEcoModeAutomatic().orElse(null);"
-      //              + "}";
-
+      // 设置body
       bodyBuffer.append("}");
-      constructor.setBody(bodyBuffer.toString());
+      String body = bodyBuffer.toString();
+      System.out.println("body:" + body);
+      constructor.setBody(body);
       cls.addConstructor(constructor);
       // 9：保存这个对象到文件中
       cls.writeFile(targetFolderPath);
