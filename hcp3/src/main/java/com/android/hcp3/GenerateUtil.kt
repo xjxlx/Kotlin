@@ -82,13 +82,7 @@ object GenerateUtil {
                 .addParameter(methodParameter) // 方法的参数
         // </editor-fold>
 
-        // 2.3：定义方法体
-        val methodBody =
-            CodeBlock.builder()
-                .addStatement(" this.aC = object.getAC().map(HvacSwitchControlEntity::new).orElse(null);")
-                .build()
-
-        // 三：构建属性对象
+        // 三：循环构建属性和方法体
         val iterator = jarMethodSet.iterator()
         while (iterator.hasNext()) {
             val bean = iterator.next()
@@ -98,33 +92,35 @@ object GenerateUtil {
             val genericPath = bean.genericPath // 返回值的路径
             val genericName = bean.genericName
 
+            // <editor-fold desc="四：构建属性对象">
             // 一：构建属性对象
-            // 分割返回类型的路径
-            val lastIndex = genericPath.lastIndexOf(".")
-            val genericPathSubs = genericPath.substring(lastIndex)
-
             // todo 此处暂时使用源码中返回值类型，后续需要给替换掉
             // 1.1：定义属性的类型
-            val fieldType = ClassName.get(genericPathSubs, genericName)
+            val fieldType = getTypeForPath(genericPath)
+            val fieldTypeName = ClassName.get(fieldType[0], fieldType[1])
             println("attribute:[$attributeName]  attributeType:[$genericPath]")
 
             // 1.2:组装属性
             val field =
-                FieldSpec.builder(fieldType, attributeName)
+                FieldSpec.builder(fieldTypeName, attributeName)
                     .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
                     .build()
-
             // 添加属性到类中
             classTypeBuild.addField(field)
+            // </editor-fold>
 
+            // <editor-fold desc="屋：构建方法体对象">
             // 2.3：定义方法体
+            val body = "this.$attributeName = object.$methodName().map(${fieldType[1]}::new).orElse(null)"
             val methodBody =
                 CodeBlock.builder()
-                    .addStatement(" this.aC = object.getAC().map(HvacSwitchControlEntity::new).orElse(null);")
+                    .addStatement(body)
                     .build()
+            methodSpecBuild.addCode(methodBody)
 
             // 添加完成的方法内容
             classTypeBuild.addMethod(methodSpecBuild.build())
+            // </editor-fold>
         }
 
         // <editor-fold desc="四：写入到类中">
