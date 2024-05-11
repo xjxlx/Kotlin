@@ -159,6 +159,9 @@ public class ReadJarFile {
               bean.setAttribute(resultMethodName);
               bean.setMethodType(resultMethodRunType);
               bean.setMethod(methodName);
+              String objectName =
+                  resultMethodRunType.substring(resultMethodRunType.lastIndexOf(".") + 1);
+              bean.setObjectName(objectName);
               set.add(bean);
             }
           }

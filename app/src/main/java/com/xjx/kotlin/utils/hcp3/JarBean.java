@@ -4,6 +4,7 @@ public class JarBean {
   private String attribute;
   private String method;
   private String methodType;
+  private String objectName;
 
   public String getAttribute() {
     return attribute;
@@ -29,6 +30,14 @@ public class JarBean {
     this.methodType = methodType;
   }
 
+  public String getObjectName() {
+    return objectName;
+  }
+
+  public void setObjectName(String objectName) {
+    this.objectName = objectName;
+  }
+
   @Override
   public String toString() {
     return "JarBean{"
@@ -40,6 +49,9 @@ public class JarBean {
         + '\''
         + ", methodType='"
         + methodType
+        + '\''
+        + ", objectName='"
+        + objectName
         + '\''
         + '}';
   }
