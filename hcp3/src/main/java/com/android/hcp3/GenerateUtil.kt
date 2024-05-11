@@ -37,9 +37,9 @@ object GenerateUtil {
     private val METHOD_ANNOTATION_TYPE = ClassName.get("androidx.annotation", "NonNull")
 
     /**
-     *文件输出的路径
+     * 父类的继承类
      */
-    private val OUT_FOLDER = File(RSI_PROJECT_PATH + RSI_PARENT_NODE_PATH + RSI_CHILD_NODE_PATH)
+    private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
 
     @Throws(IOException::class)
     @JvmStatic
@@ -57,8 +57,12 @@ object GenerateUtil {
         // <editor-fold desc="一：构建类对象">
         val classType = getTypeForPath(RSI_CHILD_NODE_OBJECT_NAME)
         val className = classType[1] + "Entity"
+
+        // 3:组合类对象
         val classTypeBuild =
             TypeSpec.classBuilder(className)
+                .addAnnotations(getAddAnnotations())
+                .superclass(SUPER_CLASS_NAME)
                 .addModifiers(Modifier.PUBLIC)
         println("ClassName:[$className]")
         // </editor-fold>
@@ -79,6 +83,7 @@ object GenerateUtil {
             MethodSpec.constructorBuilder() // 标注是构造犯法
                 .addModifiers(Modifier.PROTECTED) // 方法的修饰符
                 .addParameter(methodParameter) // 方法的参数
+                .addStatement("super(object)") // 调用父类构造函数
         // </editor-fold>
 
         // 三：循环构建属性和方法体
@@ -145,5 +150,22 @@ object GenerateUtil {
         array[0] = path.substring(0, lastIndexOf)
         array[1] = path.substring(lastIndexOf + 1)
         return array
+    }
+
+    /**
+     * 类的注解
+     */
+    private fun getAddAnnotations(): List<AnnotationSpec> {
+        val annotations = arrayListOf<AnnotationSpec>()
+        val getter = AnnotationSpec.builder(ClassName.get("lombok", "Getter")).build()
+        annotations.add(getter)
+
+        val toString = AnnotationSpec.builder(ClassName.get("lombok", "ToString")).addMember("callSuper", "true").build()
+        annotations.add(toString)
+
+        val equalsAndHashCode =
+            AnnotationSpec.builder(ClassName.get("lombok", "EqualsAndHashCode")).addMember("callSuper", "true").build()
+        annotations.add(equalsAndHashCode)
+        return annotations
     }
 }
