@@ -145,8 +145,6 @@ public class ReadJarFile {
 
               // 4:获取方法的返回类型
               Type returnType = method.getGenericReturnType();
-              String typeName = returnType.getTypeName();
-
               // 5:返回泛型的类型
               if (returnType instanceof ParameterizedType) {
                 ParameterizedType parameterizedType = (ParameterizedType) returnType;
@@ -158,21 +156,18 @@ public class ReadJarFile {
               System.out.println(
                   "method ["
                       + resultMethodName
-                      + "] typeName: ["
-                      + typeName
                       + "] GenericType:["
                       + resultMethodGenericityType
                       + "]");
 
               JarBean bean = new JarBean();
-              bean.setAttribute(resultMethodName);
-              bean.setMethod(methodName);
-              bean.setMethodType(typeName);
-              bean.setMethodGenericityType(resultMethodGenericityType);
+              bean.setAttributeName(resultMethodName);
+              bean.setMethodName(methodName);
+              bean.setGenericPath(resultMethodGenericityType);
               String objectName =
                   resultMethodGenericityType.substring(
                       resultMethodGenericityType.lastIndexOf(".") + 1);
-              bean.setObjectName(objectName);
+              bean.setGenericName(objectName);
               set.add(bean);
             }
           }

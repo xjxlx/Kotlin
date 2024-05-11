@@ -1,69 +1,64 @@
 package com.android.hcp3;
 
 public class JarBean {
-  private String attribute;
-  private String method;
-  private String methodType;
-  private String methodGenericityType;
-  private String objectName;
+  /** 方法对应的具体的属性名字，例如：aC */
+  private String attributeName;
 
-  public String getAttribute() {
-    return attribute;
+  /** 方法的名字，例如：getAc */
+  private String methodName;
+
+  /** 泛型的路径，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject */
+  private String genericPath;
+
+  /** 泛型的名字，例如：SwitchControlObject */
+  private String genericName;
+
+  public String getAttributeName() {
+    return attributeName;
   }
 
-  public void setAttribute(String attribute) {
-    this.attribute = attribute;
+  public void setAttributeName(String attributeName) {
+    this.attributeName = attributeName;
   }
 
-  public String getMethod() {
-    return method;
+  public String getMethodName() {
+    return methodName;
   }
 
-  public void setMethod(String method) {
-    this.method = method;
+  public void setMethodName(String methodName) {
+    this.methodName = methodName;
   }
 
-  public String getMethodType() {
-    return methodType;
+  public String getGenericPath() {
+    return genericPath;
   }
 
-  public void setMethodType(String methodType) {
-    this.methodType = methodType;
+  public void setGenericPath(String genericPath) {
+    this.genericPath = genericPath;
   }
 
-  public String getMethodGenericityType() {
-    return methodGenericityType;
+  public String getGenericName() {
+    return genericName;
   }
 
-  public void setMethodGenericityType(String methodGenericityType) {
-    this.methodGenericityType = methodGenericityType;
-  }
-
-  public String getObjectName() {
-    return objectName;
-  }
-
-  public void setObjectName(String objectName) {
-    this.objectName = objectName;
+  public void setGenericName(String genericName) {
+    this.genericName = genericName;
   }
 
   @Override
   public String toString() {
     return "JarBean{"
         + "attribute='"
-        + attribute
+        + attributeName
         + '\''
         + ", method='"
-        + method
-        + '\''
-        + ", methodType='"
-        + methodType
+        + methodName
         + '\''
         + ", methodGenericityType='"
-        + methodGenericityType
+        + genericPath
         + '\''
         + ", objectName='"
-        + objectName
+        + genericName
         + '\''
         + '}';
   }
