@@ -24,7 +24,7 @@ public class DT {
             .build();
 
     JavaFile javaFile = JavaFile.builder("com.example.helloworld", helloWorld).build();
-    File file = new File("com.android.hcp3");
+    File file = new File("/hcp3/com/android/hcp3/temp");
     //    javaFile.writeTo(System.out);
     javaFile.writeTo(file);
   }

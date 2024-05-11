@@ -1,4 +1,4 @@
-package com.xjx.kotlin.utils.hcp3;
+package com.android.hcp3;
 
 import java.io.File;
 import java.io.IOException;
