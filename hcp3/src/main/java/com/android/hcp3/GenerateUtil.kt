@@ -82,12 +82,8 @@ object GenerateUtil {
             // todo 此处暂时使用源码中返回值类型，后续需要给替换掉
             // 1.1：定义属性的类型
             val fieldType = getTypeForPath(genericPath)
-            if (attributeName.equals("flavourCartridgeAvailability")) {
-                println("-------------------------------->:" + fieldType[1])
-            }
-
             // 1.2:组装属性
-            var fieldSpec: FieldSpec.Builder? = null
+            var fieldSpec: FieldSpec.Builder
 
             // 判定是不是集合类型的属性
             if (isListAttribute(genericPath)) {
@@ -98,7 +94,7 @@ object GenerateUtil {
                     )
                 // 创建成员变量
                 fieldSpec =
-                    FieldSpec.builder(listType, "myList")
+                    FieldSpec.builder(listType, attributeName)
             } else {
                 val fieldTypeName = ClassName.get(fieldType[0], fieldType[1])
                 fieldSpec =
@@ -142,6 +138,9 @@ object GenerateUtil {
         // </editor-fold>
     }
 
+    /**
+     * 判断参数是不是集合类型的参数
+     */
     private fun isListAttribute(path: String): Boolean {
         return (path.startsWith("java.util.List")) && (path.contains("<") && path.contains(">")) && (path.endsWith(">"))
     }
