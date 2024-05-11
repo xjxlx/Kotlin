@@ -23,6 +23,10 @@ public class ReadJarFile {
       "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject";
   private static final String LOCAL_PATH = "com.xjx.kotlin.utils.hcp3.Bean";
 
+  public static void main(String[] args) {
+    execute();
+  }
+
   /**
    * @return 1：返回指定JAR包中，指定targetPath 目录下所有object和Enum的集合的名字
    */
@@ -213,7 +217,7 @@ public class ReadJarFile {
     //    }
   }
 
-  public void execute() {
+  public static void execute() {
     try {
       // 1：读取指定目标节点下所有的object集合
       List<String> objectList = readObjectClassName();
@@ -233,6 +237,4 @@ public class ReadJarFile {
       System.out.println("write data error!");
     }
   }
-
-  public static void main(String[] args) {}
 }
