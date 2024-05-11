@@ -13,7 +13,7 @@ import java.util.jar.JarFile;
 
 public class ReadJarFile {
 
-  private static final String BASE_JAR_PATH = "src/main/java/com/xjx/kotlin/utils/hcp3/jar/";
+  private static final String BASE_JAR_PATH = "hcp3/src/main/java/com/android/hcp3/jar/";
 
   private static final String TARGET_JAR_NAME = "mib_rsi_android.jar";
   private static final String TARGET_JAR_PATH = BASE_JAR_PATH + TARGET_JAR_NAME;
@@ -232,6 +232,7 @@ public class ReadJarFile {
         System.out.println("不需要写入属性！");
       } else {
         System.out.println("需要写入属性！");
+        GenerateUtil.generateEntity(jarSet);
       }
     } catch (Exception e) {
       System.out.println("write data error!");

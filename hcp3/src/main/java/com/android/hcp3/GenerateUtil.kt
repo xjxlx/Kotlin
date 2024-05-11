@@ -1,36 +1,16 @@
 package com.android.hcp3
 
+import com.android.hcp3.Config.RSI_CHILD_NODE_OBJECT_NAME
+import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
+import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
+import com.android.hcp3.Config.RSI_PROJECT_PACKAGE_PATH
+import com.android.hcp3.Config.RSI_PROJECT_PATH
 import com.squareup.javapoet.*
 import java.io.File
 import java.io.IOException
 import javax.lang.model.element.Modifier
 
 object GenerateUtil {
-    /**
-     *项目中mode的路径，用于存储生成的代码outPut路径
-     */
-    private const val RSI_PROJECT_PATH: String = "hcp3/src/main/java/"
-
-    /**
-     *生成代码的主路径，这里指的是mode的包名
-     */
-    private const val RSI_PROJECT_PACKAGE_PATH: String = "com.android.hcp3.generate."
-
-    /**
-     *rsi中大项的节点路径
-     */
-    private const val RSI_PARENT_NODE_PATH = "hvac.v3."
-
-    /**
-     *rsi中大项中子节点路径
-     */
-    private const val RSI_CHILD_NODE_PATH = "generalsettings"
-
-    /**
-     * rsi大项节点下的子节点种object的完整包名
-     */
-    private const val RSI_CHILD_NODE_OBJECT_NAME = "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject"
-
     /**
      * 方法参数的注解类型
      */
@@ -53,6 +33,7 @@ object GenerateUtil {
         generateEntity(linkedSetOf)
     }
 
+    @JvmStatic
     fun generateEntity(jarMethodSet: LinkedHashSet<JarBean>) {
         // <editor-fold desc="一：构建类对象">
         val classType = getTypeForPath(RSI_CHILD_NODE_OBJECT_NAME)
@@ -86,6 +67,7 @@ object GenerateUtil {
                 .addStatement("super(object)") // 调用父类构造函数
         // </editor-fold>
 
+        val bodyBuilder = StringBuilder()
         // 三：循环构建属性和方法体
         val iterator = jarMethodSet.iterator()
         while (iterator.hasNext()) {
@@ -112,22 +94,23 @@ object GenerateUtil {
             classTypeBuild.addField(field)
             // </editor-fold>
 
-            // <editor-fold desc="屋：构建方法体对象">
-            // 2.3：定义方法体
-            val body = "this.$attributeName = object.$methodName().map(${fieldType[1]}::new).orElse(null)"
-            val methodBody =
-                CodeBlock.builder()
-                    .addStatement(body)
-                    .build()
-            methodSpecBuild.addCode(methodBody)
-
-            // 添加完成的方法内容
-            classTypeBuild.addMethod(methodSpecBuild.build())
-            // </editor-fold>
+            // 组合方法体内容
+            bodyBuilder.append("this.$attributeName = object.$methodName().map(${fieldType[1]}::new).orElse(null);\n")
         }
 
-        // <editor-fold desc="四：写入到类中">
-        // 四：写入类
+        // <editor-fold desc="五：构建方法体对象">
+        // 2.3：定义方法体
+        val methodBody =
+            CodeBlock.builder()
+                .addStatement(bodyBuilder.toString())
+                .build()
+        methodSpecBuild.addCode(methodBody)
+
+        // 添加完成的方法内容
+        classTypeBuild.addMethod(methodSpecBuild.build())
+        // </editor-fold>
+
+        // <editor-fold desc="六：写入到类中">
         val packageName = RSI_PROJECT_PACKAGE_PATH + RSI_PARENT_NODE_PATH + RSI_CHILD_NODE_PATH
         val javaFile = JavaFile.builder(packageName, classTypeBuild.build()).build()
 
