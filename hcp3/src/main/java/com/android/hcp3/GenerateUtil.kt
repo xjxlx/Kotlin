@@ -82,16 +82,36 @@ object GenerateUtil {
             // todo 此处暂时使用源码中返回值类型，后续需要给替换掉
             // 1.1：定义属性的类型
             val fieldType = getTypeForPath(genericPath)
-            val fieldTypeName = ClassName.get(fieldType[0], fieldType[1])
-            println("attribute:[$attributeName]  attributeType:[$genericPath]")
+            if (attributeName.equals("flavourCartridgeAvailability")) {
+                println("-------------------------------->:" + fieldType[1])
+            }
 
             // 1.2:组装属性
-            val field =
-                FieldSpec.builder(fieldTypeName, attributeName)
-                    .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-                    .build()
+            var fieldSpec: FieldSpec.Builder? = null
+
+            // 判定是不是集合类型的属性
+            if (isListAttribute(genericPath)) {
+                val listType: TypeName =
+                    ParameterizedTypeName.get(
+                        ClassName.get("java.util", "List"),
+                        ClassName.get(fieldType[0], fieldType[1])
+                    )
+                // 创建成员变量
+                fieldSpec =
+                    FieldSpec.builder(listType, "myList")
+            } else {
+                val fieldTypeName = ClassName.get(fieldType[0], fieldType[1])
+                fieldSpec =
+                    FieldSpec.builder(fieldTypeName, attributeName)
+            }
+
+            println("attribute:[$attributeName]  attributeType:[$genericPath]")
+
             // 添加属性到类中
-            classTypeBuild.addField(field)
+            fieldSpec?.let {
+                it.addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                classTypeBuild.addField(it.build())
+            }
             // </editor-fold>
 
             // 组合方法体内容
@@ -122,16 +142,30 @@ object GenerateUtil {
         // </editor-fold>
     }
 
+    private fun isListAttribute(path: String): Boolean {
+        return (path.startsWith("java.util.List")) && (path.contains("<") && path.contains(">")) && (path.endsWith(">"))
+    }
+
     /**
      * @param path 指定类的全路径，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject
      * @return 返回一个数据，第一个元素是指定路径中最后一个.的前半截，第二个元素是object的简写名字，例如：[0] = de.esolutions.fw.rudi.viwi.service.hvac.v3
      * [1] = GeneralSettingObject
      */
     private fun getTypeForPath(path: String): Array<String> {
-        val lastIndexOf = path.lastIndexOf(".")
         val array = Array(2) { "" }
-        array[0] = path.substring(0, lastIndexOf)
-        array[1] = path.substring(lastIndexOf + 1)
+        val lastIndexOf = path.lastIndexOf(".")
+        val packageName = path.substring(0, lastIndexOf)
+        val simple = path.substring(lastIndexOf + 1)
+
+        // 判断是否是集合
+        val listAttribute = isListAttribute(path)
+        if (listAttribute) {
+            array[0] = packageName.split("java.util.List<")[1]
+            array[1] = simple.replace(">", "")
+        } else {
+            array[0] = packageName
+            array[1] = simple
+        }
         return array
     }
 
