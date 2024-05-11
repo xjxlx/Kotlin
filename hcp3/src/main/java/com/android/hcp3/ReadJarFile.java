@@ -164,10 +164,6 @@ public class ReadJarFile {
               bean.setAttributeName(resultMethodName);
               bean.setMethodName(methodName);
               bean.setGenericPath(resultMethodGenericityType);
-              String objectName =
-                  resultMethodGenericityType.substring(
-                      resultMethodGenericityType.lastIndexOf(".") + 1);
-              bean.setGenericName(objectName);
               set.add(bean);
             }
           }

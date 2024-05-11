@@ -49,7 +49,6 @@ object GenerateUtil {
         jarBean.attributeName = "aC"
         jarBean.methodName = "getAC"
         jarBean.genericPath = "de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject"
-        jarBean.genericName = "SwitchControlObject"
         linkedSetOf.add(jarBean)
         generateEntity(linkedSetOf)
     }
@@ -90,7 +89,6 @@ object GenerateUtil {
             val attributeName = bean.attributeName // 具体的属性名字
             val methodName = bean.methodName // 方法名字
             val genericPath = bean.genericPath // 返回值的路径
-            val genericName = bean.genericName
 
             // <editor-fold desc="四：构建属性对象">
             // 一：构建属性对象
