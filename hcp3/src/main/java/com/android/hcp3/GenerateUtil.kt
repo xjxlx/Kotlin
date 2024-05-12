@@ -109,7 +109,9 @@ object GenerateUtil {
                     }
 
                     3 -> { // List数据类型
-                        "this.$attributeName = object.$methodName().map(list ->list.stream().map(${fieldType[1]}::new).collect(Collectors.toList()))..orElse(null);\n"
+                        bodyBuilder.append(
+                            "this.$attributeName = object.$methodName().map(list ->list.stream().map(${fieldType[1]}::new).collect(Collectors.toList())).orElse(null);\n"
+                        )
                     }
 
                     4 -> { // object数据类型
