@@ -65,23 +65,26 @@ public class ReadJarFile {
    * @return 2：返回指定jar包中目标class类型的Class对象
    */
   public static Class<?> readJar(String className, List<String> listObject) {
-    String[] jarArray =
-        new String[] {
-          "fw_comm_android_stapi.jar",
-          "fw_comm_android_support.jar",
-          "fw_rsi_android_stapi.jar",
-          "fw_rsi_rx2_android_support.jar",
-          "fw_rudi_android_stapi.jar",
-          "fw_rudi_android_support.jar",
-          "fw_util_android_stapi.jar",
-          "fw_util_android_support.jar",
-          TARGET_JAR_NAME
-        };
+    ArrayList<String> jarList = new ArrayList<>();
+    File folder = new File(BASE_JAR_PATH);
+    if (folder.exists() && folder.isDirectory()) {
+      // 获取文件夹下的所有文件
+      File[] files = folder.listFiles();
+      if (files != null) {
+        // 遍历文件数组，输出文件名
+        for (File file : files) {
+          System.out.println("JAR-Name: " + file.getName());
+          jarList.add(file.getName());
+        }
+      }
+    } else {
+      System.out.println("读取目标Jar文件夹中的JAR异常！");
+    }
 
     try {
-      URL[] urls = new URL[jarArray.length];
-      for (int i = 0; i < jarArray.length; i++) {
-        urls[i] = new File(BASE_JAR_PATH + jarArray[i]).toURI().toURL();
+      URL[] urls = new URL[jarList.size()];
+      for (int i = 0; i < jarList.size(); i++) {
+        urls[i] = new File(BASE_JAR_PATH + jarList.get(i)).toURI().toURL();
       }
 
       // 创建URLClassLoader来加载依赖的JAR包
