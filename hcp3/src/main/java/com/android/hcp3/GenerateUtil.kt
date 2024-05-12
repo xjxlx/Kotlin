@@ -102,7 +102,20 @@ object GenerateUtil {
                 // 组合参数
                 classTypeBuild.addField(fieldSpec.build())
                 // 组合方法体内容
-                bodyBuilder.append("this.$attributeName = object.$methodName().map(${fieldType[1]}::new).orElse(null);\n")
+
+                when (attributeClassType) {
+                    1 -> { // 1：基础数据类型
+                        bodyBuilder.append("this.$attributeName = object.$methodName().orElse(null);\n")
+                    }
+
+                    3 -> { // List数据类型
+                        "this.$attributeName = object.$methodName().map(list ->list.stream().map(${fieldType[1]}::new).collect(Collectors.toList()))..orElse(null);\n"
+                    }
+
+                    4 -> { // object数据类型
+                        bodyBuilder.append("this.$attributeName = object.$methodName().map(${fieldType[1]}::new).orElse(null);\n")
+                    }
+                }
                 // </editor-fold>
             } else {
                 println("参数的具体类型找不到，请检查具体的内容！")
@@ -131,8 +144,8 @@ object GenerateUtil {
         println("OutPutPath:$RSI_PROJECT_PATH")
         val outPutFile = File(RSI_PROJECT_PATH)
         // 这里输出的路径，是以项目的root作为根目录的
-//        javaFile.writeTo(outPutFile)
-        javaFile.writeTo(System.out)
+        javaFile.writeTo(outPutFile)
+//        javaFile.writeTo(System.out)
         // </editor-fold>
     }
 
