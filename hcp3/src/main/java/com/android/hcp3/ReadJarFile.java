@@ -17,6 +17,7 @@ import java.util.jar.JarFile;
 public class ReadJarFile {
 
   private static final String LOCAL_PATH = "com.xjx.kotlin.utils.hcp3.Bean";
+  private static URLClassLoader mClassLoader;
 
   public static void main(String[] args) {
     execute();
@@ -38,12 +39,21 @@ public class ReadJarFile {
         JarEntry entry = entries.nextElement();
         String entryName = entry.getName();
         // 收集指定路径下的所有文件名称
-        // System.out.println("entryName:" + entryName);
         if (entryName.startsWith(filterNodePath)) {
+          // System.out.println("entryName:" + entryName);
+          String parentNodeName = StringUtil.capitalize(RSI_PARENT_NODE_PATH);
           if (entryName.contains(".class")) {
             String splitClassName = entryName.split(".class")[0];
-            if (((splitClassName.endsWith("Object")) || (splitClassName.endsWith("Enum")))
+            if (((splitClassName.endsWith("Object"))
+                    || (splitClassName.endsWith("Enum"))
+                    || (splitClassName.endsWith(parentNodeName)))
                 && (splitClassName.contains("/"))) {
+
+              // 如果是以父类节点结束的，则保存这个节点的全属性包名
+              if (splitClassName.endsWith(parentNodeName)) {
+                System.out.println("rsiTargetNodePath:" + splitClassName);
+                rsiTargetNodePath = splitClassName;
+              }
               String replaceName = splitClassName.replace("/", ".");
               fileNames.add(replaceName);
             }
@@ -65,6 +75,7 @@ public class ReadJarFile {
   public static Class<?> readJar(String className, List<String> listObject) {
     ArrayList<String> jarList = new ArrayList<>();
     File folder = new File(BASE_JAR_PATH);
+    // 加载指定位置的jar包到classLoad里面
     if (folder.exists() && folder.isDirectory()) {
       // 获取文件夹下的所有文件
       File[] files = folder.listFiles();
@@ -86,22 +97,23 @@ public class ReadJarFile {
       }
 
       // 创建URLClassLoader来加载依赖的JAR包
-      URLClassLoader classLoader = new URLClassLoader(urls, null);
-      // 加载需要的类
-      classLoader.loadClass("de.esolutions.fw.rudi.core.locators.IResourceLocator");
-      classLoader.loadClass("de.esolutions.fw.rudi.core.IPath");
+      if (mClassLoader == null) {
+        mClassLoader = new URLClassLoader(urls, null);
+        // 加载需要的类
+        mClassLoader.loadClass("de.esolutions.fw.rudi.core.locators.IResourceLocator");
+        mClassLoader.loadClass("de.esolutions.fw.rudi.core.IPath");
 
-      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwElement");
-      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwPrimitive");
-      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwObject");
-      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.ObjectKey");
-      for (String s : listObject) {
-        classLoader.loadClass(s);
+        mClassLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwElement");
+        mClassLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwPrimitive");
+        mClassLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwObject");
+        mClassLoader.loadClass("de.esolutions.fw.util.commons.genericdata.ObjectKey");
+        mClassLoader.loadClass("io.reactivex.rxjava3.core.Single");
+        for (String classPath : listObject) {
+          mClassLoader.loadClass(classPath);
+        }
       }
 
-      Class<?> jarClass = classLoader.loadClass(className);
-      // 关闭ClassLoader释放资源
-      classLoader.close();
+      Class<?> jarClass = mClassLoader.loadClass(className);
       System.out.println("顺利读取到了JAR包中的Class文件：" + jarClass);
       return jarClass;
     } catch (Exception e) {
@@ -247,6 +259,22 @@ public class ReadJarFile {
         || clazz == Float.class;
   }
 
+  private static void loadParentNode() {
+    // 使用类加载器，读取父类中主节点的接口变量
+    if (!rsiTargetNodePath.isEmpty()) {
+      try {
+        Class<?> parentNodeClass =
+            mClassLoader.loadClass(StringUtil.transitionPath(rsiTargetNodePath));
+        // 获取类的所有方法
+        for (Method method : parentNodeClass.getDeclaredMethods()) {
+          System.out.println(method.getName());
+        }
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
   public static void execute() {
     try {
       // 1：读取指定目标节点下所有的object集合
@@ -269,8 +297,12 @@ public class ReadJarFile {
       if (needWriteVariable) {
         System.out.println("属性完全相同，不需要重新写入属性！");
       } else {
+        loadParentNode();
         GenerateUtil.generateEntity(jarSet);
       }
+      // 关闭ClassLoader释放资源
+      mClassLoader.close();
+      mClassLoader = null;
     } catch (Exception e) {
       e.printStackTrace();
       System.out.println("write data error!");

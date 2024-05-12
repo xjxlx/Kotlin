@@ -148,8 +148,8 @@ object GenerateUtil {
         // println("OutPutPath:$RSI_PROJECT_PATH")
         val outPutFile = File(RSI_PROJECT_PATH)
         // 这里输出的路径，是以项目的root作为根目录的
-        javaFile.writeTo(outPutFile)
-//        javaFile.writeTo(System.out)
+//        javaFile.writeTo(outPutFile)
+        javaFile.writeTo(System.out)
         println("写入结束！")
         // </editor-fold>
     }

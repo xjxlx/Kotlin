@@ -27,6 +27,17 @@ object Config {
     const val RSI_PROJECT_PACKAGE_PATH: String = "com.android.hcp3.generate"
 
     /**
+     * 当前父类节点下的主接口全路径，这个舒心是动态生成的，不要做任何的改动，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.Hvac
+     */
+    @JvmField
+    var rsiTargetNodePath: String = ""
+
+    /**
+     * 用来存储当前节点下的所有子节点名字，内容会自动生成，不要做任何的改动
+     */
+    val RSI_TARGET_NODE_LIST: MutableList<String> = mutableListOf()
+
+    /**
      *rsi中大项的节点路径，这个每次生成不同的模块，都要进行不同的改动
      */
     const val RSI_PARENT_NODE_PATH = "hvac"
