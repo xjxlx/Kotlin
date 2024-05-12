@@ -1,6 +1,6 @@
 package com.android.hcp3;
 
-import static com.android.hcp3.Config.RSI_CHILD_NODE_OBJECT_NAME;
+import static com.android.hcp3.Config.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,18 +9,14 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class ReadJarFile {
 
-  private static final String BASE_JAR_PATH = "hcp3/src/main/java/com/android/hcp3/jar/";
-
-  private static final String TARGET_JAR_NAME = "mib_rsi_android.jar";
-  private static final String TARGET_JAR_PATH = BASE_JAR_PATH + TARGET_JAR_NAME;
-
-  private static final String TARGET_NODE_PATH = "de/esolutions/fw/rudi/viwi/service/hvac/v3";
   private static final String LOCAL_PATH = "com.xjx.kotlin.utils.hcp3.Bean";
 
   public static void main(String[] args) {
@@ -28,9 +24,11 @@ public class ReadJarFile {
   }
 
   /**
+   * @param filterNodePath
+   *     过滤指定父类节点的包名，注意这里的节点类型不是包名，是反斜杠的路径，例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
    * @return 1：返回指定JAR包中，指定targetPath 目录下所有object和Enum的集合的名字
    */
-  private static List<String> readObjectClassName() {
+  private static List<String> readObjectClassName(String filterNodePath) {
     List<String> fileNames = new ArrayList<>();
     try {
       // 打开Jar文件
@@ -41,7 +39,8 @@ public class ReadJarFile {
         JarEntry entry = entries.nextElement();
         String entryName = entry.getName();
         // 收集指定路径下的所有文件名称
-        if (entryName.startsWith(TARGET_NODE_PATH)) {
+        System.out.println("entryName:" + entryName);
+        if (entryName.startsWith(filterNodePath)) {
           if (entryName.contains(".class")) {
             String splitClassName = entryName.split(".class")[0];
             if (((splitClassName.endsWith("Object")) || (splitClassName.endsWith("Enum")))
@@ -233,7 +232,10 @@ public class ReadJarFile {
     return classType;
   }
 
-  // 判断是否是基本数据类型或其包装类
+  /**
+   * @param clazz class的对象
+   * @return 判断是否是基本数据类型
+   */
   private static boolean isPrimitiveOrWrapper(Class<?> clazz) {
     return clazz.isPrimitive()
         || clazz == Integer.class
@@ -249,7 +251,13 @@ public class ReadJarFile {
   public static void execute() {
     try {
       // 1：读取指定目标节点下所有的object集合
-      List<String> objectList = readObjectClassName();
+      // de/esolutions/fw/rudi/viwi/service/hvac/v3
+      Path rootNode = Paths.get(RSI_ROOT_NODE_PATH);
+      Path parentNode = Paths.get(RSI_PARENT_NODE_PATH);
+      Path filterNode = rootNode.resolve(parentNode);
+      String filterNodePath = filterNode.toString().replace(".", "/");
+      System.out.println("FilterNodePath: " + filterNodePath);
+      List<String> objectList = readObjectClassName(filterNodePath);
       // 2：读取Jar包中指定的class类
       Class<?> jarClass = readJar(RSI_CHILD_NODE_OBJECT_NAME, objectList);
       Class<?> targetClass = readLocalClass(LOCAL_PATH);
