@@ -9,7 +9,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
@@ -252,11 +251,12 @@ public class ReadJarFile {
     try {
       // 1：读取指定目标节点下所有的object集合
       // de/esolutions/fw/rudi/viwi/service/hvac/v3
-      Path rootNode = Paths.get(RSI_ROOT_NODE_PATH);
-      Path parentNode = Paths.get(RSI_PARENT_NODE_PATH);
-      Path parentNodeLevel = Paths.get(RSI_PARENT_NODE_LEVEL);
-      Path filterNode = rootNode.resolve(parentNode).resolve(parentNodeLevel);
-      String filterNodePath = filterNode.toString().replace(".", "/");
+      String filterNodePath =
+          Paths.get(RSI_ROOT_NODE_PATH)
+              .resolve(Paths.get(RSI_PARENT_NODE_PATH))
+              .resolve(Paths.get(RSI_PARENT_NODE_LEVEL))
+              .toString()
+              .replace(".", "/");
       System.out.println("过滤JAR包中的父节点为： " + filterNodePath);
       List<String> objectList = readObjectClassName(filterNodePath);
       // 2：读取Jar包中指定的class类
