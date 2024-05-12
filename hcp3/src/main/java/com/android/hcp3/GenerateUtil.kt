@@ -116,9 +116,12 @@ object GenerateUtil {
 
         // <editor-fold desc="五：构建方法体对象">
         // 2.3：定义方法体
+        var body = bodyBuilder.toString()
+        body = body.substring(0, body.lastIndexOf(";"))
+
         val methodBody =
             CodeBlock.builder()
-                .addStatement(bodyBuilder.toString())
+                .addStatement(body)
                 .build()
         methodSpecBuild.addCode(methodBody)
 
@@ -176,7 +179,8 @@ object GenerateUtil {
         val getter = AnnotationSpec.builder(ClassName.get("lombok", "Getter")).build()
         annotations.add(getter)
 
-        val toString = AnnotationSpec.builder(ClassName.get("lombok", "ToString")).addMember("callSuper", "true").build()
+        val toString =
+            AnnotationSpec.builder(ClassName.get("lombok", "ToString")).addMember("callSuper", "true").build()
         annotations.add(toString)
 
         val equalsAndHashCode =
