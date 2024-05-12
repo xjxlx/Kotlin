@@ -254,7 +254,8 @@ public class ReadJarFile {
       // de/esolutions/fw/rudi/viwi/service/hvac/v3
       Path rootNode = Paths.get(RSI_ROOT_NODE_PATH);
       Path parentNode = Paths.get(RSI_PARENT_NODE_PATH);
-      Path filterNode = rootNode.resolve(parentNode);
+      Path parentNodeLevel = Paths.get(RSI_PARENT_NODE_LEVEL);
+      Path filterNode = rootNode.resolve(parentNode).resolve(parentNodeLevel);
       String filterNodePath = filterNode.toString().replace(".", "/");
       System.out.println("过滤JAR包中的父节点为： " + filterNodePath);
       List<String> objectList = readObjectClassName(filterNodePath);

@@ -2,12 +2,14 @@ package com.android.hcp3
 
 import com.android.hcp3.Config.RSI_CHILD_NODE_OBJECT_NAME
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
+import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.RSI_PROJECT_PATH
 import com.squareup.javapoet.*
 import java.io.File
 import java.io.IOException
+import java.nio.file.Paths
 import javax.lang.model.element.Modifier
 
 object GenerateUtil {
@@ -84,6 +86,8 @@ object GenerateUtil {
 
             // todo 此处暂时使用源码中返回值类型，后续需要给替换掉
             // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
+            generateChildClass(genericPath, attributeClassType)
+
             val fieldType = getTypeForPath(genericPath, attributeClassType)
 
             // 0：默认无效的数据类型，1：基础数据类型 2：数组类型，3：List数据集合，4：其他数据类型，也就是自定义的数据类型
@@ -135,16 +139,40 @@ object GenerateUtil {
         // </editor-fold>
 
         // <editor-fold desc="五：写入到类中">
-        val packageName = RSI_PROJECT_PACKAGE_PATH + RSI_PARENT_NODE_PATH + RSI_CHILD_NODE_PATH
+        val packageName =
+            Paths.get(RSI_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                .resolve(Paths.get(RSI_PARENT_NODE_LEVEL)).resolve(Paths.get(RSI_CHILD_NODE_PATH)).toString()
+
         val javaFile = JavaFile.builder(packageName, classTypeBuild.build()).build()
 
         // println("OutPutPath:$RSI_PROJECT_PATH")
         val outPutFile = File(RSI_PROJECT_PATH)
         // 这里输出的路径，是以项目的root作为根目录的
-//        javaFile.writeTo(outPutFile)
-        javaFile.writeTo(System.out)
+        javaFile.writeTo(outPutFile)
+//        javaFile.writeTo(System.out)
         println("写入结束！")
         // </editor-fold>
+    }
+
+    /**
+     * 每当读取到一个属性的时候，就需要判定这个类的重构类是否存在，如果不存在的话，则需要去主动生成这个类
+     */
+    private fun generateChildClass(
+        genericPath: String,
+        attributeClassType: Int,
+    ) {
+        if (genericPath.contains(".")) {
+            val clasName = genericPath.substring(genericPath.lastIndexOf(".") + 1)
+            println("className: $clasName")
+            var newClassName = ""
+            if (clasName.endsWith("Object")) {
+                newClassName = "${clasName}Entity"
+            } else if (clasName.endsWith("Enum")) {
+                newClassName = "${clasName}Entity"
+            } else {
+                println("出现了异种的返回值[$clasName]，请手动处理！")
+            }
+        }
     }
 
     /**

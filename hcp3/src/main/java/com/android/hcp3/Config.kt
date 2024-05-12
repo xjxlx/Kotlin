@@ -24,12 +24,17 @@ object Config {
     /**
      *生成代码的主路径，这里的路径，一般指的是当前mode的包名，毕竟是要存储到当前包路径下的，也可以随意更改，不过不会随意改动
      */
-    const val RSI_PROJECT_PACKAGE_PATH: String = "com.android.hcp3.generate."
+    const val RSI_PROJECT_PACKAGE_PATH: String = "com.android.hcp3.generate"
 
     /**
      *rsi中大项的节点路径，这个每次生成不同的模块，都要进行不同的改动
      */
-    const val RSI_PARENT_NODE_PATH = "hvac.v3."
+    const val RSI_PARENT_NODE_PATH = "hvac"
+
+    /**
+     *rsi中大项的节点的等级，这个每次生成不同的模块，都要进行不同的改动
+     */
+    const val RSI_PARENT_NODE_LEVEL = "v3"
 
     /**
      *rsi中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动
