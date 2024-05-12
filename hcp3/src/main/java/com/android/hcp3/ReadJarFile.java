@@ -261,6 +261,7 @@ public class ReadJarFile {
         GenerateUtil.generateEntity(jarSet);
       }
     } catch (Exception e) {
+      e.printStackTrace();
       System.out.println("write data error!");
     }
   }
