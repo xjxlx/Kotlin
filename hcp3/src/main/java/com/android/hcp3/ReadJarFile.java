@@ -1,5 +1,7 @@
 package com.android.hcp3;
 
+import static com.android.hcp3.Config.RSI_CHILD_NODE_OBJECT_NAME;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -19,8 +21,6 @@ public class ReadJarFile {
   private static final String TARGET_JAR_PATH = BASE_JAR_PATH + TARGET_JAR_NAME;
 
   private static final String TARGET_NODE_PATH = "de/esolutions/fw/rudi/viwi/service/hvac/v3";
-  private static final String JAR_OBJECT_PATH =
-      "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject";
   private static final String LOCAL_PATH = "com.xjx.kotlin.utils.hcp3.Bean";
 
   public static void main(String[] args) {
@@ -127,8 +127,8 @@ public class ReadJarFile {
   /**
    * @return 4：返回指定class的方法以及方法的泛型
    */
-  private static LinkedHashSet<JarBean> getMethods(Class<?> clazz, String tag) {
-    LinkedHashSet<JarBean> set = new LinkedHashSet<>();
+  private static LinkedHashSet<ObjectEntity> getMethods(Class<?> clazz, String tag) {
+    LinkedHashSet<ObjectEntity> set = new LinkedHashSet<>();
     try {
       if (clazz != null) {
         // 将数组转换为集合
@@ -136,15 +136,17 @@ public class ReadJarFile {
 
         for (Method method : methods) {
           String methodName = method.getName();
-          String resultMethodName = "";
-          String resultMethodGenericityType = "";
+          String attributeName = "";
+          String genericPath = "";
           // 1： 必须是以get开头的方法
           if (methodName.startsWith("get")) {
+            ObjectEntity bean = new ObjectEntity();
+
             // 2：过滤掉桥接方法和合成方法
             if (!method.isBridge() && !method.isSynthetic()) {
               // 3:去掉get并转换首字母为小写
               String splitGetName = methodName.split("get")[1];
-              resultMethodName =
+              attributeName =
                   splitGetName.substring(0, 1).toLowerCase() + splitGetName.substring(1);
 
               // 4:获取方法的返回类型
@@ -154,20 +156,18 @@ public class ReadJarFile {
                 ParameterizedType parameterizedType = (ParameterizedType) returnType;
                 Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
                 if (actualTypeArguments.length > 0) {
-                  resultMethodGenericityType = actualTypeArguments[0].getTypeName();
+                  Type argument = actualTypeArguments[0];
+                  genericPath = argument.getTypeName();
+                  bean.setClassType(checkClassType(argument));
                 }
               }
-              System.out.println(
-                  "method ["
-                      + resultMethodName
-                      + "] GenericType:["
-                      + resultMethodGenericityType
-                      + "]");
 
-              JarBean bean = new JarBean();
-              bean.setAttributeName(resultMethodName);
+              bean.setAttributeName(attributeName);
               bean.setMethodName(methodName);
-              bean.setGenericPath(resultMethodGenericityType);
+              bean.setGenericPath(genericPath);
+
+              System.out.println(
+                  "method [" + attributeName + "] GenericType:[" + genericPath + "]");
               set.add(bean);
             }
           }
@@ -186,7 +186,7 @@ public class ReadJarFile {
    * @return 检测是否需要写入属性
    */
   private static boolean checkNeedWriteVariable(
-      LinkedHashSet<JarBean> jarMethodSet, LinkedHashSet<JarBean> targetMethodSet) {
+      LinkedHashSet<ObjectEntity> jarMethodSet, LinkedHashSet<ObjectEntity> targetMethodSet) {
     if (jarMethodSet.size() != targetMethodSet.size()) {
       System.out.println("本地数据和jar包数据不相同，需要重新写入数据！");
       return false;
@@ -196,25 +196,51 @@ public class ReadJarFile {
     }
   }
 
-  public static void write(String key, String type) {
-    //    try {
-    //      // 创建类池
-    //      ClassPool classPool = ClassPool.getDefault();
-    //      // 设置类路径，指定要修改的类所在的路径
-    //      classPool.insertClassPath("com.xjx.kotlin.utils.hcp3");
-    //      // 加载类
-    //      CtClass ctClass = classPool.get("com.xjx.kotlin.utils.hcp3.Bean");
-    //      // 创建新属性，并指定类型
-    //      CtField newField = new CtField(classPool.get(type), key, ctClass);
-    //      // 添加新的属性
-    //      ctClass.addField(newField);
-    //      // 保存修改后的类文件
-    //      ctClass.writeFile("com.xjx.kotlin.utils.hcp3");
-    //      System.out.println("Field added successfully.");
-    //    } catch (NotFoundException | CannotCompileException | IOException e) {
-    //      e.printStackTrace();
-    //      System.err.println("An error occurred: " + e.getMessage());
-    //    }
+  /**
+   * @return 返回当前的class是什么数据类型 0：默认无效的数据类型，1：基础数据类型，例如，Float、Boolean、Integer *
+   *     2：数组类型，3：List数据集合，4：自定义Object数据类型
+   */
+  private static int checkClassType(Type type) {
+    int classType = 0;
+    Class<?> typeClass = null;
+    if (type instanceof ParameterizedType parameterizedType) { // 泛型类型
+      Type rawType = parameterizedType.getRawType();
+      if (rawType instanceof Class<?>) {
+        typeClass = (Class<?>) rawType;
+      }
+    } else if (type instanceof Class<?> cls) { // 不是泛型类型的参数
+      typeClass = cls;
+    }
+
+    if (typeClass != null) {
+      if (isPrimitiveOrWrapper(typeClass)) { // 基本数据类型
+        classType = 1;
+        // System.out.println("基本数据类型");
+      } else if (typeClass.isArray()) { // 数组类型
+        classType = 2;
+        // System.out.println("数组类型");
+      } else if (List.class.isAssignableFrom(typeClass)) { //  List数据类型
+        classType = 3;
+        // System.out.println("List数据类型");
+      } else { // 其他引用数据类型，也就是自定义的object数据类型
+        classType = 4;
+        // System.out.println("自定义Object数据类型");
+      }
+    }
+    return classType;
+  }
+
+  // 判断是否是基本数据类型或其包装类
+  private static boolean isPrimitiveOrWrapper(Class<?> clazz) {
+    return clazz.isPrimitive()
+        || clazz == Integer.class
+        || clazz == Double.class
+        || clazz == Boolean.class
+        || clazz == Character.class
+        || clazz == Byte.class
+        || clazz == Short.class
+        || clazz == Long.class
+        || clazz == Float.class;
   }
 
   public static void execute() {
@@ -222,10 +248,10 @@ public class ReadJarFile {
       // 1：读取指定目标节点下所有的object集合
       List<String> objectList = readObjectClassName();
       // 2：读取Jar包中指定的class类
-      Class<?> jarClass = readJar(JAR_OBJECT_PATH, objectList);
+      Class<?> jarClass = readJar(RSI_CHILD_NODE_OBJECT_NAME, objectList);
       Class<?> targetClass = readLocalClass(LOCAL_PATH);
-      LinkedHashSet<JarBean> jarSet = getMethods(jarClass, "JAR");
-      LinkedHashSet<JarBean> localSet = getMethods(targetClass, "Local");
+      LinkedHashSet<ObjectEntity> jarSet = getMethods(jarClass, "JAR");
+      LinkedHashSet<ObjectEntity> localSet = getMethods(targetClass, "Local");
 
       boolean needWriteVariable = checkNeedWriteVariable(jarSet, localSet);
       if (needWriteVariable) {

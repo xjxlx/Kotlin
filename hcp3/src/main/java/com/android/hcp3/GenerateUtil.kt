@@ -24,8 +24,8 @@ object GenerateUtil {
     @Throws(IOException::class)
     @JvmStatic
     fun main(args: Array<String>) {
-        val linkedSetOf = linkedSetOf<JarBean>()
-        val jarBean = JarBean()
+        val linkedSetOf = linkedSetOf<ObjectEntity>()
+        val jarBean = ObjectEntity()
         jarBean.attributeName = "aC"
         jarBean.methodName = "getAC"
         jarBean.genericPath = "de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject"
@@ -34,7 +34,7 @@ object GenerateUtil {
     }
 
     @JvmStatic
-    fun generateEntity(jarMethodSet: LinkedHashSet<JarBean>) {
+    fun generateEntity(jarMethodSet: LinkedHashSet<ObjectEntity>) {
         // <editor-fold desc="一：构建类对象">
         val classType = getTypeForPath(RSI_CHILD_NODE_OBJECT_NAME)
         val className = classType[1] + "Entity"
@@ -76,42 +76,37 @@ object GenerateUtil {
             val attributeName = bean.attributeName // 具体的属性名字
             val methodName = bean.methodName // 方法名字
             val genericPath = bean.genericPath // 返回值的路径
-
+            val attributeClassType = bean.classType // 参数的具体数据类型
             // <editor-fold desc="四：构建属性对象">
             // 一：构建属性对象
             // todo 此处暂时使用源码中返回值类型，后续需要给替换掉
             // 1.1：定义属性的类型
-            val fieldType = getTypeForPath(genericPath)
+            val fieldType = getTypeForPath(genericPath, attributeClassType)
             // 1.2:组装属性
-            var fieldSpec: FieldSpec.Builder
 
-            // 判定是不是集合类型的属性
-            if (isListAttribute(genericPath)) {
-                val listType: TypeName =
-                    ParameterizedTypeName.get(
-                        ClassName.get("java.util", "List"),
-                        ClassName.get(fieldType[0], fieldType[1])
-                    )
-                // 创建成员变量
-                fieldSpec =
-                    FieldSpec.builder(listType, attributeName)
+            // 0：默认无效的数据类型，1：基础数据类型 2：数组类型，3：List数据集合，4：其他数据类型，也就是自定义的数据类型
+            if (attributeClassType != 0) {
+                // 默认的数据类型
+                var fieldTypeName: TypeName = ClassName.get(fieldType[0], fieldType[1])
+                if (attributeClassType == 3) { // List 数据类型,需要单独构造
+                    fieldTypeName =
+                        ParameterizedTypeName.get(
+                            ClassName.get("java.util", "List"),
+                            fieldTypeName
+                        )
+                }
+
+                val fieldSpec = FieldSpec.builder(fieldTypeName, attributeName)
+                println("attribute:[$attributeName]  attributeType:[$genericPath]")
+                fieldSpec.addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                // 组合参数
+                classTypeBuild.addField(fieldSpec.build())
+                // 组合方法体内容
+                bodyBuilder.append("this.$attributeName = object.$methodName().map(${fieldType[1]}::new).orElse(null);\n")
+                // </editor-fold>
             } else {
-                val fieldTypeName = ClassName.get(fieldType[0], fieldType[1])
-                fieldSpec =
-                    FieldSpec.builder(fieldTypeName, attributeName)
+                println("参数的具体类型找不到，请检查具体的内容！")
             }
-
-            println("attribute:[$attributeName]  attributeType:[$genericPath]")
-
-            // 添加属性到类中
-            fieldSpec?.let {
-                it.addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-                classTypeBuild.addField(it.build())
-            }
-            // </editor-fold>
-
-            // 组合方法体内容
-            bodyBuilder.append("this.$attributeName = object.$methodName().map(${fieldType[1]}::new).orElse(null);\n")
         }
 
         // <editor-fold desc="五：构建方法体对象">
@@ -136,16 +131,9 @@ object GenerateUtil {
         println("OutPutPath:$RSI_PROJECT_PATH")
         val outPutFile = File(RSI_PROJECT_PATH)
         // 这里输出的路径，是以项目的root作为根目录的
-        javaFile.writeTo(outPutFile)
-        // javaFile.writeTo(System.out)
+//        javaFile.writeTo(outPutFile)
+        javaFile.writeTo(System.out)
         // </editor-fold>
-    }
-
-    /**
-     * 判断参数是不是集合类型的参数
-     */
-    private fun isListAttribute(path: String): Boolean {
-        return (path.startsWith("java.util.List")) && (path.contains("<") && path.contains(">")) && (path.endsWith(">"))
     }
 
     /**
@@ -153,15 +141,17 @@ object GenerateUtil {
      * @return 返回一个数据，第一个元素是指定路径中最后一个.的前半截，第二个元素是object的简写名字，例如：[0] = de.esolutions.fw.rudi.viwi.service.hvac.v3
      * [1] = GeneralSettingObject
      */
-    private fun getTypeForPath(path: String): Array<String> {
+    private fun getTypeForPath(
+        path: String,
+        classType: Int = 0,
+    ): Array<String> {
         val array = Array(2) { "" }
         val lastIndexOf = path.lastIndexOf(".")
         val packageName = path.substring(0, lastIndexOf)
         val simple = path.substring(lastIndexOf + 1)
 
         // 判断是否是集合
-        val listAttribute = isListAttribute(path)
-        if (listAttribute) {
+        if (classType == 3) {
             array[0] = packageName.split("java.util.List<")[1]
             array[1] = simple.replace(">", "")
         } else {

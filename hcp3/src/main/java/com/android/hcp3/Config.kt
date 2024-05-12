@@ -19,10 +19,12 @@ object Config {
     /**
      *rsi中大项中子节点路径
      */
-    const val RSI_CHILD_NODE_PATH = "generalsettings"
+//    const val RSI_CHILD_NODE_PATH = "generalsettings"
+    const val RSI_CHILD_NODE_PATH = "airQualities"
 
     /**
      * rsi大项节点下的子节点种object的完整包名
      */
-    const val RSI_CHILD_NODE_OBJECT_NAME = "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject"
+//    const val RSI_CHILD_NODE_OBJECT_NAME = "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject"
+    const val RSI_CHILD_NODE_OBJECT_NAME = "de.esolutions.fw.rudi.viwi.service.hvac.v3.AirQualityObject"
 }
