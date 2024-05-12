@@ -39,7 +39,7 @@ public class ReadJarFile {
         JarEntry entry = entries.nextElement();
         String entryName = entry.getName();
         // 收集指定路径下的所有文件名称
-        System.out.println("entryName:" + entryName);
+        // System.out.println("entryName:" + entryName);
         if (entryName.startsWith(filterNodePath)) {
           if (entryName.contains(".class")) {
             String splitClassName = entryName.split(".class")[0];
@@ -72,7 +72,7 @@ public class ReadJarFile {
       if (files != null) {
         // 遍历文件数组，输出文件名
         for (File file : files) {
-          System.out.println("JAR-Name: " + file.getName());
+          // System.out.println("JAR-Name: " + file.getName());
           jarList.add(file.getName());
         }
       }
@@ -169,7 +169,7 @@ public class ReadJarFile {
               bean.setGenericPath(genericPath);
 
               System.out.println(
-                  "method [" + attributeName + "] GenericType:[" + genericPath + "]");
+                  "      method [" + attributeName + "] GenericType:[" + genericPath + "]");
               set.add(bean);
             }
           }
@@ -256,7 +256,7 @@ public class ReadJarFile {
       Path parentNode = Paths.get(RSI_PARENT_NODE_PATH);
       Path filterNode = rootNode.resolve(parentNode);
       String filterNodePath = filterNode.toString().replace(".", "/");
-      System.out.println("FilterNodePath: " + filterNodePath);
+      System.out.println("过滤JAR包中的父节点为： " + filterNodePath);
       List<String> objectList = readObjectClassName(filterNodePath);
       // 2：读取Jar包中指定的class类
       Class<?> jarClass = readJar(RSI_CHILD_NODE_OBJECT_NAME, objectList);
@@ -266,9 +266,8 @@ public class ReadJarFile {
 
       boolean needWriteVariable = checkNeedWriteVariable(jarSet, localSet);
       if (needWriteVariable) {
-        System.out.println("不需要写入属性！");
+        System.out.println("属性完全相同，不需要重新写入属性！");
       } else {
-        System.out.println("需要写入属性！");
         GenerateUtil.generateEntity(jarSet);
       }
     } catch (Exception e) {

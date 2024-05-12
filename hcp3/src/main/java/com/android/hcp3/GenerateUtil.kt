@@ -46,13 +46,13 @@ object GenerateUtil {
                 .addAnnotations(getAddAnnotations())
                 .superclass(SUPER_CLASS_NAME)
                 .addModifiers(Modifier.PUBLIC)
-        println("ClassName:[$className]")
+        println("需要生成的Object主对象为：[$className]")
         // </editor-fold>
 
         // <editor-fold desc="二：构建方法对象">
         // 2.1：构造方法的参数类型
         val methodPackageName = classType[0]
-        println("methodPackageName:[$methodPackageName] methodSimpleName:[$className]")
+        println("类的名字为：[$className] 构造类参数的路径为：[$methodPackageName]")
         val methodParameterType = ClassName.get(methodPackageName, classType[1])
         // 2.2：方法的参数
         val methodParameter =
@@ -101,7 +101,7 @@ object GenerateUtil {
                 // 3.3：构建属性对象
                 val fieldSpec =
                     FieldSpec.builder(fieldTypeName, attributeName).addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-                println("attribute:[$attributeName]  attributeType:[$genericPath]")
+                println("      attribute:[$attributeName]  attributeType:[$genericPath]")
                 // 把生成的属性对象添加到类中
                 classTypeBuild.addField(fieldSpec.build())
 
@@ -138,11 +138,12 @@ object GenerateUtil {
         val packageName = RSI_PROJECT_PACKAGE_PATH + RSI_PARENT_NODE_PATH + RSI_CHILD_NODE_PATH
         val javaFile = JavaFile.builder(packageName, classTypeBuild.build()).build()
 
-        println("OutPutPath:$RSI_PROJECT_PATH")
+        // println("OutPutPath:$RSI_PROJECT_PATH")
         val outPutFile = File(RSI_PROJECT_PATH)
         // 这里输出的路径，是以项目的root作为根目录的
-        javaFile.writeTo(outPutFile)
-//        javaFile.writeTo(System.out)
+//        javaFile.writeTo(outPutFile)
+        javaFile.writeTo(System.out)
+        println("写入结束！")
         // </editor-fold>
     }
 
