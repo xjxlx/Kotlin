@@ -22,7 +22,7 @@ object GenerateUtil {
     private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
 
-    private const val DEBUG = true
+    private const val DEBUG = false
 
     @Throws(IOException::class)
     @JvmStatic
@@ -51,7 +51,7 @@ object GenerateUtil {
     /**
      * @param objectClassPath 构造方法中参数的全路径包名
      * @param jarMethodSet 生成代码里面需要写入的属性集合
-     * @param packagePath 包名的路径，这里不能包含存放代码的目录
+     * @param packagePath 包名的路径，这里不包含存放代码的目录
      * 动态生成代码
      */
     @JvmStatic
@@ -105,7 +105,7 @@ object GenerateUtil {
             val genericPath = next.genericPath // 返回值的路径
             val attributeClassType = next.classType // 参数的具体数据类型
 
-            if (attributeClassType == ENUM) {
+            if (attributeClassType == ENUM || attributeClassType == LIST_ENUM) {
                 continue
             }
 
@@ -234,7 +234,8 @@ object GenerateUtil {
         genericPath: String,
         attributeClassType: ClassType,
     ): AttributeTypeBean? {
-        if (attributeClassType == PRIMITIVE) {
+        // 如果是u基础数据类型，或者基础数据类型的集合，则不参与后续的流程
+        if ((attributeClassType == PRIMITIVE) || (attributeClassType == LIST_PRIMITIVE)) {
             println("      当前属性[$genericPath]是基础类型，不做额外处理!")
             return null
         } else {
@@ -280,14 +281,15 @@ object GenerateUtil {
             var realFileName = ""
             if (attributeClassType == OBJECT || attributeClassType == LIST_OBJECT) {
                 realFileName = "${jarObjectName}Entity"
-            } else if (attributeClassType == ENUM) {
+            } else if (attributeClassType == ENUM || attributeClassType == LIST_ENUM) {
                 realFileName = "Vc$jarObjectName"
             }
 
-            if (checkApiEntityFileExists(folderPath, realFileName)) {
+            if (checkApiEntityFileExists(folderPath, realFileName)) { // 如果文件存在，则直接返回文件的路径
                 val attributeTypeBean = AttributeTypeBean()
                 attributeTypeBean.name = realFileName
                 attributeTypeBean.path = folderPath
+                println("     文件[$realFileName]存在，直接返回文件信息：$attributeTypeBean")
                 return attributeTypeBean
             } else {
                 // 6:读取jar包中属性的字段
@@ -307,7 +309,7 @@ object GenerateUtil {
                         if (attributeClassType == OBJECT || attributeClassType == LIST_OBJECT) {
                             println("子对象：[$realFileName]不存在，去创建object对象！")
                             return generateObject(genericPath, jarMethodSet, packagePath)
-                        } else if (attributeClassType == ENUM) {
+                        } else if (attributeClassType == ENUM || attributeClassType == LIST_ENUM) {
                             println("子Enum：[$realFileName]不存在，去创建Enum对象！")
                             // todo 创建子类的Enum
                             return null
@@ -379,7 +381,7 @@ object GenerateUtil {
     /**
      * 检测文件夹是否存在
      */
-    fun checkFolderExists(packagePath: String): Boolean {
+    private fun checkFolderExists(packagePath: String): Boolean {
         // println("checkPackagePath:[$packagePath]")
         val file = File(packagePath)
         return file.exists()
@@ -393,12 +395,12 @@ object GenerateUtil {
         if (!file.exists()) {
             val mkdirs = file.mkdirs()
             if (mkdirs) {
-                println("路径：$packagePath 创建成功！")
+                println("folder：$packagePath 创建成功！")
             } else {
-                println("路径：$packagePath 创建失败！")
+                println("folder：$packagePath 创建失败！")
             }
         } else {
-            println("路径：$packagePath 文件已经存在！")
+            println("folder：$packagePath 文件已经存在！")
         }
     }
 }
