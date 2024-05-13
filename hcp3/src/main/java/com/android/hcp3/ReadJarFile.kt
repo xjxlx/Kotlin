@@ -287,7 +287,11 @@ object ReadJarFile {
                         if (isPrimitiveOrWrapper(parameterType as Class<*>)) {
                             ClassType.LIST_PRIMITIVE //  泛型是基础数据类型的
                         } else {
-                            ClassType.LIST_OBJECT // 泛型是object的数据类型
+                            if (Enum::class.java.isAssignableFrom(listParameterType as Class<*>)) {
+                                ClassType.LIST_ENUM // 泛型是Enum的数据类型
+                            } else {
+                                ClassType.LIST_OBJECT // 泛型是object的数据类型
+                            }
                         }
                 }
             } else if (Enum::class.java.isAssignableFrom(typeClass)) { // Enum类型

@@ -16,6 +16,9 @@ public enum ClassType {
   /** list集合，泛型是引用数据类型 */
   LIST_OBJECT,
 
+  /** list集合，泛型是enum数据类型 */
+  LIST_ENUM,
+
   /** 枚举类型数据 */
   ENUM,
 

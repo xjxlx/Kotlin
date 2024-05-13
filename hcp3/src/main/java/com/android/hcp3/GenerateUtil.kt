@@ -69,9 +69,6 @@ object GenerateUtil {
     ): AttributeTypeBean {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Object类：[$objectClassPath] ------>")
-        if (objectClassPath == "de.esolutions.fw.rudi.services.rsiglobal.Duration") {
-            println("---->")
-        }
         val classType = getTypeForPath(objectClassPath)
         val className = classType[1] + "Entity"
 
@@ -120,9 +117,6 @@ object GenerateUtil {
             }
 
             // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
-            if (genericPath == "de.esolutions.fw.rudi.services.rsiglobal.Duration") {
-                println("---->")
-            }
             val attributeTypeBean = checkChildRunTypeClass(genericPath, attributeClassType)
             println("attributeName:[$attributeName] attributeTypeBean:$attributeTypeBean")
 
@@ -134,35 +128,21 @@ object GenerateUtil {
             when (attributeClassType.name) {
                 PRIMITIVE.name -> { // 基础数据类型的数据，使用原始的数据
                     fieldTypeName = ClassName.get(fieldType[0], fieldType[1])
-                    // 增加方法体内容
                     codeBuild.addStatement("this.$attributeName = object.$methodName().orElse(null)")
                 }
 
-                OBJECT.name, ENUM.name -> { // object类型的数据
+                OBJECT.name -> { // object类型的数据
                     attributeTypeBean?.let { att ->
                         fieldTypeName = ClassName.get(transitionPackage(att.path), att.name)
-
-                        // 增加方法体内容
-                        // todo 随后要区分object和enum
                         codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::new).orElse(null)")
                     }
                 }
 
-                LIST_OBJECT.name -> { // 泛型是object类型的list
+                ENUM.name -> { // object类型的数据
                     attributeTypeBean?.let { att ->
-                        fieldTypeName =
-                            ParameterizedTypeName.get(
-                                ClassName.get("java.util", "List"),
-                                ClassName.get(transitionPackage(att.path), att.name)
-                            )
-
-                        // 增加方法体内容
-                        val get = ClassName.get(transitionPackage(att.path), att.name)
-                        codeBuild.addStatement(
-                            "this.$attributeName = object.$methodName().map(list ->list.stream()" +
-                                ".map(${att.name}::new).collect(\$T.toList())).orElse(null)",
-                            COLLECTORS_CLASSNAME
-                        )
+                        fieldTypeName = ClassName.get(transitionPackage(att.path), att.name)
+                        // todo 此处的方法体和object不一样
+                        codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::new).orElse(null)")
                     }
                 }
 
@@ -179,6 +159,39 @@ object GenerateUtil {
                             ".map(${fieldType[1]}::new).collect(\$T.toList())).orElse(null)",
                         COLLECTORS_CLASSNAME
                     )
+                }
+
+                LIST_OBJECT.name -> { // 泛型是object类型的list
+                    attributeTypeBean?.let { att ->
+                        fieldTypeName =
+                            ParameterizedTypeName.get(
+                                ClassName.get("java.util", "List"),
+                                ClassName.get(transitionPackage(att.path), att.name)
+                            )
+
+                        codeBuild.addStatement(
+                            "this.$attributeName = object.$methodName().map(list ->list.stream()" +
+                                ".map(${att.name}::new).collect(\$T.toList())).orElse(null)",
+                            COLLECTORS_CLASSNAME
+                        )
+                    }
+                }
+
+                LIST_ENUM.name -> { // 泛型是object类型的list
+                    attributeTypeBean?.let { att ->
+                        fieldTypeName =
+                            ParameterizedTypeName.get(
+                                ClassName.get("java.util", "List"),
+                                ClassName.get(transitionPackage(att.path), att.name)
+                            )
+
+                        //         object.getSwitchValueConfiguration().map(list -> list.stream().map(HvacSwitchValueEnum::fromRSI).collect(Collectors.toList())).orElse(null);
+                        codeBuild.addStatement(
+                            "this.$attributeName = object.$methodName().map(list ->list.stream()" +
+                                ".map(${att.name}::fromRSI).collect(\$T.toList())).orElse(null)",
+                            COLLECTORS_CLASSNAME
+                        )
+                    }
                 }
 
                 INVALID.name, ARRAY.name -> {
@@ -232,12 +245,11 @@ object GenerateUtil {
             println("      当前属性[$genericPath]是基础类型，不做额外处理!")
             return null
         } else {
-            if (attributeClassType == LIST_OBJECT) {
-                println("---->")
-            }
-
             // 1：从path中获取属性的类名
             val jarObjectName = StringUtil.getSimpleForPath(genericPath)
+            if (genericPath == "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObjectAirCleaningInformationEnum") {
+                println("----->")
+            }
             println("className: $jarObjectName")
 
             val bean =
@@ -304,9 +316,6 @@ object GenerateUtil {
                             )
                         if (attributeClassType == OBJECT || attributeClassType == LIST_OBJECT) {
                             println("子对象：[$realFileName]不存在，去创建object对象！")
-                            if (genericPath == "de.esolutions.fw.rudi.services.rsiglobal.Duration") {
-                                println("---->")
-                            }
                             return generateObject(genericPath, jarMethodSet, packagePath)
                         } else if (attributeClassType == ENUM) {
                             println("子Enum：[$realFileName]不存在，去创建Enum对象！")
