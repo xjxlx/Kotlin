@@ -18,18 +18,11 @@ import java.nio.file.Paths
 import javax.lang.model.element.Modifier
 
 object GenerateUtil {
-    /**
-     * 方法参数的注解类型
-     */
     private val METHOD_ANNOTATION_TYPE = ClassName.get("androidx.annotation", "NonNull")
-
-    /**
-     * 父类的继承类
-     */
     private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
-    private val COLLECTORS_CLASSNAME: ClassName = ClassName.get("java.util.stream", "Collectors")
+    private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
 
-    private const val DEBUG = false
+    private const val DEBUG = true
 
     @Throws(IOException::class)
     @JvmStatic
@@ -141,8 +134,8 @@ object GenerateUtil {
                 ENUM.name -> { // object类型的数据
                     attributeTypeBean?.let { att ->
                         fieldTypeName = ClassName.get(transitionPackage(att.path), att.name)
-                        // todo 此处的方法体和object不一样
-                        codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::new).orElse(null)")
+                        //     countryInformation = object.getCountryInformation().map(AirQualityEntityCountryInformationEnum::fromObjectEnum).orElse(null);
+                        codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::fromRSI).orElse(null)")
                     }
                 }
 
@@ -157,7 +150,7 @@ object GenerateUtil {
                     codeBuild.addStatement(
                         "this.$attributeName = object.$methodName().map(list ->list.stream()" +
                             ".map(${fieldType[1]}::new).collect(\$T.toList())).orElse(null)",
-                        COLLECTORS_CLASSNAME
+                        CLASSNAME_COLLECTORS
                     )
                 }
 
@@ -172,7 +165,7 @@ object GenerateUtil {
                         codeBuild.addStatement(
                             "this.$attributeName = object.$methodName().map(list ->list.stream()" +
                                 ".map(${att.name}::new).collect(\$T.toList())).orElse(null)",
-                            COLLECTORS_CLASSNAME
+                            CLASSNAME_COLLECTORS
                         )
                     }
                 }
@@ -189,7 +182,7 @@ object GenerateUtil {
                         codeBuild.addStatement(
                             "this.$attributeName = object.$methodName().map(list ->list.stream()" +
                                 ".map(${att.name}::fromRSI).collect(\$T.toList())).orElse(null)",
-                            COLLECTORS_CLASSNAME
+                            CLASSNAME_COLLECTORS
                         )
                     }
                 }
@@ -247,9 +240,6 @@ object GenerateUtil {
         } else {
             // 1：从path中获取属性的类名
             val jarObjectName = StringUtil.getSimpleForPath(genericPath)
-            if (genericPath == "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObjectAirCleaningInformationEnum") {
-                println("----->")
-            }
             println("className: $jarObjectName")
 
             val bean =
