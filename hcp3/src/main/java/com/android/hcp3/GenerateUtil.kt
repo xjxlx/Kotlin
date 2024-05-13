@@ -246,30 +246,32 @@ object GenerateUtil {
         val classType = getTypeForPath(objectClassPath)
         val className = "Vc${classType[1]}"
 
-        // 构建类的build对象，用于组装类中的数据
+        // 1：构建固定属性对象
+        val fieldSpec =
+            FieldSpec.builder(ClassName.get("java.lang", "String"), "value")
+                .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                .build()
+
+        // 2:组装方法对象
+        val methodSpecBuild =
+            MethodSpec.constructorBuilder()
+                .addParameter(
+                    ParameterSpec.builder(ClassName.get("java.lang", "String"), "object")
+                        .build()
+                )
+                .addCode(CodeBlock.builder().add("this.value = object;").build()).build()
+
+        // 3：组装类对象
         val classTypeBuild =
             TypeSpec.enumBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
-                .addEnumConstant("clamp15Off")
-        // </editor-fold>
-
-        // <editor-fold desc="二：构建方法对象">
-        // 2.1：构造方法的参数类型
-        val methodPackageName = classType[0]
-        println("Enum类的名字为：[$className] 构造类参数的路径为：[$methodPackageName]")
-        val methodParameterType = ClassName.get(methodPackageName, classType[1])
-        // 2.2：方法的参数
-        val methodParameter =
-            ParameterSpec.builder(methodParameterType, "object")
-                .build()
-
-        // 2.3:组装方法的修饰符和参数
-        val methodSpecBuild =
-            MethodSpec.constructorBuilder() // 标注是构造犯法
-                .addParameter(methodParameter) // 方法的参数
-
-        // 2.4：构造code build,用于循环添加内容到方法体内
-        val codeBuild = CodeBlock.builder()
+                .addField(fieldSpec)
+                .addMethod(methodSpecBuild)
+                .addEnumConstant(
+                    "CLAMP15OFF",
+                    TypeSpec.anonymousClassBuilder("\$S", "clamp15Off")
+                        .build()
+                )
         // </editor-fold>
 
         // <editor-fold desc="三：循环添加属性和方法内容">
@@ -293,13 +295,11 @@ object GenerateUtil {
             when (attributeClassType.name) {
                 PRIMITIVE.name -> { // 基础数据类型的数据，使用原始的数据
                     fieldTypeName = ClassName.get(fieldType[0], fieldType[1])
-                    codeBuild.addStatement("this.$attributeName = object.$methodName().orElse(null)")
                 }
 
                 OBJECT.name -> { // object类型的数据
                     attributeTypeBean?.let { att ->
                         fieldTypeName = ClassName.get(transitionPackage(att.path), att.name)
-                        codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::new).orElse(null)")
                     }
                 }
 
@@ -307,7 +307,6 @@ object GenerateUtil {
                     attributeTypeBean?.let { att ->
                         fieldTypeName = ClassName.get(transitionPackage(att.path), att.name)
                         //     countryInformation = object.getCountryInformation().map(AirQualityEntityCountryInformationEnum::fromObjectEnum).orElse(null);
-                        codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::fromRSI).orElse(null)")
                     }
                 }
 
@@ -317,13 +316,6 @@ object GenerateUtil {
                             ClassName.get("java.util", "List"),
                             ClassName.get(fieldType[0], fieldType[1])
                         )
-
-                    // 增加方法体内容
-                    codeBuild.addStatement(
-                        "this.$attributeName = object.$methodName().map(list ->list.stream()" +
-                            ".map(${fieldType[1]}::new).collect(\$T.toList())).orElse(null)",
-                        CLASSNAME_COLLECTORS
-                    )
                 }
 
                 LIST_OBJECT.name -> { // 泛型是object类型的list
@@ -333,12 +325,6 @@ object GenerateUtil {
                                 ClassName.get("java.util", "List"),
                                 ClassName.get(transitionPackage(att.path), att.name)
                             )
-
-                        codeBuild.addStatement(
-                            "this.$attributeName = object.$methodName().map(list ->list.stream()" +
-                                ".map(${att.name}::new).collect(\$T.toList())).orElse(null)",
-                            CLASSNAME_COLLECTORS
-                        )
                     }
                 }
 
@@ -349,13 +335,6 @@ object GenerateUtil {
                                 ClassName.get("java.util", "List"),
                                 ClassName.get(transitionPackage(att.path), att.name)
                             )
-
-                        //         object.getSwitchValueConfiguration().map(list -> list.stream().map(HvacSwitchValueEnum::fromRSI).collect(Collectors.toList())).orElse(null);
-                        codeBuild.addStatement(
-                            "this.$attributeName = object.$methodName().map(list ->list.stream()" +
-                                ".map(${att.name}::fromRSI).collect(\$T.toList())).orElse(null)",
-                            CLASSNAME_COLLECTORS
-                        )
                     }
                 }
 
@@ -363,24 +342,12 @@ object GenerateUtil {
                     println("      >>> 无效类型的数据!")
                 }
             }
-
-            // 3.3：构建属性对象
-            val fieldSpec =
-                FieldSpec.builder(fieldTypeName, attributeName).addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-            println("      attribute:[$attributeName]  attributeType:[$genericPath]")
-            // 把生成的属性对象添加到类中
-            classTypeBuild.addField(fieldSpec.build())
             try {
             } catch (e: Exception) {
                 println("写入属性异常：${e.message}")
                 println(e)
             }
         }
-        // </editor-fold>
-
-        // <editor-fold desc="四：构建方法体对象">
-        // 添加完成的方法内容
-        classTypeBuild.addMethod(methodSpecBuild.addCode(codeBuild.build()).build())
         // </editor-fold>
 
         // <editor-fold desc="五：写入到类中">
