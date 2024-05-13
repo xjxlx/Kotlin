@@ -25,4 +25,15 @@ object StringUtil {
         }
         return Paths.get(str).toString().replace("/", ".")
     }
+
+    @JvmStatic
+    fun getSimpleForPath(str: String): String {
+        if (str.isEmpty()) {
+            return ""
+        }
+        if (str.contains(".")) {
+            return str.substring(str.lastIndexOf(".") + 1)
+        }
+        return ""
+    }
 }

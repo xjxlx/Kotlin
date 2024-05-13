@@ -17,7 +17,6 @@ import java.util.jar.JarFile;
 public class ReadJarFile {
 
   private static final String LOCAL_PATH = "com.xjx.kotlin.utils.hcp3.Bean";
-  private static URLClassLoader mClassLoader;
 
   public static void main(String[] args) {
     execute();
@@ -28,7 +27,7 @@ public class ReadJarFile {
    *     过滤指定父类节点的包名，注意这里的节点类型不是包名，是反斜杠的路径，例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
    * @return 1：返回指定JAR包中，指定targetPath 目录下所有object和Enum的集合的名字
    */
-  private static List<String> readObjectClassName(String filterNodePath) {
+  private static List<String> readNeedDependenciesClassName(String filterNodePath) {
     List<String> fileNames = new ArrayList<>();
     try {
       // 打开Jar文件
@@ -67,12 +66,7 @@ public class ReadJarFile {
     return fileNames;
   }
 
-  /**
-   * @param className 指定的class类名
-   * @param listObject 指定节点下所有的Object或者Enum的对象集合
-   * @return 2：返回指定jar包中目标class类型的Class对象
-   */
-  public static Class<?> readJar(String className, List<String> listObject) {
+  private static URLClassLoader getGlobalClassLoad(List<String> dependenciesList) {
     ArrayList<String> jarList = new ArrayList<>();
     File folder = new File(BASE_JAR_PATH);
     // 加载指定位置的jar包到classLoad里面
@@ -82,14 +76,17 @@ public class ReadJarFile {
       if (files != null) {
         // 遍历文件数组，输出文件名
         for (File file : files) {
-          // System.out.println("JAR-Name: " + file.getName());
-          jarList.add(file.getName());
+          String jarName = file.getName();
+          if (jarName.endsWith(".jar")) {
+            // System.out.println("      JAR-Name: " + file.getName());
+            jarList.add(file.getName());
+          }
         }
       }
     } else {
       System.out.println("读取目标Jar文件夹中的JAR异常！");
     }
-
+    // 构造classLoad并加载依赖的类
     try {
       URL[] urls = new URL[jarList.size()];
       for (int i = 0; i < jarList.size(); i++) {
@@ -97,25 +94,22 @@ public class ReadJarFile {
       }
 
       // 创建URLClassLoader来加载依赖的JAR包
-      if (mClassLoader == null) {
-        mClassLoader = new URLClassLoader(urls, null);
-        // 加载需要的类
-        mClassLoader.loadClass("de.esolutions.fw.rudi.core.locators.IResourceLocator");
-        mClassLoader.loadClass("de.esolutions.fw.rudi.core.IPath");
+      URLClassLoader classLoader = new URLClassLoader(urls, null);
+      // 加载需要的类
+      classLoader.loadClass("de.esolutions.fw.rudi.core.locators.IResourceLocator");
+      classLoader.loadClass("de.esolutions.fw.rudi.core.IPath");
 
-        mClassLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwElement");
-        mClassLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwPrimitive");
-        mClassLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwObject");
-        mClassLoader.loadClass("de.esolutions.fw.util.commons.genericdata.ObjectKey");
-        mClassLoader.loadClass("io.reactivex.rxjava3.core.Single");
-        for (String classPath : listObject) {
-          mClassLoader.loadClass(classPath);
-        }
+      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwElement");
+      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwPrimitive");
+      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwObject");
+      classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.ObjectKey");
+      // classLoader.loadClass("io.reactivex.rxjava3.core.Single");
+
+      // 加载指定集合
+      for (String classPath : dependenciesList) {
+        classLoader.loadClass(classPath);
       }
-
-      Class<?> jarClass = mClassLoader.loadClass(className);
-      System.out.println("顺利读取到了JAR包中的Class文件：" + jarClass);
-      return jarClass;
+      return classLoader;
     } catch (Exception e) {
       e.printStackTrace();
       System.out.println("读取JAR包中的Class文件异常：" + e.getMessage());
@@ -124,15 +118,19 @@ public class ReadJarFile {
   }
 
   /**
-   * @return 3：读取本地的文件，获取class类型文件
+   * @param classLoader classLoad对象
+   * @param className 指定的class类名，这里是全路径的类名
+   * @return 2：返回指定jar包中目标class类型的Class对象
    */
-  public static Class<?> readLocalClass(String className) {
+  public static Class<?> readClass(URLClassLoader classLoader, String className) {
     try {
-      Class<?> targetClass = Class.forName(className);
-      System.out.println("顺利读取本地的Class文件成功：" + targetClass);
-      return targetClass;
+      Class<?> aClass = classLoader.loadClass(className);
+      String simple = StringUtil.getSimpleForPath(className);
+      System.out.println("读取到了目标的[" + simple + "]Class:" + aClass);
+      return aClass;
     } catch (Exception e) {
-      System.out.println("读取本地的Class文件异常：" + e.getMessage());
+      e.printStackTrace();
+      System.out.println("读取Class类异常：" + e.getMessage());
       return null;
     }
   }
@@ -259,12 +257,12 @@ public class ReadJarFile {
         || clazz == Float.class;
   }
 
-  private static void loadParentNode() {
+  private static void loadParentNode(URLClassLoader globalClassLoad) {
     // 使用类加载器，读取父类中主节点的接口变量
     if (!rsiTargetNodePath.isEmpty()) {
       try {
         Class<?> parentNodeClass =
-            mClassLoader.loadClass(StringUtil.transitionPath(rsiTargetNodePath));
+            globalClassLoad.loadClass(StringUtil.transitionPath(rsiTargetNodePath));
         // 获取类的所有方法
         for (Method method : parentNodeClass.getDeclaredMethods()) {
           System.out.println(method.getName());
@@ -277,8 +275,7 @@ public class ReadJarFile {
 
   public static void execute() {
     try {
-      // 1：读取指定目标节点下所有的object集合
-      // de/esolutions/fw/rudi/viwi/service/hvac/v3
+      // 1：读取指定目标节点下所有的object集合,例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
       String filterNodePath =
           Paths.get(RSI_ROOT_NODE_PATH)
               .resolve(Paths.get(RSI_PARENT_NODE_PATH))
@@ -286,10 +283,14 @@ public class ReadJarFile {
               .toString()
               .replace(".", "/");
       System.out.println("过滤JAR包中的父节点为： " + filterNodePath);
-      List<String> objectList = readObjectClassName(filterNodePath);
-      // 2：读取Jar包中指定的class类
-      Class<?> jarClass = readJar(RSI_CHILD_NODE_OBJECT_NAME, objectList);
-      Class<?> targetClass = readLocalClass(LOCAL_PATH);
+      // 2: 读取jar包中需要依赖的类名字
+      List<String> needDependenciesClassNameList = readNeedDependenciesClassName(filterNodePath);
+      // 3:通过配置需要依赖的类，去构建一个classLoad
+      URLClassLoader globalClassLoad = getGlobalClassLoad(needDependenciesClassNameList);
+      // 4：读取Jar包中指定的class类
+      Class<?> jarClass = readClass(globalClassLoad, RSI_CHILD_NODE_OBJECT_NAME);
+      // 5:读取本地指定类的class类
+      Class<?> targetClass = readClass(globalClassLoad, LOCAL_PATH);
       LinkedHashSet<ObjectEntity> jarSet = getMethods(jarClass, "JAR");
       LinkedHashSet<ObjectEntity> localSet = getMethods(targetClass, "Local");
 
@@ -297,12 +298,13 @@ public class ReadJarFile {
       if (needWriteVariable) {
         System.out.println("属性完全相同，不需要重新写入属性！");
       } else {
-        loadParentNode();
+        loadParentNode(globalClassLoad);
         GenerateUtil.generateEntity(jarSet);
       }
       // 关闭ClassLoader释放资源
-      mClassLoader.close();
-      mClassLoader = null;
+      if (globalClassLoad != null) {
+        globalClassLoad.close();
+      }
     } catch (Exception e) {
       e.printStackTrace();
       System.out.println("write data error!");
