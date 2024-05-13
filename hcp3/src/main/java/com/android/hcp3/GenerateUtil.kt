@@ -2,9 +2,11 @@ package com.android.hcp3
 
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
-import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
-import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
+import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
+import com.android.hcp3.ReadJarFile.getMethods
+import com.android.hcp3.ReadJarFile.mGlobalClassLoad
+import com.android.hcp3.ReadJarFile.readClass
 import com.squareup.javapoet.*
 import java.io.File
 import java.io.IOException
@@ -36,12 +38,16 @@ object GenerateUtil {
     }
 
     /**
+     * @param objectClassPath 构造方法中参数的全路径包名
+     * @param jarMethodSet 生成代码里面需要写入的属性集合
+     * @param packagePath 包名的路径，这里不能包含存放代码的目录
      * 动态生成代码
      */
     @JvmStatic
-    fun generateEntity(
+    fun generateClass(
         objectClassPath: String,
         jarMethodSet: LinkedHashSet<ObjectEntity>,
+        packagePath: String,
     ) {
         // <editor-fold desc="一：构建类对象">
         println("开始生成类：$objectClassPath ------>")
@@ -83,7 +89,6 @@ object GenerateUtil {
         val iterator = jarMethodSet.iterator()
         while (iterator.hasNext()) {
             val bean = iterator.next()
-
             // 3.1：获取ben中的信息
             val attributeName = bean.attributeName // 具体的属性名字
             val methodName = bean.methodName // 方法名字
@@ -92,7 +97,7 @@ object GenerateUtil {
 
             // todo 此处暂时使用源码中返回值类型，后续需要给替换掉
             // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
-            generateChildClass(genericPath, attributeClassType)
+            checkChildRunTypeClass(genericPath, attributeClassType)
 
             val fieldType = getTypeForPath(genericPath, attributeClassType)
 
@@ -145,17 +150,13 @@ object GenerateUtil {
         // </editor-fold>
 
         // <editor-fold desc="五：写入到类中">
-        val packageName =
-            Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
-                .resolve(Paths.get(RSI_PARENT_NODE_LEVEL)).resolve(Paths.get(RSI_CHILD_NODE_PATH)).toString()
-
-        val javaFile = JavaFile.builder(packageName, classTypeBuild.build()).build()
+        val javaFile = JavaFile.builder(packagePath, classTypeBuild.build()).build()
 
         // println("OutPutPath:$RSI_PROJECT_PATH")
         val outPutFile = File(BASE_OUT_PUT_PATH)
         // 这里输出的路径，是以项目的root作为根目录的
-//        javaFile.writeTo(outPutFile)
-        javaFile.writeTo(System.out)
+        javaFile.writeTo(outPutFile)
+//        javaFile.writeTo(System.out)
         println("写入结束！")
         // </editor-fold>
     }
@@ -163,20 +164,77 @@ object GenerateUtil {
     /**
      * 每当读取到一个属性的时候，就需要判定这个类的重构类是否存在，如果不存在的话，则需要去主动生成这个类
      */
-    private fun generateChildClass(
+    private fun checkChildRunTypeClass(
         genericPath: String,
         attributeClassType: Int,
     ) {
-        if (genericPath.contains(".")) {
-            val clasName = genericPath.substring(genericPath.lastIndexOf(".") + 1)
-            println("className: $clasName")
-            var newClassName = ""
-            if (clasName.endsWith("Object")) {
-                newClassName = "${clasName}Entity"
-            } else if (clasName.endsWith("Enum")) {
-                newClassName = "${clasName}Entity"
-            } else {
-                println("出现了异种的返回值[$clasName]，请手动处理！")
+        if (attributeClassType == 1) {
+            println("      当前属性[$genericPath]是基础类型，不做额外处理!")
+        } else {
+            if (genericPath.contains(".")) {
+                // 1：从path中获取对应的包名
+                val objectName = StringUtil.getSimpleForPath(genericPath)
+                // println("className: $objectName")
+                val bean =
+                    RSI_TARGET_NODE_LIST.find { filter ->
+                        StringUtil.lowercase(filter.apiGenericName) ==
+                            StringUtil.lowercase(
+                                objectName
+                            )
+                    }
+                if (bean != null) {
+                    // 2：获取package的路径
+                    val folderPath =
+                        StringUtil.transitionPath(
+                            Paths.get(BASE_OUT_PUT_PATH).resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
+                                .resolve(StringUtil.lowercase(RSI_PARENT_NODE_PATH))
+                                .resolve(StringUtil.lowercase(bean.apiName))
+                                .toString()
+                        )
+                    // 3：检测文件夹是否存在
+                    val checkFolderExists = checkFolderExists(folderPath)
+                    // println("      folderPath:$folderPath exists:$checkFolderExists")
+                    if (!checkFolderExists) {
+                        println("      包:${folderPath}不存在，需要去创建！")
+                        mkdirFolder(folderPath)
+                    }
+                    // 4：再次检查包是否存在
+                    if (checkFolderExists(folderPath)) {
+                        // 5：todo 检查类是否存在,这里要区分是基础数据类型、枚举、还是自定义的数据类型
+                        if (attributeClassType == 4) {
+                            val checkApiEntityFileExists = checkApiEntityFileExists(folderPath, "${objectName}Entity")
+                            if (!checkApiEntityFileExists) {
+                                println("需要去创建属性的对象！")
+
+                                // 6:读取jar包中属性的字段
+                                mGlobalClassLoad?.let { classLoad ->
+                                    val readClass = readClass(classLoad, genericPath, "child:")
+                                    if (readClass != null) {
+                                        val methods = getMethods(readClass, "child:[$genericPath]")
+
+                                        val packagePath =
+                                            StringUtil.lowercase(
+                                                StringUtil.transitionPackage(
+                                                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                                                        .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(
+                                                            bean.apiName
+                                                        )
+                                                        .toString()
+                                                )
+                                            )
+                                        generateClass(genericPath, methods, packagePath)
+                                    } else {
+                                        println("     读取到的class为空，请重读取class!")
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        println("      创建package之后，package依旧不存在，请检查详细路径信息！")
+                    }
+                } else {
+                    println("      当前属性[$genericPath]的类型不在Api中，请查看这个特殊的类型：$genericPath")
+                }
             }
         }
     }
@@ -238,9 +296,18 @@ object GenerateUtil {
     }
 
     /**
-     * 检测
+     * 检测文件夹是否存在
      */
-    fun mkdirApiEntity(packagePath: String) {
+    fun checkFolderExists(packagePath: String): Boolean {
+        // println("checkPackagePath:[$packagePath]")
+        val file = File(packagePath)
+        return file.exists()
+    }
+
+    /**
+     * 创建文件夹
+     */
+    private fun mkdirFolder(packagePath: String) {
         val file = File(packagePath)
         if (!file.exists()) {
             val mkdirs = file.mkdirs()

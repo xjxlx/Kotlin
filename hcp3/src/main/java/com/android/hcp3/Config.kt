@@ -2,6 +2,11 @@ package com.android.hcp3
 
 object Config {
     /**
+     * 用来存储当前节点下的所有子节点名字，内容会自动生成，不要做任何的改动
+     */
+    val RSI_TARGET_NODE_LIST: MutableList<ApiNodeBean> = mutableListOf()
+
+    /**
      *RSI 中Root节点路径，这个一般不会进行改动
      * @see{de.esolutions.fw.rudi.viwi.service}
      */
@@ -48,4 +53,5 @@ object Config {
      * @see {generalsettings}
      */
     const val RSI_CHILD_NODE_PATH = "generalsettings"
+//    const val RSI_CHILD_NODE_PATH = "flavourCartridges"
 }

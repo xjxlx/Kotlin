@@ -7,8 +7,9 @@ import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
+import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.Config.TARGET_JAR_PATH
-import com.android.hcp3.GenerateUtil.generateEntity
+import com.android.hcp3.GenerateUtil.generateClass
 import com.android.hcp3.StringUtil.capitalize
 import com.android.hcp3.StringUtil.getSimpleForPath
 import com.android.hcp3.StringUtil.lowercase
@@ -26,14 +27,12 @@ import java.util.jar.JarFile
 
 object ReadJarFile {
     /**
-     * 用来存储当前节点下的所有子节点名字，内容会自动生成，不要做任何的改动
-     */
-    private val RSI_TARGET_NODE_LIST: MutableList<ApiNodeBean> = mutableListOf()
-
-    /**
      * 当前父类节点下的主接口全路径，这个舒心是动态生成的，不要做任何的改动，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.Hvac
      */
     private var rsiTargetNodePath: String = ""
+
+    // 公用的classLoad加载器，不用做任何处理
+    var mGlobalClassLoad: URLClassLoader? = null
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -146,7 +145,7 @@ object ReadJarFile {
      * @param className 指定的class类名，这里是全路径的类名
      * @return 2：返回指定jar包中目标class类型的Class对象
      */
-    private fun readClass(
+    fun readClass(
         classLoader: URLClassLoader,
         className: String?,
         tag: String = "",
@@ -169,7 +168,7 @@ object ReadJarFile {
     /**
      * @return 4：返回指定class的方法以及方法的泛型
      */
-    private fun getMethods(
+    fun getMethods(
         clazz: Class<*>?,
         tag: String,
     ): LinkedHashSet<ObjectEntity> {
@@ -272,6 +271,9 @@ object ReadJarFile {
                 } else if (MutableList::class.java.isAssignableFrom(typeClass)) { //  List数据类型
                     3
                     // System.out.println("List数据类型");
+                } else if (Enum::class.java.isAssignableFrom(typeClass)) { // Enum类型
+                    //  println("枚举数据类型")
+                    5
                 } else { // 其他引用数据类型，也就是自定义的object数据类型
                     4
                     // System.out.println("自定义Object数据类型");
@@ -369,6 +371,7 @@ object ReadJarFile {
             // 3:通过配置需要依赖的类，去构建一个classLoad
             val globalClassLoad = getGlobalClassLoad(needDependenciesClassNameList)
             globalClassLoad?.let {
+                mGlobalClassLoad = it
                 // 4：读取父节点下所有的api方法，获取所有api的方法的名字以及返回类型的全路径包名
                 readApiNodeForParent(it)
                 // 5：从读取父类中的Api对象中去匹配节点
@@ -398,7 +401,13 @@ object ReadJarFile {
                     if (needWriteVariable) {
                         println("属性完全相同，不需要重新写入属性！")
                     } else {
-                        generateEntity(filterBean.apiGenericPath, jarSet)
+                        val packagePath =
+                            transitionPackage(
+                                Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                                    .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(Paths.get(RSI_CHILD_NODE_PATH))
+                                    .toString()
+                            )
+                        generateClass(filterBean.apiGenericPath, jarSet, packagePath)
                     }
                 } else {
                     println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")

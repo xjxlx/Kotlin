@@ -12,7 +12,7 @@ public class ObjectEntity {
 
   /**
    * 判断当前的class是什么类型 0：默认无效的数据类型，1：基础数据类型，例如，Float、Boolean、Integer 2：数组类型，
-   * 3：List数据集合，4：其他数据类型，也就是自定义的数据类型
+   * 3：List数据集合，4：其他数据类型，也就是自定义的数据类型，5:枚举类型
    */
   private int classType;
 
@@ -46,7 +46,7 @@ public class ObjectEntity {
 
   /**
    * @param classType 0：默认无效的数据类型，1：基础数据类型，例如，Float、Boolean、Integer
-   *     2：数组类型，3：List数据集合，4：其他数据类型，也就是自定义的数据类型
+   *     2：数组类型，3：List数据集合，4：其他数据类型，也就是自定义的数据类型,5:枚举类型
    */
   public void setClassType(int classType) {
     this.classType = classType;
