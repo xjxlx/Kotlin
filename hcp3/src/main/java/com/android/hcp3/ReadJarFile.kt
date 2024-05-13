@@ -212,16 +212,13 @@ object ReadJarFile {
                             bean.attributeName = attributeName
                             bean.methodName = methodName
                             bean.genericPath = genericPath
-
-                            println(
-                                "      method [$attributeName] GenericType:[$genericPath]"
-                            )
+                            // println("      method [$attributeName] GenericType:[$genericPath]")
                             set.add(bean)
                         }
                     }
                 }
             } else {
-                println("      ${tag}的clas为空！")
+                println("      ${tag}的clas为空，请检查是否正确获取了class对象！")
             }
             println("[" + tag + "]" + "反射获取到的属性：" + set.size)
         } catch (e: Exception) {
@@ -350,7 +347,7 @@ object ReadJarFile {
                         RSI_TARGET_NODE_LIST.addAll(tempApiMethodList)
                     }
                 }
-                println("\r\n父类节点[$RSI_PARENT_NODE_PATH]中Api列表：$RSI_TARGET_NODE_LIST\r\n")
+                println("父类节点[$RSI_PARENT_NODE_PATH]中Api列表：$RSI_TARGET_NODE_LIST")
             } catch (e: ClassNotFoundException) {
                 throw RuntimeException(e)
             }
