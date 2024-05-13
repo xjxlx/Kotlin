@@ -27,7 +27,7 @@ object ReadJarFile {
     /**
      * 用来存储当前节点下的所有子节点名字，内容会自动生成，不要做任何的改动
      */
-    private val RSI_TARGET_NODE_LIST: MutableList<String> = mutableListOf()
+    private val RSI_TARGET_NODE_LIST: MutableList<ApiNodeBean> = mutableListOf()
 
     /**
      * 当前父类节点下的主接口全路径，这个舒心是动态生成的，不要做任何的改动，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.Hvac
@@ -146,14 +146,11 @@ object ReadJarFile {
      * @return 2：返回指定jar包中目标class类型的Class对象
      */
     private fun readClass(
-        classLoader: URLClassLoader?,
+        classLoader: URLClassLoader,
         className: String?,
     ): Class<*>? {
         try {
-            val aClass = classLoader!!.loadClass(className)
-            val simple = getSimpleForPath(className!!)
-            println("读取到了目标的[$simple] Class：[$aClass]")
-            return aClass
+            return classLoader.loadClass(className)
         } catch (e: Exception) {
             e.printStackTrace()
             println("读取Class类异常：" + e.message)
@@ -176,7 +173,7 @@ object ReadJarFile {
 
                 for (method in methods) {
                     val methodName = method.name
-                    var attributeName = ""
+                    var attributeName: String
                     var genericPath = ""
                     // 1： 必须是以get开头的方法
                     if (methodName.startsWith("get")) {
@@ -286,20 +283,62 @@ object ReadJarFile {
     }
 
     /** 读取大项中节点的内容  */
-    private fun readParentNodeContent(globalClassLoad: URLClassLoader?) {
+    private fun readParentNodeContent(globalClassLoad: URLClassLoader) {
         // 使用类加载器，读取父类中主节点的接口变量
         if (rsiTargetNodePath.isNotEmpty()) {
             try {
-                val parentNodeClass = globalClassLoad!!.loadClass(transitionPath(rsiTargetNodePath))
-                // 获取类的所有方法
-                for (method in parentNodeClass.declaredMethods) {
-                    val methodName = method.name
-                    if (methodName != "getResources") {
-                        // println("      父类节点中的名字为：$methodName")
-                        RSI_TARGET_NODE_LIST.add(methodName)
+                val parentNodeClass = globalClassLoad.loadClass(transitionPath(rsiTargetNodePath))
+                // 获取类的所有的api方法
+                for (apiMethod in parentNodeClass.declaredMethods) {
+                    val apiMethodName = apiMethod.name
+                    if (apiMethodName != "getResources") {
+                        val apiRunTypePath = apiMethod.returnType.name // 父类中Api方法的返回类型，这里是全路径的包名
+                        // 根据api方法的返回类型的path，去反射获取的Api对象的class对象
+                        val apiClass = readClass(globalClassLoad, apiRunTypePath)
+                        val tempApiMethodList = ArrayList<ApiNodeBean>()
+                        if (apiClass != null) {
+                            // 获取api类中所有的方法
+                            for (apiChildMethod in apiClass.declaredMethods) {
+                                // 过滤api中的方法
+                                //    1:返回值类型必须是io.reactivex.rxjava3.core.Observable开头的方法
+                                //    2:方法不能是default的类型
+                                //    3:泛型的参数不能是list，必须是Class类型的
+                                if ((apiChildMethod.returnType.name.equals("io.reactivex.rxjava3.core.Observable")) &&
+                                    (!apiChildMethod.isDefault)
+                                ) {
+                                    val apiChildGenericReturnType = apiChildMethod.genericReturnType
+                                    if (apiChildGenericReturnType is ParameterizedType) {
+                                        val actualTypeArguments = apiChildGenericReturnType.actualTypeArguments
+                                        if (actualTypeArguments.isNotEmpty()) {
+                                            val argument = actualTypeArguments[0]
+                                            if (argument is Class<*>) {
+                                                val typeName = argument.typeName
+                                                println(
+                                                    "      Api节点[$apiMethodName]" +
+                                                        "\r\n          方法类型是：[$apiChildGenericReturnType]" +
+                                                        "\r\n          泛型的类型是:[$typeName]"
+                                                )
+                                                val apiNodeBean = ApiNodeBean()
+                                                apiNodeBean.apiName = apiMethodName // 父类中api方法的名字
+                                                apiNodeBean.apiReturnTypePath = apiRunTypePath // 父类中api返回类型的全路径包名
+                                                apiNodeBean.apiGenericName =
+                                                    getSimpleForPath(typeName) // api类中匹配方法泛型的名字
+                                                apiNodeBean.apiGenericPath = typeName
+
+                                                tempApiMethodList.add(apiNodeBean)
+                                                if (tempApiMethodList.size > 1) {
+                                                    throw IllegalStateException("当前节点[$apiMethodName]匹配到的方法过多，请重新检查匹配方法的规则！")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        RSI_TARGET_NODE_LIST.addAll(tempApiMethodList)
                     }
                 }
-                println("      父类节点中的名字为：$RSI_TARGET_NODE_LIST")
+                println("父类节点中Api列表：$RSI_TARGET_NODE_LIST\r\n")
             } catch (e: ClassNotFoundException) {
                 throw RuntimeException(e)
             }
@@ -320,23 +359,24 @@ object ReadJarFile {
             val needDependenciesClassNameList = readNeedDependenciesClassName(filterNodePath)
             // 3:通过配置需要依赖的类，去构建一个classLoad
             val globalClassLoad = getGlobalClassLoad(needDependenciesClassNameList)
-            readParentNodeContent(globalClassLoad)
+            globalClassLoad?.let {
+                readParentNodeContent(it)
+                // 4：读取Jar包中指定的class类
+                val jarClass = readClass(it, RSI_CHILD_NODE_OBJECT_NAME)
+                // 5:读取本地指定类的class类
+                val targetClass = readClass(it, LOCAL_PATH)
+                val jarSet = getMethods(jarClass, "JAR")
+                val localSet = getMethods(targetClass, "Local")
 
-            // 4：读取Jar包中指定的class类
-            val jarClass = readClass(globalClassLoad, RSI_CHILD_NODE_OBJECT_NAME)
-            // 5:读取本地指定类的class类
-            val targetClass = readClass(globalClassLoad, LOCAL_PATH)
-            val jarSet = getMethods(jarClass, "JAR")
-            val localSet = getMethods(targetClass, "Local")
-
-            val needWriteVariable = checkNeedWriteVariable(jarSet, localSet)
-            if (needWriteVariable) {
-                println("属性完全相同，不需要重新写入属性！")
-            } else {
-                generateEntity(jarSet)
+                val needWriteVariable = checkNeedWriteVariable(jarSet, localSet)
+                if (needWriteVariable) {
+                    println("属性完全相同，不需要重新写入属性！")
+                } else {
+                    generateEntity(jarSet)
+                }
+                // 关闭ClassLoader释放资源
+                it.close()
             }
-            // 关闭ClassLoader释放资源
-            globalClassLoad?.close()
         } catch (e: Exception) {
             e.printStackTrace()
             println("write data error!")
