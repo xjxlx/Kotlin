@@ -7,9 +7,6 @@ public enum ClassType {
   /** 基础数据类型 */
   PRIMITIVE,
 
-  /** 数组类型数据 */
-  ARRAY,
-
   /** 自定义object类型数据 */
   OBJECT,
 
@@ -20,5 +17,8 @@ public enum ClassType {
   LIST_OBJECT,
 
   /** 枚举类型数据 */
-  ENUM
+  ENUM,
+
+  /** 数组类型数据，暂时不用 */
+  ARRAY
 }

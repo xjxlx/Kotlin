@@ -1,4 +1,4 @@
-package com.android.hcp3.rsi.hvac;
+package com.android.hcp3;
 
 public class AttributeTypeBean {
   /** 生成属性类的路径，这个是全路径 */

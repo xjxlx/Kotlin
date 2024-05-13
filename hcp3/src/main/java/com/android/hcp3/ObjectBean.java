@@ -11,7 +11,7 @@ public class ObjectBean {
   private String genericPath;
 
   /** 判断当前的class是什么类型 */
-  private ClassType classType;
+  private ClassType classType = ClassType.INVALID;
 
   public String getAttributeName() {
     return attributeName;
@@ -47,7 +47,7 @@ public class ObjectBean {
 
   @Override
   public String toString() {
-    return "ObjectEntity{"
+    return "ObjectBean{"
         + "attributeName='"
         + attributeName
         + '\''

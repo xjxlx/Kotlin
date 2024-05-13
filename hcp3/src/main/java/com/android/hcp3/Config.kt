@@ -4,7 +4,7 @@ object Config {
     /**
      * 用来存储当前节点下的所有子节点名字，内容会自动生成，不要做任何的改动
      */
-    val RSI_TARGET_NODE_LIST: MutableList<ApiNodeBean> = mutableListOf()
+    val RSI_TARGET_NODE_LIST: LinkedHashSet<ApiNodeBean> = LinkedHashSet<ApiNodeBean>()
 
     /**
      *RSI 中Root节点路径，这个一般不会进行改动

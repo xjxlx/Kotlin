@@ -14,6 +14,7 @@ import com.android.hcp3.StringUtil.capitalize
 import com.android.hcp3.StringUtil.getSimpleForPath
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
+import de.esolutions.fw.rudi.services.rsiglobal.Duration
 import java.io.File
 import java.io.IOException
 import java.lang.reflect.Method
@@ -22,6 +23,8 @@ import java.lang.reflect.Type
 import java.net.URL
 import java.net.URLClassLoader
 import java.nio.file.Paths
+import java.time.LocalDate
+import java.time.OffsetTime
 import java.util.*
 import java.util.jar.JarFile
 
@@ -177,9 +180,12 @@ object ReadJarFile {
         try {
             if (clazz != null) {
                 // 将数组转换为集合
-                val methods: Set<Method> = HashSet(Arrays.asList(*clazz.declaredMethods))
+                val methods: Set<Method> = HashSet(listOf(*clazz.declaredMethods))
                 for (method in methods) {
                     val methodName = method.name
+                    if (method.name == "OffsetTime") {
+                        println("---->")
+                    }
                     var attributeName: String
                     var genericPath = ""
                     // 1： 必须是以get开头的方法
@@ -196,19 +202,30 @@ object ReadJarFile {
 
                             // 4:获取方法的返回类型
                             val returnType = method.genericReturnType
+                            var listGenericPath = ""
                             // 5:返回泛型的类型
                             if (returnType is ParameterizedType) {
                                 val actualTypeArguments = returnType.actualTypeArguments
                                 if (actualTypeArguments.isNotEmpty()) {
                                     val argument = actualTypeArguments[0]
                                     genericPath = argument.typeName
-                                    bean.classType = checkClassType(argument)
+                                    val classType = checkClassType(argument)
+                                    println("argument:$argument type:$classType")
+                                    bean.classType = classType
+                                    // 只有泛型对象是list的时候，才会添加list的泛型参数
+                                    if (classType == ClassType.LIST_OBJECT || classType == ClassType.LIST_PRIMITIVE) {
+                                        if (argument is ParameterizedType) { // 泛型类型
+                                            bean.genericPath = argument.actualTypeArguments[0].typeName
+                                        }
+                                    } else {
+                                        bean.genericPath = genericPath
+                                    }
                                 }
                             }
 
                             bean.attributeName = attributeName
                             bean.methodName = methodName
-                            bean.genericPath = genericPath
+                            // bean.genericPath = genericPath
                             // println("      method [$attributeName] GenericType:[$genericPath]")
                             set.add(bean)
                         }
@@ -289,8 +306,11 @@ object ReadJarFile {
      */
     private fun isPrimitiveOrWrapper(clazz: Class<*>): Boolean {
         return clazz.isPrimitive || clazz == Int::class.javaObjectType || clazz == Double::class.javaObjectType ||
-            clazz == Boolean::class.javaObjectType || clazz == Char::class.javaObjectType || clazz == Byte::class.javaObjectType ||
-            clazz == Short::class.javaObjectType || clazz == Long::class.javaObjectType || clazz == Float::class.javaObjectType
+            clazz == Boolean::class.javaObjectType || clazz == Char::class.javaObjectType ||
+            clazz == Byte::class.javaObjectType || clazz == Short::class.javaObjectType ||
+            clazz == Long::class.javaObjectType || clazz == Float::class.javaObjectType ||
+            clazz == OffsetTime::class.javaObjectType || clazz == LocalDate::class.javaObjectType ||
+            (clazz.name == Duration::class.javaObjectType.name)
     }
 
     /** 读取大项中节点的Api信息  */
