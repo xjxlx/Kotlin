@@ -201,7 +201,7 @@ object ReadJarFile {
                             // 5:返回泛型的类型
                             if (returnType is ParameterizedType) {
                                 val actualTypeArguments = returnType.actualTypeArguments
-                                if (actualTypeArguments.size > 0) {
+                                if (actualTypeArguments.isNotEmpty()) {
                                     val argument = actualTypeArguments[0]
                                     genericPath = argument.typeName
                                     bean.classType = checkClassType(argument)
@@ -259,7 +259,6 @@ object ReadJarFile {
         } else if (type is Class<*>) { // 不是泛型类型的参数
             typeClass = type
         }
-
         if (typeClass != null) {
             classType =
                 if (isPrimitiveOrWrapper(typeClass)) { // 基本数据类型
@@ -285,11 +284,12 @@ object ReadJarFile {
     /**
      * @param clazz class的对象
      * @return 判断是否是基本数据类型
+     * val javaClass = Boolean::class.javaObjectType
      */
     private fun isPrimitiveOrWrapper(clazz: Class<*>): Boolean {
-        return clazz.isPrimitive || clazz == Int::class.java || clazz == Double::class.java ||
-            clazz == Boolean::class.java || clazz == Char::class.java || clazz == Byte::class.java ||
-            clazz == Short::class.java || clazz == Long::class.java || clazz == Float::class.java
+        return clazz.isPrimitive || clazz == Int::class.javaObjectType || clazz == Double::class.javaObjectType ||
+            clazz == Boolean::class.javaObjectType || clazz == Char::class.javaObjectType || clazz == Byte::class.javaObjectType ||
+            clazz == Short::class.javaObjectType || clazz == Long::class.javaObjectType || clazz == Float::class.javaObjectType
     }
 
     /** 读取大项中节点的Api信息  */
