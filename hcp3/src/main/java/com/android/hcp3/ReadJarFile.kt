@@ -402,11 +402,15 @@ object ReadJarFile {
                         println("属性完全相同，不需要重新写入属性！")
                     } else {
                         val packagePath =
-                            transitionPackage(
-                                Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                                    .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(Paths.get(RSI_CHILD_NODE_PATH))
-                                    .toString()
+                            lowercase(
+                                transitionPackage(
+                                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                                        .resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                                        .resolve(Paths.get(RSI_CHILD_NODE_PATH))
+                                        .toString()
+                                )
                             )
+                        // 10：写入当前的Object
                         generateClass(filterBean.apiGenericPath, jarSet, packagePath)
                     }
                 } else {

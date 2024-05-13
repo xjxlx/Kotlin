@@ -25,6 +25,8 @@ object GenerateUtil {
     private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
     private val collectorsClassName: ClassName = ClassName.get("java.util.stream", "Collectors")
 
+    private val Debug = true
+
     @Throws(IOException::class)
     @JvmStatic
     fun main(args: Array<String>) {
@@ -151,18 +153,268 @@ object GenerateUtil {
 
         // <editor-fold desc="五：写入到类中">
         val javaFile = JavaFile.builder(packagePath, classTypeBuild.build()).build()
-
-        // println("OutPutPath:$RSI_PROJECT_PATH")
-        val outPutFile = File(BASE_OUT_PUT_PATH)
-        // 这里输出的路径，是以项目的root作为根目录的
-        javaFile.writeTo(outPutFile)
-//        javaFile.writeTo(System.out)
+        if (Debug) {
+            javaFile.writeTo(System.out)
+        } else {
+            val outPutFile = File(BASE_OUT_PUT_PATH)
+            javaFile.writeTo(outPutFile)
+        }
         println("写入结束！")
         // </editor-fold>
     }
 
     /**
-     * 每当读取到一个属性的时候，就需要判定这个类的重构类是否存在，如果不存在的话，则需要去主动生成这个类
+     * @param objectClassPath 构造方法中参数的全路径包名
+     * @param jarMethodSet 生成代码里面需要写入的属性集合
+     * @param packagePath 包名的路径，这里不能包含存放代码的目录
+     * 动态生成代码
+     */
+    @JvmStatic
+    fun generateChildObject(
+        objectClassPath: String,
+        jarMethodSet: LinkedHashSet<ObjectEntity>,
+        packagePath: String,
+    ) {
+        // <editor-fold desc="一：构建类对象">
+        println("开始生成类：$objectClassPath ------>")
+        val classType = getTypeForPath(objectClassPath)
+        val className = classType[1] + "Entity"
+
+        // 构建类的build对象，用于组装类中的数据
+        val classTypeBuild =
+            TypeSpec.classBuilder(className)
+                .addAnnotations(getAddAnnotations())
+                .superclass(SUPER_CLASS_NAME)
+                .addModifiers(Modifier.PUBLIC)
+        println("需要生成的Object主对象为：[$className]")
+        // </editor-fold>
+
+        // <editor-fold desc="二：构建方法对象">
+        // 2.1：构造方法的参数类型
+        val methodPackageName = classType[0]
+        println("类的名字为：[$className] 构造类参数的路径为：[$methodPackageName]")
+        val methodParameterType = ClassName.get(methodPackageName, classType[1])
+        // 2.2：方法的参数
+        val methodParameter =
+            ParameterSpec.builder(methodParameterType, "object")
+                .addAnnotation(METHOD_ANNOTATION_TYPE) // 设置方法的注解
+                .build()
+
+        // 2.3:组装方法的修饰符和参数
+        val methodSpecBuild =
+            MethodSpec.constructorBuilder() // 标注是构造犯法
+                .addModifiers(Modifier.PROTECTED) // 方法的修饰符
+                .addParameter(methodParameter) // 方法的参数
+                .addStatement("super(object)") // 调用父类构造函数
+
+        // 2.4：构造code build,用于循环添加内容到方法体内
+        val codeBuild = CodeBlock.builder()
+        // </editor-fold>
+
+        // <editor-fold desc="三：循环添加属性和方法内容">
+        val iterator = jarMethodSet.iterator()
+        while (iterator.hasNext()) {
+            val bean = iterator.next()
+            // 3.1：获取ben中的信息
+            val attributeName = bean.attributeName // 具体的属性名字
+            val methodName = bean.methodName // 方法名字
+            val genericPath = bean.genericPath // 返回值的路径
+            val attributeClassType = bean.classType // 参数的具体数据类型
+
+            // todo 此处暂时使用源码中返回值类型，后续需要给替换掉
+            // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
+            checkChildRunTypeClass(genericPath, attributeClassType)
+
+            val fieldType = getTypeForPath(genericPath, attributeClassType)
+
+            // 0：默认无效的数据类型，1：基础数据类型 2：数组类型，3：List数据集合，4：其他数据类型，也就是自定义的数据类型
+            if (attributeClassType != 0) {
+                // 构建属性的数据类型
+                var fieldTypeName: TypeName = ClassName.get(fieldType[0], fieldType[1])
+                if (attributeClassType == 3) { // List 数据类型,需要单独构造
+                    fieldTypeName =
+                        ParameterizedTypeName.get(
+                            ClassName.get("java.util", "List"),
+                            fieldTypeName
+                        )
+                }
+
+                // 3.3：构建属性对象
+                val fieldSpec =
+                    FieldSpec.builder(fieldTypeName, attributeName).addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                println("      attribute:[$attributeName]  attributeType:[$genericPath]")
+                // 把生成的属性对象添加到类中
+                classTypeBuild.addField(fieldSpec.build())
+
+                // 3.4: 根据属性不同的类型，去添加属性的初始化值
+                when (attributeClassType) {
+                    1 -> { // 1：基础数据类型
+                        codeBuild.addStatement("this.$attributeName = object.$methodName().orElse(null)")
+                    }
+
+                    3 -> { // List数据类型
+                        codeBuild.addStatement(
+                            "this.$attributeName = object.$methodName().map(list ->list.stream()" +
+                                ".map(${fieldType[1]}::new).collect(\$T.toList())).orElse(null)",
+                            collectorsClassName
+                        )
+                    }
+
+                    4 -> { // object数据类型
+                        codeBuild.addStatement("this.$attributeName = object.$methodName().map(${fieldType[1]}::new).orElse(null)")
+                    }
+                }
+            } else {
+                println("参数的具体类型找不到，请检查具体的内容！")
+            }
+        }
+        // </editor-fold>
+
+        // <editor-fold desc="四：构建方法体对象">
+        // 添加完成的方法内容
+        classTypeBuild.addMethod(methodSpecBuild.addCode(codeBuild.build()).build())
+        // </editor-fold>
+
+        // <editor-fold desc="五：写入到类中">
+        val javaFile = JavaFile.builder(packagePath, classTypeBuild.build()).build()
+
+        if (Debug) {
+            javaFile.writeTo(System.out)
+        } else {
+            val outPutFile = File(BASE_OUT_PUT_PATH)
+            javaFile.writeTo(outPutFile)
+        }
+        println("写入结束！")
+        // </editor-fold>
+    }
+
+    /**
+     * @param objectClassPath 构造方法中参数的全路径包名
+     * @param jarMethodSet 生成代码里面需要写入的属性集合
+     * @param packagePath 包名的路径，这里不能包含存放代码的目录
+     * 动态生成代码
+     */
+    @JvmStatic
+    fun generateChildEnum(
+        objectClassPath: String,
+        jarMethodSet: LinkedHashSet<ObjectEntity>,
+        packagePath: String,
+    ) {
+        // <editor-fold desc="一：构建类对象">
+        println("开始生成类：$objectClassPath ------>")
+        val classType = getTypeForPath(objectClassPath)
+        val className = classType[1] + "Entity"
+
+        // 构建类的build对象，用于组装类中的数据
+        val classTypeBuild =
+            TypeSpec.classBuilder(className)
+                .addAnnotations(getAddAnnotations())
+                .superclass(SUPER_CLASS_NAME)
+                .addModifiers(Modifier.PUBLIC)
+        println("需要生成的Object主对象为：[$className]")
+        // </editor-fold>
+
+        // <editor-fold desc="二：构建方法对象">
+        // 2.1：构造方法的参数类型
+        val methodPackageName = classType[0]
+        println("类的名字为：[$className] 构造类参数的路径为：[$methodPackageName]")
+        val methodParameterType = ClassName.get(methodPackageName, classType[1])
+        // 2.2：方法的参数
+        val methodParameter =
+            ParameterSpec.builder(methodParameterType, "object")
+                .addAnnotation(METHOD_ANNOTATION_TYPE) // 设置方法的注解
+                .build()
+
+        // 2.3:组装方法的修饰符和参数
+        val methodSpecBuild =
+            MethodSpec.constructorBuilder() // 标注是构造犯法
+                .addModifiers(Modifier.PROTECTED) // 方法的修饰符
+                .addParameter(methodParameter) // 方法的参数
+                .addStatement("super(object)") // 调用父类构造函数
+
+        // 2.4：构造code build,用于循环添加内容到方法体内
+        val codeBuild = CodeBlock.builder()
+        // </editor-fold>
+
+        // <editor-fold desc="三：循环添加属性和方法内容">
+        val iterator = jarMethodSet.iterator()
+        while (iterator.hasNext()) {
+            val bean = iterator.next()
+            // 3.1：获取ben中的信息
+            val attributeName = bean.attributeName // 具体的属性名字
+            val methodName = bean.methodName // 方法名字
+            val genericPath = bean.genericPath // 返回值的路径
+            val attributeClassType = bean.classType // 参数的具体数据类型
+
+            // todo 此处暂时使用源码中返回值类型，后续需要给替换掉
+            // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
+            checkChildRunTypeClass(genericPath, attributeClassType)
+
+            val fieldType = getTypeForPath(genericPath, attributeClassType)
+
+            // 0：默认无效的数据类型，1：基础数据类型 2：数组类型，3：List数据集合，4：其他数据类型，也就是自定义的数据类型
+            if (attributeClassType != 0) {
+                // 构建属性的数据类型
+                var fieldTypeName: TypeName = ClassName.get(fieldType[0], fieldType[1])
+                if (attributeClassType == 3) { // List 数据类型,需要单独构造
+                    fieldTypeName =
+                        ParameterizedTypeName.get(
+                            ClassName.get("java.util", "List"),
+                            fieldTypeName
+                        )
+                }
+
+                // 3.3：构建属性对象
+                val fieldSpec =
+                    FieldSpec.builder(fieldTypeName, attributeName).addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                println("      attribute:[$attributeName]  attributeType:[$genericPath]")
+                // 把生成的属性对象添加到类中
+                classTypeBuild.addField(fieldSpec.build())
+
+                // 3.4: 根据属性不同的类型，去添加属性的初始化值
+                when (attributeClassType) {
+                    1 -> { // 1：基础数据类型
+                        codeBuild.addStatement("this.$attributeName = object.$methodName().orElse(null)")
+                    }
+
+                    3 -> { // List数据类型
+                        codeBuild.addStatement(
+                            "this.$attributeName = object.$methodName().map(list ->list.stream()" +
+                                ".map(${fieldType[1]}::new).collect(\$T.toList())).orElse(null)",
+                            collectorsClassName
+                        )
+                    }
+
+                    4 -> { // object数据类型
+                        codeBuild.addStatement("this.$attributeName = object.$methodName().map(${fieldType[1]}::new).orElse(null)")
+                    }
+                }
+            } else {
+                println("参数的具体类型找不到，请检查具体的内容！")
+            }
+        }
+        // </editor-fold>
+
+        // <editor-fold desc="四：构建方法体对象">
+        // 添加完成的方法内容
+        classTypeBuild.addMethod(methodSpecBuild.addCode(codeBuild.build()).build())
+        // </editor-fold>
+
+        // <editor-fold desc="五：写入到类中">
+        val javaFile = JavaFile.builder(packagePath, classTypeBuild.build()).build()
+
+        if (Debug) {
+            javaFile.writeTo(System.out)
+        } else {
+            val outPutFile = File(BASE_OUT_PUT_PATH)
+            javaFile.writeTo(outPutFile)
+        }
+        println("写入结束！")
+        // </editor-fold>
+    }
+
+    /**
+     * 每当读取到一个属性的时候，就需要判定这个类的重构类是否存在，如果不存在的话，则需要去主动生成这个类,然后返回这个类的全路径名字
      */
     private fun checkChildRunTypeClass(
         genericPath: String,
@@ -205,28 +457,33 @@ object GenerateUtil {
                             val checkApiEntityFileExists = checkApiEntityFileExists(folderPath, "${objectName}Entity")
                             if (!checkApiEntityFileExists) {
                                 println("需要去创建属性的对象！")
+                            }
+                        } else if (attributeClassType == 5) {
+                            // 写入子类的枚举对象
+                            val checkApiEntityFileExists = checkApiEntityFileExists(folderPath, "Vc$objectName")
+                            if (!checkApiEntityFileExists) {
+                                println("需要去创建属性的对象！")
+                            }
+                        }
 
-                                // 6:读取jar包中属性的字段
-                                mGlobalClassLoad?.let { classLoad ->
-                                    val readClass = readClass(classLoad, genericPath, "child:")
-                                    if (readClass != null) {
-                                        val methods = getMethods(readClass, "child:[$genericPath]")
-
-                                        val packagePath =
-                                            StringUtil.lowercase(
-                                                StringUtil.transitionPackage(
-                                                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                                                        .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(
-                                                            bean.apiName
-                                                        )
-                                                        .toString()
+                        // 6:读取jar包中属性的字段
+                        mGlobalClassLoad?.let { classLoad ->
+                            val readClass = readClass(classLoad, genericPath, "child:")
+                            if (readClass != null) {
+                                val methods = getMethods(readClass, "child:[$genericPath]")
+                                val packagePath =
+                                    StringUtil.lowercase(
+                                        StringUtil.transitionPackage(
+                                            Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                                                .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(
+                                                    bean.apiName
                                                 )
-                                            )
-                                        generateClass(genericPath, methods, packagePath)
-                                    } else {
-                                        println("     读取到的class为空，请重读取class!")
-                                    }
-                                }
+                                                .toString()
+                                        )
+                                    )
+                                generateClass(genericPath, methods, packagePath)
+                            } else {
+                                println("     读取到的class为空，请重读取class!")
                             }
                         }
                     } else {
