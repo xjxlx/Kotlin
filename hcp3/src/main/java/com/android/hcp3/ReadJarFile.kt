@@ -14,6 +14,8 @@ import com.android.hcp3.StringUtil.capitalize
 import com.android.hcp3.StringUtil.getSimpleForPath
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
+import com.android.hcp3.bean.ApiNodeBean
+import com.android.hcp3.bean.ObjectBean
 import de.esolutions.fw.rudi.services.rsiglobal.Duration
 import java.io.File
 import java.io.IOException
@@ -213,7 +215,7 @@ object ReadJarFile {
                                     println("argument:$argument type:$classType")
                                     bean.classType = classType
                                     // 只有泛型对象是list的时候，才会添加list的泛型参数
-                                    if (classType == ClassType.LIST_OBJECT || classType == ClassType.LIST_PRIMITIVE) {
+                                    if (classType == ClassTypeEnum.LIST_OBJECT || classType == ClassTypeEnum.LIST_PRIMITIVE) {
                                         if (argument is ParameterizedType) { // 泛型类型
                                             bean.genericPath = argument.actualTypeArguments[0].typeName
                                         }
@@ -262,10 +264,10 @@ object ReadJarFile {
     /**
      * @return 返回当前的class是什么数据类型
      */
-    private fun checkClassType(type: Type): ClassType {
+    private fun checkClassType(type: Type): ClassTypeEnum {
         var typeClass: Class<*>? = null
         var listParameterType: Type? = null
-        var classType: ClassType = ClassType.INVALID
+        var classType: ClassTypeEnum = ClassTypeEnum.INVALID
         if (type is ParameterizedType) { // 泛型类型
             listParameterType = type.actualTypeArguments[0]
             val rawType: Type = type.rawType
@@ -278,26 +280,26 @@ object ReadJarFile {
 
         if (typeClass != null) {
             if (isPrimitiveOrWrapper(typeClass)) { // 基本数据类型
-                classType = ClassType.PRIMITIVE
+                classType = ClassTypeEnum.PRIMITIVE
             } else if (typeClass.isArray) { // 数组类型
-                classType = ClassType.ARRAY
+                classType = ClassTypeEnum.ARRAY
             } else if (MutableList::class.java.isAssignableFrom(typeClass)) { //  List数据类型
                 listParameterType?.let { parameterType ->
                     classType =
                         if (isPrimitiveOrWrapper(parameterType as Class<*>)) {
-                            ClassType.LIST_PRIMITIVE //  泛型是基础数据类型的
+                            ClassTypeEnum.LIST_PRIMITIVE //  泛型是基础数据类型的
                         } else {
                             if (Enum::class.java.isAssignableFrom(listParameterType as Class<*>)) {
-                                ClassType.LIST_ENUM // 泛型是Enum的数据类型
+                                ClassTypeEnum.LIST_ENUM // 泛型是Enum的数据类型
                             } else {
-                                ClassType.LIST_OBJECT // 泛型是object的数据类型
+                                ClassTypeEnum.LIST_OBJECT // 泛型是object的数据类型
                             }
                         }
                 }
             } else if (Enum::class.java.isAssignableFrom(typeClass)) { // Enum类型
-                classType = ClassType.ENUM
+                classType = ClassTypeEnum.ENUM
             } else { // 其他引用数据类型，也就是自定义的object数据类型
-                classType = ClassType.OBJECT
+                classType = ClassTypeEnum.OBJECT
             }
         }
         return classType

@@ -1,6 +1,6 @@
 package com.android.hcp3
 
-import com.android.hcp3.ClassType.*
+import com.android.hcp3.ClassTypeEnum.*
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
@@ -11,6 +11,8 @@ import com.android.hcp3.ReadJarFile.mGlobalClassLoad
 import com.android.hcp3.ReadJarFile.readClass
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
+import com.android.hcp3.bean.AttributeTypeBean
+import com.android.hcp3.bean.ObjectBean
 import com.squareup.javapoet.*
 import java.io.File
 import java.io.IOException
@@ -232,7 +234,7 @@ object GenerateUtil {
      */
     private fun checkChildRunTypeClass(
         genericPath: String,
-        attributeClassType: ClassType,
+        attributeClassType: ClassTypeEnum,
     ): AttributeTypeBean? {
         // 如果是u基础数据类型，或者基础数据类型的集合，则不参与后续的流程
         if ((attributeClassType == PRIMITIVE) || (attributeClassType == LIST_PRIMITIVE)) {
@@ -330,7 +332,7 @@ object GenerateUtil {
      */
     private fun getTypeForPath(
         path: String,
-        classType: ClassType = INVALID,
+        classType: ClassTypeEnum = INVALID,
     ): Array<String> {
         val array = Array(2) { "" }
         try {

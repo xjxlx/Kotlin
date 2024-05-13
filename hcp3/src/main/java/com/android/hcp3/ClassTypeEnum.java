@@ -1,6 +1,6 @@
 package com.android.hcp3;
 
-public enum ClassType {
+public enum ClassTypeEnum {
   /** 无效的数据类型 */
   INVALID,
 

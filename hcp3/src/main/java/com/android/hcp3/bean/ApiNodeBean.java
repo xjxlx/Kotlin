@@ -1,4 +1,4 @@
-package com.android.hcp3;
+package com.android.hcp3.bean;
 
 public class ApiNodeBean {
   /** 父类节点下，api方法的名字，例如：keys */

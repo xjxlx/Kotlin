@@ -1,4 +1,6 @@
-package com.android.hcp3;
+package com.android.hcp3.bean;
+
+import com.android.hcp3.ClassTypeEnum;
 
 public class ObjectBean {
   /** 方法对应的具体的属性名字，例如：aC */
@@ -11,7 +13,7 @@ public class ObjectBean {
   private String genericPath;
 
   /** 判断当前的class是什么类型 */
-  private ClassType classType = ClassType.INVALID;
+  private ClassTypeEnum classType = ClassTypeEnum.INVALID;
 
   public String getAttributeName() {
     return attributeName;
@@ -37,11 +39,11 @@ public class ObjectBean {
     this.genericPath = genericPath;
   }
 
-  public ClassType getClassType() {
+  public ClassTypeEnum getClassType() {
     return classType;
   }
 
-  public void setClassType(ClassType classType) {
+  public void setClassType(ClassTypeEnum classType) {
     this.classType = classType;
   }
 
