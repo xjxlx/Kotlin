@@ -371,12 +371,11 @@ object ReadJarFile {
             globalClassLoad?.let {
                 // 4：读取父节点下所有的api方法，获取所有api的方法的名字以及返回类型的全路径包名
                 readApiNodeForParent(it)
-
-                // 6：从读取父类中的Api对象中去匹配节点
+                // 5：从读取父类中的Api对象中去匹配节点
                 val filterBean =
                     RSI_TARGET_NODE_LIST.find { filter -> lowercase(filter.apiName) == lowercase(RSI_CHILD_NODE_PATH) }
                 if (filterBean != null) {
-                    // 5：读取Jar包中指定的class类 apiGenericPath
+                    // 6：读取Jar包中指定的class类
                     val jarClass =
                         readClass(it, filterBean.apiGenericPath, "读取JAR中的类：${filterBean.apiGenericName}")
 
@@ -389,10 +388,12 @@ object ReadJarFile {
                                 .resolve(className)
                                 .toString()
                         )
+                    // 7：读取本地的class类
                     val targetClass = readClass(it, path, "读取本地类：$path")
+                    // 8：读取class中的方法数量和内容
                     val jarSet = getMethods(jarClass, "JAR")
                     val localSet = getMethods(targetClass, "Local")
-
+                    // 9:对比本地和jar中类的方法信息，如果不匹配则需要动态生成代码
                     val needWriteVariable = checkNeedWriteVariable(jarSet, localSet)
                     if (needWriteVariable) {
                         println("属性完全相同，不需要重新写入属性！")
