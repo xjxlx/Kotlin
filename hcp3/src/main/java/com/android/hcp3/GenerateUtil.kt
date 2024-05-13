@@ -1,11 +1,11 @@
 package com.android.hcp3
 
+import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.RSI_CHILD_NODE_OBJECT_NAME
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_PROJECT_PACKAGE_PATH
-import com.android.hcp3.Config.RSI_PROJECT_PATH
 import com.squareup.javapoet.*
 import java.io.File
 import java.io.IOException
@@ -146,7 +146,7 @@ object GenerateUtil {
         val javaFile = JavaFile.builder(packageName, classTypeBuild.build()).build()
 
         // println("OutPutPath:$RSI_PROJECT_PATH")
-        val outPutFile = File(RSI_PROJECT_PATH)
+        val outPutFile = File(BASE_OUT_PUT_PATH)
         // 这里输出的路径，是以项目的root作为根目录的
 //        javaFile.writeTo(outPutFile)
         javaFile.writeTo(System.out)
@@ -216,5 +216,18 @@ object GenerateUtil {
             AnnotationSpec.builder(ClassName.get("lombok", "EqualsAndHashCode")).addMember("callSuper", "true").build()
         annotations.add(equalsAndHashCode)
         return annotations
+    }
+
+    /**
+     * 检测对应的ApiEntity是否存在
+     */
+    fun checkApiEntity(): Boolean {
+        return false
+    }
+
+    /**
+     * 检测
+     */
+    fun mkdirApiEntity() {
     }
 }

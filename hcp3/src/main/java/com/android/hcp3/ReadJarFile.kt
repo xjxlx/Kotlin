@@ -282,8 +282,8 @@ object ReadJarFile {
             clazz == Short::class.java || clazz == Long::class.java || clazz == Float::class.java
     }
 
-    /** 读取大项中节点的内容  */
-    private fun readParentNodeContent(globalClassLoad: URLClassLoader) {
+    /** 读取大项中节点的Api信息  */
+    private fun readApiNodeForParent(globalClassLoad: URLClassLoader) {
         // 使用类加载器，读取父类中主节点的接口变量
         if (rsiTargetNodePath.isNotEmpty()) {
             try {
@@ -355,12 +355,16 @@ object ReadJarFile {
                     .toString()
                     .replace(".", "/")
             println("过滤JAR包中的父节点为：[$filterNodePath]")
+
             // 2: 读取jar包中需要依赖的类名字
             val needDependenciesClassNameList = readNeedDependenciesClassName(filterNodePath)
+
             // 3:通过配置需要依赖的类，去构建一个classLoad
             val globalClassLoad = getGlobalClassLoad(needDependenciesClassNameList)
+
             globalClassLoad?.let {
-                readParentNodeContent(it)
+                // 读取父节点下所有的api方法，获取所有api的方法的名字以及返回类型的全路径包名
+                readApiNodeForParent(it)
                 // 4：读取Jar包中指定的class类
                 val jarClass = readClass(it, RSI_CHILD_NODE_OBJECT_NAME)
                 // 5:读取本地指定类的class类
