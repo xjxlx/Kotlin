@@ -398,7 +398,7 @@ object ReadJarFile {
                     if (needWriteVariable) {
                         println("属性完全相同，不需要重新写入属性！")
                     } else {
-                        generateEntity(jarSet)
+                        generateEntity(filterBean.apiGenericPath, jarSet)
                     }
                 } else {
                     println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")

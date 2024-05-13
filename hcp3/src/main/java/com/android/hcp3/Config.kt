@@ -48,9 +48,4 @@ object Config {
      * @see {generalsettings}
      */
     const val RSI_CHILD_NODE_PATH = "generalsettings"
-
-    /**
-     * rsi大项节点下的子节点种object的完整包名，这个每次生成不同的模块的Object，都要进行不同的改动
-     */
-    const val RSI_CHILD_NODE_OBJECT_NAME = "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject"
 }

@@ -2,7 +2,6 @@ package com.android.hcp3
 
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
-import com.android.hcp3.Config.RSI_CHILD_NODE_OBJECT_NAME
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
@@ -33,13 +32,20 @@ object GenerateUtil {
         jarBean.methodName = "getAC"
         jarBean.genericPath = "de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject"
         linkedSetOf.add(jarBean)
-        generateEntity(linkedSetOf)
+//        generateEntity(linkedSetOf)
     }
 
+    /**
+     * 动态生成代码
+     */
     @JvmStatic
-    fun generateEntity(jarMethodSet: LinkedHashSet<ObjectEntity>) {
+    fun generateEntity(
+        objectClassPath: String,
+        jarMethodSet: LinkedHashSet<ObjectEntity>,
+    ) {
         // <editor-fold desc="一：构建类对象">
-        val classType = getTypeForPath(RSI_CHILD_NODE_OBJECT_NAME)
+        println("开始生成类：$objectClassPath ------>")
+        val classType = getTypeForPath(objectClassPath)
         val className = classType[1] + "Entity"
 
         // 构建类的build对象，用于组装类中的数据
