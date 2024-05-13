@@ -53,5 +53,5 @@ object Config {
      * @see {generalsettings}
      */
     const val RSI_CHILD_NODE_PATH = "generalsettings"
-//    const val RSI_CHILD_NODE_PATH = "flavourCartridges"
+//    const val RSI_CHILD_NODE_PATH = "rows"
 }

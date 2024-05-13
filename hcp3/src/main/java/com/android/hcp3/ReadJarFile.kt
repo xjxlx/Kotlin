@@ -9,7 +9,7 @@ import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.Config.TARGET_JAR_PATH
-import com.android.hcp3.GenerateUtil.generateClass
+import com.android.hcp3.GenerateUtil.generateObject
 import com.android.hcp3.StringUtil.capitalize
 import com.android.hcp3.StringUtil.getSimpleForPath
 import com.android.hcp3.StringUtil.lowercase
@@ -156,7 +156,7 @@ object ReadJarFile {
             }
             val cls = classLoader.loadClass(className)
             if (tag.isNotEmpty()) {
-                println("$tag[success]")
+                println("读取class[$className]成功")
             }
             return cls
         } catch (e: Exception) {
@@ -171,9 +171,9 @@ object ReadJarFile {
     fun getMethods(
         clazz: Class<*>?,
         tag: String,
-    ): LinkedHashSet<ObjectEntity> {
-        println("开始读取${tag}的所有方法---->")
-        val set = LinkedHashSet<ObjectEntity>()
+    ): LinkedHashSet<ObjectBean> {
+        println("开始读取[$tag]的所有方法---->")
+        val set = LinkedHashSet<ObjectBean>()
         try {
             if (clazz != null) {
                 // 将数组转换为集合
@@ -185,7 +185,7 @@ object ReadJarFile {
                     var genericPath = ""
                     // 1： 必须是以get开头的方法
                     if (methodName.startsWith("get")) {
-                        val bean = ObjectEntity()
+                        val bean = ObjectBean()
 
                         // 2：过滤掉桥接方法和合成方法
                         if (!method.isBridge && !method.isSynthetic) {
@@ -232,8 +232,8 @@ object ReadJarFile {
      * @return 检测是否需要写入属性
      */
     private fun checkNeedWriteVariable(
-        jarMethodSet: LinkedHashSet<ObjectEntity>,
-        targetMethodSet: LinkedHashSet<ObjectEntity>,
+        jarMethodSet: LinkedHashSet<ObjectBean>,
+        targetMethodSet: LinkedHashSet<ObjectBean>,
     ): Boolean {
         if (jarMethodSet.size != targetMethodSet.size) {
             println("本地数据和jar包数据不相同，需要重新写入数据！")
@@ -411,7 +411,7 @@ object ReadJarFile {
                                 )
                             )
                         // 10：写入当前的Object
-                        generateClass(filterBean.apiGenericPath, jarSet, packagePath)
+                        generateObject(filterBean.apiGenericPath, jarSet, packagePath)
                     }
                 } else {
                     println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")

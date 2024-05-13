@@ -19,7 +19,7 @@ public class WriteSDK {
    *     JAR中需要写入的类，注意，此处需要全路径，例如："de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject"
    */
   public static void writeEntity(
-      String targetFolderPath, LinkedHashSet<ObjectEntity> beanSet, String JarObjectPath) {
+      String targetFolderPath, LinkedHashSet<ObjectBean> beanSet, String JarObjectPath) {
     try {
       //      ClassPool pool = ClassPool.getDefault();
       //      // 1：添加jar文件到类路径中，避免找不到类报错
@@ -32,8 +32,8 @@ public class WriteSDK {
       // 3：循环写入成员变量
       StringBuilder bodyBuffer = new StringBuilder();
       bodyBuffer.append("{\n").append("super($1);");
-      Iterator<ObjectEntity> iterator = beanSet.iterator();
-      ObjectEntity bean = iterator.next();
+      Iterator<ObjectBean> iterator = beanSet.iterator();
+      ObjectBean bean = iterator.next();
 
       // "java.util.Optional<de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject>");
       //      CtClass type = pool.get("com.xjx.kotlin.utils.hcp3.HvacSwitchControlEntity");

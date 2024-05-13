@@ -1,6 +1,6 @@
 package com.android.hcp3;
 
-public class ObjectEntity {
+public class ObjectBean {
   /** 方法对应的具体的属性名字，例如：aC */
   private String attributeName;
 
