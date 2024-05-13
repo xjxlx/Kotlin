@@ -250,6 +250,7 @@ object GenerateUtil {
         val classTypeBuild =
             TypeSpec.enumBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
+                .addEnumConstant("clamp15Off")
         // </editor-fold>
 
         // <editor-fold desc="二：构建方法对象">
