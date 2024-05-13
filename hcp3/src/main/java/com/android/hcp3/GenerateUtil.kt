@@ -1,11 +1,11 @@
 package com.android.hcp3
 
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
+import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.RSI_CHILD_NODE_OBJECT_NAME
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
-import com.android.hcp3.Config.RSI_PROJECT_PACKAGE_PATH
 import com.squareup.javapoet.*
 import java.io.File
 import java.io.IOException
@@ -140,7 +140,7 @@ object GenerateUtil {
 
         // <editor-fold desc="五：写入到类中">
         val packageName =
-            Paths.get(RSI_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
+            Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
                 .resolve(Paths.get(RSI_PARENT_NODE_LEVEL)).resolve(Paths.get(RSI_CHILD_NODE_PATH)).toString()
 
         val javaFile = JavaFile.builder(packageName, classTypeBuild.build()).build()
@@ -221,13 +221,30 @@ object GenerateUtil {
     /**
      * 检测对应的ApiEntity是否存在
      */
-    fun checkApiEntity(): Boolean {
-        return false
+    fun checkApiEntityFileExists(
+        packagePath: String,
+        className: String,
+    ): Boolean {
+        // 检测类是否存在：
+        println("checkPackagePath:[$packagePath] className：[$className]")
+        val file = File(packagePath, className)
+        return file.exists()
     }
 
     /**
      * 检测
      */
-    fun mkdirApiEntity() {
+    fun mkdirApiEntity(packagePath: String) {
+        val file = File(packagePath)
+        if (!file.exists()) {
+            val mkdirs = file.mkdirs()
+            if (mkdirs) {
+                println("路径：$packagePath 创建成功！")
+            } else {
+                println("路径：$packagePath 创建失败！")
+            }
+        } else {
+            println("路径：$packagePath 文件已经存在！")
+        }
     }
 }

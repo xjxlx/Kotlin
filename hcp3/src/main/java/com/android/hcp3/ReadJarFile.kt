@@ -1,12 +1,17 @@
 package com.android.hcp3
 
 import com.android.hcp3.Config.BASE_JAR_PATH
+import com.android.hcp3.Config.BASE_OUT_PUT_PATH
+import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.RSI_CHILD_NODE_OBJECT_NAME
+import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.TARGET_JAR_PATH
+import com.android.hcp3.GenerateUtil.checkApiEntityFileExists
 import com.android.hcp3.GenerateUtil.generateEntity
+import com.android.hcp3.GenerateUtil.mkdirApiEntity
 import com.android.hcp3.StringUtil.capitalize
 import com.android.hcp3.StringUtil.getSimpleForPath
 import com.android.hcp3.StringUtil.transitionPath
@@ -346,6 +351,17 @@ object ReadJarFile {
     }
 
     fun execute() {
+        val targetPath =
+            Paths.get(BASE_OUT_PUT_PATH).resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
+                .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(Paths.get(RSI_PARENT_NODE_LEVEL))
+                .resolve(Paths.get(RSI_CHILD_NODE_PATH)).toString().replace(".", "/")
+
+        val apiEntityFileExists = checkApiEntityFileExists(targetPath, "GeneralSettingEntity")
+        println("文件是否存在：$apiEntityFileExists")
+        if (!apiEntityFileExists) {
+            mkdirApiEntity(targetPath)
+        }
+
         try {
             // 1：读取指定目标节点下所有的object集合,例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
             val filterNodePath: String =

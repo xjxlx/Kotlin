@@ -29,7 +29,7 @@ object Config {
      * 生成代码的路径是由【主路径】+【主包名】构成的，这个是包名，所有生成的代码都会放入到这个目录下面
      * @see {com.android.hcp3.rsi}
      */
-    const val RSI_PROJECT_PACKAGE_PATH: String = "com.android.hcp3.rsi"
+    const val BASE_PROJECT_PACKAGE_PATH: String = "com.android.hcp3.rsi"
 
     /**
      *rsi中大项的节点路径，这个每次生成不同的模块，都要进行不同的改动
