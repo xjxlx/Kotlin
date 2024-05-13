@@ -19,11 +19,33 @@ object StringUtil {
      * de.esolutions.fw.rudi.viwi.service.hvac.v3.Hvac
      */
     @JvmStatic
-    fun transitionPath(str: String): String {
+    fun transitionPackage(str: String): String {
         if (str.isEmpty()) {
             return ""
         }
         return Paths.get(str).toString().replace("/", ".")
+    }
+
+    /**
+     * 把包名转换为路径
+     */
+    @JvmStatic
+    fun transitionPath(str: String): String {
+        if (str.isEmpty()) {
+            return ""
+        }
+        return Paths.get(str).toString().replace(".", "/")
+    }
+
+    /**
+     * 全部转换为小写
+     */
+    @JvmStatic
+    fun lowercase(str: String): String {
+        if (str.isEmpty()) {
+            return ""
+        }
+        return str.lowercase()
     }
 
     @JvmStatic

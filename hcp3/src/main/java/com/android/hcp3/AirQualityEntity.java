@@ -1,9 +1,9 @@
-//package com.xjx.kotlin.utils.hcp3;
+// package com.xjx.kotlin.utils.hcp3;
 //
-//import androidx.annotation.NonNull;
-//import androidx.annotation.Nullable;
+// import androidx.annotation.NonNull;
+// import androidx.annotation.Nullable;
 //
-//public class AirQualityEntity extends BaseRSIValue {
+// public class AirQualityEntity extends BaseRSIValue {
 //  @Nullable private final Boolean isAllFine;
 //  @Nullable private final Boolean isFogRiskActive;
 //  @Nullable private final Boolean isManualModeActive;
@@ -23,4 +23,4 @@
 //            .map(AirQualityEntityCountryInformationEnum::fromObjectEnum)
 //            .orElse(null);
 //  }
-//}
+// }

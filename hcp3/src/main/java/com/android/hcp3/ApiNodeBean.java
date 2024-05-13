@@ -46,7 +46,7 @@ public class ApiNodeBean {
 
   @Override
   public String toString() {
-    return "ParentNodeBean{"
+    return "ApiNodeBean{"
         + "apiName='"
         + apiName
         + '\''
