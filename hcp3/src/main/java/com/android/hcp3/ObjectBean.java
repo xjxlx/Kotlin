@@ -10,11 +10,8 @@ public class ObjectBean {
   /** 泛型的路径，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject */
   private String genericPath;
 
-  /**
-   * 判断当前的class是什么类型 0：默认无效的数据类型，1：基础数据类型，例如，Float、Boolean、Integer 2：数组类型，
-   * 3：List数据集合，4：其他数据类型，也就是自定义的数据类型，5:枚举类型
-   */
-  private int classType;
+  /** 判断当前的class是什么类型 */
+  private ClassType classType;
 
   public String getAttributeName() {
     return attributeName;
@@ -40,15 +37,11 @@ public class ObjectBean {
     this.genericPath = genericPath;
   }
 
-  public int getClassType() {
+  public ClassType getClassType() {
     return classType;
   }
 
-  /**
-   * @param classType 0：默认无效的数据类型，1：基础数据类型，例如，Float、Boolean、Integer
-   *     2：数组类型，3：List数据集合，4：其他数据类型，也就是自定义的数据类型,5:枚举类型
-   */
-  public void setClassType(int classType) {
+  public void setClassType(ClassType classType) {
     this.classType = classType;
   }
 

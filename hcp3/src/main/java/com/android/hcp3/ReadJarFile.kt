@@ -178,7 +178,6 @@ object ReadJarFile {
             if (clazz != null) {
                 // 将数组转换为集合
                 val methods: Set<Method> = HashSet(Arrays.asList(*clazz.declaredMethods))
-
                 for (method in methods) {
                     val methodName = method.name
                     var attributeName: String
@@ -186,7 +185,6 @@ object ReadJarFile {
                     // 1： 必须是以get开头的方法
                     if (methodName.startsWith("get")) {
                         val bean = ObjectBean()
-
                         // 2：过滤掉桥接方法和合成方法
                         if (!method.isBridge && !method.isSynthetic) {
                             // 3:去掉get并转换首字母为小写
@@ -245,13 +243,14 @@ object ReadJarFile {
     }
 
     /**
-     * @return 返回当前的class是什么数据类型 0：默认无效的数据类型，1：基础数据类型，例如，Float、Boolean、Integer *
-     * 2：数组类型，3：List数据集合，4：自定义Object数据类型
+     * @return 返回当前的class是什么数据类型
      */
-    private fun checkClassType(type: Type): Int {
-        var classType = 0
+    private fun checkClassType(type: Type): ClassType {
         var typeClass: Class<*>? = null
+        var listParameterType: Type? = null
+        var classType: ClassType = ClassType.INVALID
         if (type is ParameterizedType) { // 泛型类型
+            listParameterType = type.actualTypeArguments[0]
             val rawType: Type = type.rawType
             if (rawType is Class<*>) {
                 typeClass = rawType
@@ -259,24 +258,26 @@ object ReadJarFile {
         } else if (type is Class<*>) { // 不是泛型类型的参数
             typeClass = type
         }
+
         if (typeClass != null) {
-            classType =
-                if (isPrimitiveOrWrapper(typeClass)) { // 基本数据类型
-                    1
-                    // System.out.println("基本数据类型");
-                } else if (typeClass.isArray) { // 数组类型
-                    2
-                    // System.out.println("数组类型");
-                } else if (MutableList::class.java.isAssignableFrom(typeClass)) { //  List数据类型
-                    3
-                    // System.out.println("List数据类型");
-                } else if (Enum::class.java.isAssignableFrom(typeClass)) { // Enum类型
-                    //  println("枚举数据类型")
-                    5
-                } else { // 其他引用数据类型，也就是自定义的object数据类型
-                    4
-                    // System.out.println("自定义Object数据类型");
+            if (isPrimitiveOrWrapper(typeClass)) { // 基本数据类型
+                classType = ClassType.PRIMITIVE
+            } else if (typeClass.isArray) { // 数组类型
+                classType = ClassType.ARRAY
+            } else if (MutableList::class.java.isAssignableFrom(typeClass)) { //  List数据类型
+                listParameterType?.let { parameterType ->
+                    classType =
+                        if (isPrimitiveOrWrapper(parameterType as Class<*>)) {
+                            ClassType.LIST_PRIMITIVE //  泛型是基础数据类型的
+                        } else {
+                            ClassType.LIST_OBJECT // 泛型是object的数据类型
+                        }
                 }
+            } else if (Enum::class.java.isAssignableFrom(typeClass)) { // Enum类型
+                classType = ClassType.ENUM
+            } else { // 其他引用数据类型，也就是自定义的object数据类型
+                classType = ClassType.OBJECT
+            }
         }
         return classType
     }
