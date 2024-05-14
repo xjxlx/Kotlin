@@ -69,8 +69,8 @@ object GenerateUtil {
     ): AttributeBean {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Object类：[$parameterPackage] ------>")
-        val fileInfo = getFileInfoForPackage(parameterPackage)
-        val realFileName = fileInfo[1] + Config.OBJECT_SUFFIX
+        val parameterInfo = getPackageInfo(parameterPackage)
+        val realFileName = parameterInfo[1] + Config.OBJECT_SUFFIX
 
         // 构建类的build对象，用于组装类中的数据
         val classTypeBuild =
@@ -82,9 +82,9 @@ object GenerateUtil {
 
         // <editor-fold desc="二：构建方法对象">
         // 2.1：构造方法的参数类型
-        val methodPackage = fileInfo[0]
+        val methodPackage = parameterInfo[0]
         println("Object类的名字为：[$realFileName] 构造类参数的路径为：[$methodPackage]")
-        val methodParameterClassType = ClassName.get(methodPackage, fileInfo[1])
+        val methodParameterClassType = ClassName.get(methodPackage, parameterInfo[1])
 
         // 2.2：方法的参数
         val methodParameter =
@@ -117,7 +117,7 @@ object GenerateUtil {
             // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
             val attributeTypeBean = checkChildRunType(genericPackage, genericType)
             println("attributeName:[$attributeName] attributeTypeBean:$attributeTypeBean")
-            val attributeInfo = getFileInfoForPackage(genericPackage, genericType)
+            val attributeInfo = getPackageInfo(genericPackage, genericType)
 
             // 构建属性对象
             var fieldTypeName: TypeName? = null
@@ -244,7 +244,7 @@ object GenerateUtil {
     ): AttributeBean {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Enum类：[$objectClassPath] ------>")
-        val classType = getFileInfoForPackage(objectClassPath)
+        val classType = getPackageInfo(objectClassPath)
         val className = "Vc${classType[1]}"
 
         // 1：构建固定属性对象
@@ -425,7 +425,7 @@ object GenerateUtil {
      * @return 返回一个数组，第一个元素是文件的全路径包名，不包含类名，第二个元素是类名的简写名字。例如：[0] = de.esolutions.fw.rudi.viwi.service.hvac.v3
      * [1] = GeneralSettingObject
      */
-    private fun getFileInfoForPackage(
+    private fun getPackageInfo(
         parameterPackage: String,
         classType: ClassTypeEnum = INVALID,
     ): Array<String> {
