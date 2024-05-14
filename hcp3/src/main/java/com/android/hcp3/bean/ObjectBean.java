@@ -10,7 +10,7 @@ public class ObjectBean {
   private String methodName;
 
   /** 泛型的路径，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchControlObject */
-  private String genericPath;
+  private String genericPackage;
 
   /** 判断当前的class是什么类型 */
   private ClassTypeEnum classType = ClassTypeEnum.INVALID;
@@ -31,12 +31,12 @@ public class ObjectBean {
     this.methodName = methodName;
   }
 
-  public String getGenericPath() {
-    return genericPath;
+  public String getGenericPackage() {
+    return genericPackage;
   }
 
-  public void setGenericPath(String genericPath) {
-    this.genericPath = genericPath;
+  public void setGenericPackage(String genericPackage) {
+    this.genericPackage = genericPackage;
   }
 
   public ClassTypeEnum getClassType() {
@@ -57,7 +57,7 @@ public class ObjectBean {
         + methodName
         + '\''
         + ", genericPath='"
-        + genericPath
+        + genericPackage
         + '\''
         + ", classType="
         + classType

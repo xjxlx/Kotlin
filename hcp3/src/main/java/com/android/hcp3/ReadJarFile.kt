@@ -218,10 +218,10 @@ object ReadJarFile {
                                         classType == ClassTypeEnum.LIST_ENUM
                                     ) {
                                         if (argument is ParameterizedType) { // 泛型类型
-                                            bean.genericPath = argument.actualTypeArguments[0].typeName
+                                            bean.genericPackage = argument.actualTypeArguments[0].typeName
                                         }
                                     } else {
-                                        bean.genericPath = genericPath
+                                        bean.genericPackage = genericPath
                                     }
                                 }
                             }
