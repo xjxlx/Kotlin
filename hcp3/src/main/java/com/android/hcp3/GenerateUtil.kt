@@ -137,6 +137,7 @@ object GenerateUtil {
                     attributeTypeBean?.let { att ->
                         fieldTypeName = ClassName.get(transitionPackage(att.attributePackage), att.name)
                         codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::new).orElse(null)")
+                        // todo 增加忽略的路径
                     }
                 }
 
@@ -171,6 +172,7 @@ object GenerateUtil {
                                 ClassName.get(transitionPackage(att.attributePackage), att.name)
                             )
 
+                        // todo 增加忽略的路径
                         codeBuild.addStatement(
                             "this.$attributeName = object.$methodName().map(list ->list.stream()" +
                                 ".map(${att.name}::new).collect(\$T.toList())).orElse(null)",
