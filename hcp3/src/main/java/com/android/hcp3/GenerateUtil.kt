@@ -12,6 +12,7 @@ import com.android.hcp3.ReadJarFile.mGlobalClassLoad
 import com.android.hcp3.ReadJarFile.readClass
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
+import com.android.hcp3.StringUtil.transitionPath
 import com.android.hcp3.bean.AttributeBean
 import com.android.hcp3.bean.ObjectBean
 import com.squareup.javapoet.*
@@ -354,11 +355,12 @@ object GenerateUtil {
                     ""
                 }
             val folderPath =
-                transitionPackage(
-                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                        .resolve(lowercase(RSI_PARENT_NODE_PATH))
-                        .resolve(lowercase(childNodePackage))
-                        .toString()
+                transitionPath(
+                    lowercase(
+                        Paths.get(BASE_OUT_PUT_PATH).resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
+                            .resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                            .resolve(childNodePackage).toString()
+                    )
                 )
 
             // 3：创建子文件夹目录
