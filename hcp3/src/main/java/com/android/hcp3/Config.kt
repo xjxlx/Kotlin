@@ -6,7 +6,17 @@ object Config {
     /**
      * 用来存储当前节点下的所有子节点名字，内容会自动生成，不要做任何的改动
      */
-    val RSI_TARGET_NODE_LIST: LinkedHashSet<ApiNodeBean> = LinkedHashSet<ApiNodeBean>()
+    val RSI_TARGET_NODE_LIST = LinkedHashSet<ApiNodeBean>()
+
+    /**
+     * object的后缀，这个是固定的
+     */
+    const val OBJECT_SUFFIX = "Entity"
+
+    /**
+     * enum的前缀，这个是固定的
+     */
+    const val ENUM_PREFIX = "Vc"
 
     /**
      *RSI 中Root节点路径，这个一般不会进行改动
@@ -55,5 +65,4 @@ object Config {
      * @see {generalsettings}
      */
     const val RSI_CHILD_NODE_PATH = "generalsettings"
-//    const val RSI_CHILD_NODE_PATH = "rows"
 }

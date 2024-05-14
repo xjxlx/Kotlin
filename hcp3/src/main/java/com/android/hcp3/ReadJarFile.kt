@@ -3,6 +3,7 @@ package com.android.hcp3
 import com.android.hcp3.Config.BASE_JAR_PATH
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
+import com.android.hcp3.Config.OBJECT_SUFFIX
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
@@ -19,7 +20,6 @@ import com.android.hcp3.bean.ObjectBean
 import de.esolutions.fw.rudi.services.rsiglobal.Duration
 import java.io.File
 import java.io.IOException
-import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.net.URL
@@ -32,11 +32,14 @@ import java.util.jar.JarFile
 
 object ReadJarFile {
     /**
-     * 当前父类节点下的主接口全路径，这个舒心是动态生成的，不要做任何的改动，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.Hvac
+     *  当前指定父类节点：[Config.RSI_PARENT_NODE_PATH]中泛型的相对路径，这个是动态生成的，不要做任何的改动
+     *  例如：de/esolutions/fw/rudi/viwi/service/hvac/v3/Hvac
      */
-    private var rsiTargetNodePath: String = ""
+    private var apiNodeGenericPath: String = ""
 
-    // 公用的classLoad加载器，不用做任何处理
+    /**
+     * 公用的classLoad加载器，会冬天初始化，不用做任何处理
+     */
     var mGlobalClassLoad: URLClassLoader? = null
 
     @JvmStatic
@@ -45,15 +48,16 @@ object ReadJarFile {
     }
 
     /**
-     * @param filterNodePath
-     * 过滤指定父类节点的包名，注意这里的节点类型不是包名，是反斜杠的路径，例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
-     * @return 1：返回指定JAR包中，指定targetPath 目录下所有object和Enum的集合的名字
+     * @param filterNodePath JAR包中指定的节点
+     * @return 读取指定JAR包中,指定节点下所有的object和Enum的文件，返回一个读取到的文件相对路径列表，用于加载到classLoad里面，避免
+     * 反射class类中有依赖其他类的情况。注意，这里读取的是路径，不是包名
+     * 例如：读取mib_rsi_android.jar包中hvac节点下所有的object和enum的类，返回集合路径
      */
     private fun readNeedDependenciesClassName(filterNodePath: String): List<String> {
         val fileNames: MutableList<String> = ArrayList()
         try {
             // 打开Jar文件
-            val jarFile: JarFile = JarFile(TARGET_JAR_PATH)
+            val jarFile = JarFile(TARGET_JAR_PATH)
             // 获取Jar包中的所有文件和目录条目
             val entries = jarFile.entries()
             while (entries.hasMoreElements()) {
@@ -63,25 +67,24 @@ object ReadJarFile {
                 if (entryName.startsWith(filterNodePath)) {
                     // System.out.println("entryName:" + entryName);
                     val parentNodeName = capitalize(RSI_PARENT_NODE_PATH)
-                    if (entryName.contains(".class")) {
+                    if (entryName.endsWith(".class") && (entryName.contains("/"))) {
+                        // String splitClassName = entryName.split(".class")[0];
                         val splitClassName =
-                            entryName.split(".class".toRegex()).dropLastWhile { it.isEmpty() }
-                                .toTypedArray()[0]
+                            entryName.split(".class".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
                         if ((
-                                (splitClassName.endsWith("Object")) ||
-                                    (splitClassName.endsWith("Enum")) ||
-                                    (splitClassName.endsWith(parentNodeName))
-                            ) &&
-                            (splitClassName.contains("/"))
+                                (splitClassName.endsWith("Object")) || (splitClassName.endsWith("Enum")) || (
+                                    splitClassName.endsWith(
+                                        parentNodeName
+                                    )
+                                )
+                            )
                         ) {
                             // 如果是以父类节点结束的，则保存这个节点的全属性包名
-
                             if (splitClassName.endsWith(parentNodeName)) {
                                 println("当前父类节点下主类: [$splitClassName]")
-                                rsiTargetNodePath = splitClassName
+                                apiNodeGenericPath = splitClassName
                             }
-                            val replaceName = splitClassName.replace("/", ".")
-                            fileNames.add(replaceName)
+                            fileNames.add(transitionPackage(splitClassName))
                         }
                     }
                 }
@@ -95,7 +98,7 @@ object ReadJarFile {
 
     private fun getGlobalClassLoad(dependenciesList: List<String>): URLClassLoader? {
         val jarList = ArrayList<String>()
-        val folder: File = File(BASE_JAR_PATH)
+        val folder = File(BASE_JAR_PATH)
         // 加载指定位置的jar包到classLoad里面
         if (folder.exists() && folder.isDirectory) {
             // 获取文件夹下的所有文件
@@ -122,7 +125,13 @@ object ReadJarFile {
 
             // 创建URLClassLoader来加载依赖的JAR包
             val classLoader = URLClassLoader(urls, null)
-            // 加载需要的类
+
+            // 加载指定集合里面的依赖类
+            for (classPath in dependenciesList) {
+                classLoader.loadClass(classPath)
+            }
+
+            // 加载特定的类
             classLoader.loadClass("de.esolutions.fw.rudi.core.locators.IResourceLocator")
             classLoader.loadClass("de.esolutions.fw.rudi.core.IPath")
 
@@ -131,12 +140,6 @@ object ReadJarFile {
             classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwObject")
             classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.ObjectKey")
 
-            // classLoader.loadClass("io.reactivex.rxjava3.core.Single");
-
-            // 加载指定集合
-            for (classPath in dependenciesList) {
-                classLoader.loadClass(classPath)
-            }
             return classLoader
         } catch (e: Exception) {
             e.printStackTrace()
@@ -147,21 +150,21 @@ object ReadJarFile {
 
     /**
      * @param classLoader classLoad对象
-     * @param className 指定的class类名，这里是全路径的类名
+     * @param packageName 指定的class类名，这里是全路径的类名，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.KeysApi
      * @return 2：返回指定jar包中目标class类型的Class对象
      */
     fun readClass(
         classLoader: URLClassLoader,
-        className: String?,
+        packageName: String?,
         tag: String = "",
     ): Class<*>? {
         try {
             if (tag.isNotEmpty()) {
                 println(tag)
             }
-            val cls = classLoader.loadClass(className)
+            val cls = classLoader.loadClass(packageName)
             if (tag.isNotEmpty()) {
-                println("读取class[$className]成功")
+                println("读取class[$packageName]成功")
             }
             return cls
         } catch (e: Exception) {
@@ -171,7 +174,7 @@ object ReadJarFile {
     }
 
     /**
-     * @return 4：返回指定class的方法以及方法的泛型
+     * @return 4：从class类中读取所有的方法，把方法、变量、路径组成一个集合返回出去
      */
     fun getMethods(
         clazz: Class<*>?,
@@ -181,13 +184,9 @@ object ReadJarFile {
         val set = LinkedHashSet<ObjectBean>()
         try {
             if (clazz != null) {
-                // 将数组转换为集合
-                val methods: Set<Method> = HashSet(listOf(*clazz.declaredMethods))
-                for (method in methods) {
+                // 遍历指定类中的所有方法
+                for (method in clazz.declaredMethods) {
                     val methodName = method.name
-                    if (method.name == "OffsetTime") {
-                        println("---->")
-                    }
                     var attributeName: String
                     var genericPath = ""
                     // 1： 必须是以get开头的方法
@@ -204,7 +203,6 @@ object ReadJarFile {
 
                             // 4:获取方法的返回类型
                             val returnType = method.genericReturnType
-                            var listGenericPath = ""
                             // 5:返回泛型的类型
                             if (returnType is ParameterizedType) {
                                 val actualTypeArguments = returnType.actualTypeArguments
@@ -230,7 +228,6 @@ object ReadJarFile {
 
                             bean.attributeName = attributeName
                             bean.methodName = methodName
-                            // bean.genericPath = genericPath
                             // println("      method [$attributeName] GenericType:[$genericPath]")
                             set.add(bean)
                         }
@@ -343,8 +340,7 @@ object ReadJarFile {
 
     /**
      * @param clazz class的对象
-     * @return 判断是否是基本数据类型
-     * val javaClass = Boolean::class.javaObjectType
+     * @return 判断是否是基本数据类型，这里可以手动去添加自己需要的类型
      */
     private fun isPrimitiveOrWrapper(clazz: Class<*>): Boolean {
         return clazz.isPrimitive || clazz == Int::class.javaObjectType || clazz == Double::class.javaObjectType ||
@@ -359,9 +355,9 @@ object ReadJarFile {
     private fun readApiNodeForParent(globalClassLoad: URLClassLoader) {
         println("读取主类[$RSI_PARENT_NODE_PATH]下所有的Api信息 --->")
         // 使用类加载器，读取父类中主节点的接口变量
-        if (rsiTargetNodePath.isNotEmpty()) {
+        if (apiNodeGenericPath.isNotEmpty()) {
             try {
-                val parentNodeClass = globalClassLoad.loadClass(transitionPackage(rsiTargetNodePath))
+                val parentNodeClass = globalClassLoad.loadClass(transitionPackage(apiNodeGenericPath))
                 // 获取类的所有的api方法
                 for (apiMethod in parentNodeClass.declaredMethods) {
                     val apiMethodName = apiMethod.name
@@ -419,21 +415,21 @@ object ReadJarFile {
         }
     }
 
-    fun execute() {
+    private fun execute() {
         try {
             // 1：读取指定目标节点下所有的object集合,例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
             val filterNodePath: String =
-                Paths.get(RSI_ROOT_NODE_PATH)
-                    .resolve(Paths.get(RSI_PARENT_NODE_PATH))
-                    .resolve(Paths.get(RSI_PARENT_NODE_LEVEL))
-                    .toString()
-                    .replace(".", "/")
+                StringUtil.transitionPath(
+                    Paths.get(RSI_ROOT_NODE_PATH)
+                        .resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                        .resolve(Paths.get(RSI_PARENT_NODE_LEVEL))
+                        .toString()
+                )
             println("过滤JAR包中的父节点为：[$filterNodePath]")
             // 2: 读取jar包中需要依赖的类名字
             val needDependenciesClassNameList = readNeedDependenciesClassName(filterNodePath)
             // 3:通过配置需要依赖的类，去构建一个classLoad
-            val globalClassLoad = getGlobalClassLoad(needDependenciesClassNameList)
-            globalClassLoad?.let {
+            getGlobalClassLoad(needDependenciesClassNameList)?.let {
                 mGlobalClassLoad = it
                 // 4：读取父节点下所有的api方法，获取所有api的方法的名字以及返回类型的全路径包名
                 readApiNodeForParent(it)
@@ -444,9 +440,7 @@ object ReadJarFile {
                     // 6：读取Jar包中指定的class类
                     val jarClass =
                         readClass(it, filterBean.apiGenericPath, "读取JAR中的类：${filterBean.apiGenericName}")
-
-                    // todo 此处的拼写规则可以自由指定，例如：要不要类后面的s
-                    val className = capitalize(filterBean.apiName).plus("Entity")
+                    val className = capitalize(filterBean.apiName).plus(OBJECT_SUFFIX)
                     val path =
                         transitionPackage(
                             Paths.get(BASE_OUT_PUT_PATH).resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
@@ -460,8 +454,7 @@ object ReadJarFile {
                     val jarSet = getMethods(jarClass, "JAR")
                     val localSet = getMethods(targetClass, "Local")
                     // 9:对比本地和jar中类的方法信息，如果不匹配则需要动态生成代码
-                    val needWriteVariable = checkNeedWriteVariable(jarSet, localSet)
-                    if (needWriteVariable) {
+                    if (checkNeedWriteVariable(jarSet, localSet)) {
                         println("属性完全相同，不需要重新写入属性！")
                     } else {
                         val packagePath =
