@@ -329,20 +329,32 @@ object ReadJarFile {
 
     /**
      * @param jarMethodSet jar包中的变量集合
-     * @param targetMethodSet 本地类中变量的集合
+     * @param localMethodSet 本地类中变量的集合
      * @return 检测是否需要写入属性
      */
     private fun checkNeedWriteVariable(
         jarMethodSet: LinkedHashSet<ObjectBean>,
-        targetMethodSet: LinkedHashSet<ObjectBean>,
+        localMethodSet: LinkedHashSet<ObjectBean>,
     ): Boolean {
-        if (jarMethodSet.size != targetMethodSet.size) {
+        var equals = false
+        if (jarMethodSet.size != localMethodSet.size) {
             println("本地数据和jar包数据不相同，需要重新写入数据！")
-            return false
+            equals = false
         } else {
             println("本地数据和jar包数据相同，需要对比数据内容是否相同！")
-            return jarMethodSet == targetMethodSet
+            val localList = localMethodSet.toList()
+            val iterator = jarMethodSet.iterator()
+            while (iterator.hasNext()) {
+                val next = iterator.next()
+                localList.find { bean -> bean.attributeName == next.attributeName }?.let { local ->
+                    equals = local.attributeName == next.attributeName
+                }
+                if (!equals) {
+                    break
+                }
+            }
         }
+        return equals
     }
 
     /**
