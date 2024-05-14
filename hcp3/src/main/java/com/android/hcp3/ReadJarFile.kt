@@ -170,7 +170,7 @@ object ReadJarFile {
             }
 
             // 如果包名是在忽略名单中，则使用本地方法读取
-            val bean = IGNORE_ARRAY.find { ignore -> ignore.genericPackage == packageName }
+            val bean = IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == packageName }
             if (bean != null) {
                 return readLocalClass(packageName, tag)
             } else {
