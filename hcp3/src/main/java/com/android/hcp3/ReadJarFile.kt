@@ -41,6 +41,14 @@ object ReadJarFile {
      */
     var mGlobalClassLoad: URLClassLoader? = null
 
+    /**
+     * 有些指定的类需要被忽略掉，这个地方专门用来存储那些被忽略的类
+     */
+    private val IGNORE_ARRAY: Array<ObjectBean> =
+        arrayOf(
+            ObjectBean("de.esolutions.fw.rudi.services.rsiglobal.RGBA", "com.android.hcp3.RGBAEntity")
+        )
+
     @JvmStatic
     fun main(args: Array<String>) {
         execute()
@@ -242,10 +250,16 @@ object ReadJarFile {
                                     }
                                 }
                             }
-
                             bean.attributeName = attributeName
                             bean.methodName = methodName
                             // println("      method [$attributeName] GenericType:[$genericPath]")
+
+                            // 遍历忽略的集合
+                            IGNORE_ARRAY.forEach { ignore ->
+                                if (bean.genericPackage.equals(ignore.genericPackage)) {
+                                    bean.genericPackage = ignore.ignorePackage
+                                }
+                            }
                             set.add(bean)
                         }
                     }
@@ -512,7 +526,7 @@ object ReadJarFile {
                             Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
                                 .resolve(Paths.get(RSI_CHILD_NODE_PATH)).resolve(localClassName).toString()
                         )
-                    val localClass = readLocalClass(localPackage, "读取本地类：[$localPackage]")
+                    val localClass = readLocalClass("$localPackage.java", "读取本地类：[$localPackage]")
 
                     // 8：读取class中的方法数量和内容
                     val localSet = getFields(localClass, "Local")

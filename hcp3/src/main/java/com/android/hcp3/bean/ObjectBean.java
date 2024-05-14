@@ -15,6 +15,16 @@ public class ObjectBean {
   /** 判断当前的class是什么类型 */
   private ClassTypeEnum classType = ClassTypeEnum.INVALID;
 
+  /** 忽略的本地类的package */
+  private String ignorePackage;
+
+  public ObjectBean() {}
+
+  public ObjectBean(String genericPackage, String ignorePackage) {
+    this.genericPackage = genericPackage;
+    this.ignorePackage = ignorePackage;
+  }
+
   public String getAttributeName() {
     return attributeName;
   }
@@ -47,6 +57,14 @@ public class ObjectBean {
     this.classType = classType;
   }
 
+  public String getIgnorePackage() {
+    return ignorePackage;
+  }
+
+  public void setIgnorePackage(String ignorePackage) {
+    this.ignorePackage = ignorePackage;
+  }
+
   @Override
   public String toString() {
     return "ObjectBean{"
@@ -56,11 +74,14 @@ public class ObjectBean {
         + ", methodName='"
         + methodName
         + '\''
-        + ", genericPath='"
+        + ", genericPackage='"
         + genericPackage
         + '\''
         + ", classType="
         + classType
+        + ", ignorePackage='"
+        + ignorePackage
+        + '\''
         + '}';
   }
 }
