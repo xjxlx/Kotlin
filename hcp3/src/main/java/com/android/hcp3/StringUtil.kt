@@ -49,7 +49,7 @@ object StringUtil {
     }
 
     @JvmStatic
-    fun getSimpleForPath(str: String): String {
+    fun getPackageSimple(str: String): String {
         if (str.isEmpty()) {
             return ""
         }

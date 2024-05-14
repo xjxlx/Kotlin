@@ -12,7 +12,7 @@ import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.Config.TARGET_JAR_PATH
 import com.android.hcp3.GenerateUtil.generateObject
 import com.android.hcp3.StringUtil.capitalize
-import com.android.hcp3.StringUtil.getSimpleForPath
+import com.android.hcp3.StringUtil.getPackageSimple
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.bean.ApiNodeBean
@@ -188,7 +188,6 @@ object ReadJarFile {
                 for (method in clazz.declaredMethods) {
                     val methodName = method.name
                     var attributeName: String
-                    var genericPath: String
                     // 1： 必须是以get开头的方法
                     if (methodName.startsWith("get")) {
                         val bean = ObjectBean()
@@ -208,7 +207,7 @@ object ReadJarFile {
                                 val actualTypeArguments = returnType.actualTypeArguments
                                 if (actualTypeArguments.isNotEmpty()) {
                                     val argument = actualTypeArguments[0]
-                                    genericPath = argument.typeName
+                                    val genericPath = argument.typeName
                                     val classType = checkClassType(argument)
                                     println("argument:$argument type:$classType")
                                     bean.classType = classType
@@ -392,7 +391,7 @@ object ReadJarFile {
                                                 apiNodeBean.apiName = apiMethodName // 父类中api方法的名字
                                                 apiNodeBean.apiReturnTypePath = apiRunTypePath // 父类中api返回类型的全路径包名
                                                 apiNodeBean.apiGenericName =
-                                                    getSimpleForPath(typeName) // api类中匹配方法泛型的名字
+                                                    getPackageSimple(typeName) // api类中匹配方法泛型的名字
                                                 apiNodeBean.apiGenericPath = typeName
 
                                                 tempApiMethodList.add(apiNodeBean)

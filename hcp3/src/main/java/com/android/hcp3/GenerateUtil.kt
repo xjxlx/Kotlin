@@ -116,7 +116,7 @@ object GenerateUtil {
 
             // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
             val attributeTypeBean = checkChildRunType(genericPackage, genericType)
-            println("attributeName:[$attributeName] attributeTypeBean:$attributeTypeBean")
+            // println("attributeName:[$attributeName] attributeTypeBean:$attributeTypeBean")
             val attributeInfo = getPackageInfo(genericPackage, genericType)
 
             // 构建属性对象
@@ -198,7 +198,7 @@ object GenerateUtil {
             // 3.3：构建属性对象
             val fieldSpec =
                 FieldSpec.builder(fieldTypeName, attributeName).addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-            println("      attribute:[$attributeName]  attributeType:[$genericPackage]")
+            // println("      attribute:[$attributeName]  attributeType:[$genericPackage]")
             // 把生成的属性对象添加到类中
             classTypeBuild.addField(fieldSpec.build())
             try {
@@ -334,8 +334,8 @@ object GenerateUtil {
             return null
         } else {
             // 1：从包名中去获取属性的类名
-            val jarObjectName = StringUtil.getSimpleForPath(genericPackage)
-            println("className: $jarObjectName")
+            val jarObjectName = StringUtil.getPackageSimple(genericPackage)
+            println("检查指定类型: $jarObjectName")
 
             val bean =
                 RSI_TARGET_NODE_LIST.find { filter ->
