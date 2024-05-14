@@ -6,6 +6,7 @@ import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
+import com.android.hcp3.ReadJarFile.IGNORE_ARRAY
 import com.android.hcp3.ReadJarFile.getEnums
 import com.android.hcp3.ReadJarFile.getMethods
 import com.android.hcp3.ReadJarFile.mGlobalClassLoad
@@ -70,7 +71,12 @@ object GenerateUtil {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Object类：[$parameterPackage] ------>")
         val parameterInfo = getPackageInfo(parameterPackage)
-        val realFileName = parameterInfo[1] + Config.OBJECT_SUFFIX
+        val realFileName =
+            if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == parameterPackage } != null) {
+                parameterInfo[1]
+            } else {
+                parameterInfo[1] + Config.OBJECT_SUFFIX
+            }
 
         // 构建类的build对象，用于组装类中的数据
         val classTypeBuild =
@@ -375,7 +381,12 @@ object GenerateUtil {
             // 5：判断文件是否存在，如果不存在，就创建，如果存在，就返回对应的类型
             var realFileName = ""
             if (genericType == OBJECT || genericType == LIST_OBJECT) {
-                realFileName = "${jarObjectName}${Config.OBJECT_SUFFIX}"
+                realFileName =
+                    if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == genericPackage } != null) {
+                        jarObjectName
+                    } else {
+                        "${jarObjectName}${Config.OBJECT_SUFFIX}"
+                    }
             } else if (genericType == ENUM || genericType == LIST_ENUM) {
                 realFileName = "${Config.ENUM_PREFIX}$jarObjectName"
             }

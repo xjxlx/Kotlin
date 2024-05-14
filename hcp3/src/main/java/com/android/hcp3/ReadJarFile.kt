@@ -44,7 +44,7 @@ object ReadJarFile {
     /**
      * 有些指定的类需要被忽略掉，这个地方专门用来存储那些被忽略的类
      */
-    private val IGNORE_ARRAY: Array<ObjectBean> =
+    val IGNORE_ARRAY: Array<ObjectBean> =
         arrayOf(
             ObjectBean("de.esolutions.fw.rudi.services.rsiglobal.RGBA", "com.android.hcp3.RGBAEntity")
         )
