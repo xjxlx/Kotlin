@@ -354,8 +354,8 @@ object GenerateUtil {
                     ""
                 }
             val folderPath =
-                StringUtil.transitionPath(
-                    Paths.get(BASE_OUT_PUT_PATH).resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
+                transitionPackage(
+                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
                         .resolve(lowercase(RSI_PARENT_NODE_PATH))
                         .resolve(lowercase(childNodePackage))
                         .toString()
@@ -378,7 +378,7 @@ object GenerateUtil {
                 realFileName = "${Config.ENUM_PREFIX}$jarObjectName"
             }
 
-            if (checkApiEntityFileExists(folderPath, realFileName)) { // 如果文件存在，则直接返回文件的路径
+            if (checkFileExists(folderPath, realFileName)) { // 如果文件存在，则直接返回文件的路径
                 val attributeBean = AttributeBean()
                 attributeBean.name = realFileName
                 attributeBean.path = folderPath
@@ -457,15 +457,13 @@ object GenerateUtil {
     }
 
     /**
-     * 检测对应的ApiEntity是否存在
+     * 检测对应的文件是否存在
      */
-    private fun checkApiEntityFileExists(
+    private fun checkFileExists(
         packagePath: String,
         className: String,
     ): Boolean {
-        // 检测类是否存在：
-        val file = File(packagePath, className)
-        return file.exists()
+        return File(packagePath, className).exists()
     }
 
     /**
