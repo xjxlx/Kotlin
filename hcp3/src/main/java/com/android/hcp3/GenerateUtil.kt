@@ -412,7 +412,7 @@ object GenerateUtil {
                             return generateEnum(genericPackage, fieldSet, writeFilePackage)
                         }
                     } else {
-                        println("     读取到的class为空，请重读取class!")
+                        println("     读取到的class:[$genericPackage]为空，请重读取class!")
                     }
                 }
             }

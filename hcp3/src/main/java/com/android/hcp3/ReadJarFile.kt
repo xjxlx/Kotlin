@@ -146,7 +146,6 @@ object ReadJarFile {
             classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwPrimitive")
             classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.FwObject")
             classLoader.loadClass("de.esolutions.fw.util.commons.genericdata.ObjectKey")
-
             return classLoader
         } catch (e: Exception) {
             e.printStackTrace()
@@ -162,18 +161,25 @@ object ReadJarFile {
      */
     fun readClass(
         classLoader: URLClassLoader,
-        packageName: String?,
+        packageName: String,
         tag: String = "",
     ): Class<*>? {
         try {
             if (tag.isNotEmpty()) {
                 println(tag)
             }
-            val cls = classLoader.loadClass(packageName)
-            if (tag.isNotEmpty()) {
-                println("      读取JAR中class[$packageName]成功")
+
+            // 如果包名是在忽略名单中，则使用本地方法读取
+            val bean = IGNORE_ARRAY.find { ignore -> ignore.genericPackage == packageName }
+            if (bean != null) {
+                return readLocalClass(packageName, tag)
+            } else {
+                val cls = classLoader.loadClass(packageName)
+                if (tag.isNotEmpty()) {
+                    println("      读取JAR中class[$packageName]成功")
+                }
+                return cls
             }
-            return cls
         } catch (e: Exception) {
             println("      $e")
             return null
@@ -181,7 +187,7 @@ object ReadJarFile {
     }
 
     private fun readLocalClass(
-        packageName: String?,
+        packageName: String,
         tag: String = "",
     ): Class<*>? {
         try {
@@ -520,14 +526,16 @@ object ReadJarFile {
                     val jarSet = getMethods(jarClass, "JAR")
 
                     // 7：读取本地的方法
-                    val localClassName = capitalize(filterBean.apiGenericName).plus(OBJECT_SUFFIX)
                     val localPackage =
                         transitionPackage(
-                            Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
-                                .resolve(Paths.get(RSI_CHILD_NODE_PATH)).resolve(localClassName).toString()
+                            lowercase(
+                                Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                                    .resolve(Paths.get(RSI_CHILD_NODE_PATH)).toString()
+                            )
                         )
-                    val localClass = readLocalClass("$localPackage.java", "读取本地类：[$localPackage]")
-
+                    val localClassName = filterBean.apiGenericName.plus(OBJECT_SUFFIX)
+                    val localRealPackage = localPackage + localClassName
+                    val localClass = readLocalClass(localRealPackage, "读取本地类：[$localRealPackage]")
                     // 8：读取class中的方法数量和内容
                     val localSet = getFields(localClass, "Local")
                     // 9:对比本地和jar中类的方法信息，如果不匹配则需要动态生成代码
