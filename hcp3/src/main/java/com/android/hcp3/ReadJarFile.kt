@@ -215,7 +215,10 @@ object ReadJarFile {
                                     println("argument:$argument type:$classType")
                                     bean.classType = classType
                                     // 只有泛型对象是list的时候，才会添加list的泛型参数
-                                    if (classType == ClassTypeEnum.LIST_OBJECT || classType == ClassTypeEnum.LIST_PRIMITIVE) {
+                                    if (classType == ClassTypeEnum.LIST_OBJECT ||
+                                        classType == ClassTypeEnum.LIST_PRIMITIVE ||
+                                        classType == ClassTypeEnum.LIST_ENUM
+                                    ) {
                                         if (argument is ParameterizedType) { // 泛型类型
                                             bean.genericPath = argument.actualTypeArguments[0].typeName
                                         }
