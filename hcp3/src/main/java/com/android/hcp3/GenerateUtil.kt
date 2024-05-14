@@ -131,14 +131,14 @@ object GenerateUtil {
 
                 OBJECT.name -> { // object类型的数据
                     attributeTypeBean?.let { att ->
-                        fieldTypeName = ClassName.get(transitionPackage(att.path), att.name)
+                        fieldTypeName = ClassName.get(transitionPackage(att.attributePackage), att.name)
                         codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::new).orElse(null)")
                     }
                 }
 
                 ENUM.name -> { // object类型的数据
                     attributeTypeBean?.let { att ->
-                        fieldTypeName = ClassName.get(transitionPackage(att.path), att.name)
+                        fieldTypeName = ClassName.get(transitionPackage(att.attributePackage), att.name)
                         //     countryInformation = object.getCountryInformation().map(AirQualityEntityCountryInformationEnum::fromObjectEnum).orElse(null);
                         codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::fromRSI).orElse(null)")
                     }
@@ -164,7 +164,7 @@ object GenerateUtil {
                         fieldTypeName =
                             ParameterizedTypeName.get(
                                 ClassName.get("java.util", "List"),
-                                ClassName.get(transitionPackage(att.path), att.name)
+                                ClassName.get(transitionPackage(att.attributePackage), att.name)
                             )
 
                         codeBuild.addStatement(
@@ -180,7 +180,7 @@ object GenerateUtil {
                         fieldTypeName =
                             ParameterizedTypeName.get(
                                 ClassName.get("java.util", "List"),
-                                ClassName.get(transitionPackage(att.path), att.name)
+                                ClassName.get(transitionPackage(att.attributePackage), att.name)
                             )
 
                         //         object.getSwitchValueConfiguration().map(list -> list.stream().map(HvacSwitchValueEnum::fromRSI).collect(Collectors.toList())).orElse(null);
@@ -226,7 +226,7 @@ object GenerateUtil {
         }
         println("写入结束！\r\n\r\n")
         val typeBean = AttributeBean()
-        typeBean.path = generateFilePackage
+        typeBean.attributePackage = generateFilePackage
         typeBean.name = realFileName
         return typeBean
         // </editor-fold>
@@ -315,7 +315,7 @@ object GenerateUtil {
         }
         println("写入结束！\r\n\r\n")
         val typeBean = AttributeBean()
-        typeBean.path = packagePath
+        typeBean.attributePackage = packagePath
         typeBean.name = className
         return typeBean
         // </editor-fold>
@@ -354,7 +354,9 @@ object GenerateUtil {
                 } else {
                     ""
                 }
-            val folderPath =
+
+            // 存储文件的路径
+            val storageFolderPath =
                 transitionPath(
                     lowercase(
                         Paths.get(BASE_OUT_PUT_PATH).resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
@@ -366,9 +368,9 @@ object GenerateUtil {
             // 3：创建子文件夹目录
             if (bean != null) {
                 // 3：检测文件夹是否存在
-                if (!checkFolderExists(folderPath)) {
-                    println("      包:${folderPath}不存在，需要去创建！")
-                    mkdirFolder(folderPath)
+                if (!checkFolderExists(storageFolderPath)) {
+                    println("      包:${storageFolderPath}不存在，需要去创建！")
+                    mkdirFolder(storageFolderPath)
                 }
             }
 
@@ -380,10 +382,21 @@ object GenerateUtil {
                 realFileName = "${Config.ENUM_PREFIX}$jarObjectName"
             }
 
-            if (checkFileExists(folderPath, realFileName)) { // 如果文件存在，则直接返回文件的路径
+            // 构建写入文件的package包名
+            val writeFilePackage =
+                lowercase(
+                    transitionPackage(
+                        Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                            .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(
+                                childNodePackage
+                            ).toString()
+                    )
+                )
+
+            if (checkFileExists(storageFolderPath, "$realFileName.java")) { // 如果文件存在，则直接返回文件的路径
                 val attributeBean = AttributeBean()
                 attributeBean.name = realFileName
-                attributeBean.path = folderPath
+                attributeBean.attributePackage = writeFilePackage
                 println("     文件[$realFileName]存在，直接返回文件信息：$attributeBean")
                 return attributeBean
             } else {
@@ -391,24 +404,14 @@ object GenerateUtil {
                 mGlobalClassLoad?.let { classLoad ->
                     val readClass = readClass(classLoad, genericPackage)
                     if (readClass != null) {
-                        val packagePath =
-                            lowercase(
-                                transitionPackage(
-                                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                                        .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(
-                                            childNodePackage
-                                        ).toString()
-                                )
-                            )
-
                         if (genericType == OBJECT || genericType == LIST_OBJECT) {
                             println("子对象：[$realFileName]不存在，去创建object对象！")
                             val jarMethodSet = getMethods(readClass, jarObjectName)
-                            return generateObject(genericPackage, jarMethodSet, packagePath)
+                            return generateObject(genericPackage, jarMethodSet, writeFilePackage)
                         } else if (genericType == ENUM || genericType == LIST_ENUM) {
                             println("子Enum：[$realFileName]不存在，去创建Enum对象！")
                             val fieldSet = getFields(readClass, jarObjectName)
-                            return generateEnum(genericPackage, fieldSet, packagePath)
+                            return generateEnum(genericPackage, fieldSet, writeFilePackage)
                         }
                     } else {
                         println("     读取到的class为空，请重读取class!")

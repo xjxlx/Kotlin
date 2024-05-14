@@ -2,17 +2,17 @@ package com.android.hcp3.bean;
 
 public class AttributeBean {
   /** 生成属性类的路径，这个是全路径 */
-  private String path;
+  private String attributePackage;
 
   /** 生成属性类的名字 */
   private String name;
 
-  public String getPath() {
-    return path;
+  public String getAttributePackage() {
+    return attributePackage;
   }
 
-  public void setPath(String path) {
-    this.path = path;
+  public void setAttributePackage(String attributePackage) {
+    this.attributePackage = attributePackage;
   }
 
   public String getName() {
@@ -25,6 +25,13 @@ public class AttributeBean {
 
   @Override
   public String toString() {
-    return "AttributeTypeBean{" + "path='" + path + '\'' + ", name='" + name + '\'' + '}';
+    return "AttributeTypeBean{"
+        + "path='"
+        + attributePackage
+        + '\''
+        + ", name='"
+        + name
+        + '\''
+        + '}';
   }
 }
