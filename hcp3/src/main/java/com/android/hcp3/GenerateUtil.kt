@@ -115,17 +115,15 @@ object GenerateUtil {
             val genericType = next.classType // 参数的具体数据类型,也就是泛型的类型
 
             // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
-            val attributeTypeBean = checkChildRunTypeClass(genericPackage, genericType)
+            val attributeTypeBean = checkChildRunType(genericPackage, genericType)
             println("attributeName:[$attributeName] attributeTypeBean:$attributeTypeBean")
-
-            val fieldType = getFileInfoForPackage(genericPackage, genericType)
-            // 0：默认无效的数据类型，1：基础数据类型 2：数组类型，3：List数据集合，4：其他数据类型，也就是自定义的数据类型
+            val attributeInfo = getFileInfoForPackage(genericPackage, genericType)
 
             // 构建属性对象
             var fieldTypeName: TypeName? = null
             when (genericType.name) {
                 PRIMITIVE.name -> { // 基础数据类型的数据，使用原始的数据
-                    fieldTypeName = ClassName.get(fieldType[0], fieldType[1])
+                    fieldTypeName = ClassName.get(attributeInfo[0], attributeInfo[1])
                     codeBuild.addStatement("this.$attributeName = object.$methodName().orElse(null)")
                 }
 
@@ -148,13 +146,13 @@ object GenerateUtil {
                     fieldTypeName =
                         ParameterizedTypeName.get(
                             ClassName.get("java.util", "List"),
-                            ClassName.get(fieldType[0], fieldType[1])
+                            ClassName.get(attributeInfo[0], attributeInfo[1])
                         )
 
                     // 增加方法体内容
                     codeBuild.addStatement(
                         "this.$attributeName = object.$methodName().map(list ->list.stream()" +
-                            ".map(${fieldType[1]}::new).collect(\$T.toList())).orElse(null)",
+                            ".map(${attributeInfo[1]}::new).collect(\$T.toList())).orElse(null)",
                         CLASSNAME_COLLECTORS
                     )
                 }
@@ -326,7 +324,7 @@ object GenerateUtil {
      * @param genericPackage 泛型的包名
      * @param genericType 泛型的类型
      */
-    private fun checkChildRunTypeClass(
+    private fun checkChildRunType(
         genericPackage: String,
         genericType: ClassTypeEnum,
     ): AttributeBean? {
