@@ -163,7 +163,7 @@ object ReadJarFile {
             }
             val cls = classLoader.loadClass(packageName)
             if (tag.isNotEmpty()) {
-                println("读取JAR中class[$packageName]成功")
+                println("      读取JAR中class[$packageName]成功")
             }
             return cls
         } catch (e: Exception) {
@@ -182,7 +182,7 @@ object ReadJarFile {
             }
             val cls = Class.forName(packageName)
             if (tag.isNotEmpty()) {
-                println("读取本地Class[$packageName]成功")
+                println("      读取本地Class[$packageName]成功")
             }
             return cls
         } catch (e: Exception) {
@@ -253,9 +253,9 @@ object ReadJarFile {
             } else {
                 println("      ${tag}的clas为空，请检查是否正确获取了class对象！")
             }
-            println("[" + tag + "]" + "反射获取到的方法：" + set.size)
+            println("      [" + tag + "]" + "反射获取到的方法：" + set.size)
         } catch (e: Exception) {
-            println("[" + tag + "]" + "反射属性异常：" + e.message)
+            println("      [" + tag + "]" + "反射属性异常：" + e.message)
         }
         return set
     }
@@ -286,9 +286,9 @@ object ReadJarFile {
             } else {
                 println("      ${tag}的clas为空，请检查是否正确获取了class对象！")
             }
-            println("[" + tag + "]" + "反射获取到的属性：" + set.size)
+            println("      [" + tag + "]" + "反射获取到的属性：" + set.size)
         } catch (e: Exception) {
-            println("[" + tag + "]" + "反射属性异常：" + e.message)
+            println("      [" + tag + "]" + "反射属性异常：" + e.message)
         }
         return set
     }
@@ -297,7 +297,7 @@ object ReadJarFile {
      * 获取本类中所有的成员变量
      * @return 返回class中所有的成员属性
      */
-    fun getFields(
+    private fun getFields(
         clazz: Class<*>?,
         tag: String,
     ): LinkedHashSet<ObjectBean> {
@@ -309,16 +309,20 @@ object ReadJarFile {
                 clazz.getDeclaredFields().forEach { field ->
                     val bean = ObjectBean()
                     bean.attributeName = field.name
-                    bean.genericPackage = field.genericType.typeName
-
+                    val genericType = field.genericType
+                    if (genericType is Class<*>) {
+                        bean.genericPackage = genericType.typeName
+                    } else if (genericType is ParameterizedType) {
+                        bean.genericPackage = genericType.actualTypeArguments[0].typeName
+                    }
                     set.add(bean)
                 }
             } else {
                 println("      ${tag}的clas为空，请检查是否正确获取了class对象！")
             }
-            println("[" + tag + "]" + "反射获取到的属性：" + set.size)
+            println("      [" + tag + "]" + "反射获取到的属性：" + set.size)
         } catch (e: Exception) {
-            println("[" + tag + "]" + "反射属性异常：" + e.message)
+            println("      [" + tag + "]" + "反射属性异常：" + e.message)
         }
         return set
     }
@@ -486,7 +490,7 @@ object ReadJarFile {
                 if (filterBean != null) {
                     // 6：读取Jar包中指定的class类
                     val jarClass =
-                        readClass(it, filterBean.apiGenericPath, "读取JAR中的类：${filterBean.apiGenericName}")
+                        readClass(it, filterBean.apiGenericPath, "读取JAR中的类：[${filterBean.apiGenericName}]")
                     val jarSet = getMethods(jarClass, "JAR")
 
                     // 7：读取本地的方法
@@ -496,7 +500,7 @@ object ReadJarFile {
                             Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
                                 .resolve(Paths.get(RSI_CHILD_NODE_PATH)).resolve(localClassName).toString()
                         )
-                    val localClass = readLocalClass(localPackage, "读取本地类：$localPackage")
+                    val localClass = readLocalClass(localPackage, "读取本地类：[$localPackage]")
 
                     // 8：读取class中的方法数量和内容
                     val localSet = getFields(localClass, "Local")
