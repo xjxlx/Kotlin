@@ -247,6 +247,39 @@ object ReadJarFile {
     }
 
     /**
+     * 获取本类中所有的成员变量，用于读取enum类中的常量
+     * @return 返回enum里面的常量，attributeName = 常量的name,methodName = 常量的value
+     */
+    fun getFields(
+        clazz: Class<*>?,
+        tag: String,
+    ): LinkedHashSet<ObjectBean> {
+        println("开始读取[$tag]的所有方法---->")
+        val set = LinkedHashSet<ObjectBean>()
+        try {
+            if (clazz != null) {
+                // 将数组转换为集合
+                clazz.getDeclaredFields().forEach { field ->
+                    if (field.isEnumConstant) {
+                        val bean = ObjectBean()
+                        val key = field.name
+                        bean.attributeName = key
+                        val get = field.get(key).toString()
+                        bean.methodName = get
+                        set.add(bean)
+                    }
+                }
+            } else {
+                println("      ${tag}的clas为空，请检查是否正确获取了class对象！")
+            }
+            println("[" + tag + "]" + "反射获取到的属性：" + set.size)
+        } catch (e: Exception) {
+            println("[" + tag + "]" + "反射属性异常：" + e.message)
+        }
+        return set
+    }
+
+    /**
      * @param jarMethodSet jar包中的变量集合
      * @param targetMethodSet 本地类中变量的集合
      * @return 检测是否需要写入属性

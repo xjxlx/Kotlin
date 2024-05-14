@@ -6,6 +6,7 @@ import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
+import com.android.hcp3.ReadJarFile.getFields
 import com.android.hcp3.ReadJarFile.getMethods
 import com.android.hcp3.ReadJarFile.mGlobalClassLoad
 import com.android.hcp3.ReadJarFile.readClass
@@ -106,10 +107,6 @@ object GenerateUtil {
             val methodName = next.methodName // 方法名字
             val genericPath = next.genericPath // 返回值的路径
             val attributeClassType = next.classType // 参数的具体数据类型
-
-//            if (attributeClassType == ENUM || attributeClassType == LIST_ENUM) {
-//                continue
-//            }
 
             // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
             val attributeTypeBean = checkChildRunTypeClass(genericPath, attributeClassType)
@@ -252,8 +249,8 @@ object GenerateUtil {
                 .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
                 .build()
 
-        // 2:组装方法对象
-        val methodSpecBuild =
+        // 2:构造方法组装
+        val methodSpecBuildConstructor =
             MethodSpec.constructorBuilder()
                 .addParameter(
                     ParameterSpec.builder(ClassName.get("java.lang", "String"), "object")
@@ -261,87 +258,39 @@ object GenerateUtil {
                 )
                 .addCode(CodeBlock.builder().add("this.value = object;").build()).build()
 
+        // 3:静态方法组装
+        val methodSpecBuildStatic =
+            MethodSpec.methodBuilder("fromRSI")
+                .addModifiers(Modifier.STATIC, Modifier.PUBLIC)
+                .addParameter(
+                    ParameterSpec.builder(ClassName.get(classType[0], classType[1]), "enumObject")
+                        .build()
+                )
+                .addCode(CodeBlock.builder().add("return valueOf(enumObject.name());").build())
+                .returns(ClassName.get(packagePath, className))
+                .build()
+
         // 3：组装类对象
         val classTypeBuild =
             TypeSpec.enumBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
                 .addField(fieldSpec)
-                .addMethod(methodSpecBuild)
-                .addEnumConstant(
-                    "CLAMP15OFF",
-                    TypeSpec.anonymousClassBuilder("\$S", "clamp15Off")
-                        .build()
-                )
+                .addMethod(methodSpecBuildConstructor)
+                .addMethod(methodSpecBuildStatic)
         // </editor-fold>
 
-        // <editor-fold desc="三：循环添加属性和方法内容">
+        // <editor-fold desc="二：循环添加属性和方法内容">
         val iterator = jarMethodSet.iterator()
         while (iterator.hasNext()) {
             val next = iterator.next()
             // 3.1：获取ben中的信息
             val attributeName = next.attributeName // 具体的属性名字
             val methodName = next.methodName // 方法名字
-            val genericPath = next.genericPath // 返回值的路径
-            val attributeClassType = next.classType // 参数的具体数据类型
-
-            // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
-            val attributeTypeBean = checkChildRunTypeClass(genericPath, attributeClassType)
-            println("attributeName:[$attributeName] attributeTypeBean:$attributeTypeBean")
-
-            val fieldType = getTypeForPath(genericPath, classType = attributeClassType)
-
-            // 构建属性对象
-            var fieldTypeName: TypeName? = null
-            when (attributeClassType.name) {
-                PRIMITIVE.name -> { // 基础数据类型的数据，使用原始的数据
-                    fieldTypeName = ClassName.get(fieldType[0], fieldType[1])
-                }
-
-                OBJECT.name -> { // object类型的数据
-                    attributeTypeBean?.let { att ->
-                        fieldTypeName = ClassName.get(transitionPackage(att.path), att.name)
-                    }
-                }
-
-                ENUM.name -> { // object类型的数据
-                    attributeTypeBean?.let { att ->
-                        fieldTypeName = ClassName.get(transitionPackage(att.path), att.name)
-                        //     countryInformation = object.getCountryInformation().map(AirQualityEntityCountryInformationEnum::fromObjectEnum).orElse(null);
-                    }
-                }
-
-                LIST_PRIMITIVE.name -> { // 泛型式基础数据类型的list
-                    fieldTypeName =
-                        ParameterizedTypeName.get(
-                            ClassName.get("java.util", "List"),
-                            ClassName.get(fieldType[0], fieldType[1])
-                        )
-                }
-
-                LIST_OBJECT.name -> { // 泛型是object类型的list
-                    attributeTypeBean?.let { att ->
-                        fieldTypeName =
-                            ParameterizedTypeName.get(
-                                ClassName.get("java.util", "List"),
-                                ClassName.get(transitionPackage(att.path), att.name)
-                            )
-                    }
-                }
-
-                LIST_ENUM.name -> { // 泛型是object类型的list
-                    attributeTypeBean?.let { att ->
-                        fieldTypeName =
-                            ParameterizedTypeName.get(
-                                ClassName.get("java.util", "List"),
-                                ClassName.get(transitionPackage(att.path), att.name)
-                            )
-                    }
-                }
-
-                INVALID.name, ARRAY.name -> {
-                    println("      >>> 无效类型的数据!")
-                }
-            }
+            classTypeBuild.addEnumConstant(
+                attributeName,
+                TypeSpec.anonymousClassBuilder("\$S", methodName)
+                    .build()
+            )
             try {
             } catch (e: Exception) {
                 println("写入属性异常：${e.message}")
@@ -350,7 +299,7 @@ object GenerateUtil {
         }
         // </editor-fold>
 
-        // <editor-fold desc="五：写入到类中">
+        // <editor-fold desc="三：写入到类中">
         val javaFile = JavaFile.builder(packagePath, classTypeBuild.build()).build()
         if (DEBUG) {
             javaFile.writeTo(System.out)
@@ -435,7 +384,6 @@ object GenerateUtil {
                 mGlobalClassLoad?.let { classLoad ->
                     val readClass = readClass(classLoad, genericPath)
                     if (readClass != null) {
-                        val jarMethodSet = getMethods(readClass, jarObjectName)
                         val packagePath =
                             lowercase(
                                 transitionPackage(
@@ -445,12 +393,15 @@ object GenerateUtil {
                                         ).toString()
                                 )
                             )
+
                         if (attributeClassType == OBJECT || attributeClassType == LIST_OBJECT) {
                             println("子对象：[$realFileName]不存在，去创建object对象！")
+                            val jarMethodSet = getMethods(readClass, jarObjectName)
                             return generateObject(genericPath, jarMethodSet, packagePath)
                         } else if (attributeClassType == ENUM || attributeClassType == LIST_ENUM) {
                             println("子Enum：[$realFileName]不存在，去创建Enum对象！")
-                            return generateEnum(genericPath, jarMethodSet, packagePath)
+                            val fieldSet = getFields(readClass, jarObjectName)
+                            return generateEnum(genericPath, fieldSet, packagePath)
                         }
                     } else {
                         println("     读取到的class为空，请重读取class!")
