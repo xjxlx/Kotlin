@@ -223,7 +223,7 @@ object GenerateUtil {
             val outPutFile = File(BASE_OUT_PUT_PATH)
             javaFile.writeTo(outPutFile)
         }
-        println("写入结束！")
+        println("写入结束！\r\n\r\n")
         val typeBean = AttributeBean()
         typeBean.path = generateFilePackage
         typeBean.name = realFileName
@@ -312,7 +312,7 @@ object GenerateUtil {
             val outPutFile = File(BASE_OUT_PUT_PATH)
             javaFile.writeTo(outPutFile)
         }
-        println("写入结束！")
+        println("写入结束！\r\n\r\n")
         val typeBean = AttributeBean()
         typeBean.path = packagePath
         typeBean.name = className
@@ -464,7 +464,6 @@ object GenerateUtil {
         className: String,
     ): Boolean {
         // 检测类是否存在：
-        println("checkPackagePath:[$packagePath] className：[$className]")
         val file = File(packagePath, className)
         return file.exists()
     }
