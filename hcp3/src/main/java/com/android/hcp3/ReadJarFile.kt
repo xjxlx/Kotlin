@@ -188,7 +188,7 @@ object ReadJarFile {
                 for (method in clazz.declaredMethods) {
                     val methodName = method.name
                     var attributeName: String
-                    var genericPath = ""
+                    var genericPath: String
                     // 1： 必须是以get开头的方法
                     if (methodName.startsWith("get")) {
                         val bean = ObjectBean()
