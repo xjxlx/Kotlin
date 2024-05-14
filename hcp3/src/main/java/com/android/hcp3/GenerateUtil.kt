@@ -95,7 +95,7 @@ object GenerateUtil {
         // 2.3:组装方法的修饰符和参数
         val methodSpecBuild =
             MethodSpec.constructorBuilder() // 标注是构造犯法
-                .addModifiers(Modifier.PROTECTED) // 方法的修饰符
+                .addModifiers(Modifier.PUBLIC) // 方法的修饰符
                 .addParameter(methodParameter) // 方法的参数
                 .addStatement("super(object)") // 调用父类构造函数
 
