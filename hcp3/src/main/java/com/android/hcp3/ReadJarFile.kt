@@ -236,7 +236,7 @@ object ReadJarFile {
             } else {
                 println("      ${tag}的clas为空，请检查是否正确获取了class对象！")
             }
-            println("[" + tag + "]" + "反射获取到的属性：" + set.size)
+            println("[" + tag + "]" + "反射获取到的方法：" + set.size)
         } catch (e: Exception) {
             println("[" + tag + "]" + "反射属性异常：" + e.message)
         }
