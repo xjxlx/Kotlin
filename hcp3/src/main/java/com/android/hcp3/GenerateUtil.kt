@@ -222,7 +222,7 @@ object GenerateUtil {
             val outPutFile = File(BASE_OUT_PUT_PATH)
             javaFile.writeTo(outPutFile)
         }
-        println("\r\n\r\n写入结束！\r\n\r\n")
+        println("\r\n\r\n【写入结束！】\r\n\r\n")
         val typeBean = AttributeBean()
         typeBean.attributePackage = generateFilePackage
         typeBean.name = realFileName
@@ -311,7 +311,7 @@ object GenerateUtil {
             val outPutFile = File(BASE_OUT_PUT_PATH)
             javaFile.writeTo(outPutFile)
         }
-        println("\r\n\r\n写入结束！\r\n\r\n")
+        println("\r\n\r\n【写入结束！】\r\n\r\n")
         val typeBean = AttributeBean()
         typeBean.attributePackage = packagePath
         typeBean.name = className
