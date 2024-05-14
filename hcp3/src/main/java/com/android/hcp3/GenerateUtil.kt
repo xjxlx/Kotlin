@@ -6,7 +6,7 @@ import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
-import com.android.hcp3.ReadJarFile.getFields
+import com.android.hcp3.ReadJarFile.getEnums
 import com.android.hcp3.ReadJarFile.getMethods
 import com.android.hcp3.ReadJarFile.mGlobalClassLoad
 import com.android.hcp3.ReadJarFile.readClass
@@ -408,7 +408,7 @@ object GenerateUtil {
                             return generateObject(genericPackage, jarMethodSet, writeFilePackage)
                         } else if (genericType == ENUM || genericType == LIST_ENUM) {
                             println("子Enum：[$realFileName]不存在，去创建Enum对象！")
-                            val fieldSet = getFields(readClass, jarObjectName)
+                            val fieldSet = getEnums(readClass, jarObjectName)
                             return generateEnum(genericPackage, fieldSet, writeFilePackage)
                         }
                     } else {

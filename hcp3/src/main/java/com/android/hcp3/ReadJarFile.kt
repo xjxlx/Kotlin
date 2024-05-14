@@ -1,7 +1,6 @@
 package com.android.hcp3
 
 import com.android.hcp3.Config.BASE_JAR_PATH
-import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
@@ -164,7 +163,26 @@ object ReadJarFile {
             }
             val cls = classLoader.loadClass(packageName)
             if (tag.isNotEmpty()) {
-                println("读取class[$packageName]成功")
+                println("读取JAR中class[$packageName]成功")
+            }
+            return cls
+        } catch (e: Exception) {
+            println("      $e")
+            return null
+        }
+    }
+
+    private fun readLocalClass(
+        packageName: String?,
+        tag: String = "",
+    ): Class<*>? {
+        try {
+            if (tag.isNotEmpty()) {
+                println(tag)
+            }
+            val cls = Class.forName(packageName)
+            if (tag.isNotEmpty()) {
+                println("读取本地Class[$packageName]成功")
             }
             return cls
         } catch (e: Exception) {
@@ -209,7 +227,7 @@ object ReadJarFile {
                                     val argument = actualTypeArguments[0]
                                     val genericPath = argument.typeName
                                     val classType = checkClassType(argument)
-                                    println("argument:$argument type:$classType")
+                                    // println("argument:$argument type:$classType")
                                     bean.classType = classType
                                     // 只有泛型对象是list的时候，才会添加list的泛型参数
                                     if (classType == ClassTypeEnum.LIST_OBJECT ||
@@ -246,11 +264,11 @@ object ReadJarFile {
      * 获取本类中所有的成员变量，用于读取enum类中的常量
      * @return 返回enum里面的常量，attributeName = 常量的name,methodName = 常量的value
      */
-    fun getFields(
+    fun getEnums(
         clazz: Class<*>?,
         tag: String,
     ): LinkedHashSet<ObjectBean> {
-        println("开始读取[$tag]的所有方法---->")
+        println("开始读取[$tag]的所有属性---->")
         val set = LinkedHashSet<ObjectBean>()
         try {
             if (clazz != null) {
@@ -264,6 +282,36 @@ object ReadJarFile {
                         bean.methodName = get
                         set.add(bean)
                     }
+                }
+            } else {
+                println("      ${tag}的clas为空，请检查是否正确获取了class对象！")
+            }
+            println("[" + tag + "]" + "反射获取到的属性：" + set.size)
+        } catch (e: Exception) {
+            println("[" + tag + "]" + "反射属性异常：" + e.message)
+        }
+        return set
+    }
+
+    /**
+     * 获取本类中所有的成员变量
+     * @return 返回class中所有的成员属性
+     */
+    fun getFields(
+        clazz: Class<*>?,
+        tag: String,
+    ): LinkedHashSet<ObjectBean> {
+        println("开始读取[$tag]的所有属性---->")
+        val set = LinkedHashSet<ObjectBean>()
+        try {
+            if (clazz != null) {
+                // 将数组转换为集合
+                clazz.getDeclaredFields().forEach { field ->
+                    val bean = ObjectBean()
+                    bean.attributeName = field.name
+                    bean.genericPackage = field.genericType.typeName
+
+                    set.add(bean)
                 }
             } else {
                 println("      ${tag}的clas为空，请检查是否正确获取了class对象！")
@@ -439,19 +487,19 @@ object ReadJarFile {
                     // 6：读取Jar包中指定的class类
                     val jarClass =
                         readClass(it, filterBean.apiGenericPath, "读取JAR中的类：${filterBean.apiGenericName}")
-                    val className = capitalize(filterBean.apiName).plus(OBJECT_SUFFIX)
-                    val path =
-                        transitionPackage(
-                            Paths.get(BASE_OUT_PUT_PATH).resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
-                                .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(Paths.get(RSI_CHILD_NODE_PATH))
-                                .resolve(className)
-                                .toString()
-                        )
-                    // 7：读取本地的class类
-                    val targetClass = readClass(it, path, "读取本地类：$path")
-                    // 8：读取class中的方法数量和内容
                     val jarSet = getMethods(jarClass, "JAR")
-                    val localSet = getMethods(targetClass, "Local")
+
+                    // 7：读取本地的方法
+                    val localClassName = capitalize(filterBean.apiGenericName).plus(OBJECT_SUFFIX)
+                    val localPackage =
+                        transitionPackage(
+                            Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                                .resolve(Paths.get(RSI_CHILD_NODE_PATH)).resolve(localClassName).toString()
+                        )
+                    val localClass = readLocalClass(localPackage, "读取本地类：$localPackage")
+
+                    // 8：读取class中的方法数量和内容
+                    val localSet = getFields(localClass, "Local")
                     // 9:对比本地和jar中类的方法信息，如果不匹配则需要动态生成代码
                     if (checkNeedWriteVariable(jarSet, localSet)) {
                         println("属性完全相同，不需要重新写入属性！")
