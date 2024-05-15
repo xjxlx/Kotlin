@@ -1,10 +1,10 @@
 package com.android.hcp3.bean;
 
 public class AttributeBean {
-  /** 生成属性类的路径，这个是全路径 */
+  /** 生成属性类的路径，这个是全路径，例如：com.android.hcp3.rsi.hvac */
   private String attributePackage;
 
-  /** 生成属性类的名字 */
+  /** 1：生成属性类的名字，例如：VcSpecialIndicationValue 2：基础类型或者忽略类型的名字，例如：String */
   private String name;
 
   public String getAttributePackage() {

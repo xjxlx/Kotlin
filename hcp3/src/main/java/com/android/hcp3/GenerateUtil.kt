@@ -137,7 +137,6 @@ object GenerateUtil {
                     attributeTypeBean?.let { att ->
                         fieldTypeName = ClassName.get(transitionPackage(att.attributePackage), att.name)
                         codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::new).orElse(null)")
-                        // todo 增加忽略的路径
                     }
                 }
 
@@ -171,8 +170,6 @@ object GenerateUtil {
                                 ClassName.get("java.util", "List"),
                                 ClassName.get(transitionPackage(att.attributePackage), att.name)
                             )
-
-                        // todo 增加忽略的路径
                         codeBuild.addStatement(
                             "this.$attributeName = object.$methodName().map(list ->list.stream()" +
                                 ".map(${att.name}::new).collect(\$T.toList())).orElse(null)",
@@ -336,10 +333,24 @@ object GenerateUtil {
         genericPackage: String,
         genericType: ClassTypeEnum,
     ): AttributeBean? {
-        // 如果是u基础数据类型，或者基础数据类型的集合，则不参与后续的流程
-        if ((genericType == PRIMITIVE) || (genericType == LIST_PRIMITIVE)) {
-            println("      当前属性[$genericPackage]是基础类型，不做额外处理!")
-            return null
+        /**
+         * 1:基础类型的数据，直接返回对象信息
+         * 2：基础数据类型的集合，直接返回对象信息
+         * 3：忽略集合中的数据，直接返回对象信息
+         */
+        if ((genericType == PRIMITIVE) || (genericType == LIST_PRIMITIVE) || (
+                IGNORE_ARRAY.find { ignore ->
+                    ignore.ignorePackage == genericPackage
+                } != null
+            )
+        ) {
+            println("      当前属性[$genericPackage]是基础类型，不做额外处理，直接返回类的名字和包名!")
+            val attributeBean = AttributeBean()
+            val otherInfo = getPackageInfo(genericPackage)
+            attributeBean.name = otherInfo[1]
+            attributeBean.attributePackage = otherInfo[0]
+            println("     文件[$genericPackage]存在，直接返回文件信息：$attributeBean")
+            return attributeBean
         } else {
             // 1：从包名中去获取属性的类名
             val jarObjectName = StringUtil.getPackageSimple(genericPackage)
