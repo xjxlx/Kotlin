@@ -3,8 +3,13 @@ package com.android.hcp3
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
+import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
+import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
+import com.android.hcp3.ReadJarFile.getGlobalClassLoad
+import com.android.hcp3.ReadJarFile.readApiNodeForParent
+import com.android.hcp3.ReadJarFile.readNeedDependenciesClassName
 import com.android.hcp3.StringUtil.deleteFileFormat
 import com.android.hcp3.StringUtil.getFileNameForPath
 import com.android.hcp3.StringUtil.lowercase
@@ -12,52 +17,92 @@ import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.StringUtil.transitionPath
 import com.android.hcp3.bean.EnumBean
 import com.android.hcp3.bean.StatisticBean
-import java.io.File
+import java.io.*
 import java.lang.reflect.ParameterizedType
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
-object StatisticUtil {
-    @JvmStatic
-    fun statistic() {
-        // 1:先统计指定节点下所有的folder,获取里面所有的类
-        // 2:通过反射，获取类的成员变量
-        // 3:把所有的成员变量存入到一个集合中，这个集合是个map集合 Map<String, Set>
-        // 4:读取文件夹下所有的类，把这些类都给存一遍
-        // 5:对比集合中的set集合，如果发现其中一个类，只有被这个集合给引用了，那么就把这个类给挪到这个包下
-    }
-
+object FileUtil {
     @JvmStatic
     fun main(args: Array<String>) {
-        val readNodeLocalFile =
-            readApiNodeLocalFile(
-                lowercase(
-                    transitionPath(
-                        Paths.get(BASE_OUT_PUT_PATH)
-                            .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
-                            .resolve(Paths.get(RSI_PARENT_NODE_PATH))
-                            .toString()
-                    )
+        val sourceFilePath = "hcp3/src/main/java/com/android/hcp3/TestFile.java" // 源文件路径
+        val targetFolderPath = "hcp3/src/main/java/com/android/hcp3/temp/TestFile.java" // 目标文件夹路径
+
+        // modifyFirstLine(sourceFilePath, targetFolderPath, "package com.android.hcp3.temp;")
+
+        // <editor-fold desc="1：读取本地JAR包的Api，返回一个list列表">
+        readJarApiList()
+        println("readJarApiFile:[$RSI_TARGET_NODE_LIST]")
+        // </editor-fold>
+
+        // <editor-fold desc="2：读取本地指定目录中的Api的路径，返回一个set集合">
+        val localTargetPath =
+            lowercase(
+                transitionPath(
+                    Paths.get(BASE_OUT_PUT_PATH)
+                        .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
+                        .resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                        .toString()
                 )
             )
-        println("readNodeLocalFile:$readNodeLocalFile")
+        val readLocalApiPath = readLocalApiPath(localTargetPath)
+        println("readLocalApiPath:[$readLocalApiPath]")
+        // </editor-fold>
 
-        val readApiNodeLocalFile = readApiNodeLocalFile(readNodeLocalFile)
-        println("readNodeLocalFile:$readApiNodeLocalFile")
+        // <editor-fold desc="3：读取本地指定目录中的Api下child的path，返回一个set集合">
+        val readLocalApiChildPath = readLocalApiChildPath(readLocalApiPath)
+        // </editor-fold>
 
-        val genericType = getGenericType(readApiNodeLocalFile)
-        println("genericType:$genericType")
-        genericType.forEach { bean ->
-            val objectGenericSet = bean.objectGenericSet
-            println("apiChildPath:[${bean.apiNodePath}] genericSet:[${objectGenericSet.size}]")
+        // <editor-fold desc="4：读取本地指定目录中的Api下child的泛型，返回一个set集合">
+        val apiChildGenericTypeList = getApiChildGenericTypeList(readLocalApiChildPath)
+        println("apiChildGenericTypeList:[$apiChildGenericTypeList]")
+        // </editor-fold>
+
+        // <editor-fold desc="5：读取本地指定目录中的Api下child的泛型，返回一个set集合">
+        val readLocalEnumFile = readLocalEnumFile(localTargetPath)
+        println("readLocalEnumFile:[$readLocalEnumFile]")
+        // </editor-fold>
+
+        // <editor-fold desc="6：对比本地的Enum在Api包下的主类中出现的次数">
+        val filterEnum = filterEnumSize(apiChildGenericTypeList, readLocalEnumFile)
+        println("filterEnum:[$filterEnum]")
+        // </editor-fold>
+    }
+
+    /**
+     * 读取JAR包中节点下Api的信息
+     */
+    private fun readJarApiList() {
+        try {
+            // 1：读取指定目标节点下所有的object集合,例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
+            val filterNodePath: String =
+                transitionPath(
+                    Paths.get(RSI_ROOT_NODE_PATH)
+                        .resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                        .resolve(Paths.get(RSI_PARENT_NODE_LEVEL))
+                        .toString()
+                )
+            println("过滤JAR包中的父节点为：[$filterNodePath]")
+            // 2: 读取jar包中需要依赖的类名字
+            val needDependenciesClassNameList = readNeedDependenciesClassName(filterNodePath)
+            // 3:通过配置需要依赖的类，去构建一个classLoad
+            getGlobalClassLoad(needDependenciesClassNameList)?.let {
+                // 4：读取父节点下所有的api方法，获取所有api的方法的名字以及返回类型的全路径包名
+                readApiNodeForParent(it)
+                // 关闭ClassLoader释放资源
+                // it.close()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println("write data error!")
         }
     }
 
     /**
-     * 根据指定的主目录，获取父类节点下的api路径
+     * 读取本地指定节点下所有的Api路径
      */
-    fun readApiNodeLocalFile(dir: String): LinkedHashSet<StatisticBean> {
+    private fun readLocalApiPath(dir: String): LinkedHashSet<StatisticBean> {
         val set = LinkedHashSet<StatisticBean>()
         val file = File(dir)
         if (file.exists() && file.isDirectory) {
@@ -76,9 +121,9 @@ object StatisticUtil {
     }
 
     /**
-     * 获取api节点下的信息
+     * 获取本地Api节点下child的path，返回一个集合
      */
-    fun readApiNodeLocalFile(set: LinkedHashSet<StatisticBean>): LinkedHashSet<StatisticBean> {
+    private fun readLocalApiChildPath(set: LinkedHashSet<StatisticBean>): LinkedHashSet<StatisticBean> {
         set.forEach { bean ->
             val file = File(bean.apiNodePath)
             if (file.exists() && file.isDirectory) {
@@ -112,7 +157,7 @@ object StatisticUtil {
     /**
      * 获取api节点下泛型对象的属性泛型
      */
-    fun getGenericType(set: LinkedHashSet<StatisticBean>): LinkedHashSet<StatisticBean> {
+    private fun getApiChildGenericTypeList(set: LinkedHashSet<StatisticBean>): LinkedHashSet<StatisticBean> {
         set.forEach { bean ->
             val outPath = bean.apiChildPath.substring(BASE_OUT_PUT_PATH.length + 1, bean.apiChildPath.length)
             val packagePath = transitionPackage(outPath)
@@ -155,7 +200,7 @@ object StatisticUtil {
     /**
      * 根据指定的主目录，获取父类节点下的api路径
      */
-    fun readLocalEnumFile(dir: String): LinkedHashSet<EnumBean> {
+    private fun readLocalEnumFile(dir: String): LinkedHashSet<EnumBean> {
         val set = LinkedHashSet<EnumBean>()
         val dir = File(dir)
         if (dir.exists() && dir.isDirectory) {
@@ -174,9 +219,9 @@ object StatisticUtil {
     }
 
     /**
-     * 循环对比两个集合，如果本地的enum只出现在一个类中，则打印这个类
+     * 循环对比两个集合，查看enum在set集合中出现的次数
      */
-    fun filter(
+    private fun filterEnumSize(
         set: LinkedHashSet<StatisticBean>,
         localEnum: LinkedHashSet<EnumBean>,
     ): LinkedHashSet<EnumBean> {
@@ -189,10 +234,59 @@ object StatisticUtil {
                 }
             }
             println("枚举：${enum.name} 在集合中出现了:${enum.count} 次~")
-
-            println("enum: $enum")
         }
         return localEnum
+    }
+
+    /**
+     * @param oldFilePath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
+     * @param newFilePath 新的文件路径，例如：hcp3/src/main/java/com/android/hcp3/temp/TestFile.java
+     * @param newPackage 新的包名，例如：package com.android.hcp3.temp
+     */
+    @JvmStatic
+    fun modifyFirstLine(
+        oldFilePath: String,
+        newFilePath: String,
+        newPackage: String?,
+    ) {
+        try {
+            BufferedReader(FileReader(oldFilePath)).use { reader ->
+                PrintWriter(FileWriter(newFilePath)).use { writer ->
+                    // 读取package 的内容
+                    var packageContent: String
+                    while ((reader.readLine().also { packageContent = it }) != null) {
+                        if (packageContent.startsWith("package ")) {
+                            // 写入包名
+                            writer.println(newPackage)
+                            break
+                        }
+                    }
+
+                    // 读取剩余的行
+                    var line: String?
+                    while ((reader.readLine().also { line = it }) != null) {
+                        writer.println(line) // 写入剩余的行
+                    }
+                }
+            }
+        } catch (e: IOException) {
+            println(e)
+        }
+
+        val originalFile = File(oldFilePath)
+        val tempFile = File("$newFilePath.temp")
+
+        // 删除原始文件
+        if (originalFile.delete()) {
+            // 重命名临时文件
+            if (tempFile.renameTo(originalFile)) {
+                println("第一行已成功修改。")
+            } else {
+                println("临时文件无法重命名为原始文件名。")
+            }
+        } else {
+            println("原始文件无法删除。")
+        }
     }
 
     fun moveFile(localEnum: LinkedHashSet<EnumBean>) {

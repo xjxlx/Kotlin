@@ -1,7 +1,6 @@
 package com.android.hcp3
 
 import com.android.hcp3.Config.BASE_JAR_PATH
-import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
@@ -11,11 +10,6 @@ import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.Config.TARGET_JAR_PATH
 import com.android.hcp3.GenerateUtil.generateObject
-import com.android.hcp3.StatisticUtil.filter
-import com.android.hcp3.StatisticUtil.getGenericType
-import com.android.hcp3.StatisticUtil.moveFile
-import com.android.hcp3.StatisticUtil.readApiNodeLocalFile
-import com.android.hcp3.StatisticUtil.readLocalEnumFile
 import com.android.hcp3.StringUtil.capitalize
 import com.android.hcp3.StringUtil.getPackageSimple
 import com.android.hcp3.StringUtil.lowercase
@@ -67,7 +61,7 @@ object ReadJarFile {
      * 反射class类中有依赖其他类的情况。注意，这里读取的是路径，不是包名
      * 例如：读取mib_rsi_android.jar包中hvac节点下所有的object和enum的类，返回集合路径
      */
-    private fun readNeedDependenciesClassName(filterNodePath: String): List<String> {
+    fun readNeedDependenciesClassName(filterNodePath: String): List<String> {
         val fileNames: MutableList<String> = ArrayList()
         try {
             // 打开Jar文件
@@ -110,7 +104,7 @@ object ReadJarFile {
         return fileNames
     }
 
-    private fun getGlobalClassLoad(dependenciesList: List<String>): URLClassLoader? {
+    fun getGlobalClassLoad(dependenciesList: List<String>): URLClassLoader? {
         val jarList = ArrayList<String>()
         val folder = File(BASE_JAR_PATH)
         // 加载指定位置的jar包到classLoad里面
@@ -508,7 +502,7 @@ object ReadJarFile {
         try {
             // 1：读取指定目标节点下所有的object集合,例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
             val filterNodePath: String =
-                StringUtil.transitionPath(
+                transitionPath(
                     Paths.get(RSI_ROOT_NODE_PATH)
                         .resolve(Paths.get(RSI_PARENT_NODE_PATH))
                         .resolve(Paths.get(RSI_PARENT_NODE_LEVEL))
@@ -564,39 +558,7 @@ object ReadJarFile {
                     println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")
                 }
                 // 关闭ClassLoader释放资源
-                // it.close()
-
-                // ----------------------------------------------------------------     --------------------------------
-
-                val targetPath =
-                    lowercase(
-                        transitionPath(
-                            Paths.get(BASE_OUT_PUT_PATH)
-                                .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
-                                .resolve(Paths.get(RSI_PARENT_NODE_PATH))
-                                .toString()
-                        )
-                    )
-
-                val readNodeLocalFile = readApiNodeLocalFile(targetPath)
-                println("readNodeLocalFile:$readNodeLocalFile \n")
-
-                val readApiNodeLocalFile = readApiNodeLocalFile(readNodeLocalFile)
-                println("readApiNodeLocalFile:$readApiNodeLocalFile \r\n")
-
-                val genericType = getGenericType(readApiNodeLocalFile)
-                println("genericType:$genericType \n")
-                genericType.forEach { bean ->
-                    val objectGenericSet = bean.objectGenericSet
-                    // println("apiChildPath:[${bean.apiNodePath}] genericSet:[${objectGenericSet.size}]")
-                }
-
-                val readLocalEnumFile = readLocalEnumFile(targetPath)
-                println("readLocalEnumFile:$readLocalEnumFile")
-
-                val filter = filter(genericType, readLocalEnumFile)
-
-                moveFile(filter)
+                it.close()
             }
         } catch (e: Exception) {
             e.printStackTrace()
