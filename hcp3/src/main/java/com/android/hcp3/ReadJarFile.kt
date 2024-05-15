@@ -1,6 +1,7 @@
 package com.android.hcp3
 
 import com.android.hcp3.Config.BASE_JAR_PATH
+import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
@@ -10,10 +11,16 @@ import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.Config.TARGET_JAR_PATH
 import com.android.hcp3.GenerateUtil.generateObject
+import com.android.hcp3.StatisticUtil.filter
+import com.android.hcp3.StatisticUtil.getGenericType
+import com.android.hcp3.StatisticUtil.moveFile
+import com.android.hcp3.StatisticUtil.readApiNodeLocalFile
+import com.android.hcp3.StatisticUtil.readLocalEnumFile
 import com.android.hcp3.StringUtil.capitalize
 import com.android.hcp3.StringUtil.getPackageSimple
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
+import com.android.hcp3.StringUtil.transitionPath
 import com.android.hcp3.bean.ApiNodeBean
 import com.android.hcp3.bean.ObjectBean
 import de.esolutions.fw.rudi.services.rsiglobal.Duration
@@ -434,7 +441,7 @@ object ReadJarFile {
     }
 
     /** 读取大项中节点的Api信息  */
-    private fun readApiNodeForParent(globalClassLoad: URLClassLoader) {
+    fun readApiNodeForParent(globalClassLoad: URLClassLoader) {
         println("读取主类[$RSI_PARENT_NODE_PATH]下所有的Api信息 --->")
         // 使用类加载器，读取父类中主节点的接口变量
         if (apiNodeGenericPath.isNotEmpty()) {
@@ -557,7 +564,39 @@ object ReadJarFile {
                     println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")
                 }
                 // 关闭ClassLoader释放资源
-                it.close()
+                // it.close()
+
+                // ----------------------------------------------------------------     --------------------------------
+
+                val targetPath =
+                    lowercase(
+                        transitionPath(
+                            Paths.get(BASE_OUT_PUT_PATH)
+                                .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
+                                .resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                                .toString()
+                        )
+                    )
+
+                val readNodeLocalFile = readApiNodeLocalFile(targetPath)
+                println("readNodeLocalFile:$readNodeLocalFile \n")
+
+                val readApiNodeLocalFile = readApiNodeLocalFile(readNodeLocalFile)
+                println("readApiNodeLocalFile:$readApiNodeLocalFile \r\n")
+
+                val genericType = getGenericType(readApiNodeLocalFile)
+                println("genericType:$genericType \n")
+                genericType.forEach { bean ->
+                    val objectGenericSet = bean.objectGenericSet
+                    // println("apiChildPath:[${bean.apiNodePath}] genericSet:[${objectGenericSet.size}]")
+                }
+
+                val readLocalEnumFile = readLocalEnumFile(targetPath)
+                println("readLocalEnumFile:$readLocalEnumFile")
+
+                val filter = filter(genericType, readLocalEnumFile)
+
+                moveFile(filter)
             }
         } catch (e: Exception) {
             e.printStackTrace()

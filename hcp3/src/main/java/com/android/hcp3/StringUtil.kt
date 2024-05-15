@@ -58,4 +58,39 @@ object StringUtil {
         }
         return ""
     }
+
+    /**
+     * 把一个文件的的路径，删除后面的格式后，返回文件不带格式的路径，例如：com.android.hcp3.rsi.hvac.VcRestrictionReason.java
+     * 返回：com.android.hcp3.rsi.hvac.VcRestrictionReason
+     */
+    @JvmStatic
+    fun deleteFileFormat(filePath: String): String {
+        if (filePath.isEmpty()) {
+            return ""
+        }
+        if (filePath.contains(".")) {
+            return filePath.substring(0, filePath.lastIndexOf("."))
+        }
+        return ""
+    }
+
+    /**
+     * 把一个文件的的路径，删除后面的格式后，返回文件的名字，例如：hcp3/src/main/java/com/android/hcp3/rsi/hvac/VcRestrictionReason.java
+     * 返回：VcRestrictionReason
+     */
+    @JvmStatic
+    fun getFileNameForPath(filePath: String): String {
+        if (filePath.isEmpty()) {
+            return ""
+        }
+        if (filePath.contains("/")) {
+            val lastIndexOf = filePath.lastIndexOf("/")
+            val format = filePath.substring(lastIndexOf + 1)
+            if (format.contains(".")) {
+                val formatLastIndexOf = format.lastIndexOf(".")
+                return format.substring(0, formatLastIndexOf)
+            }
+        }
+        return ""
+    }
 }
