@@ -20,6 +20,7 @@ import com.squareup.javapoet.*
 import java.io.File
 import java.io.IOException
 import java.nio.file.Paths
+import java.util.*
 import javax.lang.model.element.Modifier
 
 object GenerateUtil {
@@ -28,6 +29,7 @@ object GenerateUtil {
     //    private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
     private val SUPER_CLASS_NAME = ClassName.get("com.android.hcp3", "BaseRSIValue")
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
+    private val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
 
     private const val DEBUG = false
 
@@ -327,7 +329,7 @@ object GenerateUtil {
     /**
      * 每当读取到一个属性的时候，就需要判定这个类的重构类是否存在，如果不存在的话，则需要去主动生成这个类,然后返回这个类的全路径名字
      * @param genericPackage 泛型的包名
-     * @param genericType 泛型的类型
+     * @param genericType 泛型的类型的文件名字
      */
     private fun checkChildRunType(
         genericPackage: String,
@@ -353,86 +355,88 @@ object GenerateUtil {
             return attributeBean
         } else {
             // 1：从包名中去获取属性的类名
-            val jarObjectName = StringUtil.getPackageSimple(genericPackage)
-            println("检查指定类型: $jarObjectName")
+            val jarFileName = StringUtil.getPackageSimple(genericPackage)
+            println("检查指定类型: $jarFileName")
 
+            // <editor-fold desc="2：查找子节点的Object是不是这个泛型,如果有则写入指定的包下，否则就写入父节点里面"
             val bean =
                 RSI_TARGET_NODE_LIST.find { filter ->
                     lowercase(filter.apiGenericName) ==
                         lowercase(
-                            jarObjectName
+                            jarFileName
                         )
                 }
 
-            // 2：获取package的路径,如果bean不为空，则说明可以写入到指定的包下，如果没有归属的话，则全部写入到父类的节点下面
+            /**
+             * 如果bean不为空，则说明当前的泛型是子节点的泛型，可以写入到指定的包下，如果没有归属的话，则全部写入到父类的节点下面
+             */
             val childNodePackage =
                 if (bean != null) {
                     bean.apiName
                 } else {
                     ""
                 }
+            // </editor-fold>
 
-            // 存储文件的路径
-            val storageFolderPath =
-                transitionPath(
-                    lowercase(
-                        Paths.get(BASE_OUT_PUT_PATH).resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
-                            .resolve(Paths.get(RSI_PARENT_NODE_PATH))
-                            .resolve(childNodePackage).toString()
-                    )
-                )
-
-            // 3：创建子文件夹目录
-            if (bean != null) {
-                // 3：检测文件夹是否存在
-                if (!checkFolderExists(storageFolderPath)) {
-                    println("      包:${storageFolderPath}不存在，需要去创建！")
-                    mkdirFolder(storageFolderPath)
-                }
-            }
-
-            // 5：判断文件是否存在，如果不存在，就创建，如果存在，就返回对应的类型
+            // <editor-fold desc="3:根据文件的类型去构建不同的文件名字"
+            // 1：如果是枚举类型，则根据规则，在枚举前面加入：[Config.ENUM_PREFIX]
+            // 2:如果是object类型，则根据规则，在后面假如：[Config.OBJECT_SUFFIX]
+            // 3:如果是object类型，同时也是忽略的指定类型的话，则不用后面加入指定规则[Config.OBJECT_SUFFIX]
             var realFileName = ""
             if (genericType == OBJECT || genericType == LIST_OBJECT) {
                 realFileName =
                     if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == genericPackage } != null) {
-                        jarObjectName
+                        jarFileName
                     } else {
-                        "${jarObjectName}${Config.OBJECT_SUFFIX}"
+                        "${jarFileName}${Config.OBJECT_SUFFIX}"
                     }
             } else if (genericType == ENUM || genericType == LIST_ENUM) {
-                realFileName = "${Config.ENUM_PREFIX}$jarObjectName"
+                realFileName = "${Config.ENUM_PREFIX}$jarFileName"
             }
+            // </editor-fold>
 
-            // 构建写入文件的package包名
-            val writeFilePackage =
+            // <editor-fold desc="4：读取本地文件，并查询集合中是否有需要的文件">
+            readNodeLocalFile(
                 lowercase(
-                    transitionPackage(
-                        Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                            .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(
-                                childNodePackage
-                            ).toString()
+                    transitionPath(
+                        Paths.get(BASE_OUT_PUT_PATH)
+                            .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
+                            .resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                            .toString()
                     )
                 )
+            )
+            val find = LOCAL_NODE_FILE_LIST.find { local -> local.name == realFileName }
+            // </editor-fold>
 
-            if (checkFileExists(storageFolderPath, "$realFileName.java")) { // 如果文件存在，则直接返回文件的路径
+            if (find != null) { // 如果文件存在，则直接返回文件的路径
                 val attributeBean = AttributeBean()
-                attributeBean.name = realFileName
-                attributeBean.attributePackage = writeFilePackage
+                attributeBean.name = find.name
+                attributeBean.attributePackage = find.attributePackage
                 println("     文件[$realFileName]存在，直接返回文件信息：$attributeBean")
                 return attributeBean
             } else {
+                // 5：构建写入文件的package包名
+                val writeFilePackage =
+                    lowercase(
+                        transitionPackage(
+                            Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                                .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(
+                                    childNodePackage
+                                ).toString()
+                        )
+                    )
                 // 6:读取jar包中属性的字段
                 mGlobalClassLoad?.let { classLoad ->
                     val readClass = readClass(classLoad, genericPackage)
                     if (readClass != null) {
                         if (genericType == OBJECT || genericType == LIST_OBJECT) {
                             println("子对象：[$realFileName]不存在，去创建object对象！")
-                            val jarMethodSet = getMethods(readClass, jarObjectName)
+                            val jarMethodSet = getMethods(readClass, jarFileName)
                             return generateObject(genericPackage, jarMethodSet, writeFilePackage)
                         } else if (genericType == ENUM || genericType == LIST_ENUM) {
                             println("子Enum：[$realFileName]不存在，去创建Enum对象！")
-                            val fieldSet = getEnums(readClass, jarObjectName)
+                            val fieldSet = getEnums(readClass, jarFileName)
                             return generateEnum(genericPackage, fieldSet, writeFilePackage)
                         }
                     } else {
@@ -486,35 +490,51 @@ object GenerateUtil {
     /**
      * 检测对应的文件是否存在
      */
-    private fun checkFileExists(
+    @JvmStatic
+    fun checkFileExists(
         packagePath: String,
         className: String,
-    ): Boolean {
-        return File(packagePath, className).exists()
-    }
-
-    /**
-     * 检测文件夹是否存在
-     */
-    private fun checkFolderExists(packagePath: String): Boolean {
-        // println("checkPackagePath:[$packagePath]")
-        return File(packagePath).exists()
-    }
-
-    /**
-     * 创建文件夹
-     */
-    private fun mkdirFolder(packagePath: String) {
-        val file = File(packagePath)
-        if (!file.exists()) {
-            val mkdirs = file.mkdirs()
-            if (mkdirs) {
-                println("folder：$packagePath 创建成功！")
-            } else {
-                println("folder：$packagePath 创建失败！")
+    ): Array<String>? {
+        val folder = File(packagePath)
+        var array: Array<String>? = null
+        folder.listFiles()?.let { fileLists ->
+            for (file in fileLists) {
+                if (file.isDirectory) {
+                } else {
+                    array = Array(2) { "" }
+                    array!![0] = file.name
+                    array!![1] = file.path
+                    return array
+                }
             }
-        } else {
-            println("folder：$packagePath 文件已经存在！")
+        }
+        return array
+    }
+
+    /**
+     * 递归读取本地指定节点下的文件，把所有文件都存储到一个set集合中
+     */
+    @JvmStatic
+    fun readNodeLocalFile(dir: String) {
+        val file = File(dir)
+        if (file.exists()) {
+            if (file.isFile) {
+                val fileName = file.name
+                val realName = fileName.substring(0, fileName.lastIndexOf("."))
+                val realPath =
+                    transitionPackage(file.parent.substring(BASE_OUT_PUT_PATH.length + 1, file.parent.length))
+                // println("开始存储数据：name:[$realName] path:[$realPath]")
+                val bean = AttributeBean()
+                bean.name = realName
+                bean.attributePackage = realPath
+                LOCAL_NODE_FILE_LIST.add(bean)
+            } else if (file.isDirectory) {
+                file.listFiles()?.let { listFiles ->
+                    listFiles.forEach { childFile ->
+                        readNodeLocalFile(childFile.path)
+                    }
+                }
+            }
         }
     }
 }
