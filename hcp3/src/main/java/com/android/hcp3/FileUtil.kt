@@ -262,9 +262,9 @@ object FileUtil {
     ) {
         try {
             BufferedReader(FileReader(oldFilePath)).use { reader ->
-                PrintWriter(FileWriter(newFilePath)).use { writer ->
+                PrintWriter(FileWriter(oldFilePath)).use { writer ->
                     // 读取package 的内容
-                    var packageContent: String
+                    var packageContent: String = ""
                     while ((reader.readLine().also { packageContent = it }) != null) {
                         if (packageContent.startsWith("package ")) {
                             // 写入包名
@@ -274,23 +274,22 @@ object FileUtil {
                     }
 
                     // 读取剩余的行
-                    var line: String?
+                    var line: String = ""
                     while ((reader.readLine().also { line = it }) != null) {
                         writer.println(line) // 写入剩余的行
                     }
                 }
             }
+            val originalFile = File(oldFilePath)
+            val renameTo = originalFile.renameTo(File(newFilePath))
+            // 重命名临时文件
+            if (renameTo) {
+                println("文件移动成功！")
+            } else {
+                println("文件移动失败！")
+            }
         } catch (e: IOException) {
             println(e)
-        }
-
-        val originalFile = File(oldFilePath)
-        val renameTo = originalFile.renameTo(File(newFilePath))
-        // 重命名临时文件
-        if (renameTo) {
-            println("文件移动成功！")
-        } else {
-            println("文件移动失败！")
         }
     }
 }
