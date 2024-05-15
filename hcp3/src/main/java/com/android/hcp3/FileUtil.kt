@@ -19,9 +19,7 @@ import com.android.hcp3.bean.EnumBean
 import com.android.hcp3.bean.StatisticBean
 import java.io.*
 import java.lang.reflect.ParameterizedType
-import java.nio.file.Files
 import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
 
 object FileUtil {
     @JvmStatic
@@ -68,6 +66,19 @@ object FileUtil {
         val filterEnum = filterEnumSize(apiChildGenericTypeList, readLocalEnumFile)
         println("filterEnum:[$filterEnum]")
         // </editor-fold>
+
+        filterEnum.forEach { enum ->
+            // 只有在小雨等于1的时候，才会去移动文件
+            if (enum.count <= 1) {
+                val path = enum.path
+                val parentPath = enum.parentPath
+                val newFileName = getFileNameForPath(path) + ".java"
+                val newFilePath = "$parentPath/$newFileName"
+                println("path:$path   newFilePath:$newFilePath")
+                val newPackage = parentPath.substring(BASE_OUT_PUT_PATH.length + 1, parentPath.length)
+                moveFile(enum.path, newFilePath, transitionPackage(newPackage))
+            }
+        }
     }
 
     /**
@@ -244,7 +255,7 @@ object FileUtil {
      * @param newPackage 新的包名，例如：package com.android.hcp3.temp
      */
     @JvmStatic
-    fun modifyFirstLine(
+    fun moveFile(
         oldFilePath: String,
         newFilePath: String,
         newPackage: String?,
@@ -257,7 +268,7 @@ object FileUtil {
                     while ((reader.readLine().also { packageContent = it }) != null) {
                         if (packageContent.startsWith("package ")) {
                             // 写入包名
-                            writer.println(newPackage)
+                            writer.println("package $newPackage;")
                             break
                         }
                     }
@@ -274,37 +285,12 @@ object FileUtil {
         }
 
         val originalFile = File(oldFilePath)
-        val tempFile = File("$newFilePath.temp")
-
-        // 删除原始文件
-        if (originalFile.delete()) {
-            // 重命名临时文件
-            if (tempFile.renameTo(originalFile)) {
-                println("第一行已成功修改。")
-            } else {
-                println("临时文件无法重命名为原始文件名。")
-            }
+        val renameTo = originalFile.renameTo(File(newFilePath))
+        // 重命名临时文件
+        if (renameTo) {
+            println("文件移动成功！")
         } else {
-            println("原始文件无法删除。")
-        }
-    }
-
-    fun moveFile(localEnum: LinkedHashSet<EnumBean>) {
-        localEnum.forEach { enum ->
-            if (enum.count <= 1) {
-//                val file = File(enum.path)
-                val realName = getFileNameForPath(enum.path)
-                val parentFile = File(enum.parentPath, "$realName.java")
-//                val renameTo = file.renameTo(parentFile)
-//                println("文件：${enum.path} 移动成功：$renameTo ")
-
-                // 目标文件路径
-                val targetPat1h = Paths.get(enum.path)
-                val targetPath = Paths.get(parentFile.path)
-
-                // 移动文件
-                Files.move(targetPat1h, targetPath, StandardCopyOption.REPLACE_EXISTING)
-            }
+            println("文件移动失败！")
         }
     }
 }
