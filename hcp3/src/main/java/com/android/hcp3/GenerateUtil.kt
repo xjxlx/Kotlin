@@ -29,7 +29,7 @@ object GenerateUtil {
     //    private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
     private val SUPER_CLASS_NAME = ClassName.get("com.android.hcp3", "BaseRSIValue")
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
-    private val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
+    val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
 
     private const val DEBUG = false
 
@@ -499,12 +499,22 @@ object GenerateUtil {
         val jarFileName = StringUtil.getPackageSimple(genericPackage)
 
         // 2：对比泛型的类是不是属于Api的泛型类
+        // val bean =
+        //     RSI_TARGET_NODE_LIST.find { filter ->
+        //         lowercase(filter.apiGenericName) ==
+        //             lowercase(
+        //                 jarFileName
+        //             )
+        //     }
+
+        /**
+         * 对比泛型的类型是不是以[RSI_TARGET_NODE_LIST]中的泛型名字作为开头的，这样会把所有相关的类都写入一个包中
+         */
         val bean =
             RSI_TARGET_NODE_LIST.find { filter ->
-                lowercase(filter.apiGenericName) ==
-                    lowercase(
-                        jarFileName
-                    )
+                lowercase(
+                    jarFileName
+                ).startsWith(lowercase(filter.apiGenericName))
             }
 
         // 3：如果是Api的泛型类，则写入到指定的包下，如果没有归属的话，则全部写入到父类的节点下面

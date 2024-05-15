@@ -424,7 +424,7 @@ object ReadJarFile {
      * @param clazz class的对象
      * @return 判断是否是基本数据类型，这里可以手动去添加自己需要的类型
      */
-    private fun isPrimitiveOrWrapper(clazz: Class<*>): Boolean {
+    fun isPrimitiveOrWrapper(clazz: Class<*>): Boolean {
         return clazz.isPrimitive || clazz == Int::class.javaObjectType || clazz == Double::class.javaObjectType ||
             clazz == Boolean::class.javaObjectType || clazz == Char::class.javaObjectType ||
             clazz == Byte::class.javaObjectType || clazz == Short::class.javaObjectType ||
