@@ -354,48 +354,10 @@ object GenerateUtil {
             println("     文件[$genericPackage]存在，直接返回文件信息：$attributeBean")
             return attributeBean
         } else {
-            // 1：从包名中去获取属性的类名
-            val jarFileName = StringUtil.getPackageSimple(genericPackage)
-            println("检查指定类型: $jarFileName")
+            // 1：根据文件的类型去获取文件名字
+            val realFileName = getFileNameForType(genericPackage, genericType)
 
-            // <editor-fold desc="2：查找子节点的Object是不是这个泛型,如果有则写入指定的包下，否则就写入父节点里面"
-            val bean =
-                RSI_TARGET_NODE_LIST.find { filter ->
-                    lowercase(filter.apiGenericName) ==
-                        lowercase(
-                            jarFileName
-                        )
-                }
-
-            /**
-             * 如果bean不为空，则说明当前的泛型是子节点的泛型，可以写入到指定的包下，如果没有归属的话，则全部写入到父类的节点下面
-             */
-            val childNodePackage =
-                if (bean != null) {
-                    bean.apiName
-                } else {
-                    ""
-                }
-            // </editor-fold>
-
-            // <editor-fold desc="3:根据文件的类型去构建不同的文件名字"
-            // 1：如果是枚举类型，则根据规则，在枚举前面加入：[Config.ENUM_PREFIX]
-            // 2:如果是object类型，则根据规则，在后面假如：[Config.OBJECT_SUFFIX]
-            // 3:如果是object类型，同时也是忽略的指定类型的话，则不用后面加入指定规则[Config.OBJECT_SUFFIX]
-            var realFileName = ""
-            if (genericType == OBJECT || genericType == LIST_OBJECT) {
-                realFileName =
-                    if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == genericPackage } != null) {
-                        jarFileName
-                    } else {
-                        "${jarFileName}${Config.OBJECT_SUFFIX}"
-                    }
-            } else if (genericType == ENUM || genericType == LIST_ENUM) {
-                realFileName = "${Config.ENUM_PREFIX}$jarFileName"
-            }
-            // </editor-fold>
-
-            // <editor-fold desc="4：读取本地文件，并查询集合中是否有需要的文件">
+            // <editor-fold desc="2：读取本地文件，并查询集合中是否有需要的文件">
             readNodeLocalFile(
                 lowercase(
                     transitionPath(
@@ -409,23 +371,17 @@ object GenerateUtil {
             val find = LOCAL_NODE_FILE_LIST.find { local -> local.name == realFileName }
             // </editor-fold>
 
-            if (find != null) { // 如果文件存在，则直接返回文件的路径
+            // 3：如果文件存在，则直接返回文件的路径
+            if (find != null) {
                 val attributeBean = AttributeBean()
                 attributeBean.name = find.name
                 attributeBean.attributePackage = find.attributePackage
                 println("     文件[$realFileName]存在，直接返回文件信息：$attributeBean")
                 return attributeBean
             } else {
-                // 5：构建写入文件的package包名
-                val writeFilePackage =
-                    lowercase(
-                        transitionPackage(
-                            Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                                .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(
-                                    childNodePackage
-                                ).toString()
-                        )
-                    )
+                // 4：获取写入文件的路径
+                val writeFilPackage = getWriteFilPackage(genericPackage)
+                val jarFileName = StringUtil.getPackageSimple(genericPackage)
                 // 6:读取jar包中属性的字段
                 mGlobalClassLoad?.let { classLoad ->
                     val readClass = readClass(classLoad, genericPackage)
@@ -433,11 +389,11 @@ object GenerateUtil {
                         if (genericType == OBJECT || genericType == LIST_OBJECT) {
                             println("子对象：[$realFileName]不存在，去创建object对象！")
                             val jarMethodSet = getMethods(readClass, jarFileName)
-                            return generateObject(genericPackage, jarMethodSet, writeFilePackage)
+                            return generateObject(genericPackage, jarMethodSet, writeFilPackage)
                         } else if (genericType == ENUM || genericType == LIST_ENUM) {
                             println("子Enum：[$realFileName]不存在，去创建Enum对象！")
                             val fieldSet = getEnums(readClass, jarFileName)
-                            return generateEnum(genericPackage, fieldSet, writeFilePackage)
+                            return generateEnum(genericPackage, fieldSet, writeFilPackage)
                         }
                     } else {
                         println("     读取到的class:[$genericPackage]为空，请重读取class!")
@@ -488,30 +444,6 @@ object GenerateUtil {
     }
 
     /**
-     * 检测对应的文件是否存在
-     */
-    @JvmStatic
-    fun checkFileExists(
-        packagePath: String,
-        className: String,
-    ): Array<String>? {
-        val folder = File(packagePath)
-        var array: Array<String>? = null
-        folder.listFiles()?.let { fileLists ->
-            for (file in fileLists) {
-                if (file.isDirectory) {
-                } else {
-                    array = Array(2) { "" }
-                    array!![0] = file.name
-                    array!![1] = file.path
-                    return array
-                }
-            }
-        }
-        return array
-    }
-
-    /**
      * 递归读取本地指定节点下的文件，把所有文件都存储到一个set集合中
      */
     @JvmStatic
@@ -536,5 +468,65 @@ object GenerateUtil {
                 }
             }
         }
+    }
+
+    /**
+     * 根据包名和文件的类型去返回文件真实的名字
+     * 1：如果是枚举类型，则根据规则，在枚举前面加入：[Config.ENUM_PREFIX]
+     * 2:如果是object类型，则根据规则，在后面假如：[Config.OBJECT_SUFFIX]
+     * 3:如果是object类型，同时也是忽略的指定类型的话，则不用后面加入指定规则[Config.OBJECT_SUFFIX]
+     */
+    private fun getFileNameForType(
+        genericPackage: String,
+        genericType: ClassTypeEnum,
+    ): String {
+        var realFileName = ""
+        val jarFileName = StringUtil.getPackageSimple(genericPackage)
+        if (genericType == OBJECT || genericType == LIST_OBJECT) {
+            realFileName =
+                if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == genericPackage } != null) {
+                    jarFileName
+                } else {
+                    "${jarFileName}${Config.OBJECT_SUFFIX}"
+                }
+        } else if (genericType == ENUM || genericType == LIST_ENUM) {
+            realFileName = "${Config.ENUM_PREFIX}$jarFileName"
+        }
+        return realFileName
+    }
+
+    /**
+     * 获取写入文件的包路径，例如：
+     */
+    private fun getWriteFilPackage(genericPackage: String): String {
+        // 1：从包名中去获取属性的类名
+        val jarFileName = StringUtil.getPackageSimple(genericPackage)
+
+        // 2：对比泛型的类是不是属于Api的泛型类
+        val bean =
+            RSI_TARGET_NODE_LIST.find { filter ->
+                lowercase(filter.apiGenericName) ==
+                    lowercase(
+                        jarFileName
+                    )
+            }
+
+        // 3：如果是Api的泛型类，则写入到指定的包下，如果没有归属的话，则全部写入到父类的节点下面
+        val childNodePackage =
+            if (bean != null) {
+                bean.apiName
+            } else {
+                ""
+            }
+
+        // 4：使用指定的路径和节点去生成指定位置的包名路径
+        return lowercase(
+            transitionPackage(
+                Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                    .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(
+                        childNodePackage
+                    ).toString()
+            )
+        )
     }
 }
