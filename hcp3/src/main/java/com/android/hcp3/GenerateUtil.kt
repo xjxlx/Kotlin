@@ -73,12 +73,8 @@ object GenerateUtil {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Object类：[$parameterPackage] ------>")
         val parameterInfo = getPackageInfo(parameterPackage)
-        val realFileName =
-            if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == parameterPackage } != null) {
-                parameterInfo[1]
-            } else {
-                parameterInfo[1] + Config.OBJECT_SUFFIX
-            }
+
+        val realFileName = getFileNameForType(parameterPackage, OBJECT)
 
         // 构建类的build对象，用于组装类中的数据
         val classTypeBuild =

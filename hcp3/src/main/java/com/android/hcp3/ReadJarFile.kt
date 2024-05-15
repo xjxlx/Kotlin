@@ -168,7 +168,6 @@ object ReadJarFile {
             if (tag.isNotEmpty()) {
                 println(tag)
             }
-
             // 如果包名是在忽略名单中，则使用本地方法读取
             val bean = IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == packageName }
             if (bean != null) {
@@ -260,7 +259,7 @@ object ReadJarFile {
                             bean.methodName = methodName
                             // println("      method [$attributeName] GenericType:[$genericPath]")
 
-                            // 遍历忽略的集合
+                            // 遍历忽略的集合，如果发现是在忽略集合中的，则替换泛型的路径
                             IGNORE_ARRAY.forEach { ignore ->
                                 if (bean.genericPackage.equals(ignore.genericPackage)) {
                                     bean.genericPackage = ignore.ignorePackage
