@@ -443,7 +443,7 @@ object ReadJarFile {
 
     /** 读取大项中节点的Api信息  */
     fun readApiNodeForParent(globalClassLoad: URLClassLoader) {
-        println("读取主类[$RSI_PARENT_NODE_PATH]下所有的Api信息 --->")
+        // println("读取主类[$RSI_PARENT_NODE_PATH]下所有的Api信息 --->")
         // 使用类加载器，读取父类中主节点的接口变量
         if (apiNodeGenericPath.isNotEmpty()) {
             try {
