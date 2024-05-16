@@ -28,7 +28,7 @@ object Config {
      * 存放JAR包的位置，这个会根据项目的不同，进行一次性的改动，不会随意改动
      * @see {hcp3/src/main/java/com/android/hcp3/jar/}
      */
-    const val BASE_JAR_PATH: String = "hcp3/src/main/java/com/android/hcp3/jar/"
+    const val BASE_JAR_PATH: String = "hcp3/libs/cluster46_12_7_0/"
 
     /**
      *读取JAR包的路径，这个地方一般是死的，不会随意改动

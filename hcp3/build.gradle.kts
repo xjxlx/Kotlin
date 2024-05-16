@@ -8,7 +8,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation(fileTree(mapOf("dir" to "libs/cluster46_12_7_0", "include" to listOf("*.jar"))))
     // 用于生成代码的依赖
     implementation("com.squareup:javapoet:1.13.0")
     implementation("org.projectlombok:lombok:1.18.30")
