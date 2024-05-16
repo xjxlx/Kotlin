@@ -71,12 +71,13 @@ object ReadJarFile {
             while (entries.hasMoreElements()) {
                 val entry = entries.nextElement()
                 val entryName = entry.name
+                // 替换不同平台的分隔符
+                val separator = filterNodePath.replace(File.separator, "/")
                 // 收集指定路径下的所有文件名称
-                if (entryName.startsWith(filterNodePath)) {
+                if (entryName.startsWith(separator)) {
                     // System.out.println("entryName:" + entryName);
                     // 把包名给全部小写，进行比对
                     val parentNodeName = lowercase(RSI_PARENT_NODE_PATH)
-
                     if (entryName.endsWith(".class")) {
                         // String splitClassName = entryName.split(".class")[0];
                         val splitClassName =

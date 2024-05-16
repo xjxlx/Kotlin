@@ -1,5 +1,6 @@
 package com.android.hcp3
 
+import java.io.File
 import java.nio.file.Paths
 
 object StringUtil {
@@ -23,7 +24,7 @@ object StringUtil {
         if (str.isEmpty()) {
             return ""
         }
-        return Paths.get(str).toString().replace("/", ".")
+        return Paths.get(str).toString().replace(File.separator, ".")
     }
 
     /**
@@ -34,7 +35,7 @@ object StringUtil {
         if (str.isEmpty()) {
             return ""
         }
-        return Paths.get(str).toString().replace(".", "/")
+        return Paths.get(str).toString().replace(".", File.separator)
     }
 
     /**
@@ -83,8 +84,9 @@ object StringUtil {
         if (filePath.isEmpty()) {
             return ""
         }
-        if (filePath.contains("/")) {
-            val lastIndexOf = filePath.lastIndexOf("/")
+        val separator = File.separator
+        if (filePath.contains(separator)) {
+            val lastIndexOf = filePath.lastIndexOf(separator)
             val format = filePath.substring(lastIndexOf + 1)
             if (format.contains(".")) {
                 val formatLastIndexOf = format.lastIndexOf(".")
