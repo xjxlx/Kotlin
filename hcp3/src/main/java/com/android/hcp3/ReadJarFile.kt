@@ -505,6 +505,9 @@ object ReadJarFile {
 
     private fun execute() {
         try {
+            val separator = File.separator
+            println("separator:$separator")
+
             // 1：读取指定目标节点下所有的object集合,例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
             val filterNodePath: String =
                 transitionPath(
