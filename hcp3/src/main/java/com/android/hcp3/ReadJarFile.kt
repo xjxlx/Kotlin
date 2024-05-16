@@ -435,7 +435,8 @@ object ReadJarFile {
             clazz == Boolean::class.javaObjectType || clazz == Char::class.javaObjectType ||
             clazz == Byte::class.javaObjectType || clazz == Short::class.javaObjectType ||
             clazz == Long::class.javaObjectType || clazz == Float::class.javaObjectType ||
-            clazz == OffsetTime::class.javaObjectType || clazz == LocalDate::class.javaObjectType ||
+            clazz == String::class.javaObjectType || clazz == OffsetTime::class.javaObjectType ||
+            clazz == LocalDate::class.javaObjectType ||
             (clazz.name == Duration::class.javaObjectType.name)
     }
 
