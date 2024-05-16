@@ -3,7 +3,6 @@ package com.android.hcp3
 import com.android.hcp3.ClassTypeEnum.*
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
-import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.ReadJarFile.IGNORE_ARRAY
@@ -18,9 +17,7 @@ import com.android.hcp3.bean.AttributeBean
 import com.android.hcp3.bean.ObjectBean
 import com.squareup.javapoet.*
 import java.io.File
-import java.io.IOException
 import java.nio.file.Paths
-import java.util.*
 import javax.lang.model.element.Modifier
 
 object GenerateUtil {
@@ -32,31 +29,6 @@ object GenerateUtil {
     val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
 
     private const val DEBUG = false
-
-    @Throws(IOException::class)
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val linkedSetOf = java.util.LinkedHashSet<ObjectBean>()
-        val jarBean = ObjectBean()
-        jarBean.attributeName = "airDistributionPresetList"
-        jarBean.methodName = "getAirDistributionPresetList"
-        jarBean.genericPackage =
-            "java.util.List<de.esolutions.fw.rudi.viwi.service.hvac.v3.AirDistributionPresetObject>"
-        jarBean.classType = LIST_OBJECT
-        linkedSetOf.add(jarBean)
-        generateObject(
-            "de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject",
-            linkedSetOf,
-            lowercase(
-                transitionPackage(
-                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                        .resolve(Paths.get(RSI_PARENT_NODE_PATH))
-                        .resolve(Paths.get(RSI_CHILD_NODE_PATH))
-                        .toString()
-                )
-            )
-        )
-    }
 
     /**
      * @param parameterPackage 构造方法中参数的全路径包名，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject
