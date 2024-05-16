@@ -265,7 +265,7 @@ object FileUtil {
                 if (readLine.startsWith(tag)) {
                     val readLineLength = readLine.length
                     val changContentLength = changContent.length
-                    println("readLineLength:[$readLineLength] changContentLength:[$changContentLength]")
+                    // println("readLineLength:[$readLineLength] changContentLength:[$changContentLength]")
                     val offset = readLineLength - changContentLength
                     if (offset > 0) {
                         random.seek(position)
@@ -291,17 +291,16 @@ object FileUtil {
                         // 写回之前读取的数据
                         random.write(replaceContent.toByteArray())
                     }
-                    println("文件：【$filePath】修改成功！")
                     break
                 }
                 position += readLine.length + System.lineSeparator().length
             }
             random.close()
-            println("文件内容修改成功。")
+            println("【Random】文件[$filePath]的[$tag]内容修改成功。")
             return true
         } catch (e: IOException) {
             println(e)
-            println("文件内容修改失败：$e")
+            println("文件[$filePath]的[$tag]内容修改失败：$e")
         }
         return false
     }
