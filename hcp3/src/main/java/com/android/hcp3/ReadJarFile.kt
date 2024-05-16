@@ -10,7 +10,6 @@ import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.Config.TARGET_JAR_PATH
 import com.android.hcp3.GenerateUtil.generateObject
-import com.android.hcp3.StringUtil.capitalize
 import com.android.hcp3.StringUtil.getPackageSimple
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
@@ -74,21 +73,26 @@ object ReadJarFile {
                 // 收集指定路径下的所有文件名称
                 if (entryName.startsWith(filterNodePath)) {
                     // System.out.println("entryName:" + entryName);
-                    val parentNodeName = capitalize(RSI_PARENT_NODE_PATH)
-                    if (entryName.endsWith(".class") && (entryName.contains("/"))) {
+                    // 把包名给全部小写，进行比对
+                    val parentNodeName = lowercase(RSI_PARENT_NODE_PATH)
+
+                    if (entryName.endsWith(".class")) {
                         // String splitClassName = entryName.split(".class")[0];
                         val splitClassName =
                             entryName.split(".class".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
-                        if ((
-                                (splitClassName.endsWith("Object")) || (splitClassName.endsWith("Enum")) || (
-                                    splitClassName.endsWith(
-                                        parentNodeName
-                                    )
-                                )
-                            )
-                        ) {
+
+                        /**
+                         * 文件读取规则：
+                         * 1：只读取object结尾的文件
+                         * 2：只读取Enum结尾的文件
+                         * 3：只读取指定[RSI_PARENT_NODE_PATH]包名结尾的文件
+                         */
+
+                        val lowercase = lowercase(splitClassName)
+                        val isApiFile = lowercase.endsWith(parentNodeName)
+                        if (((splitClassName.endsWith("Object")) || (splitClassName.endsWith("Enum"))) || (isApiFile)) {
                             // 如果是以父类节点结束的，则保存这个节点的全属性包名
-                            if (splitClassName.endsWith(parentNodeName)) {
+                            if (lowercase.endsWith(parentNodeName)) {
                                 println("当前父类节点下主类: [$splitClassName]")
                                 apiNodeGenericPath = splitClassName
                             }

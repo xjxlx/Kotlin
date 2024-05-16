@@ -52,18 +52,18 @@ object Config {
      *rsi中大项的节点路径，这个每次生成不同的模块，都要进行不同的改动
      * @see {hvac}
      */
-    const val RSI_PARENT_NODE_PATH = "hvac"
+    const val RSI_PARENT_NODE_PATH = "clustersds"
 
     /**
      *rsi中大项的节点的等级，这个每次生成不同的模块，都要进行不同的改动
      * @see {v3}
      */
-    const val RSI_PARENT_NODE_LEVEL = "v3"
+    const val RSI_PARENT_NODE_LEVEL = "v2"
 
     /**
      *rsi中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动
      * @see {generalsettings}
      */
-    const val RSI_CHILD_NODE_PATH = "zones"
+    const val RSI_CHILD_NODE_PATH = "poi"
 //    const val RSI_CHILD_NODE_PATH = "airQualities"
 }
