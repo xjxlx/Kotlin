@@ -17,7 +17,9 @@ import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.StringUtil.transitionPath
 import com.android.hcp3.bean.EnumBean
 import com.android.hcp3.bean.StatisticBean
-import java.io.*
+import java.io.File
+import java.io.IOException
+import java.io.RandomAccessFile
 import java.lang.reflect.ParameterizedType
 import java.nio.file.Paths
 
@@ -76,7 +78,7 @@ object FileUtil {
                 val newFilePath = "$parentPath/$newFileName"
                 println("path:$path   newFilePath:$newFilePath")
                 val newPackage = parentPath.substring(BASE_OUT_PUT_PATH.length + 1, parentPath.length)
-                moveFile(enum.path, newFilePath, transitionPackage(newPackage))
+                changePackage(enum.path, transitionPackage(newPackage))
             }
         }
     }
@@ -250,46 +252,57 @@ object FileUtil {
     }
 
     /**
-     * @param oldFilePath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
-     * @param newFilePath 新的文件路径，例如：hcp3/src/main/java/com/android/hcp3/temp/TestFile.java
+     * @param filePath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
      * @param newPackage 新的包名，例如：package com.android.hcp3.temp
+     */
+    @JvmStatic
+    fun changePackage(
+        filePath: String,
+        newPackage: String,
+    ): Boolean {
+        try {
+            val newContent = "package $newPackage;\r\n"
+            val file = RandomAccessFile(filePath, "rw")
+            // 定位到要修改的行的起始位置
+            var position: Long = 0
+            // 循环读取文件内容
+            var line: String
+            while ((file.readLine().also { line = it }) != null) {
+                if (line.startsWith("package ")) {
+                    // 先删除原来的
+                    file.seek(position)
+                    file.writeBytes(newContent)
+                }
+                position += line.length + System.lineSeparator().length
+            }
+            file.close()
+            println("文件内容修改成功。")
+            return true
+        } catch (e: IOException) {
+            println(e)
+            println("文件内容修改失败：$e")
+        }
+        return false
+    }
+
+    /**
+     * @param oldFilePath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
+     * @param newFilePath 新的文件的路径，例如：hcp3/src/main/java/com/android/hcp3/temp/TestFile.java
      */
     @JvmStatic
     fun moveFile(
         oldFilePath: String,
         newFilePath: String,
-        newPackage: String?,
-    ) {
+    ): Boolean {
         try {
-            BufferedReader(FileReader(oldFilePath)).use { reader ->
-                PrintWriter(FileWriter(oldFilePath)).use { writer ->
-                    // 读取package 的内容
-                    var packageContent: String = ""
-                    while ((reader.readLine().also { packageContent = it }) != null) {
-                        if (packageContent.startsWith("package ")) {
-                            // 写入包名
-                            writer.println("package $newPackage;")
-                            break
-                        }
-                    }
-
-                    // 读取剩余的行
-                    var line: String = ""
-                    while ((reader.readLine().also { line = it }) != null) {
-                        writer.println(line) // 写入剩余的行
-                    }
-                }
-            }
-            val originalFile = File(oldFilePath)
-            val renameTo = originalFile.renameTo(File(newFilePath))
-            // 重命名临时文件
-            if (renameTo) {
-                println("文件移动成功！")
-            } else {
-                println("文件移动失败！")
-            }
+            val oldFile = File(oldFilePath)
+            val newFile = File(Paths.get(newFilePath).resolve(Paths.get(oldFile.name)).toString())
+            val renameTo = oldFile.renameTo(newFile)
+            println("文件移动成功: oldPath:[${oldFile.path}] newFilePath:[${newFile.path}]")
+            return renameTo
         } catch (e: IOException) {
-            println(e)
+            println("文件内容修改失败：$e")
         }
+        return false
     }
 }
