@@ -1,6 +1,7 @@
 package com.android.hcp3
 
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
+import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
 import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
@@ -11,6 +12,7 @@ import com.android.hcp3.ReadJarFile.readApiNodeForParent
 import com.android.hcp3.ReadJarFile.readNeedDependenciesClassName
 import com.android.hcp3.StringUtil.deleteFileFormat
 import com.android.hcp3.StringUtil.getFileNameForPath
+import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.StringUtil.transitionPath
 import com.android.hcp3.bean.EnumBean
@@ -25,65 +27,55 @@ import kotlin.math.abs
 object FileUtil {
     @JvmStatic
     fun main(args: Array<String>) {
-//        val sourceFilePath = "hcp3/src/main/java/com/android/hcp3/TestFile.java" // 源文件路径
-//        val targetFolderPath = "hcp3/src/main/java/com/android/hcp3/temp/TestFile.java" // 目标文件夹路径
-//
-//        // modifyFirstLine(sourceFilePath, targetFolderPath, "package com.android.hcp3.temp;")
-//
-//        // <editor-fold desc="1：读取本地JAR包的Api，返回一个list列表">
-//        readJarApiList()
-//        println("readJarApiFile:[$RSI_TARGET_NODE_LIST]")
-//        // </editor-fold>
-//
-//        // <editor-fold desc="2：读取本地指定目录中的Api的路径，返回一个set集合">
-//        val localTargetPath =
-//            lowercase(
-//                transitionPath(
-//                    Paths.get(BASE_OUT_PUT_PATH)
-//                        .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
-//                        .resolve(Paths.get(RSI_PARENT_NODE_PATH))
-//                        .toString()
-//                )
-//            )
-//        val readLocalApiPath = readLocalApiPath(localTargetPath)
-//        println("readLocalApiPath:[$readLocalApiPath]")
-//        // </editor-fold>
-//
-//        // <editor-fold desc="3：读取本地指定目录中的Api下child的path，返回一个set集合">
-//        val readLocalApiChildPath = readLocalApiChildPath(readLocalApiPath)
-//        // </editor-fold>
-//
-//        // <editor-fold desc="4：读取本地指定目录中的Api下child的泛型，返回一个set集合">
-//        val apiChildGenericTypeList = getApiChildGenericTypeList(readLocalApiChildPath)
-//        println("apiChildGenericTypeList:[$apiChildGenericTypeList]")
-//        // </editor-fold>
-//
-//        // <editor-fold desc="5：读取本地指定目录中的Api下child的泛型，返回一个set集合">
-//        val readLocalEnumFile = readLocalEnumFile(localTargetPath)
-//        println("readLocalEnumFile:[$readLocalEnumFile]")
-//        // </editor-fold>
-//
-//        // <editor-fold desc="6：对比本地的Enum在Api包下的主类中出现的次数">
-//        val filterEnum = filterEnumSize(apiChildGenericTypeList, readLocalEnumFile)
-//        println("filterEnum:[$filterEnum]")
-//        // </editor-fold>
-//
-//        filterEnum.forEach { enum ->
-//            // 只有在小雨等于1的时候，才会去移动文件
-//            if (enum.count <= 1) {
-//                val path = enum.path
-//                val parentPath = enum.parentPath
-//                val newFileName = getFileNameForPath(path) + ".java"
-//                val newFilePath = "$parentPath/$newFileName"
-//                println("path:$path   newFilePath:$newFilePath")
-//                val newPackage = parentPath.substring(BASE_OUT_PUT_PATH.length + 1, parentPath.length)
-//                changePackage(enum.path, transitionPackage(newPackage))
-//            }
-//        }
+        // <editor-fold desc="1：读取本地JAR包的Api，返回一个list列表">
+        readJarApiList()
+        println("readJarApiFile:[$RSI_TARGET_NODE_LIST]")
+        // </editor-fold>
 
-//        val sourceFilePath = "hcp3/src/main/java/com/android/hcp3/TestFile.java" // 源文件路径
-        val sourceFilePath = "hcp3/src/main/java/com/android/hcp3/rsi/hvac/VcSpecialValue.java"; // 源文件路径
-        changePackage(sourceFilePath, "com.android.hcp3.temp")
+        // <editor-fold desc="2：读取本地指定目录中的Api的路径，返回一个set集合">
+        val localTargetPath =
+            lowercase(
+                transitionPath(
+                    Paths.get(BASE_OUT_PUT_PATH)
+                        .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
+                        .resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                        .toString()
+                )
+            )
+        val readLocalApiPath = readLocalApiPath(localTargetPath)
+        println("readLocalApiPath:[$readLocalApiPath]")
+        // </editor-fold>
+
+        // <editor-fold desc="3：读取本地指定目录中的Api下child的path，返回一个set集合">
+        val readLocalApiChildPath = readLocalApiChildPath(readLocalApiPath)
+        // </editor-fold>
+
+        // <editor-fold desc="4：读取本地指定目录中的Api下child的泛型，返回一个set集合">
+        val apiChildGenericTypeList = getApiChildGenericTypeList(readLocalApiChildPath)
+        println("apiChildGenericTypeList:[$apiChildGenericTypeList]")
+        // </editor-fold>
+
+        // <editor-fold desc="5：读取本地指定目录中的Api下child的泛型，返回一个set集合">
+        val readLocalEnumFile = readLocalEnumFile(localTargetPath)
+        println("readLocalEnumFile:[$readLocalEnumFile]")
+        // </editor-fold>
+
+        // <editor-fold desc="6：对比本地的Enum在Api包下的主类中出现的次数">
+        val filterEnum = filterEnumSize(apiChildGenericTypeList, readLocalEnumFile)
+        println("filterEnum:[$filterEnum]")
+        // </editor-fold>
+
+        filterEnum.forEach { enum ->
+            // 只有在小雨等于1的时候，才会去移动文件
+            if (enum.count <= 1) {
+                val parentPath = enum.parentPath
+                val newPackage = parentPath.substring(BASE_OUT_PUT_PATH.length + 1, parentPath.length)
+                // 改变文件的包名
+                changePackage(enum.path, transitionPackage(newPackage))
+                // 移动文件到新的包中去
+                moveFile(enum.path, parentPath)
+            }
+        }
     }
 
     /**
@@ -291,12 +283,13 @@ object FileUtil {
                         random.seek(position)
                         // 写入新数据
                         val originalBuffer = String(buffer)
-                        println("originalBuffer:【$originalBuffer】")
+                        // println("originalBuffer:【$originalBuffer】")
                         val replaceContent = originalBuffer.replace(readLine, "")
-                        println("replaceContent:【$replaceContent】")
+                        // println("replaceContent:【$replaceContent】")
                         random.write(realContent.toByteArray())
                         // 写回之前读取的数据
                         random.write(replaceContent.toByteArray())
+                        println("文件：$filePath 包名修改成功！")
                     }
                     break
                 }
@@ -314,7 +307,7 @@ object FileUtil {
 
     /**
      * @param oldFilePath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
-     * @param newFilePath 新的文件的路径，例如：hcp3/src/main/java/com/android/hcp3/temp/TestFile.java
+     * @param newFilePath 新的文件的路径，例如：hcp3/src/main/java/com/android/hcp3/temp
      */
     @JvmStatic
     fun moveFile(
