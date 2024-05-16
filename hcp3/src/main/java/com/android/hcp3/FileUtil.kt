@@ -99,7 +99,7 @@ object FileUtil {
                 // 4：读取父节点下所有的api方法，获取所有api的方法的名字以及返回类型的全路径包名
                 readApiNodeForParent(it)
                 // 关闭ClassLoader释放资源
-                // it.close()
+                it.close()
             }
         } catch (e: Exception) {
             e.printStackTrace()
