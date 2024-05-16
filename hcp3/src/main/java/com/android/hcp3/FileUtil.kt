@@ -269,11 +269,10 @@ object FileUtil {
             var position: Long = 0
             var readLine: String
             while ((random.readLine().also { readLine = it }) != null) {
-                println("readLine:$readLine position:$position")
                 if (readLine.startsWith("package ")) {
                     val readLineLength = readLine.length
                     val newPackageLength = realContent.length
-                    println("readLineLength:$readLineLength newPackageLength:$newPackageLength")
+                    println("readLineLength:[$readLineLength] newPackageLength:[$newPackageLength]")
                     val offset = readLineLength - newPackageLength
                     if (offset > 0) {
                         random.seek(position)
@@ -291,9 +290,14 @@ object FileUtil {
                         // 将文件指针移回插入位置
                         random.seek(position)
                         // 写入新数据
+                        val originalBuffer = String(buffer)
+                        println("originalBuffer:【$originalBuffer】")
+                        val replaceContent = originalBuffer.replace(readLine, "")
+                        println("replaceContent:【$replaceContent】")
                         random.write(realContent.toByteArray())
                         // 写回之前读取的数据
-                        random.write(buffer)
+                        random.write(replaceContent.toByteArray())
+                        break
                     }
                 }
                 position += readLine.length + System.lineSeparator().length
