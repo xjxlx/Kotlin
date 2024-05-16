@@ -463,8 +463,8 @@ object ReadJarFile {
                             for (apiChildMethod in apiClass.declaredMethods) {
                                 // 过滤api中的方法
                                 //    1:方法不能是default的类型
-                                //    2:泛型的类型不能是list，必须是Class类型的
                                 val default = apiChildMethod.isDefault
+                                //    2:泛型的类型不能是list，必须是Class类型的
                                 val isClass = apiChildMethod.returnType is Class<*>
                                 if ((!default) && isClass) {
                                     val genericReturnType = apiChildMethod.genericReturnType
