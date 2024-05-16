@@ -81,8 +81,8 @@ object FileUtil {
 //            }
 //        }
 
-        val sourceFilePath = "hcp3/src/main/java/com/android/hcp3/TestFile.java" // 源文件路径
-        //    String sourceFilePath = "hcp3/src/main/java/com/android/hcp3/rsi/hvac/VcSpecialValue.java"; // 源文件路径
+//        val sourceFilePath = "hcp3/src/main/java/com/android/hcp3/TestFile.java" // 源文件路径
+        val sourceFilePath = "hcp3/src/main/java/com/android/hcp3/rsi/hvac/VcSpecialValue.java"; // 源文件路径
         changePackage(sourceFilePath, "com.android.hcp3.temp")
     }
 
@@ -297,8 +297,8 @@ object FileUtil {
                         random.write(realContent.toByteArray())
                         // 写回之前读取的数据
                         random.write(replaceContent.toByteArray())
-                        break
                     }
+                    break
                 }
                 position += readLine.length + System.lineSeparator().length
             }
