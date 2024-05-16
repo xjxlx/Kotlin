@@ -208,9 +208,9 @@ object FileUtil {
     /**
      * 根据指定的主目录，获取父类节点下的api路径
      */
-    private fun readLocalEnumFile(dir: String): LinkedHashSet<EnumBean> {
+    private fun readLocalEnumFile(dirPath: String): LinkedHashSet<EnumBean> {
         val set = LinkedHashSet<EnumBean>()
-        val dir = File(dir)
+        val dir = File(dirPath)
         if (dir.exists() && dir.isDirectory) {
             dir.listFiles()?.let { listFiles ->
                 listFiles.forEach { childFile ->
