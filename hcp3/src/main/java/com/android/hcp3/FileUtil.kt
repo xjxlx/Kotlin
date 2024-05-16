@@ -261,19 +261,29 @@ object FileUtil {
         newPackage: String,
     ): Boolean {
         try {
-            val newContent = "package $newPackage;\r\n"
+            val newPackage = "package $newPackage;"
             val file = RandomAccessFile(filePath, "rw")
             // 定位到要修改的行的起始位置
             var position: Long = 0
             // 循环读取文件内容
-            var line: String
-            while ((file.readLine().also { line = it }) != null) {
-                if (line.startsWith("package ")) {
+            var readLine: String
+            while ((file.readLine().also { readLine = it }) != null) {
+                if (readLine.startsWith("package ")) {
                     // 先删除原来的
                     file.seek(position)
-                    file.writeBytes(newContent)
+                    file.writeBytes(newPackage)
+                    val readLineLength = readLine.length
+                    val newPackageLength = newPackage.length
+                    println("readLineLength:$readLineLength newPackageLength:$newPackageLength")
+                    val offset = readLineLength - newPackageLength
+                    if (offset > 0) {
+                        Array(offset) { " " }.forEach { item ->
+                            file.writeBytes(item)
+                        }
+                    }
+                    break
                 }
-                position += line.length + System.lineSeparator().length
+                position += readLine.length + System.lineSeparator().length
             }
             file.close()
             println("文件内容修改成功。")
