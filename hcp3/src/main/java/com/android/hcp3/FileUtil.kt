@@ -282,6 +282,18 @@ object FileUtil {
                             random.writeBytes(item)
                         }
                     } else if (offset < 0) {
+                        // 记录当前文件长度，用于后续处理
+                        val fileLength: Long = random.length()
+                        // 将文件指针移到插入位置后，开始读取剩余数据到缓冲区
+                        val buffer = ByteArray((fileLength - position).toInt())
+                        random.seek(position)
+                        random.read(buffer)
+                        // 将文件指针移回插入位置
+                        random.seek(position)
+                        // 写入新数据
+                        random.write(realContent.toByteArray())
+                        // 写回之前读取的数据
+                        random.write(buffer)
                     }
                 }
                 position += readLine.length + System.lineSeparator().length
