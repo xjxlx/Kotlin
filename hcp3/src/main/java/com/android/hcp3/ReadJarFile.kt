@@ -21,6 +21,7 @@ import java.io.File
 import java.io.IOException
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.net.URI
 import java.net.URL
 import java.net.URLClassLoader
 import java.nio.file.Paths
@@ -449,6 +450,10 @@ object ReadJarFile {
                 for (apiMethod in parentNodeClass.declaredMethods) {
                     val apiMethodName = apiMethod.name
                     if (apiMethodName != "getResources") {
+                        if (apiMethodName == "poi") {
+                            println("--------------------------------")
+                        }
+                        println("apiMethodName:$apiMethodName")
                         val apiRunTypePath = apiMethod.returnType.name // 父类中Api方法的返回类型，这里是全路径的包名
                         // 根据api方法的返回类型的path，去反射获取的Api对象的class对象
                         val apiClass = readClass(globalClassLoad, apiRunTypePath)
@@ -457,34 +462,32 @@ object ReadJarFile {
                             // 获取api类中所有的方法
                             for (apiChildMethod in apiClass.declaredMethods) {
                                 // 过滤api中的方法
-                                //    1:返回值类型必须是io.reactivex.rxjava3.core.Observable开头的方法
-                                //    2:方法不能是default的类型
-                                //    3:泛型的参数不能是list，必须是Class类型的
-                                if ((apiChildMethod.returnType.name.equals("io.reactivex.rxjava3.core.Observable")) &&
-                                    (!apiChildMethod.isDefault)
-                                ) {
-                                    val apiChildGenericReturnType = apiChildMethod.genericReturnType
-                                    if (apiChildGenericReturnType is ParameterizedType) {
-                                        val actualTypeArguments = apiChildGenericReturnType.actualTypeArguments
+                                //    1:方法不能是default的类型
+                                //    2:泛型的类型不能是list，必须是Class类型的
+                                val default = apiChildMethod.isDefault
+                                val isClass = apiChildMethod.returnType is Class<*>
+                                if ((!default) && isClass) {
+                                    val genericReturnType = apiChildMethod.genericReturnType
+                                    if (genericReturnType is ParameterizedType) {
+                                        val actualTypeArguments = genericReturnType.actualTypeArguments
                                         if (actualTypeArguments.isNotEmpty()) {
+                                            //    3:泛型的类型不能是URI类型的
                                             val argument = actualTypeArguments[0]
-                                            if (argument is Class<*>) {
-                                                val typeName = argument.typeName
-                                                //   println(
-                                                //       "      Api节点[$apiMethodName]" +
-                                                //        "\r\n          方法类型是：[$apiChildGenericReturnType]" +
-                                                //        "\r\n          泛型的类型是:[$typeName]"
-                                                //   )
-                                                val apiNodeBean = ApiNodeBean()
-                                                apiNodeBean.apiName = apiMethodName // 父类中api方法的名字
-                                                apiNodeBean.apiReturnTypePath = apiRunTypePath // 父类中api返回类型的全路径包名
-                                                apiNodeBean.apiGenericName =
-                                                    getPackageSimple(typeName) // api类中匹配方法泛型的名字
-                                                apiNodeBean.apiGenericPath = typeName
+                                            if (argument != URI::class.javaObjectType) {
+                                                if (argument is Class<*>) {
+                                                    val typeName = argument.typeName
+                                                    val apiNodeBean = ApiNodeBean()
+                                                    apiNodeBean.apiName = apiMethodName // 父类中api方法的名字
+                                                    apiNodeBean.apiReturnTypePath =
+                                                        apiRunTypePath // 父类中api返回类型的全路径包名
+                                                    apiNodeBean.apiGenericName =
+                                                        getPackageSimple(typeName) // api类中匹配方法泛型的名字
+                                                    apiNodeBean.apiGenericPath = typeName
 
-                                                tempApiMethodList.add(apiNodeBean)
-                                                if (tempApiMethodList.size > 1) {
-                                                    throw IllegalStateException("当前节点[$apiMethodName]匹配到的方法过多，请重新检查匹配方法的规则！")
+                                                    tempApiMethodList.add(apiNodeBean)
+                                                    if (tempApiMethodList.size > 1) {
+                                                        throw IllegalStateException("当前节点[$apiMethodName]匹配到的方法过多，请重新检查匹配方法的规则！")
+                                                    }
                                                 }
                                             }
                                         }
