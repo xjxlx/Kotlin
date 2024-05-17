@@ -25,7 +25,7 @@ object RandomAccessFileUtil {
                     println("line:$line   changePosition:$changePosition")
                     if (line.startsWith("package ")) {
                         val length = random.length()
-                        val content = "package com.android.helper.xjx.test;"
+                        val content = "package com.android;"
 
                         // 1：先跳到指定的位置，开始读取文件剩余的内容
                         random.seek(changePosition)
@@ -37,10 +37,17 @@ object RandomAccessFileUtil {
                         val originalBuffer = String(byteArray)
                         println("【originalBuffer】:$originalBuffer")
 
+                        val offset = line.length - content.length
+                        println("offset:$offset")
+
                         // 4：把指针设置到从改变的位置
                         random.seek(changePosition)
                         random.write(content.toByteArray(charset = Charsets.UTF_8))
 
+                        // 5：跳过指定数量的字符，在往后面写入，避免数据过短，导致后面的数据会压上来
+                        if (offset > 0) {
+                            random.skipBytes(offset)
+                        }
                         // 删除原来的数据
                         val replace = originalBuffer.replace(line, "")
                         random.write(replace.toByteArray())
