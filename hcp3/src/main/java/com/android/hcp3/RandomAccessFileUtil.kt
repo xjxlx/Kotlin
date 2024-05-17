@@ -25,7 +25,7 @@ object RandomAccessFileUtil {
                     println("line:$line   changePosition:$changePosition")
                     if (line.startsWith("package ")) {
                         val length = random.length()
-                        val content = "package com.android;"
+                        val content = "package com.android.helper.test;"
 
                         // 1：先跳到指定的位置，开始读取文件剩余的内容
                         random.seek(changePosition)
