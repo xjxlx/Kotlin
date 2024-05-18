@@ -19,8 +19,8 @@ object RandomAccessFileUtil {
 
     /**
      * @param filePath 指定文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
-     * @param deleteContent 指定需要删除的内容数组
-     * @param newContent 需要被替换的内容数组
+     * @param deleteContent 指定需要删除的内容
+     * @param newContent 需要被替换的内容
      */
     @JvmStatic
     fun changeFileContent(
