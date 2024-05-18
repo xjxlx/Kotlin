@@ -136,7 +136,7 @@ object RandomAccessFileUtil {
                         // 9：把指针设置到从改变的位置，并写入内容
                         random.seek(insertBeforePosition)
                         // 10：删除多余的占位符，避免出现空格
-                        random.setLength(fileLength - deleteContent.length)
+                        random.setLength(fileLength - deleteContent.length - 1)
                         // 11：替换掉需要删除的指定内容
                         val replace = residueContent.replace(line, "")
                         // println("replace:$replace")

@@ -17,6 +17,8 @@ import lombok.ToString;
 public class ValueIndicationObjectEntity extends BaseRSIValue {
   private final List<VcSpecialIndicationValue> specialStateConfiguration;
 
+  private final VcValueIndicationObjectUnitDensityEnum unitDensity;
+
   private final Float currentValue;
 
   private final VcSpecialIndicationValue specialState;
@@ -31,8 +33,6 @@ public class ValueIndicationObjectEntity extends BaseRSIValue {
 
   private final VcValueIndicationObjectUnitPercentEnum unitPercent;
 
-  private final VcValueIndicationObjectUnitDensityEnum unitDensity;
-
   private final VcRestrictionReason restrictionReason;
 
   public ValueIndicationObjectEntity(ValueIndicationObject object) {
@@ -46,6 +46,8 @@ public class ValueIndicationObjectEntity extends BaseRSIValue {
                         .map(VcSpecialIndicationValue::fromRSI)
                         .collect(Collectors.toList()))
             .orElse(null);
+    this.unitDensity =
+        object.getUnitDensity().map(VcValueIndicationObjectUnitDensityEnum::fromRSI).orElse(null);
     this.currentValue = object.getCurrentValue().orElse(null);
     this.specialState =
         object.getSpecialState().map(VcSpecialIndicationValue::fromRSI).orElse(null);
@@ -55,8 +57,6 @@ public class ValueIndicationObjectEntity extends BaseRSIValue {
     this.resolution = object.getResolution().orElse(null);
     this.unitPercent =
         object.getUnitPercent().map(VcValueIndicationObjectUnitPercentEnum::fromRSI).orElse(null);
-    this.unitDensity =
-        object.getUnitDensity().map(VcValueIndicationObjectUnitDensityEnum::fromRSI).orElse(null);
     this.restrictionReason =
         object.getRestrictionReason().map(VcRestrictionReason::fromRSI).orElse(null);
   }

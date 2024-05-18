@@ -19,8 +19,6 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class GeneralSettingObjectEntity extends BaseRSIValue {
-  private final SwitchControlObjectEntity steeringWheelHeatingIntensityToggleButton;
-
   private final ValueControlObjectEntity airCirculationSensitivity;
 
   private final SwitchControlObjectEntity airCirculationSmartSystem;
@@ -126,13 +124,10 @@ public class GeneralSettingObjectEntity extends BaseRSIValue {
 
   private final SwitchControlObjectEntity sync;
 
+  private final SwitchControlObjectEntity steeringWheelHeatingIntensityToggleButton;
+
   public GeneralSettingObjectEntity(GeneralSettingObject object) {
     super(object);
-    this.steeringWheelHeatingIntensityToggleButton =
-        object
-            .getSteeringWheelHeatingIntensityToggleButton()
-            .map(SwitchControlObjectEntity::new)
-            .orElse(null);
     this.airCirculationSensitivity =
         object.getAirCirculationSensitivity().map(ValueControlObjectEntity::new).orElse(null);
     this.airCirculationSmartSystem =
@@ -272,5 +267,10 @@ public class GeneralSettingObjectEntity extends BaseRSIValue {
     this.defrost = object.getDefrost().map(SwitchControlObjectEntity::new).orElse(null);
     this.fanOnly = object.getFanOnly().map(SwitchControlObjectEntity::new).orElse(null);
     this.sync = object.getSync().map(SwitchControlObjectEntity::new).orElse(null);
+    this.steeringWheelHeatingIntensityToggleButton =
+        object
+            .getSteeringWheelHeatingIntensityToggleButton()
+            .map(SwitchControlObjectEntity::new)
+            .orElse(null);
   }
 }

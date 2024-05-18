@@ -16,9 +16,9 @@ import lombok.ToString;
 public class SwitchControlObjectEntity extends BaseRSIValue {
   private final List<VcSwitchValue> switchValueConfiguration;
 
-  private final VcRestrictionReason restrictionReason;
-
   private final VcSwitchValue switchValue;
+
+  private final VcRestrictionReason restrictionReason;
 
   public SwitchControlObjectEntity(SwitchControlObject object) {
     super(object);
@@ -27,8 +27,8 @@ public class SwitchControlObjectEntity extends BaseRSIValue {
             .getSwitchValueConfiguration()
             .map(list -> list.stream().map(VcSwitchValue::fromRSI).collect(Collectors.toList()))
             .orElse(null);
+    this.switchValue = object.getSwitchValue().map(VcSwitchValue::fromRSI).orElse(null);
     this.restrictionReason =
         object.getRestrictionReason().map(VcRestrictionReason::fromRSI).orElse(null);
-    this.switchValue = object.getSwitchValue().map(VcSwitchValue::fromRSI).orElse(null);
   }
 }
