@@ -37,41 +37,34 @@ object RandomAccessFileUtil {
             val random = RandomAccessFile(filePath, "rw")
             var readLine: String? = null
             var readBeforePosition: Long = 0
+            var readAfterPosition: Long = 0
 
             // 2：循环读取文件每一行的数据
             while ((random.readLine().also { readLine = it }) != null) {
-                // println("line: $readLine insertBeforePosition:$insertBeforePosition")
+                readAfterPosition = random.filePointer
+                // println("line: $readLine before:[$readBeforePosition] After:[$readAfterPosition]")
                 readLine?.let { line ->
                     // 3：排查指定的节点，才开始后续的操作
                     if (line == deleteContent) {
                         // 4：读取文件的整个长度，用于后续读取和截取的操作
                         val fileLength = random.length()
-                        // 5：对比当前匹配到内容的长度和需要替换内容的长度的差值
-                        val offset = deleteContent.length - newContent.length
-                        // println("offset:$offset")
-
-                        // 5：跳转指针到指定的未发货子，从此处开始读取剩余的内容
-                        random.seek(readBeforePosition)
-                        // 6：设置一个指定长度的字节数组，长度 = 文件总长度 - 匹配到的位置
-                        val byteArray = ByteArray((fileLength - readBeforePosition).toInt())
+                        // 5：把指针条跳转到当前行读取结束的地方，开始读取剩余的内容
+                        random.seek(readAfterPosition)
+                        // 6：设置一个指定长度的字节数组，长度 = 文件总长度 - 匹配到的结束位置
+                        val byteArray = ByteArray((fileLength - readAfterPosition).toInt())
                         // 7：读取这个字节数组，把剩余的内容放到字节数组中
                         random.read(byteArray)
-                        // 8：把剩余字节数组转换为字符串
-                        val residueContent = String(byteArray)
-                        // println("【residueContent】:residueContent")
 
-                        // 9：把指针设置到从改变的位置，并写入内容
+                        // 9：把指针跳转到指定行开始的position，从这个地方开始插入
                         random.seek(readBeforePosition)
+                        // 10：写入需要替换的内容
                         random.write(newContent.toByteArray(charset = Charsets.UTF_8))
-                        // 10：如果被修改的内容小于被替换掉的内容长度，则需要缩短整个文件的长度，不然会出现多出来一部分内容没有被替换掉
-                        if (offset > 0) {
-                            random.setLength(fileLength - offset)
-                        }
-                        // 11：替换掉需要删除的指定内容
-                        val replace = residueContent.replace(line, "")
-                        // println("replace:$replace")
-                        // 12：把剩下的数据给重新写入
-                        random.write(replace.toByteArray())
+
+                        // 11：跳转到匹配结束的地方，从结束的位置开始读写剩余的内容
+                        random.seek(readAfterPosition)
+                        // 设置剩余写入内容的长度 length = file.length - after.position
+                        random.setLength(fileLength - readAfterPosition)
+                        random.write(byteArray)
                         println("【Random-Change】文件[$filePath]的[$deleteContent]内容修改成功。")
                     }
                     // [must] 必须把这个放到读取的后面，这样才能从指定的位置插入
