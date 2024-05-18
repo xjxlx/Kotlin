@@ -133,10 +133,10 @@ object RandomAccessFileUtil {
                         // 8：把剩余字节数组转换为字符串
                         val residueContent = String(byteArray)
                         // println("【residueContent】:residueContent")
-                        // 9：把指针设置到从改变的位置，并写入内容
-                        random.seek(insertBeforePosition)
+                        // 9：把指针设置到从改变的位置，因为要删除一整行，所以要删除一个换行符，也就是整体要往前挪一行
+                        random.seek(insertBeforePosition - System.lineSeparator().length)
                         // 10：删除多余的占位符，避免出现空格
-                        random.setLength(fileLength - deleteContent.length - 1)
+                        random.setLength(fileLength - deleteContent.length)
                         // 11：替换掉需要删除的指定内容
                         val replace = residueContent.replace(line, "")
                         // println("replace:$replace")
