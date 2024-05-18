@@ -13,7 +13,8 @@ object RandomAccessFileUtil {
         val deleteArray = arrayOf("package $packageName;", "// item = 3")
         val newArray = arrayOf("package com.xjx.cccc.ddd.ccc.aaa;", "// item = 4")
         val path = "hcp3/src/main/java/com/android/hcp3/TestFile.java"
-        changeFileContent(path, deleteArray, newArray)
+//        changeFileContent(path, deleteArray, newArray)
+        changeFileContent(path, "package $packageName;", "package com.xjx.cccc.ddd.ccc.aaa;")
     }
 
     /**
@@ -24,33 +25,20 @@ object RandomAccessFileUtil {
     @JvmStatic
     fun changeFileContent(
         filePath: String,
-        deleteArray: Array<String>,
-        newArray: Array<String>,
+        deleteContent: String,
+        newContent: String,
     ): Boolean {
         try {
             // 1:设置文件的格式为【读写】
             val random = RandomAccessFile(filePath, "rw")
             var readLine: String? = null
             var insertBeforePosition: Long = 0
-            var itemIndex = 0
-            val deleteList = deleteArray.toMutableList()
-            val newList = newArray.toMutableList()
 
             // 2：循环读取文件每一行的数据
             while ((random.readLine().also { readLine = it }) != null) {
                 println("line: $readLine insertBeforePosition:$insertBeforePosition")
                 readLine?.let { line ->
-                    // 每次都要删掉一个数据，避免后续的数据相同
-                    if (itemIndex > 0) {
-                        deleteList.removeAt(0)
-                        newList.removeAt(0)
-                    }
-
-                    // println("line:$line   insertBeforePosition:$insertBeforePosition")
-                    println("itemIndex:$itemIndex deleteList:$deleteList   newList:$newList")
                     // 3：排查指定的节点，才开始后续的操作
-                    val deleteContent = deleteList[itemIndex]
-                    val newContent = deleteList[itemIndex]
                     if (line == deleteContent) {
                         // 4：读取文件的整个长度，用于后续读取和截取的操作
                         val fileLength = random.length()
@@ -70,7 +58,7 @@ object RandomAccessFileUtil {
 
                         // 9：把指针设置到从改变的位置，并写入内容
                         random.seek(insertBeforePosition)
-                        random.write(newList[itemIndex].toByteArray(charset = Charsets.UTF_8))
+                        random.write(newContent.toByteArray(charset = Charsets.UTF_8))
                         // 10：如果被修改的内容小于被替换掉的内容长度，则需要缩短整个文件的长度，不然会出现多出来一部分内容没有被替换掉
                         if (offset > 0) {
                             random.setLength(fileLength - offset)
@@ -80,7 +68,6 @@ object RandomAccessFileUtil {
                         // println("replace:$replace")
                         // 12：把剩下的数据给重新写入
                         random.write(replace.toByteArray())
-                        itemIndex += 1
                         println("【Random】文件[$filePath]的[$deleteContent]内容修改成功。")
                     }
                     // [must] 必须把这个放到读取的后面，这样才能从指定的位置插入
