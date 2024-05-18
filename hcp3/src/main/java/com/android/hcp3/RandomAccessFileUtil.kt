@@ -115,6 +115,7 @@ object RandomAccessFileUtil {
             val random = RandomAccessFile(filePath, "rw")
             var readLine: String? = null
             var insertBeforePosition: Long = 0
+            val lineSeparatorLength = System.lineSeparator().length
 
             // 2：循环读取文件每一行的数据
             while ((random.readLine().also { readLine = it }) != null) {
@@ -134,9 +135,9 @@ object RandomAccessFileUtil {
                         val residueContent = String(byteArray)
                         // println("【residueContent】:residueContent")
                         // 9：把指针设置到从改变的位置，因为要删除一整行，所以要删除一个换行符，也就是整体要往前挪一行
-                        random.seek(insertBeforePosition - System.lineSeparator().length)
-                        // 10：删除多余的占位符，避免出现空格
-                        random.setLength(fileLength - deleteContent.length)
+                        random.seek(insertBeforePosition - lineSeparatorLength)
+                        // 10：删除多余的占位符，避免出现空格，这里的长度也要减去一个换行符，避免内容会往上移
+                        random.setLength(fileLength - deleteContent.length - lineSeparatorLength)
                         // 11：替换掉需要删除的指定内容
                         val replace = residueContent.replace(line, "")
                         // println("replace:$replace")
@@ -144,9 +145,9 @@ object RandomAccessFileUtil {
                         random.write(replace.toByteArray())
                         println("【Random-Delete】文件[$filePath]的[$deleteContent]内容删除成功。")
                     }
-                    // [must] 必须把这个放到读取的后面，这样才能从指定的位置插入
-                    insertBeforePosition = random.filePointer
                 }
+                // [must] 必须把这个放到读取的后面，这样才能从指定的位置删除
+                insertBeforePosition = random.filePointer
             }
             random.close()
             return true
