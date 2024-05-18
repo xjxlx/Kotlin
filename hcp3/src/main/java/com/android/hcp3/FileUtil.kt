@@ -12,6 +12,7 @@ import com.android.hcp3.ReadJarFile.readApiNodeForParent
 import com.android.hcp3.ReadJarFile.readNeedDependenciesClassName
 import com.android.hcp3.StringUtil.deleteFileFormat
 import com.android.hcp3.StringUtil.getFileNameForPath
+import com.android.hcp3.StringUtil.getPackageForProjectPath
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.StringUtil.transitionPath
@@ -19,10 +20,8 @@ import com.android.hcp3.bean.EnumBean
 import com.android.hcp3.bean.StatisticBean
 import java.io.File
 import java.io.IOException
-import java.io.RandomAccessFile
 import java.lang.reflect.ParameterizedType
 import java.nio.file.Paths
-import kotlin.math.abs
 
 object FileUtil {
     @JvmStatic
@@ -73,7 +72,7 @@ object FileUtil {
                 // 改变文件的包名
                 changePackage(enum.path, transitionPackage(newPackage))
                 // 移动文件到新的包中去
-                moveFile(enum.path, parentPath)
+//                moveFile(enum.path, parentPath)
             }
         }
     }
@@ -248,65 +247,6 @@ object FileUtil {
 
     /**
      * @param filePath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
-     * @param tag 指定这个节点才会去遍历
-     * @param changContent 被替换的内容
-     */
-    @JvmStatic
-    fun randomAccess(
-        filePath: String,
-        tag: String,
-        changContent: String,
-    ): Boolean {
-        try {
-            val random = RandomAccessFile(filePath, "rw")
-            var position: Long = 0
-            var readLine: String
-            while ((random.readLine().also { readLine = it }) != null) {
-                if (readLine.startsWith(tag)) {
-                    val readLineLength = readLine.length
-                    val changContentLength = changContent.length
-                    // println("readLineLength:[$readLineLength] changContentLength:[$changContentLength]")
-                    val offset = readLineLength - changContentLength
-                    if (offset > 0) {
-                        random.seek(position)
-                        random.write(changContent.toByteArray())
-                        Array(abs(offset)) { " " }.forEach { item ->
-                            random.writeBytes(item)
-                        }
-                    } else if (offset <= 0) {
-                        // 记录当前文件长度，用于后续处理
-                        val fileLength: Long = random.length()
-                        // 将文件指针移到插入位置后，开始读取剩余数据到缓冲区
-                        val buffer = ByteArray((fileLength - position).toInt())
-                        random.seek(position)
-                        random.read(buffer)
-                        // 将文件指针移回插入位置
-                        random.seek(position)
-                        // 写入新数据
-                        val originalBuffer = String(buffer)
-                        // println("originalBuffer:【$originalBuffer】")
-                        val replaceContent = originalBuffer.replace(readLine, "")
-                        // println("replaceContent:【$replaceContent】")
-                        random.write(changContent.toByteArray())
-                        // 写回之前读取的数据
-                        random.write(replaceContent.toByteArray())
-                    }
-                    break
-                }
-                position += readLine.length + System.lineSeparator().length
-            }
-            random.close()
-            println("【Random】文件[$filePath]的[$tag]内容修改成功。")
-            return true
-        } catch (e: IOException) {
-            println(e)
-            println("文件[$filePath]的[$tag]内容修改失败：$e")
-        }
-        return false
-    }
-
-    /**
-     * @param filePath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
      * @param packageContent 被替换的内容包,不包含; 例如："com.xjx.android"
      */
     @JvmStatic
@@ -314,7 +254,8 @@ object FileUtil {
         filePath: String,
         packageContent: String,
     ): Boolean {
-        return randomAccess(filePath, "package ", "package $packageContent;")
+        val packageName = Class.forName(getPackageForProjectPath(filePath)).packageName
+        return RandomAccessFileUtil.changeFileContent(filePath, "package $packageName;", "package $packageContent;")
     }
 
     /**
@@ -326,55 +267,7 @@ object FileUtil {
         filePath: String,
         importContent: String,
     ): Boolean {
-        return randomAccess(filePath, "import ", "import $importContent")
-
-//        try {
-//            val realContent = "package $newContent;"
-//            val random = RandomAccessFile(filePath, "rw")
-//            var position: Long = 0
-//            var readLine: String
-//            while ((random.readLine().also { readLine = it }) != null) {
-//                if (readLine.startsWith("package ")) {
-//                    val readLineLength = readLine.length
-//                    val newPackageLength = realContent.length
-//                    println("readLineLength:[$readLineLength] newPackageLength:[$newPackageLength]")
-//                    val offset = readLineLength - newPackageLength
-//                    if (offset > 0) {
-//                        random.seek(position)
-//                        random.write(realContent.toByteArray())
-//                        Array(abs(offset)) { " " }.forEach { item ->
-//                            random.writeBytes(item)
-//                        }
-//                    } else if (offset < 0) {
-//                        // 记录当前文件长度，用于后续处理
-//                        val fileLength: Long = random.length()
-//                        // 将文件指针移到插入位置后，开始读取剩余数据到缓冲区
-//                        val buffer = ByteArray((fileLength - position).toInt())
-//                        random.seek(position)
-//                        random.read(buffer)
-//                        // 将文件指针移回插入位置
-//                        random.seek(position)
-//                        // 写入新数据
-//                        val originalBuffer = String(buffer)
-//                        // println("originalBuffer:【$originalBuffer】")
-//                        val replaceContent = originalBuffer.replace(readLine, "")
-//                        // println("replaceContent:【$replaceContent】")
-//                        random.write(realContent.toByteArray())
-//                        // 写回之前读取的数据
-//                        random.write(replaceContent.toByteArray())
-//                        println("文件：$filePath 包名修改成功！")
-//                    }
-//                    break
-//                }
-//                position += readLine.length + System.lineSeparator().length
-//            }
-//            random.close()
-//            println("文件内容修改成功。")
-//            return true
-//        } catch (e: IOException) {
-//            println(e)
-//            println("文件内容修改失败：$e")
-//        }
+//        return randomAccess(filePath, "import ", "import $importContent")
         return false
     }
 
