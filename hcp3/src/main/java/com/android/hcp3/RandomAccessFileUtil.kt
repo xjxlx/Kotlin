@@ -2,19 +2,30 @@ package com.android.hcp3
 
 import java.io.IOException
 import java.io.RandomAccessFile
+import java.lang.Class.forName
 
 object RandomAccessFileUtil {
     @JvmStatic
     fun main(args: Array<String>) {
+        val filePackage = "com.android.hcp3.TestFile"
+        val packageName = forName(filePackage).packageName
+        println("packageName:$packageName")
+        val deleteContent = "package $packageName;"
+        val newContent = "package com.xjx.cccc.ddd.ccc.aaa;"
         val path = "hcp3/src/main/java/com/android/hcp3/TestFile.java"
-        randomAccess(path, "package ", "package com.xjx;")
+        changeFileContent(path, deleteContent, newContent)
     }
 
+    /**
+     * @param filePath 指定文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
+     * @param deleteContent 指定需要删除的内容
+     * @param newContent 需要被替换的内容
+     */
     @JvmStatic
-    fun randomAccess(
+    fun changeFileContent(
         filePath: String,
-        tag: String,
-        changContent: String,
+        deleteContent: String,
+        newContent: String,
     ): Boolean {
         try {
             // 1:设置文件的格式为【读写】
@@ -26,11 +37,11 @@ object RandomAccessFileUtil {
                 readLine?.let { line ->
                     // println("line:$line   insertBeforePosition:$insertBeforePosition")
                     // 3：排查指定的节点，才开始后续的操作
-                    if (line.startsWith(tag)) {
+                    if (line == deleteContent) {
                         // 4：读取文件的整个长度，用于后续读取和截取的操作
                         val fileLength = random.length()
                         // 5：对比当前匹配到内容的长度和需要替换内容的长度的差值
-                        val offset = line.length - changContent.length
+                        val offset = line.length - newContent.length
                         // println("offset:$offset")
 
                         // 5：跳转指针到指定的未发货子，从此处开始读取剩余的内容
@@ -45,7 +56,7 @@ object RandomAccessFileUtil {
 
                         // 9：把指针设置到从改变的位置，并写入内容
                         random.seek(insertBeforePosition)
-                        random.write(changContent.toByteArray(charset = Charsets.UTF_8))
+                        random.write(newContent.toByteArray(charset = Charsets.UTF_8))
                         // 10：如果被修改的内容小于被替换掉的内容长度，则需要缩短整个文件的长度，不然会出现多出来一部分内容没有被替换掉
                         if (offset >= 0) {
                             random.setLength(fileLength - offset)
@@ -61,11 +72,10 @@ object RandomAccessFileUtil {
                 }
             }
             random.close()
-            println("【Random】文件[$filePath]的[$tag]内容修改成功。")
-//            return true
+            println("【Random】文件[$filePath]的[$deleteContent]内容修改成功。")
         } catch (e: IOException) {
             println(e)
-            println("文件[$filePath]的[$tag]内容修改失败：$e")
+            println("文件[$filePath]的[$deleteContent]内容修改失败：$e")
         }
         return false
     }
