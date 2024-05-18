@@ -309,7 +309,6 @@ object FileUtil {
         importPath: String,
         deleteImport: String,
     ): Boolean {
-//        println("deleteFileImport: path:[$importPath] deleteImport: [$deleteImport]")
         return RandomAccessFileUtil.deleteFileContent(importPath, "import $deleteImport;")
     }
 }
