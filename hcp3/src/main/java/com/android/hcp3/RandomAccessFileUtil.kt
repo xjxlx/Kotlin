@@ -13,8 +13,9 @@ object RandomAccessFileUtil {
         val deleteArray = arrayOf("package $packageName;", "// item = 3")
         val newArray = arrayOf("package com.xjx.cccc.ddd.ccc.aaa;", "// item = 4")
         val path = "hcp3/src/main/java/com/android/hcp3/TestFile.java"
-//        changeFileContent(path, deleteArray, newArray)
-        changeFileContent(path, "package $packageName;", "package com.xjx.cccc.ddd.ccc.aaa;")
+        // changeFileContent(path, "package $packageName;", "package com.xjx.cccc.ddd.ccc.aaa;")
+        // changeFileContent(path, "// item = 3", "// item = 4")
+        changeFileArrayContent(path, deleteArray, newArray)
     }
 
     /**
@@ -75,10 +76,26 @@ object RandomAccessFileUtil {
                 }
             }
             random.close()
+            return true
         } catch (e: IOException) {
             println(e)
             println("文件[$filePath]的内容修改失败：$e")
         }
         return false
+    }
+
+    fun changeFileArrayContent(
+        filePath: String,
+        deleteArray: Array<String>,
+        newArray: Array<String>,
+    ): Boolean {
+        if (deleteArray.size != newArray.size) {
+            println("替换内容的数组长度必须相同，否则会出现异常！")
+            return false
+        }
+        deleteArray.forEachIndexed { index, delete ->
+            changeFileContent(filePath, delete, newArray[index])
+        }
+        return true
     }
 }
