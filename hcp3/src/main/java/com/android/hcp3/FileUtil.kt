@@ -65,14 +65,32 @@ object FileUtil {
         // </editor-fold>
 
         filterEnum.forEach { enum ->
-            // 只有在小雨等于1的时候，才会去移动文件
+            // 只有在小于等于1的时候，才会去移动文件
             if (enum.count <= 1) {
                 val parentPath = enum.parentPath
-                val newPackage = parentPath.substring(BASE_OUT_PUT_PATH.length + 1, parentPath.length)
-                // 改变文件的包名
-                changePackage(enum.path, transitionPackage(newPackage))
-                // 移动文件到新的包中去
-//                moveFile(enum.path, parentPath)
+                // 一：移动文件到新包中去
+                val moveFile = moveFile(enum.path, parentPath)
+                if (moveFile) {
+                    // 二：获取挪移到新目录的路径
+                    val packagePath = Paths.get(enum.parentPath).resolve(Paths.get(enum.name)).toString() + ".java"
+                    // 2.1: 获取原始目录的路径
+                    val deletePackage: String =
+                        transitionPackage(
+                            Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH)).toString()
+                        )
+                    // 2.2:获取到挪移后的包名
+                    val newPackage = getPackageForProjectPath(Paths.get(enum.parentPath).toString() + ".java")
+                    changePackage(packagePath, deletePackage, newPackage)
+
+                    // 三：改变import的内容
+                    // 3.1:被删除的import内容
+                    val deleteImport =
+                        transitionPackage(
+                            Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                                .resolve(enum.name).toString()
+                        )
+                    deleteFileImport(enum.apiChildPath, deleteImport)
+                }
             }
         }
     }
@@ -238,6 +256,7 @@ object FileUtil {
                 if (find != null) {
                     enum.count += 1
                     enum.parentPath = bean.apiNodePath
+                    enum.apiChildPath = bean.apiChildPath
                 }
             }
             println("枚举：${enum.name} 在集合中出现了:${enum.count} 次~")
@@ -246,29 +265,18 @@ object FileUtil {
     }
 
     /**
-     * @param filePath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
-     * @param packageContent 被替换的内容包,不包含; 例如："com.xjx.android"
+     * @param packagePath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
+     * @param deletePackage 原来的包名，例如：com.android.hcp3.rsi.hvac.valueindications
+     * @param newPackage 被替换的内容包,不包含; 例如："com.xjx.android"
      */
     @JvmStatic
     fun changePackage(
-        filePath: String,
-        packageContent: String,
+        packagePath: String,
+        deletePackage: String,
+        newPackage: String,
     ): Boolean {
-        val packageName = Class.forName(getPackageForProjectPath(filePath)).packageName
-        return RandomAccessFileUtil.changeFileContent(filePath, "package $packageName;", "package $packageContent;")
-    }
-
-    /**
-     * @param filePath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
-     * @param importContent 被替换的import内容
-     */
-    @JvmStatic
-    fun changeImport(
-        filePath: String,
-        importContent: String,
-    ): Boolean {
-//        return randomAccess(filePath, "import ", "import $importContent")
-        return false
+        // println("filePath:[$filePath] deletePackage:[$deletePackage] newPackage:[$newPackage]")
+        return RandomAccessFileUtil.changeFileContent(packagePath, "package $deletePackage;", "package $newPackage;")
     }
 
     /**
@@ -284,11 +292,24 @@ object FileUtil {
             val oldFile = File(oldFilePath)
             val newFile = File(Paths.get(newFilePath).resolve(Paths.get(oldFile.name)).toString())
             val renameTo = oldFile.renameTo(newFile)
-            println("文件移动成功: oldPath:[${oldFile.path}] newFilePath:[${newFile.path}]")
+            println("【Move-File】文件移动成功: oldPath:[${oldFile.path}] newFilePath:[${newFile.path}]")
             return renameTo
         } catch (e: IOException) {
             println("文件内容修改失败：$e")
         }
         return false
+    }
+
+    /**
+     * @param importPath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
+     * @param deleteImport 需要import的内容
+     */
+    @JvmStatic
+    private fun deleteFileImport(
+        importPath: String,
+        deleteImport: String,
+    ): Boolean {
+//        println("deleteFileImport: path:[$importPath] deleteImport: [$deleteImport]")
+        return RandomAccessFileUtil.deleteFileContent(importPath, "import $deleteImport;")
     }
 }

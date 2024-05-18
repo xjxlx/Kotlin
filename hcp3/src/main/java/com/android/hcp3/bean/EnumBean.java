@@ -13,6 +13,11 @@ public class EnumBean {
   /** 父类的节点路径，例如：com/android/hcp3/rsi/hvac/airoutlets */
   private String parentPath;
 
+  /**
+   * Api节点中Object的path，例如：hcp3/src/main/java/com/android/hcp3/rsi/hvac/generalsettings/GeneralSettingObjectEntity.java
+   */
+  private String apiChildPath;
+
   public String getName() {
     return name;
   }
@@ -45,6 +50,14 @@ public class EnumBean {
     this.parentPath = parentPath;
   }
 
+  public String getApiChildPath() {
+    return apiChildPath;
+  }
+
+  public void setApiChildPath(String apiChildPath) {
+    this.apiChildPath = apiChildPath;
+  }
+
   @Override
   public String toString() {
     return "EnumBean{"
@@ -58,6 +71,9 @@ public class EnumBean {
         + count
         + ", parentPath='"
         + parentPath
+        + '\''
+        + ", apiPath='"
+        + apiChildPath
         + '\''
         + '}';
   }
