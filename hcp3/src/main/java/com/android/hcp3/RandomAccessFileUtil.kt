@@ -7,12 +7,13 @@ import java.lang.Class.forName
 object RandomAccessFileUtil {
     @JvmStatic
     fun main(args: Array<String>) {
-        val filePackage = "com.android.hcp3.TestFile"
+        val filePackage = "com.android.hcp3.VcRestrictionReason"
+        val path = "hcp3/src/main/java/com/android/hcp3/VcRestrictionReason.java"
+
         val packageName = forName(filePackage).packageName
         // println("packageName:$packageName")
-        val deleteArray = arrayOf("package $packageName;", "// item = 3")
-        val newArray = arrayOf("package com.xjx.cccc.ddd.ccc.aaa;", "// item = 4")
-        val path = "hcp3/src/main/java/com/android/hcp3/TestFile.java"
+        val deleteArray = arrayOf("package $packageName;", "  DEFECT(\"defect\"),")
+        val newArray = arrayOf("package com.xjx.cccc.ddd.ccc.aaa;", "  DEFECT(\"defect1\"),")
         // changeFileContent(path, "package $packageName;", "package com.xjx.cccc.ddd.ccc.aaa;")
         // changeFileContent(path, "// item = 3", "// item = 4")
         changeFileArrayContent(path, deleteArray, newArray)
@@ -22,6 +23,8 @@ object RandomAccessFileUtil {
      * @param filePath 指定文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
      * @param deleteContent 指定需要删除的内容
      * @param newContent 需要被替换的内容
+     * @return 修改文件内的指定内容，需要注意的是，被修改的内容必须要是完全匹配，是属于==的关系，如果有空格啥的不匹配，
+     * 则会有可能造成匹配不上导致修改不成功，或者修改出来的内容，格式对不上
      */
     @JvmStatic
     fun changeFileContent(
@@ -37,7 +40,7 @@ object RandomAccessFileUtil {
 
             // 2：循环读取文件每一行的数据
             while ((random.readLine().also { readLine = it }) != null) {
-                println("line: $readLine insertBeforePosition:$insertBeforePosition")
+                // println("line: $readLine insertBeforePosition:$insertBeforePosition")
                 readLine?.let { line ->
                     // 3：排查指定的节点，才开始后续的操作
                     if (line == deleteContent) {
@@ -45,7 +48,7 @@ object RandomAccessFileUtil {
                         val fileLength = random.length()
                         // 5：对比当前匹配到内容的长度和需要替换内容的长度的差值
                         val offset = deleteContent.length - newContent.length
-                        println("offset:$offset")
+                        // println("offset:$offset")
 
                         // 5：跳转指针到指定的未发货子，从此处开始读取剩余的内容
                         random.seek(insertBeforePosition)
