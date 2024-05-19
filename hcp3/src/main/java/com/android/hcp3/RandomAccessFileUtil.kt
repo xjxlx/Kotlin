@@ -21,7 +21,8 @@ object RandomAccessFileUtil {
         changeFileContent(
             path,
             "package com.android.hcp3;",
-            "package com.android.hcp4.audio;"
+//            "package com.android.hcp4.audio;"
+            "package com.android;"
         )
     }
 
@@ -86,20 +87,13 @@ object RandomAccessFileUtil {
                              * 往前偏移。
                              *
                              * 2：方法返回的文件的当前长度小于｛@code-newLength｝参数，则文件将被扩展。在这种情况下，不定义文件的扩展部分的内容。
-                             * 测试结果有待查看
-                             *
-                             * 此处因为直接从匹配到的地方开始重写写入，所以会把原来内容的换行符给截取掉，所以为了保持格式的完整性，要手动加上一个换行符
                              */
-                            if (offset > 0) {
-                                random.setLength(readBeforePosition + realNewContent.length + byteArray.size)
-                                // 11：跳转的位置 =  开始读取的位置 + 写入内容的长度 + 换行符
-                                random.seek(readBeforePosition + realNewContent.length)
-                            } else {
-//                                random.setLength(readBeforePosition + realNewContent.length + byteArray.size)
-                            }
+                            random.setLength(readBeforePosition + realNewContent.length + byteArray.size)
                             // </editor-fold>
 
                             // <editor-fold desc="4：写入剩余的内容"
+                            // 11：跳转的位置 =  开始读取的位置 + 写入内容的长度 + 换行符
+                            random.seek(readBeforePosition + realNewContent.length)
                             random.write(residueContent.toByteArray())
                             // </editor-fold>
                             println("【Random-Change】文件[$filePath]的[$deleteContent]内容修改成功。")
