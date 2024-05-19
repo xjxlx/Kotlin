@@ -21,7 +21,7 @@ object RandomAccessFileUtil {
         changeFileContent(
             path,
             "package com.android.hcp3;",
-            "package com.android.hcp4;"
+            "package com.android.hcp4.audio;"
         )
     }
 
@@ -39,52 +39,71 @@ object RandomAccessFileUtil {
         newContent: String,
     ): Boolean {
         try {
-            // 1:设置文件的格式为【读写】
+            // 1.1:设置文件的格式为【读写】
             val random = RandomAccessFile(filePath, "rw")
             var readLine: String? = null
             var readBeforePosition: Long = 0
             var readAfterPosition: Long = 0
-            val lineSeparatorLength = System.lineSeparator().length
+            var isWrite = true
 
-            // 2：循环读取文件每一行的数据
+            // 1.2：循环读取文件每一行的数据
             while ((random.readLine().also { readLine = it }) != null) {
                 readAfterPosition = random.filePointer
                 println("line: $readLine before:[$readBeforePosition] After:[$readAfterPosition]")
                 readLine?.let { line ->
-                    // 3：排查指定的节点，才开始后续的操作
+                    // 1.3：排查指定的节点，才开始后续的操作
                     if (line == deleteContent) {
-                        // 4：读取文件的整个长度，用于后续读取和截取的操作
+                        // 1.4：读取文件的整个长度，用于后续读取和截取的操作
                         val fileLength = random.length()
-                        val offset = newContent.length - line.length
-                        // 5：把指针条跳转到当前行读取结束的地方，开始读取剩余的内容
-                        random.seek(readAfterPosition)
-                        // 6：设置一个指定长度的字节数组，长度 = 文件总长度 - 匹配到的结束位置
-                        val byteArray = ByteArray(fileLength.toInt() - readAfterPosition.toInt())
-                        // 7：读取这个字节数组，把剩余的内容放到字节数组中
-                        random.read(byteArray)
-
-                        // 9：把指针跳转到指定行开始的position，从这个地方开始重新插入数据，覆盖原来的数据
-                        random.seek(readBeforePosition)
+                        var offset = 0
                         println("【offset】: $offset")
-                        // 10：写入需要替换的内容
-                        random.write(newContent.toByteArray(charset = Charsets.UTF_8))
-                        /**
-                         * 如果返回文件的length大于当{@code newLength}的参数，则文件会被截断，这种情况下，
-                         *
-                         * 1：如果返回的length大于参数newLength,则偏移量等于newLength，按照内容测试结果来看，会在后续的filePointer
-                         * 往前偏移。
-                         *
-                         * 2：方法返回的文件的当前长度小于｛@code-newLength｝参数，则文件将被扩展。在这种情况下，不定义文件的扩展部分的内容。
-                         * 测试结果有待查看
-                         *
-                         * 此处因为直接从匹配到的地方开始重写写入，所以会把原来内容的换行符给截取掉，所以为了保持格式的完整性，要手动加上一个换行符
-                         */
-                        random.setLength(readBeforePosition + newContent.length + lineSeparatorLength + byteArray.size)
+                        if (isWrite) {
+                            // <editor-fold desc="2:读取剩余的内容"
+                            // 2.1：把指针条跳转到当前行读取结束的地方，开始读取剩余的内容
+                            random.seek(readAfterPosition)
+                            // 2.2：设置一个指定长度的字节数组，长度 = 文件总长度 - 匹配到的结束位置
+                            val byteArray = ByteArray(fileLength.toInt() - readAfterPosition.toInt())
+                            // 2.3：读取这个字节数组，把剩余的内容放到字节数组中
+                            random.read(byteArray)
+                            val residueContent = String(byteArray)
+                            println("residueContent:$residueContent")
+                            // </editor-fold>
 
-                        // 11：跳转的位置 =  开始读取的位置 + 写入内容的长度 + 换行符
-                        random.seek(readBeforePosition + newContent.length + lineSeparatorLength)
-                        random.write(String(byteArray).toByteArray(charset = Charsets.UTF_8))
-                        println("【Random-Change】文件[$filePath]的[$deleteContent]内容修改成功。")
+                            // <editor-fold desc="3：从开始位置写入新的内容"
+                            // 3.1：因为要覆盖原来的数据，所以这里要从从读取开始的position写入
+                            // 3.2：因为要覆盖掉原来的数据，所以会丢失一个换行符，所以要在后面写入的时候，手动在末尾加上一个换行符
+                            val realNewContent = newContent + System.lineSeparator()
+                            offset = realNewContent.length - line.length
+                            println("realNewContent:$realNewContent")
+                            // 3.3：从匹配行开始的位置开始覆盖数据
+                            random.seek(readBeforePosition)
+                            // 3.4：写入需要替换的内容
+                            random.write(realNewContent.toByteArray())
+                            /**
+                             * 如果返回文件的length大于当{@code newLength}的参数，则文件会被截断，这种情况下，
+                             *
+                             * 1：如果返回的length大于参数newLength,则偏移量等于newLength，按照内容测试结果来看，会在后续的filePointer
+                             * 往前偏移。
+                             *
+                             * 2：方法返回的文件的当前长度小于｛@code-newLength｝参数，则文件将被扩展。在这种情况下，不定义文件的扩展部分的内容。
+                             * 测试结果有待查看
+                             *
+                             * 此处因为直接从匹配到的地方开始重写写入，所以会把原来内容的换行符给截取掉，所以为了保持格式的完整性，要手动加上一个换行符
+                             */
+                            if (offset > 0) {
+                                random.setLength(readBeforePosition + realNewContent.length + byteArray.size)
+                                // 11：跳转的位置 =  开始读取的位置 + 写入内容的长度 + 换行符
+                                random.seek(readBeforePosition + realNewContent.length)
+                            } else {
+//                                random.setLength(readBeforePosition + realNewContent.length + byteArray.size)
+                            }
+                            // </editor-fold>
+
+                            // <editor-fold desc="4：写入剩余的内容"
+                            random.write(residueContent.toByteArray())
+                            // </editor-fold>
+                            println("【Random-Change】文件[$filePath]的[$deleteContent]内容修改成功。")
+                        }
                     }
                     // [must] 必须把这个放到读取的后面，这样才能从指定的位置插入
                     readBeforePosition = random.filePointer
