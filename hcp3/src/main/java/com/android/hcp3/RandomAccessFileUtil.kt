@@ -2,21 +2,27 @@ package com.android.hcp3
 
 import java.io.IOException
 import java.io.RandomAccessFile
-import java.lang.Class.forName
 
 object RandomAccessFileUtil {
     @JvmStatic
     fun main(args: Array<String>) {
-        val filePackage = "com.android.hcp3.VcRestrictionReason"
-        val path = "hcp3/src/main/java/com/android/hcp3/VcRestrictionReason.java"
+//        val filePackage = "com.android.hcp3.VcRestrictionReason"
+//        val path = "hcp3/src/main/java/com/android/hcp3/VcRestrictionReason.java"
+//
+//        val packageName = forName(filePackage).packageName
+//        // println("packageName:$packageName")
+//        val deleteArray = arrayOf("package $packageName;", "  DEFECT(\"defect\"),")
+//        val newArray = arrayOf("package com.xjx.cccc.ddd.ccc.aaa;", "  DEFECT(\"defect1\"),")
+//        // changeFileContent(path, "package $packageName;", "package com.xjx.cccc.ddd.ccc.aaa;")
+//        // changeFileContent(path, "// item = 3", "// item = 4")
+//        changeFileArrayContent(path, deleteArray, newArray)
 
-        val packageName = forName(filePackage).packageName
-        // println("packageName:$packageName")
-        val deleteArray = arrayOf("package $packageName;", "  DEFECT(\"defect\"),")
-        val newArray = arrayOf("package com.xjx.cccc.ddd.ccc.aaa;", "  DEFECT(\"defect1\"),")
-        // changeFileContent(path, "package $packageName;", "package com.xjx.cccc.ddd.ccc.aaa;")
-        // changeFileContent(path, "// item = 3", "// item = 4")
-        changeFileArrayContent(path, deleteArray, newArray)
+        val path = "hcp3/src/main/java/com/android/hcp3/VcSpecialValue.java"
+        changeFileContent(
+            path,
+            "package com.android.hcp3;",
+            "package com.android.hcp4;"
+        )
     }
 
     /**
@@ -38,33 +44,46 @@ object RandomAccessFileUtil {
             var readLine: String? = null
             var readBeforePosition: Long = 0
             var readAfterPosition: Long = 0
+            val lineSeparatorLength = System.lineSeparator().length
 
             // 2：循环读取文件每一行的数据
             while ((random.readLine().also { readLine = it }) != null) {
                 readAfterPosition = random.filePointer
-                // println("line: $readLine before:[$readBeforePosition] After:[$readAfterPosition]")
+                println("line: $readLine before:[$readBeforePosition] After:[$readAfterPosition]")
                 readLine?.let { line ->
                     // 3：排查指定的节点，才开始后续的操作
                     if (line == deleteContent) {
                         // 4：读取文件的整个长度，用于后续读取和截取的操作
                         val fileLength = random.length()
+                        val offset = newContent.length - line.length
                         // 5：把指针条跳转到当前行读取结束的地方，开始读取剩余的内容
                         random.seek(readAfterPosition)
                         // 6：设置一个指定长度的字节数组，长度 = 文件总长度 - 匹配到的结束位置
-                        val byteArray = ByteArray((fileLength - readAfterPosition).toInt())
+                        val byteArray = ByteArray(fileLength.toInt() - readAfterPosition.toInt())
                         // 7：读取这个字节数组，把剩余的内容放到字节数组中
                         random.read(byteArray)
 
-                        // 9：把指针跳转到指定行开始的position，从这个地方开始插入
+                        // 9：把指针跳转到指定行开始的position，从这个地方开始重新插入数据，覆盖原来的数据
                         random.seek(readBeforePosition)
+                        println("【offset】: $offset")
                         // 10：写入需要替换的内容
                         random.write(newContent.toByteArray(charset = Charsets.UTF_8))
+                        /**
+                         * 如果返回文件的length大于当{@code newLength}的参数，则文件会被截断，这种情况下，
+                         *
+                         * 1：如果返回的length大于参数newLength,则偏移量等于newLength，按照内容测试结果来看，会在后续的filePointer
+                         * 往前偏移。
+                         *
+                         * 2：方法返回的文件的当前长度小于｛@code-newLength｝参数，则文件将被扩展。在这种情况下，不定义文件的扩展部分的内容。
+                         * 测试结果有待查看
+                         *
+                         * 此处因为直接从匹配到的地方开始重写写入，所以会把原来内容的换行符给截取掉，所以为了保持格式的完整性，要手动加上一个换行符
+                         */
+                        random.setLength(readBeforePosition + newContent.length + lineSeparatorLength + byteArray.size)
 
-                        // 11：跳转到匹配结束的地方，从结束的位置开始读写剩余的内容
-                        random.seek(readAfterPosition)
-                        // 设置剩余写入内容的长度 length = file.length - after.position
-                        random.setLength(fileLength - readAfterPosition)
-                        random.write(byteArray)
+                        // 11：跳转的位置 =  开始读取的位置 + 写入内容的长度 + 换行符
+                        random.seek(readBeforePosition + newContent.length + lineSeparatorLength)
+                        random.write(String(byteArray).toByteArray(charset = Charsets.UTF_8))
                         println("【Random-Change】文件[$filePath]的[$deleteContent]内容修改成功。")
                     }
                     // [must] 必须把这个放到读取的后面，这样才能从指定的位置插入
