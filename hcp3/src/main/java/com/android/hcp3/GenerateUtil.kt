@@ -21,10 +21,12 @@ import java.nio.file.Paths
 import javax.lang.model.element.Modifier
 
 object GenerateUtil {
-    private val METHOD_ANNOTATION_TYPE = ClassName.get("androidx.annotation", "NonNull")
+    private val ANNOTATION_NONNULL = ClassName.get("androidx.annotation", "NonNull")
+    private val ANNOTATION_NULLABLE = ClassName.get("androidx.annotation", "Nullable")
 
-    // private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
-    private val SUPER_CLASS_NAME = ClassName.get("com.android.hcp3", "BaseRSIValue")
+    private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
+
+    //  private val SUPER_CLASS_NAME = ClassName.get("com.android.hcp3", "BaseRSIValue")
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
     val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
 
@@ -65,7 +67,7 @@ object GenerateUtil {
         // 2.2：方法的参数
         val methodParameter =
             ParameterSpec.builder(methodParameterClassType, "object")
-                .addAnnotation(METHOD_ANNOTATION_TYPE) // 设置方法的注解
+                .addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                 .build()
 
         // 2.3:组装方法的修饰符和参数
@@ -88,6 +90,7 @@ object GenerateUtil {
             val methodName = next.methodName // 方法名字
             val genericPackage = next.genericPackage // 返回值的包名
             val genericType = next.classType // 参数的具体数据类型,也就是泛型的类型
+            var fieldEntityType = false // 是不是entity的属性，需要添加Nullable修饰符
 
             // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
             val attributeTypeBean = checkChildRunType(genericPackage, genericType)
@@ -100,12 +103,14 @@ object GenerateUtil {
                 PRIMITIVE.name -> { // 基础数据类型的数据，使用原始的数据
                     fieldTypeName = ClassName.get(attributeInfo[0], attributeInfo[1])
                     codeBuild.addStatement("this.$attributeName = object.$methodName().orElse(null)")
+                    fieldEntityType = true
                 }
 
                 OBJECT.name -> { // object类型的数据
                     attributeTypeBean?.let { att ->
                         fieldTypeName = ClassName.get(transitionPackage(att.attributePackage), att.name)
                         codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::new).orElse(null)")
+                        fieldEntityType = true
                     }
                 }
 
@@ -115,6 +120,7 @@ object GenerateUtil {
                         //     countryInformation = object.getCountryInformation().map(AirQualityEntityCountryInformationEnum::fromObjectEnum).orElse(null);
                         codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::fromRSI).orElse(null)")
                     }
+                    fieldEntityType = false
                 }
 
                 LIST_PRIMITIVE.name -> { // 泛型式基础数据类型的list
@@ -130,6 +136,7 @@ object GenerateUtil {
                             ".map(${attributeInfo[1]}::new).collect(\$T.toList())).orElse(null)",
                         CLASSNAME_COLLECTORS
                     )
+                    fieldEntityType = true
                 }
 
                 LIST_OBJECT.name -> { // 泛型是object类型的list
@@ -145,6 +152,7 @@ object GenerateUtil {
                             CLASSNAME_COLLECTORS
                         )
                     }
+                    fieldEntityType = true
                 }
 
                 LIST_ENUM.name -> { // 泛型是object类型的list
@@ -161,10 +169,12 @@ object GenerateUtil {
                                 ".map(${att.name}::fromRSI).collect(\$T.toList())).orElse(null)",
                             CLASSNAME_COLLECTORS
                         )
+                        fieldEntityType = false
                     }
                 }
 
                 INVALID.name, ARRAY.name -> {
+                    fieldEntityType = false
                     println("      >>> 无效类型的数据!")
                 }
             }
@@ -172,6 +182,12 @@ object GenerateUtil {
             // 3.3：构建属性对象
             val fieldSpec =
                 FieldSpec.builder(fieldTypeName, attributeName).addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+
+            // 添加属性修饰符
+            if (fieldEntityType) {
+                fieldSpec.addAnnotation(AnnotationSpec.builder(ANNOTATION_NULLABLE).build())
+            }
+
             // println("      attribute:[$attributeName]  attributeType:[$genericPackage]")
             // 把生成的属性对象添加到类中
             classTypeBuild.addField(fieldSpec.build())
