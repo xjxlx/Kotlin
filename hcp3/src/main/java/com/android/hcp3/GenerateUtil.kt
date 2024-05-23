@@ -3,6 +3,7 @@ package com.android.hcp3
 import com.android.hcp3.ClassTypeEnum.*
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
+import com.android.hcp3.Config.OBJECT_SUFFIX
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.ReadJarFile.IGNORE_ARRAY
@@ -45,7 +46,6 @@ object GenerateUtil {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Object类：[$parameterPackage] ------>")
         val parameterInfo = getPackageInfo(parameterPackage)
-
         val realFileName = getFileNameForType(parameterPackage, OBJECT)
 
         // 构建类的build对象，用于组装类中的数据
@@ -352,6 +352,7 @@ object GenerateUtil {
                 // 4：获取写入文件的路径
                 val writeFilPackage = getWriteFilPackage(genericPackage)
                 val jarFileName = StringUtil.getPackageSimple(genericPackage)
+
                 // 6:读取jar包中属性的字段
                 mGlobalClassLoad?.let { classLoad ->
                     val readClass = readClass(classLoad, genericPackage)
@@ -451,16 +452,25 @@ object GenerateUtil {
         genericType: ClassTypeEnum,
     ): String {
         var realFileName = ""
-        val jarFileName = StringUtil.getPackageSimple(genericPackage)
-        if (genericType == OBJECT || genericType == LIST_OBJECT) {
-            realFileName =
-                if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == genericPackage } != null) {
-                    jarFileName
-                } else {
-                    "${jarFileName}${Config.OBJECT_SUFFIX}"
-                }
-        } else if (genericType == ENUM || genericType == LIST_ENUM) {
-            realFileName = "${Config.ENUM_PREFIX}$jarFileName"
+
+        /**
+         * 如果发现类的全路径地址在[RSI_TARGET_NODE_LIST]中的话，则给他设置特殊的名字
+         */
+        val apiBean = RSI_TARGET_NODE_LIST.find { filter -> filter.apiGenericPath == genericPackage }
+        if (apiBean != null) {
+            realFileName = StringUtil.capitalize(apiBean.apiName + OBJECT_SUFFIX)
+        } else {
+            val jarFileName = StringUtil.getPackageSimple(genericPackage)
+            if (genericType == OBJECT || genericType == LIST_OBJECT) {
+                realFileName =
+                    if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == genericPackage } != null) {
+                        jarFileName
+                    } else {
+                        "${jarFileName}$OBJECT_SUFFIX"
+                    }
+            } else if (genericType == ENUM || genericType == LIST_ENUM) {
+                realFileName = "${Config.ENUM_PREFIX}$jarFileName"
+            }
         }
         return realFileName
     }
@@ -473,13 +483,13 @@ object GenerateUtil {
         val jarFileName = StringUtil.getPackageSimple(genericPackage)
 
         // 2：对比泛型的类是不是属于Api的泛型类
-        // val bean =
-        //     RSI_TARGET_NODE_LIST.find { filter ->
-        //         lowercase(filter.apiGenericName) ==
-        //             lowercase(
-        //                 jarFileName
-        //             )
-        //     }
+        //         val bean =
+        //             RSI_TARGET_NODE_LIST.find { filter ->
+        //                 lowercase(filter.apiGenericName) ==
+        //                     lowercase(
+        //                         jarFileName
+        //                     )
+        //             }
 
         /**
          * 对比泛型的类型是不是以[RSI_TARGET_NODE_LIST]中的泛型名字作为开头的，这样会把所有相关的类都写入一个包中
