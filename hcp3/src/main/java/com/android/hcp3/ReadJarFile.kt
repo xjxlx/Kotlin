@@ -3,6 +3,7 @@ package com.android.hcp3
 import com.android.hcp3.Config.BASE_JAR_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
+import com.android.hcp3.Config.PARENT_NODE_GENERIC_PATH
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
@@ -34,12 +35,6 @@ import java.util.*
 import java.util.jar.JarFile
 
 object ReadJarFile {
-    /**
-     *  当前指定父类节点：[Config.RSI_PARENT_NODE_PATH]中泛型的相对路径，这个是动态生成的，不要做任何的改动
-     *  例如：de/esolutions/fw/rudi/viwi/service/hvac/v3/Hvac
-     */
-    var apiNodeGenericPath: String = ""
-
     /**
      * 公用的classLoad加载器，会冬天初始化，不用做任何处理
      */
@@ -98,7 +93,7 @@ object ReadJarFile {
                             // 如果是以父类节点结束的，则保存这个节点的全属性包名
                             if (lowercase.endsWith(parentNodeName)) {
                                 println("当前父类节点下主类: [$splitClassName]")
-                                apiNodeGenericPath = splitClassName
+                                PARENT_NODE_GENERIC_PATH = splitClassName
                             }
                             fileNames.add(transitionPackage(splitClassName))
                         }
@@ -447,9 +442,9 @@ object ReadJarFile {
     fun readApiNodeForParent(globalClassLoad: URLClassLoader) {
         // println("读取主类[$RSI_PARENT_NODE_PATH]下所有的Api信息 --->")
         // 使用类加载器，读取父类中主节点的接口变量
-        if (apiNodeGenericPath.isNotEmpty()) {
+        if (PARENT_NODE_GENERIC_PATH.isNotEmpty()) {
             try {
-                val parentNodeClass = globalClassLoad.loadClass(transitionPackage(apiNodeGenericPath))
+                val parentNodeClass = globalClassLoad.loadClass(transitionPackage(PARENT_NODE_GENERIC_PATH))
                 // 获取类的所有的api方法
                 for (apiMethod in parentNodeClass.declaredMethods) {
                     val apiMethodName = apiMethod.name

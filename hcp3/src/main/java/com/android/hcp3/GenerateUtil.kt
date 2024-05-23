@@ -4,10 +4,10 @@ import com.android.hcp3.ClassTypeEnum.*
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
+import com.android.hcp3.Config.PARENT_NODE_GENERIC_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.ReadJarFile.IGNORE_ARRAY
-import com.android.hcp3.ReadJarFile.apiNodeGenericPath
 import com.android.hcp3.ReadJarFile.getEnums
 import com.android.hcp3.ReadJarFile.getMethods
 import com.android.hcp3.ReadJarFile.mGlobalClassLoad
@@ -318,7 +318,7 @@ object GenerateUtil {
                 .addModifiers(Modifier.PUBLIC)
 
         // 1:把读取到的父类的主路径信息转换为包和类名
-        val parentNodeInfo = transitionPackage(apiNodeGenericPath)
+        val parentNodeInfo = transitionPackage(PARENT_NODE_GENERIC_PATH)
         val packageInfo = getPackageInfo(parentNodeInfo)
 
         // 3:构造方法组装
