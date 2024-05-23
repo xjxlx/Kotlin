@@ -336,7 +336,7 @@ object GenerateUtil {
             ParameterSpec.builder(
                 ParameterizedTypeName.get(
                     ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "ServiceProvider"),
-                    TypeVariableName.get("HVACVehiclePreconditioning")
+                    TypeVariableName.get(packageInfo[1])
                 ),
                 "serviceProvider"
             ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
