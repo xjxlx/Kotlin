@@ -296,6 +296,69 @@ object GenerateUtil {
         // </editor-fold>
     }
 
+    @JvmStatic
+    fun generateApi(
+        packagePath: String,
+        fileName: String,
+    ) {
+        // <editor-fold desc="一：构建类对象">
+        println("开始生成Api类：[$fileName] ------>")
+        // 1:创建继承类的泛型参数,todo 此处要动态去判断是否要更新
+        val superClass =
+            ParameterizedTypeName.get(
+                ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIResource"),
+                TypeVariableName.get("PreConditioningSettingsEntity")
+            )
+
+        // 2:构建类的对象
+        val classSpec =
+            TypeSpec.classBuilder(ClassName.get(packagePath, fileName))
+                .superclass(superClass)
+                .addModifiers(Modifier.PUBLIC)
+
+        // 3:构造方法组装
+        val firstParameter =
+            ParameterSpec.builder(
+                ClassName.get(
+                    "de.esolutions.fw.rudi.viwi.service.hvacvehiclepreconditioning.v100",
+                    "HVACVehiclePreconditioning"
+                ),
+                "service"
+            ).addAnnotation(ANNOTATION_NULLABLE)
+                .build()
+
+        val secondParameter =
+            ParameterSpec.builder(
+                ParameterizedTypeName.get(
+                    ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "ServiceProvider"),
+                    TypeVariableName.get("HVACVehiclePreconditioning")
+                ),
+                "serviceProvider"
+            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+                .build()
+
+        val methodConstructor =
+            MethodSpec.constructorBuilder()
+                .addParameter(firstParameter) // 添加构造方法的第一个参数
+                .addParameter(secondParameter) // 添加构造方法的第二个参数
+                .addStatement("super(service, serviceProvider)") // 调用父类构造函数
+                .build()
+
+        classSpec.addMethod(methodConstructor)
+
+        // <editor-fold desc="三：写入到类中">
+        val javaFile = JavaFile.builder(packagePath, classSpec.build()).build()
+        if (DEBUG) {
+            javaFile.writeTo(System.out)
+        } else {
+            val outPutFile = File(BASE_OUT_PUT_PATH)
+            javaFile.writeTo(outPutFile)
+        }
+        println("\r\n【写入结束！】\r\n")
+
+        // </editor-fold>
+    }
+
     /**
      * 每当读取到一个属性的时候，就需要判定这个类的重构类是否存在，如果不存在的话，则需要去主动生成这个类,然后返回这个类的全路径名字
      * @param genericPackage 泛型的包名
