@@ -7,6 +7,7 @@ import com.android.hcp3.Config.OBJECT_SUFFIX
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.ReadJarFile.IGNORE_ARRAY
+import com.android.hcp3.ReadJarFile.apiNodeGenericPath
 import com.android.hcp3.ReadJarFile.getEnums
 import com.android.hcp3.ReadJarFile.getMethods
 import com.android.hcp3.ReadJarFile.mGlobalClassLoad
@@ -316,12 +317,16 @@ object GenerateUtil {
                 .superclass(superClass)
                 .addModifiers(Modifier.PUBLIC)
 
+        // 1:把读取到的父类的主路径信息转换为包和类名
+        val parentNodeInfo = transitionPackage(apiNodeGenericPath)
+        val packageInfo = getPackageInfo(parentNodeInfo)
+
         // 3:构造方法组装
         val firstParameter =
             ParameterSpec.builder(
                 ClassName.get(
-                    "de.esolutions.fw.rudi.viwi.service.hvacvehiclepreconditioning.v100",
-                    "HVACVehiclePreconditioning"
+                    packageInfo[0],
+                    packageInfo[1]
                 ),
                 "service"
             ).addAnnotation(ANNOTATION_NULLABLE)

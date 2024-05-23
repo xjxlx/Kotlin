@@ -38,7 +38,7 @@ object ReadJarFile {
      *  当前指定父类节点：[Config.RSI_PARENT_NODE_PATH]中泛型的相对路径，这个是动态生成的，不要做任何的改动
      *  例如：de/esolutions/fw/rudi/viwi/service/hvac/v3/Hvac
      */
-    private var apiNodeGenericPath: String = ""
+    var apiNodeGenericPath: String = ""
 
     /**
      * 公用的classLoad加载器，会冬天初始化，不用做任何处理
