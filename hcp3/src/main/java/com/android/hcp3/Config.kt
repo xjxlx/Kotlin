@@ -31,6 +31,7 @@ object Config {
      * @see {hcp3/src/main/java/com/android/hcp3/jar/}
      */
     // var BASE_JAR_PATH: String = "hcp3${File.separator}libs${File.separator}cluster46_12_7_0${File.separator}"
+    @Suppress("ktlint:standard:no-consecutive-comments")
     var BASE_JAR_PATH: String = "hcp3${File.separator}libs${File.separator}oia${File.separator}"
 
     /**
