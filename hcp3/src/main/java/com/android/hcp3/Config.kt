@@ -68,6 +68,6 @@ object Config {
      *rsi中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动
      * @see {generalsettings}
      */
-    const val RSI_CHILD_NODE_PATH = "valueIndications"
-//    const val RSI_CHILD_NODE_PATH = "airQualities"
+    const val RSI_CHILD_NODE_PATH = "preConditioningSettings"
+//    const val RSI_CHILD_NODE_PATH = "preconditioningtimers"
 }
