@@ -21,9 +21,9 @@ import java.nio.file.Paths
 import javax.lang.model.element.Modifier
 
 object GenerateUtil {
-    // private val METHOD_ANNOTATION_TYPE = ClassName.get("androidx.annotation", "NonNull")
+    private val METHOD_ANNOTATION_TYPE = ClassName.get("androidx.annotation", "NonNull")
 
-    //    private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
+    // private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
     private val SUPER_CLASS_NAME = ClassName.get("com.android.hcp3", "BaseRSIValue")
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
     val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
@@ -65,8 +65,7 @@ object GenerateUtil {
         // 2.2：方法的参数
         val methodParameter =
             ParameterSpec.builder(methodParameterClassType, "object")
-                // todo 临时去掉注解
-                // .addAnnotation(METHOD_ANNOTATION_TYPE) // 设置方法的注解
+                .addAnnotation(METHOD_ANNOTATION_TYPE) // 设置方法的注解
                 .build()
 
         // 2.3:组装方法的修饰符和参数
