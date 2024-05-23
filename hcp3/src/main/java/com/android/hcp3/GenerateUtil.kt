@@ -307,7 +307,7 @@ object GenerateUtil {
         val superClass =
             ParameterizedTypeName.get(
                 ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIResource"),
-                TypeVariableName.get("PreConditioningSettingsEntity")
+                TypeVariableName.get(fileName + OBJECT_SUFFIX) // 继承类的名字
             )
 
         // 2:构建类的对象

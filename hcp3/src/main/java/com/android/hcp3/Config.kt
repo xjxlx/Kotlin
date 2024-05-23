@@ -1,10 +1,18 @@
 package com.android.hcp3
 
 import com.android.hcp3.bean.ApiNodeBean
+import com.android.hcp3.bean.ParentNodeBean
 import java.io.File
 
 @Suppress("ktlint:standard:property-naming")
 object Config {
+    /**
+     * 用来存储jar中指定目录下父类节点的主类，例如：hvacvehiclepreconditioning在rsi节点下的主类：
+     * [de.esolutions.fw.rudi.viwi.service.hvacvehiclepreconditioning.v100.HVACVehiclePreconditioning],里面包含了
+     * 所有子级节点的信息
+     */
+    val PARENT_NODE_MASTER: ParentNodeBean = ParentNodeBean()
+
     /**
      * 用来存储当前节点下的所有子节点名字，内容会自动生成，不要做任何的改动
      */
