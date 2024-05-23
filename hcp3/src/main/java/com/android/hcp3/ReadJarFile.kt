@@ -9,11 +9,13 @@ import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.Config.TARGET_JAR_PATH
+import com.android.hcp3.GenerateUtil.generateApi
 import com.android.hcp3.GenerateUtil.generateObject
 import com.android.hcp3.StringUtil.getPackageSimple
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.StringUtil.transitionPath
+import com.android.hcp3.bean.ApiMasterBean
 import com.android.hcp3.bean.ApiNodeBean
 import com.android.hcp3.bean.ObjectBean
 import de.esolutions.fw.rudi.services.rsiglobal.Duration
@@ -89,7 +91,6 @@ object ReadJarFile {
                          * 2：只读取Enum结尾的文件
                          * 3：只读取指定[RSI_PARENT_NODE_PATH]包名结尾的文件
                          */
-
                         val lowercase = lowercase(splitClassName)
                         val isApiFile = lowercase.endsWith(parentNodeName)
                         if (((splitClassName.endsWith("Object")) || (splitClassName.endsWith("Enum"))) || (isApiFile)) {
@@ -504,6 +505,19 @@ object ReadJarFile {
         }
     }
 
+    private fun checkApiFile(
+        packageName: String,
+        apiName: String,
+    ): ApiMasterBean {
+        val fileName = StringUtil.capitalize(apiName)
+        val apiFile = File(packageName, fileName)
+        val masterBean = ApiMasterBean()
+        masterBean.apiName = fileName
+        masterBean.apiPackage = packageName
+        masterBean.isExists = apiFile.exists()
+        return masterBean
+    }
+
     private fun execute() {
         try {
             // 1：读取指定目标节点下所有的object集合,例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
@@ -559,6 +573,14 @@ object ReadJarFile {
                             )
                         // 10：写入当前的Object
                         generateObject(filterBean.apiGenericPath, jarSet, packagePath)
+                    }
+
+                    // 11：写入Api的class
+                    val apiBean = checkApiFile(localPackage, filterBean.apiName)
+                    if (apiBean.isExists) {
+                        println("Api的主文件已经存在，不需要再次写入了！")
+                    } else {
+                        generateApi(apiBean.apiPackage, apiBean.apiName)
                     }
                 } else {
                     println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")
