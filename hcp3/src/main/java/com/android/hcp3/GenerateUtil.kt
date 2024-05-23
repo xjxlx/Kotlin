@@ -244,6 +244,7 @@ object GenerateUtil {
                 .addModifiers(Modifier.STATIC, Modifier.PUBLIC)
                 .addParameter(
                     ParameterSpec.builder(ClassName.get(classType[0], classType[1]), "enumObject")
+                        .addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                         .build()
                 )
                 .addCode(CodeBlock.builder().add("return valueOf(enumObject.name());").build())
