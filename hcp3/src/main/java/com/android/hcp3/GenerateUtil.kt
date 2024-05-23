@@ -25,10 +25,8 @@ object GenerateUtil {
     private val ANNOTATION_NULLABLE = ClassName.get("androidx.annotation", "Nullable")
 
     private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
-
-    //  private val SUPER_CLASS_NAME = ClassName.get("com.android.hcp3", "BaseRSIValue")
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
-    val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
+    private val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
 
     private const val DEBUG = false
 
