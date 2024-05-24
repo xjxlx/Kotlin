@@ -317,11 +317,10 @@ object GenerateUtil {
                 .superclass(superClass)
                 .addModifiers(Modifier.PUBLIC)
 
-        // 1:把读取到的父类的主路径信息转换为包和类名
-        val parentNodeInfo = transitionPackage(PARENT_NODE_GENERIC_PATH)
-        val packageInfo = getPackageInfo(parentNodeInfo)
+        // 3:把读取到的父类的主路径信息转换为包和类名
+        val packageInfo = getPackageInfo(transitionPackage(PARENT_NODE_GENERIC_PATH))
 
-        // 3:构造方法组装
+        // 4:构造方法组装
         val firstParameter =
             ParameterSpec.builder(
                 ClassName.get(
