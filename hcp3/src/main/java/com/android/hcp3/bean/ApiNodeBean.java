@@ -12,6 +12,23 @@ public class ApiNodeBean {
   /** 父类节点下api返回类型泛型类型的名字 */
   private String apiGenericName;
 
+  /**
+   * api节点类中更新方法参数的名字 例如：
+   * Api的类:de.esolutions.fw.rudi.viwi.service.hvacvehiclepreconditioning.v101.SwitchControlsApi
+   * 其中的更新方法为:Single<URI> updateSwitchControlsObject(UUID var1, UpdateSwitchControlsObject var2)
+   * 参数为：UpdateSwitchControlsObject，
+   * 所以返回的名字为：de.esolutions.fw.rudi.viwi.service.hvacvehiclepreconditioning.v101
+   */
+  private String updatePackage;
+
+  /**
+   * api节点类中更新方法参数的名字 例如：
+   * Api的类:de.esolutions.fw.rudi.viwi.service.hvacvehiclepreconditioning.v101.SwitchControlsApi
+   * 其中的更新方法为:Single<URI> updateSwitchControlsObject(UUID var1, UpdateSwitchControlsObject var2)
+   * 参数为：UpdateSwitchControlsObject， 所以返回的名字为：UpdateSwitchControlsObject
+   */
+  private String updateName;
+
   public String getApiName() {
     return apiName;
   }
@@ -28,14 +45,6 @@ public class ApiNodeBean {
     this.apiReturnTypePath = apiReturnTypePath;
   }
 
-  public String getApiGenericName() {
-    return apiGenericName;
-  }
-
-  public void setApiGenericName(String apiGenericName) {
-    this.apiGenericName = apiGenericName;
-  }
-
   public String getApiGenericPath() {
     return apiGenericPath;
   }
@@ -44,20 +53,50 @@ public class ApiNodeBean {
     this.apiGenericPath = apiGenericPath;
   }
 
+  public String getApiGenericName() {
+    return apiGenericName;
+  }
+
+  public void setApiGenericName(String apiGenericName) {
+    this.apiGenericName = apiGenericName;
+  }
+
+  public String getUpdatePackage() {
+    return updatePackage;
+  }
+
+  public void setUpdatePackage(String updatePackage) {
+    this.updatePackage = updatePackage;
+  }
+
+  public String getUpdateName() {
+    return updateName;
+  }
+
+  public void setUpdateName(String updateName) {
+    this.updateName = updateName;
+  }
+
   @Override
   public String toString() {
     return "ApiNodeBean{"
         + "apiName='"
         + apiName
         + '\''
-        + ", apiPath='"
+        + ", apiReturnTypePath='"
         + apiReturnTypePath
+        + '\''
+        + ", apiGenericPath='"
+        + apiGenericPath
         + '\''
         + ", apiGenericName='"
         + apiGenericName
         + '\''
-        + ", apiGenericPath='"
-        + apiGenericPath
+        + ", updatePackage='"
+        + updatePackage
+        + '\''
+        + ", updateName='"
+        + updateName
         + '\''
         + '}';
   }

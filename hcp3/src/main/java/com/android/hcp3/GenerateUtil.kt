@@ -1,6 +1,13 @@
 package com.android.hcp3
 
-import com.android.hcp3.ClassTypeEnum.*
+import com.android.hcp3.ClassTypeEnum.ARRAY
+import com.android.hcp3.ClassTypeEnum.ENUM
+import com.android.hcp3.ClassTypeEnum.INVALID
+import com.android.hcp3.ClassTypeEnum.LIST_ENUM
+import com.android.hcp3.ClassTypeEnum.LIST_OBJECT
+import com.android.hcp3.ClassTypeEnum.LIST_PRIMITIVE
+import com.android.hcp3.ClassTypeEnum.OBJECT
+import com.android.hcp3.ClassTypeEnum.PRIMITIVE
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
@@ -17,7 +24,17 @@ import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.StringUtil.transitionPath
 import com.android.hcp3.bean.AttributeBean
 import com.android.hcp3.bean.ObjectBean
-import com.squareup.javapoet.*
+import com.squareup.javapoet.AnnotationSpec
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.FieldSpec
+import com.squareup.javapoet.JavaFile
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.ParameterizedTypeName
+import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeSpec
+import com.squareup.javapoet.TypeVariableName
 import java.io.File
 import java.nio.file.Paths
 import javax.lang.model.element.Modifier
@@ -447,7 +464,7 @@ object GenerateUtil {
      * @return 返回一个数组，第一个元素是文件的全路径包名，不包含类名，第二个元素是类名的简写名字。例如：[0] = de.esolutions.fw.rudi.viwi.service.hvac.v3
      * [1] = GeneralSettingObject
      */
-    private fun getPackageInfo(
+    fun getPackageInfo(
         parameterPackage: String,
         classType: ClassTypeEnum = INVALID,
     ): Array<String> {
