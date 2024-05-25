@@ -331,17 +331,29 @@ object GenerateUtil {
         println("updatePackage:$updatePackage updateName:$updateName apiEntityName:$apiEntityName")
         // <editor-fold desc="一：构建类对象">
         println("开始生成Api类：[$localApiName] ------>")
-        // 1:创建继承类的泛型参数,todo 此处要动态去判断是否要更新
-        val superClass =
-            ParameterizedTypeName.get(
-                ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIResource"),
-                TypeVariableName.get(apiEntityName) // 泛型类的名字
-            )
+        // 1:创建继承类对象
+        val superclassParameterFirst: TypeName = ClassName.get(localApiPackage, apiEntityName)
+        val superclass =
+            if ((updatePackage.isEmpty()) or (updateName.isEmpty())) { // 没有更新对象，使用api的Entity作为参数
+                ParameterizedTypeName.get(
+                    ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIResource"),
+                    superclassParameterFirst
+                )
+            } else { // 有更新对象，使用api的Entity 和 update的类作为参数
+                // 创建第二个泛型参数
+                val superclassParameterSecond: TypeName = ClassName.get(updatePackage, updateName)
+                // 创建超类，指定多个泛型参数
+                ParameterizedTypeName.get(
+                    ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIResourceUpdate"),
+                    superclassParameterFirst,
+                    superclassParameterSecond
+                )
+            }
 
         // 2:构建类的对象
         val classSpec =
             TypeSpec.classBuilder(ClassName.get(localApiPackage, localApiName))
-                .superclass(superClass)
+                .superclass(superclass)
                 .addModifiers(Modifier.PUBLIC)
 
         // 3:把读取到的父类的主路径信息转换为包和类名
@@ -373,6 +385,7 @@ object GenerateUtil {
                 .addParameter(firstParameter) // 添加构造方法的第一个参数
                 .addParameter(secondParameter) // 添加构造方法的第二个参数
                 .addStatement("super(service, serviceProvider)") // 调用父类构造函数
+                .addModifiers(Modifier.PROTECTED)
                 .build()
 
         classSpec.addMethod(methodConstructor)
