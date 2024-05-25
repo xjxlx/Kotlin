@@ -64,7 +64,7 @@ object GenerateUtil {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Object类：[$parameterPackage] ------>")
         val parameterInfo = getPackageInfo(parameterPackage)
-        val realFileName = getFileNameForType(parameterPackage, OBJECT)
+        val realFileName = getFileNameForType(parameterPackage, OBJECT, generateFilePackage)
 
         // 构建类的build对象，用于组装类中的数据
         val classTypeBuild =
@@ -314,23 +314,32 @@ object GenerateUtil {
         // </editor-fold>
     }
 
+    /**
+     * @param localApiPackage 生成api类的包名，例如：technology.cariad.vehiclecontrolmanager.rsi.hvacvehiclepreconditioning.switchindications
+     * @param localApiName 生成类的名字，例如：SwitchIndications
+     *
+     */
     @JvmStatic
     fun generateApi(
-        packagePath: String,
-        fileName: String,
+        localApiPackage: String,
+        localApiName: String,
+        updatePackage: String,
+        updateName: String,
+        apiEntityName: String,
     ) {
+        println("updatePackage:$updatePackage updateName:$updateName apiEntityName:$apiEntityName")
         // <editor-fold desc="一：构建类对象">
-        println("开始生成Api类：[$fileName] ------>")
+        println("开始生成Api类：[$localApiName] ------>")
         // 1:创建继承类的泛型参数,todo 此处要动态去判断是否要更新
         val superClass =
             ParameterizedTypeName.get(
                 ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIResource"),
-                TypeVariableName.get(fileName + OBJECT_SUFFIX) // 继承类的名字
+                TypeVariableName.get(apiEntityName) // 泛型类的名字
             )
 
         // 2:构建类的对象
         val classSpec =
-            TypeSpec.classBuilder(ClassName.get(packagePath, fileName))
+            TypeSpec.classBuilder(ClassName.get(localApiPackage, localApiName))
                 .superclass(superClass)
                 .addModifiers(Modifier.PUBLIC)
 
@@ -368,7 +377,7 @@ object GenerateUtil {
         classSpec.addMethod(methodConstructor)
 
         // <editor-fold desc="三：写入到类中">
-        val javaFile = JavaFile.builder(packagePath, classSpec.build()).build()
+        val javaFile = JavaFile.builder(localApiPackage, classSpec.build()).build()
         if (DEBUG) {
             javaFile.writeTo(System.out)
         } else {
@@ -376,7 +385,6 @@ object GenerateUtil {
             javaFile.writeTo(outPutFile)
         }
         println("\r\n【写入结束！】\r\n")
-
         // </editor-fold>
     }
 
@@ -408,10 +416,12 @@ object GenerateUtil {
             println("     文件[$genericPackage]存在，直接返回文件信息：$attributeBean")
             return attributeBean
         } else {
-            // 1：根据文件的类型去获取文件名字
-            val realFileName = getFileNameForType(genericPackage, genericType)
+            // 1：获取写入文件的路径
+            val writeFilPackage = getWriteFilPackage(genericPackage)
+            // 2：根据文件的类型去获取文件名字
+            val realFileName = getFileNameForType(genericPackage, genericType, writeFilPackage)
 
-            // <editor-fold desc="2：读取本地文件，并查询集合中是否有需要的文件">
+            // <editor-fold desc="3：读取本地文件，并查询集合中是否有需要的文件">
             readNodeLocalFile(
                 lowercase(
                     transitionPath(
@@ -425,7 +435,7 @@ object GenerateUtil {
             val find = LOCAL_NODE_FILE_LIST.find { local -> local.name == realFileName }
             // </editor-fold>
 
-            // 3：如果文件存在，则直接返回文件的路径
+            // 4：如果文件存在，则直接返回文件的路径
             if (find != null) {
                 val attributeBean = AttributeBean()
                 attributeBean.name = find.name
@@ -433,11 +443,9 @@ object GenerateUtil {
                 println("     文件[$realFileName]存在，直接返回文件信息：$attributeBean")
                 return attributeBean
             } else {
-                // 4：获取写入文件的路径
-                val writeFilPackage = getWriteFilPackage(genericPackage)
                 val jarFileName = StringUtil.getPackageSimple(genericPackage)
 
-                // 6:读取jar包中属性的字段
+                // 5:读取jar包中属性的字段
                 mGlobalClassLoad?.let { classLoad ->
                     val readClass = readClass(classLoad, genericPackage)
                     if (readClass != null) {
@@ -528,12 +536,16 @@ object GenerateUtil {
     /**
      * 根据包名和文件的类型去返回文件真实的名字
      * 1：如果是枚举类型，则根据规则，在枚举前面加入：[Config.ENUM_PREFIX]
-     * 2:如果是object类型，则根据规则，在后面假如：[Config.OBJECT_SUFFIX]
-     * 3:如果是object类型，同时也是忽略的指定类型的话，则不用后面加入指定规则[Config.OBJECT_SUFFIX]
+     * 2：如果是object类型，则根据规则，在后面假如：[Config.OBJECT_SUFFIX]
+     * 3：如果是object类型，同时也是忽略的指定类型的话，则不用后面加入指定规则[Config.OBJECT_SUFFIX]
+     * 4：如果是Api的Entity的主类的话，则使用[ApiNodeBean.apiName]去设置名字，例如：[switchIndications]
+     *    设置为：switchIndicationsEntity
+     * 5：如果发现了Api的主类，则在这个时候去生成对应的Api的类
      */
     private fun getFileNameForType(
         genericPackage: String,
         genericType: ClassTypeEnum,
+        localPackage: String,
     ): String {
         var realFileName = ""
 
@@ -543,6 +555,15 @@ object GenerateUtil {
         val apiBean = RSI_TARGET_NODE_LIST.find { filter -> filter.apiGenericPath == genericPackage }
         if (apiBean != null) {
             realFileName = StringUtil.capitalize(apiBean.apiName + OBJECT_SUFFIX)
+            // 发现了api的Entity的类，则去生成对应的Api的类
+            println("-------------------------------->")
+            generateApi(
+                localPackage,
+                StringUtil.capitalize(apiBean.apiName),
+                apiBean.updatePackage,
+                apiBean.updateName,
+                realFileName
+            )
         } else {
             val jarFileName = StringUtil.getPackageSimple(genericPackage)
             if (genericType == OBJECT || genericType == LIST_OBJECT) {
