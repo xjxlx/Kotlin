@@ -19,7 +19,7 @@ public class ApiNodeBean {
    * 参数为：UpdateSwitchControlsObject，
    * 所以返回的名字为：de.esolutions.fw.rudi.viwi.service.hvacvehiclepreconditioning.v101
    */
-  private String updatePackage;
+  private String updatePackage = "";
 
   /**
    * api节点类中更新方法参数的名字 例如：
@@ -27,7 +27,7 @@ public class ApiNodeBean {
    * 其中的更新方法为:Single<URI> updateSwitchControlsObject(UUID var1, UpdateSwitchControlsObject var2)
    * 参数为：UpdateSwitchControlsObject， 所以返回的名字为：UpdateSwitchControlsObject
    */
-  private String updateName;
+  private String updateName = "";
 
   public String getApiName() {
     return apiName;
