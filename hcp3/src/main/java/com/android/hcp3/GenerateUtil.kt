@@ -19,6 +19,7 @@ import com.android.hcp3.ReadJarFile.getEnums
 import com.android.hcp3.ReadJarFile.getMethods
 import com.android.hcp3.ReadJarFile.mGlobalClassLoad
 import com.android.hcp3.ReadJarFile.readClass
+import com.android.hcp3.StringUtil.deleteFileFormat
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.StringUtil.transitionPath
@@ -556,14 +557,23 @@ object GenerateUtil {
         if (apiBean != null) {
             realFileName = StringUtil.capitalize(apiBean.apiName + OBJECT_SUFFIX)
             // 发现了api的Entity的类，则去生成对应的Api的类
-            println("-------------------------------->")
-            generateApi(
-                localPackage,
-                StringUtil.capitalize(apiBean.apiName),
-                apiBean.updatePackage,
-                apiBean.updateName,
-                realFileName
-            )
+            val localName = StringUtil.capitalize(apiBean.apiName)
+
+            val localFile =
+                File(BASE_OUT_PUT_PATH, transitionPath(localPackage)).listFiles()
+                    ?.find { local -> deleteFileFormat(local.name) == localName }
+
+            if ((localFile != null) && (localFile.exists())) {
+                println("本地的Api文件已经存在，不需要再次创建！")
+            } else {
+                generateApi(
+                    localPackage,
+                    localName,
+                    apiBean.updatePackage,
+                    apiBean.updateName,
+                    realFileName
+                )
+            }
         } else {
             val jarFileName = StringUtil.getPackageSimple(genericPackage)
             if (genericType == OBJECT || genericType == LIST_OBJECT) {

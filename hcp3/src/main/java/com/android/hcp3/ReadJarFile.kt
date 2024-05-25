@@ -451,7 +451,6 @@ object ReadJarFile {
                         val apiRunTypePath = apiMethod.returnType.name // 父类中Api方法的返回类型，这里是全路径的包名
                         // 根据api方法的返回类型的path，去反射获取的Api对象的class对象
                         val apiClass = readClass(globalClassLoad, apiRunTypePath)
-                        val tempApiMethodList = ArrayList<ApiNodeBean>()
                         if (apiClass != null) {
                             val apiNodeBean = ApiNodeBean()
                             apiNodeBean.apiName = apiMethodName // 父类中api方法的名字
