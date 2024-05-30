@@ -36,9 +36,8 @@ object Config {
      * 存放JAR包的位置，这个会根据项目的不同，进行一次性的改动，不会随意改动
      * @see {hcp3/src/main/java/com/android/hcp3/jar/}
      */
-    // var BASE_JAR_PATH: String = "hcp3${File.separator}libs${File.separator}cluster46_12_7_0${File.separator}"
-    @Suppress("ktlint:standard:no-consecutive-comments")
-    var BASE_JAR_PATH: String = "hcp3${File.separator}libs${File.separator}oia${File.separator}"
+    var BASE_JAR_PATH: String = "hcp3${File.separator}libs${File.separator}cluster46_12_7_0${File.separator}"
+//    var BASE_JAR_PATH: String = "hcp3${File.separator}libs${File.separator}oia${File.separator}"
 
     /**
      *读取JAR包的路径，这个地方一般是死的，不会随意改动
@@ -62,18 +61,18 @@ object Config {
      *rsi中大项的节点路径，这个每次生成不同的模块，都要进行不同的改动
      * @see {hvac}
      */
-    const val RSI_PARENT_NODE_PATH = "hvacvehiclepreconditioning"
+    const val RSI_PARENT_NODE_PATH = "seating"
 
     /**
      *rsi中大项的节点的等级，这个每次生成不同的模块，都要进行不同的改动
      * @see {v3}
      */
-    const val RSI_PARENT_NODE_LEVEL = "v101"
+    const val RSI_PARENT_NODE_LEVEL = "v9"
 
     /**
      *rsi中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动
      * @see {generalsettings}
      */
-    const val RSI_CHILD_NODE_PATH = "preConditioningSettings"
+    const val RSI_CHILD_NODE_PATH = "seats"
 //    const val RSI_CHILD_NODE_PATH = "preconditioningtimers"
 }

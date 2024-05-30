@@ -1,13 +1,6 @@
 package com.android.hcp3
 
-import com.android.hcp3.ClassTypeEnum.ARRAY
-import com.android.hcp3.ClassTypeEnum.ENUM
-import com.android.hcp3.ClassTypeEnum.INVALID
-import com.android.hcp3.ClassTypeEnum.LIST_ENUM
-import com.android.hcp3.ClassTypeEnum.LIST_OBJECT
-import com.android.hcp3.ClassTypeEnum.LIST_PRIMITIVE
-import com.android.hcp3.ClassTypeEnum.OBJECT
-import com.android.hcp3.ClassTypeEnum.PRIMITIVE
+import com.android.hcp3.ClassTypeEnum.*
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
@@ -25,17 +18,7 @@ import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.StringUtil.transitionPath
 import com.android.hcp3.bean.AttributeBean
 import com.android.hcp3.bean.ObjectBean
-import com.squareup.javapoet.AnnotationSpec
-import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.CodeBlock
-import com.squareup.javapoet.FieldSpec
-import com.squareup.javapoet.JavaFile
-import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.ParameterSpec
-import com.squareup.javapoet.ParameterizedTypeName
-import com.squareup.javapoet.TypeName
-import com.squareup.javapoet.TypeSpec
-import com.squareup.javapoet.TypeVariableName
+import com.squareup.javapoet.*
 import java.io.File
 import java.nio.file.Paths
 import javax.lang.model.element.Modifier
@@ -568,20 +551,24 @@ object GenerateUtil {
          */
         val apiBean = RSI_TARGET_NODE_LIST.find { filter -> filter.apiGenericPath == genericPackage }
         if (apiBean != null) {
-            realFileName = StringUtil.capitalize(apiBean.apiName + OBJECT_SUFFIX)
             // 发现了api的Entity的类，则去生成对应的Api的类
-            val localName = StringUtil.capitalize(apiBean.apiName)
+            val apiGenericName = apiBean.apiGenericName
+            if (apiGenericName.endsWith("Object")) {
+                // api节点下Entity的名字
+                realFileName = apiGenericName.substring(0, apiGenericName.lastIndexOf("Object")) + OBJECT_SUFFIX
+            }
+            // 对应api的文件名字
+            val apiNameName = StringUtil.capitalize(apiBean.apiName)
 
-            val localFile =
+            val localApiFile =
                 File(BASE_OUT_PUT_PATH, transitionPath(localPackage)).listFiles()
-                    ?.find { local -> deleteFileFormat(local.name) == localName }
-
-            if ((localFile != null) && (localFile.exists())) {
+                    ?.find { local -> deleteFileFormat(local.name) == apiNameName }
+            if ((localApiFile != null) && (localApiFile.exists())) {
                 println("本地的Api文件已经存在，不需要再次创建！")
             } else {
                 generateApi(
                     localPackage,
-                    localName,
+                    apiNameName,
                     apiBean.updatePackage,
                     apiBean.updateName,
                     realFileName
