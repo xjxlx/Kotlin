@@ -224,7 +224,7 @@ object GenerateUtil {
         println("开始生成Enum类：[$objectClassPath] ------>")
         val classType = getPackageInfo(objectClassPath)
         val clsTypeName = classType[1]
-        val isEnum = lowercase(clsTypeName) == "enum"
+        val isEnum = lowercase(clsTypeName).endsWith("enum")
         val className =
             if (isEnum) {
                 "Vc$clsTypeName"
