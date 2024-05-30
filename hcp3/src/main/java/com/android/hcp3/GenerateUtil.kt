@@ -223,7 +223,14 @@ object GenerateUtil {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Enum类：[$objectClassPath] ------>")
         val classType = getPackageInfo(objectClassPath)
-        val className = "Vc${classType[1]}"
+        val clsTypeName = classType[1]
+        val isEnum = lowercase(clsTypeName) == "enum"
+        val className =
+            if (isEnum) {
+                "Vc$clsTypeName"
+            } else {
+                "Vc${clsTypeName}Enum"
+            }
 
         // 1：构建固定属性对象
         val fieldSpec =
