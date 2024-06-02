@@ -598,12 +598,42 @@ object GenerateUtil {
         val interfaceSpec =
             TypeSpec.interfaceBuilder(interfaceName)
                 .addModifiers(Modifier.PUBLIC)
-                .addMethod(
-                    MethodSpec.methodBuilder("someMethod")
-                        .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                        .returns(String::class.java)
-                        .build()
-                )
+                .build()
+
+        // <editor-fold desc="四：写入到类中">
+        val javaFile = JavaFile.builder(interfacePackage, interfaceSpec).build()
+        if (DEBUG) {
+            javaFile.writeTo(System.out)
+        } else {
+            val outPutFile = File(BASE_OUT_PUT_PATH)
+            javaFile.writeTo(outPutFile)
+        }
+        println("\r\n【写入结束！】\r\n")
+        // </editor-fold>
+    }
+
+    @JvmStatic
+    fun dynamicAddInterfaceMethod() {
+        val interfacePackage =
+            transitionPackage(
+                Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                    .resolve(Paths.get(RSI_NODE_NAME)).toString()
+            )
+        val interfaceName = StringUtil.getPackageSimple(transitionPackage(RSI_NODE_PATH)) + "Interface"
+        // <editor-fold desc="一：构建接口类对象">
+        println("开始动态添加Interface方法：[$interfaceName] ------>")
+
+        // 创建一个新的方法
+        val newMethod =
+            MethodSpec.methodBuilder("newMethod")
+                .addModifiers(Modifier.ABSTRACT)
+                .returns(Void.TYPE)
+                .build()
+
+        val interfaceSpec =
+            TypeSpec.interfaceBuilder(interfaceName)
+                .addModifiers(Modifier.PUBLIC)
+                .addMethod(newMethod)
                 .build()
 
         // <editor-fold desc="四：写入到类中">
@@ -815,6 +845,7 @@ object GenerateUtil {
                 try {
                     Class.forName("$interfacePackage.$interfaceName")
                     println("接口存在，去动态添加接口的方法！")
+                    dynamicAddInterfaceMethod()
                 } catch (e: ClassNotFoundException) {
                     println("接口类不存在，请检查是否正常生成了接口类！")
                 }
