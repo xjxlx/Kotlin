@@ -35,7 +35,7 @@ object FileUtil {
         println("文件生成完毕，开始移动文件到目标文件夹中--------->")
         // <editor-fold desc="1：读取本地JAR包的Api，返回一个list列表">
         readJarApiList()
-        println("readJarApiFile:[$RSI_TARGET_NODE_LIST]")
+        println("1：readJarApiFile:[$RSI_TARGET_NODE_LIST]")
         // </editor-fold>
 
         // <editor-fold desc="2：读取本地指定目录中的Api的路径，返回一个set集合">
@@ -49,26 +49,28 @@ object FileUtil {
                 )
             )
         val readLocalApiPath = readLocalApiPath(localTargetPath)
-        println("readLocalApiPath:[$readLocalApiPath]")
+        println("2：readLocalApiPath:[$readLocalApiPath]")
         // </editor-fold>
 
         // <editor-fold desc="3：读取本地指定目录中的Api下child的path，返回一个set集合">
         val readLocalApiChildPath = readLocalApiChildPath(readLocalApiPath)
+        println("3：readLocalApiChildPath:[$readLocalApiChildPath]")
+
         // </editor-fold>
 
         // <editor-fold desc="4：读取本地指定目录中的Api下child的泛型，返回一个set集合">
         val apiChildGenericTypeList = getApiChildGenericTypeList(readLocalApiChildPath)
-        println("apiChildGenericTypeList:[$apiChildGenericTypeList]")
+        println("4：apiChildGenericTypeList:[$apiChildGenericTypeList]")
         // </editor-fold>
 
         // <editor-fold desc="5：读取本地指定目录中的Api下child的泛型，返回一个set集合">
         val readLocalEnumFile = readLocalEnumFile(localTargetPath)
-        println("readLocalEnumFile:[$readLocalEnumFile]")
+        println("5：readLocalEnumFile:[$readLocalEnumFile]")
         // </editor-fold>
 
         // <editor-fold desc="6：对比本地的Enum在Api包下的主类中出现的次数">
         val filterEnum = filterEnumSize(apiChildGenericTypeList, readLocalEnumFile)
-        println("filterEnum:[$filterEnum]")
+        println("6：filterEnum:[$filterEnum]")
         // </editor-fold>
 
         filterEnum.forEach { enum ->
@@ -196,12 +198,10 @@ object FileUtil {
             val indexOf = packagePath.lastIndexOf(".")
             val substring = packagePath.substring(0, indexOf)
             val cls = Class.forName(substring)
-
             var objectGenericSet = bean.objectGenericSet
             if (objectGenericSet == null) {
                 objectGenericSet = LinkedHashSet()
             }
-
             for (field in cls.declaredFields) {
                 val genericType = field.genericType
                 if (genericType is Class<*>) {
