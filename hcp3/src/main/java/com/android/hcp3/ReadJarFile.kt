@@ -582,9 +582,6 @@ object ReadJarFile {
                             )
                         // 10：写入当前的Object
                         generateObject(filterBean.apiObjectPath, jarSet, packagePath)
-
-                        // 11：执行文件挪动任务
-                        FileUtil.execute()
                     }
                 } else {
                     println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")

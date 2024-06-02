@@ -1,25 +1,44 @@
 package com.android.hcp3
 
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 object TaskUtil {
     @JvmStatic
     fun main(args: Array<String>) {
-        val execute =
-            executeAsync {
-                TimeUnit.SECONDS.sleep(2) // 模拟耗时操作
+        val executor = Executors.newScheduledThreadPool(1)
+        // 移动文件的等待时间
+        var moveDelayTime = 3
+
+        // 1：执行文件写入任务
+        executeAsync {
+            thread(true) {
+                ReadJarFile.execute()
             }
-        println("execute: $execute")
+        }
+
+        // 2：等待指定的时间后，去执行移动文件的任务
+        thread(true) {
+            executor.scheduleAtFixedRate({
+                println("倒计时：$moveDelayTime 秒")
+                if (moveDelayTime == 0) {
+                    println("时间到！")
+                    executor.shutdown() // 停止计时器
+                    FileUtil.execute()
+                }
+                moveDelayTime--
+            }, 0, 1, TimeUnit.SECONDS) // 每隔一秒执行一次任务
+        }
     }
 
-    fun executeAsync(block: () -> Unit): Boolean {
+    private fun executeAsync(block: () -> Unit): Boolean {
         // 定义异步任务
         val future =
             CompletableFuture.supplyAsync {
                 try {
-                    ReadJarFile.execute()
-                    TimeUnit.SECONDS.sleep(2) // 模拟耗时操作
+                    block()
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
@@ -35,7 +54,6 @@ object TaskUtil {
         // 获取结果
         val result = future.get()
         println(result)
-        FileUtil.execute()
         return true
     }
 }
