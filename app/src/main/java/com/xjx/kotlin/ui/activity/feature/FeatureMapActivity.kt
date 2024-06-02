@@ -14,11 +14,10 @@ import com.xjx.kotlin.ui.activity.thread.ThreadMapActivity
 import com.xjx.kotlin.utils.zmq.big.ServiceActivity
 
 class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>() {
-
     override fun getBinding(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            attachToRoot: Boolean
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean,
     ): ActivityFeatureMapBinding {
         return ActivityFeatureMapBinding.inflate(inflater, container, true)
     }
@@ -52,6 +51,7 @@ class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>()
         mBinding.tvItemTestColor.setOnClickListener { startActivity(ColorConvertActivity::class.java) }
         mBinding.tvItemTextSpeech.setOnClickListener { startActivity(TextToSpeechActivity::class.java) }
         mBinding.tvItemConvertEnum.setOnClickListener { startActivity(ConvertEnumActivity::class.java) }
+        mBinding.tvItemSplitStr.setOnClickListener { startActivity(SplitStrActivity::class.java) }
     }
 
     override fun onClick(v: View?) {
