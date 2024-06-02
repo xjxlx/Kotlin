@@ -28,8 +28,12 @@ object GenerateUtil {
     private val ANNOTATION_NULLABLE = ClassName.get("androidx.annotation", "Nullable")
 
     private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
+    private val MANAGER_SUPER_CLASS_NAME =
+        ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIService")
+    private val MANAGER_I_RSI_ADMIN_NAME = ClassName.get("de.esolutions.fw.android.rsi.client.rx", "IRsiAdmin")
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
-    val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
+
+    private val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
 
     private const val DEBUG = false
 
@@ -392,6 +396,56 @@ object GenerateUtil {
         // </editor-fold>
     }
 
+    @JvmStatic
+    fun generateManager(
+        localPackage: String,
+        apiName: String,
+    ) {
+        // <editor-fold desc="一：构建类对象">
+        val managerName = StringUtil.capitalize(apiName) + "Manager"
+        println("开始生成Manager类：[$managerName] ------>")
+        // 1.1：创建超类，指定泛型参数
+        val rsiNodeInfo = transitionPackage(RSI_NODE_PATH)
+        val rsiInfo = getPackageInfo(rsiNodeInfo)
+        val superClass =
+            ParameterizedTypeName.get(
+                MANAGER_SUPER_CLASS_NAME,
+                ClassName.get(rsiInfo[0], rsiInfo[1])
+            )
+        // 1.2：构造类对象
+        val classSpec =
+            TypeSpec.classBuilder(ClassName.get(localPackage, managerName))
+                .superclass(superClass)
+                .addModifiers(Modifier.PUBLIC)
+
+        val parameter =
+            ParameterSpec.builder(MANAGER_I_RSI_ADMIN_NAME, "rsiAdmin")
+                .build()
+        // </editor-fold>
+
+        // <editor-fold desc="二：构造方法组装">
+        val methodConstructor =
+            MethodSpec.constructorBuilder()
+                .addParameter(parameter) // 添加构造方法参数
+                .addStatement("super(rsiAdmin)") // 调用父类构造函数
+                .addModifiers(Modifier.PROTECTED)
+                .build()
+
+        classSpec.addMethod(methodConstructor)
+        // </editor-fold>
+
+        // <editor-fold desc="三：写入到类中">
+        val javaFile = JavaFile.builder(localPackage, classSpec.build()).build()
+        if (DEBUG) {
+            javaFile.writeTo(System.out)
+        } else {
+            val outPutFile = File(BASE_OUT_PUT_PATH)
+            javaFile.writeTo(outPutFile)
+        }
+        println("\r\n【写入结束！】\r\n")
+        // </editor-fold>
+    }
+
     /**
      * 每当读取到一个属性的时候，就需要判定这个类的重构类是否存在，如果不存在的话，则需要去主动生成这个类,然后返回这个类的全路径名字
      * @param genericPackage 泛型的包名
@@ -574,6 +628,7 @@ object GenerateUtil {
                     apiBean.updateObjectName,
                     realFileName
                 )
+                generateManager(localPackage, apiBean.apiName)
             }
         }
         return realFileName
