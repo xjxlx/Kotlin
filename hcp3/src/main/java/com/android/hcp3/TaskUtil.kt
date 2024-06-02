@@ -23,8 +23,8 @@ object TaskUtil {
             TimeUnit.MILLISECONDS.sleep(500)
             val readProcess = readProcess()
             if (readProcess == 0) {
-                TimeUnit.MILLISECONDS.sleep(500)
-//                fileProcess()
+                TimeUnit.MILLISECONDS.sleep(3000)
+                fileProcess()
             }
         }
     }
@@ -46,8 +46,6 @@ object TaskUtil {
         while ((reader.readLine().also { line = it }) != null) {
             println(line)
         }
-        // 等待进程结束
-        interfaceProcess.waitFor()
         // 等待第一个进程完成
         val exitCode = interfaceProcess.waitFor()
         interfaceProcess.destroy()
@@ -72,8 +70,6 @@ object TaskUtil {
         while ((reader.readLine().also { line = it }) != null) {
             println(line)
         }
-        // 等待进程结束
-        readProcess.waitFor()
         // 等待第一个进程完成
         val exitCode = readProcess.waitFor()
         println("读取JAR进程退出代码: $exitCode")
@@ -83,7 +79,7 @@ object TaskUtil {
 
     private fun fileProcess(): Int {
         println("File移动文件的进程开始启动--->")
-        val processInterface =
+        val processFile =
             ProcessBuilder(
                 "java",
                 "-cp",
@@ -91,17 +87,15 @@ object TaskUtil {
                 FILE_CLASS_NAME,
                 FILE_METHOD_NAME
             )
-        val interfaceProcess = processInterface.start()
+        val readProcess = processFile.start()
         // 读取进程的输出
-        val reader = BufferedReader(InputStreamReader(interfaceProcess.inputStream))
+        val reader = BufferedReader(InputStreamReader(readProcess.inputStream))
         var line: String?
         while ((reader.readLine().also { line = it }) != null) {
             println(line)
         }
-        // 等待进程结束
-        interfaceProcess.waitFor()
         // 等待第一个进程完成
-        val exitCode = interfaceProcess.waitFor()
+        val exitCode = readProcess.waitFor()
         println("File移动文件的进程退出代码: $exitCode")
         return exitCode
     }
