@@ -36,6 +36,7 @@ object GenerateUtil {
         ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "ValueCallback")
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
     private val CLASSNAME_LIST = ClassName.get("java.util", "List")
+    private val CLASSNAME_STRING = ClassName.get("java.util", "String")
 
     private val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
 
@@ -409,6 +410,7 @@ object GenerateUtil {
         // <editor-fold desc="一：构建类对象">
         val realApiName = StringUtil.capitalize(apiName)
         val entityFileName = getFileName(apiObjectPath, OBJECT)
+        val apiObjectEntity = ClassName.get(localPackage, entityFileName)
 
         val managerName = realApiName + "Manager"
         println("开始生成Manager类：[$managerName] ------>")
@@ -472,7 +474,7 @@ object GenerateUtil {
                     MANAGER_VALUE_CALL_BACK_NAME,
                     ParameterizedTypeName.get(
                         CLASSNAME_LIST,
-                        ClassName.get(localPackage, entityFileName)
+                        apiObjectEntity
                     )
                 ),
                 "callback"
@@ -502,7 +504,7 @@ object GenerateUtil {
                     MANAGER_VALUE_CALL_BACK_NAME,
                     ParameterizedTypeName.get(
                         CLASSNAME_LIST,
-                        ClassName.get(localPackage, entityFileName)
+                        apiObjectEntity
                     )
                 ),
                 "callback"
@@ -518,6 +520,56 @@ object GenerateUtil {
                 .build()
         classSpec.addMethod(unregisterMethod)
         // </editor-fold>
+
+        // <editor-fold desc="3.4：getAllEntities"
+        val getAllCodeBuild = CodeBlock.builder()
+        getAllCodeBuild.addStatement(
+            "return create$realApiName().getAllValueSync()",
+            ClassName.get(localPackage, realApiName)
+        )
+
+        val getAllReturnType =
+            ParameterizedTypeName.get(
+                CLASSNAME_LIST,
+                apiObjectEntity
+            )
+
+        val getAllMethod =
+            MethodSpec.methodBuilder("getAll" + realApiName + "EntitiesSync")
+                .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(ANNOTATION_NULLABLE)
+                .addAnnotation(ANNOTATION_OVERRIDE)
+                .addCode(getAllCodeBuild.build())
+                .returns(getAllReturnType)
+                .build()
+        classSpec.addMethod(getAllMethod)
+        // </editor-fold>
+
+        // <editor-fold desc="3.4：getEntities"
+        val getEntitiesCodeBuild = CodeBlock.builder()
+        getEntitiesCodeBuild.addStatement(
+            "return create$realApiName().getValueSync(name)",
+            ClassName.get(localPackage, realApiName)
+        )
+        val getEntitiesParameter =
+            ParameterSpec.builder(
+                CLASSNAME_STRING,
+                "name"
+            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+                .build()
+
+        val getEntitiesMethod =
+            MethodSpec.methodBuilder("get" + realApiName + "EntitiesSync")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(getEntitiesParameter)
+                .addAnnotation(ANNOTATION_NULLABLE)
+                .addAnnotation(ANNOTATION_OVERRIDE)
+                .addCode(getEntitiesCodeBuild.build())
+                .returns(apiObjectEntity)
+                .build()
+        classSpec.addMethod(getEntitiesMethod)
+        // </editor-fold>
+
         // </editor-fold>
 
         // <editor-fold desc="四：写入到类中">

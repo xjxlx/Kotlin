@@ -14,4 +14,14 @@ public abstract class BaseRSIResource<E extends BaseRSIValue> {
   public void registerValueCallback(@NonNull ValueCallback<List<E>> callback) {}
 
   public void unregisterValueCallback(@NonNull ValueCallback<List<E>> callback) {}
+
+  @NonNull
+  public List<E> getAllValueSync() {
+    return null;
+  }
+
+  @Nullable
+  public E getValueSync(@NonNull String name) {
+    return null;
+  }
 }
