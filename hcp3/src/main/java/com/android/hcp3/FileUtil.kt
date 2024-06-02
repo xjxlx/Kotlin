@@ -3,8 +3,8 @@ package com.android.hcp3
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
-import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
-import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
+import com.android.hcp3.Config.RSI_NODE_LEVEL
+import com.android.hcp3.Config.RSI_NODE_NAME
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.ReadJarFile.getGlobalClassLoad
@@ -37,7 +37,7 @@ object FileUtil {
                 transitionPath(
                     Paths.get(BASE_OUT_PUT_PATH)
                         .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
-                        .resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                        .resolve(Paths.get(RSI_NODE_NAME))
                         .toString()
                 )
             )
@@ -76,7 +76,7 @@ object FileUtil {
                     // 2.1: 获取原始目录的路径
                     val deletePackage: String =
                         transitionPackage(
-                            Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH)).toString()
+                            Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_NODE_NAME)).toString()
                         )
                     // 2.2:获取到挪移后的包名
                     val newPackage = getPackageForProjectPath(Paths.get(enum.parentPath).toString() + ".java")
@@ -86,7 +86,7 @@ object FileUtil {
                     // 3.1:被删除的import内容
                     val deleteImport =
                         transitionPackage(
-                            Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                            Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_NODE_NAME))
                                 .resolve(enum.name).toString()
                         )
                     deleteFileImport(enum.apiChildPath, deleteImport)
@@ -104,13 +104,13 @@ object FileUtil {
             val filterNodePath: String =
                 transitionPath(
                     Paths.get(RSI_ROOT_NODE_PATH)
-                        .resolve(Paths.get(RSI_PARENT_NODE_PATH))
-                        .resolve(Paths.get(RSI_PARENT_NODE_LEVEL))
+                        .resolve(Paths.get(RSI_NODE_NAME))
+                        .resolve(Paths.get(RSI_NODE_LEVEL))
                         .toString()
                 )
             println("过滤JAR包中的父节点为：[$filterNodePath]")
             // 2: 读取jar包中需要依赖的类名字
-            val needDependenciesClassNameList = readNeedDependenciesClassName(filterNodePath)
+            val needDependenciesClassNameList = readNeedDependenciesClassName()
             // 3:通过配置需要依赖的类，去构建一个classLoad
             getGlobalClassLoad(needDependenciesClassNameList)?.let {
                 // 4：读取父节点下所有的api方法，获取所有api的方法的名字以及返回类型的全路径包名

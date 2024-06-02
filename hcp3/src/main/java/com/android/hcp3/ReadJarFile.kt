@@ -3,13 +3,12 @@ package com.android.hcp3
 import com.android.hcp3.Config.BASE_JAR_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
-import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
+import com.android.hcp3.Config.RSI_NODE_API_NAME
+import com.android.hcp3.Config.RSI_NODE_LEVEL
+import com.android.hcp3.Config.RSI_NODE_NAME
 import com.android.hcp3.Config.RSI_NODE_PATH
-import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
-import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
-import com.android.hcp3.Config.TARGET_JAR_PATH
 import com.android.hcp3.GenerateUtil.generateObject
 import com.android.hcp3.GenerateUtil.getPackageInfo
 import com.android.hcp3.StringUtil.getPackageSimple
@@ -52,49 +51,56 @@ object ReadJarFile {
     }
 
     /**
-     * @param filterNodePath JAR包中指定的节点
      * @return 读取指定JAR包中,指定节点下所有的object和Enum的文件，返回一个读取到的文件相对路径列表，用于加载到classLoad里面，避免
      * 反射class类中有依赖其他类的情况。注意，这里读取的是路径，不是包名
      * 例如：读取mib_rsi_android.jar包中hvac节点下所有的object和enum的类，返回集合路径
      */
-    fun readNeedDependenciesClassName(filterNodePath: String): List<String> {
+    fun readNeedDependenciesClassName(): List<String> {
         val fileNames: MutableList<String> = ArrayList()
+        // 1：读取JAB包中指定节点下文件,例如：de/esolutions/fw/rudi/viwi/service/headupdisplay/v4
+        var filterNodePath: String =
+            transitionPath(
+                Paths.get(RSI_ROOT_NODE_PATH)
+                    .resolve(Paths.get(RSI_NODE_NAME))
+                    .resolve(Paths.get(RSI_NODE_LEVEL))
+                    .toString()
+            )
+        println("过滤JAR包中的父节点为：[$filterNodePath]")
+        // 2：读取指定jar包中的文件
+        val jarName = "${BASE_JAR_PATH}mib_rsi_android.jar"
+        println("读取JAR的名字为：[$jarName]")
+
         try {
             // 打开Jar文件
-            val jarFile = JarFile(TARGET_JAR_PATH)
+            val jarFile = JarFile(jarName)
             // 获取Jar包中的所有文件和目录条目
             val entries = jarFile.entries()
             while (entries.hasMoreElements()) {
-                val entry = entries.nextElement()
-                val entryName = entry.name
+                val entryName = entries.nextElement().name
                 // 替换不同平台的分隔符
-                val separator = filterNodePath.replace(File.separator, "/")
+                filterNodePath = filterNodePath.replace(File.separator, "/")
                 // 收集指定路径下的所有文件名称
-                if (entryName.startsWith(separator)) {
-                    // System.out.println("entryName:" + entryName);
-                    // 把包名给全部小写，进行比对
-                    val parentNodeName = lowercase(RSI_PARENT_NODE_PATH)
-                    if (entryName.endsWith(".class")) {
-                        // String splitClassName = entryName.split(".class")[0];
-                        val splitClassName =
-                            entryName.split(".class".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+                if (entryName.startsWith(filterNodePath)) {
+                    // 删除掉文件的格式
+                    val deleteFileFormat = StringUtil.deleteFileFormat(entryName)
+                    // 把包名给全部转换成小写，进行比对
+                    val lowercaseFileName = lowercase(deleteFileFormat)
 
-                        /**
-                         * 文件读取规则：
-                         * 1：只读取object结尾的文件
-                         * 2：只读取Enum结尾的文件
-                         * 3：只读取指定[RSI_PARENT_NODE_PATH]包名结尾的文件
-                         */
-                        val lowercase = lowercase(splitClassName)
-                        val isApiFile = lowercase.endsWith(parentNodeName)
-                        if (((splitClassName.endsWith("Object")) || (splitClassName.endsWith("Enum"))) || (isApiFile)) {
-                            // 如果是以父类节点结束的，则保存这个节点的全属性包名
-                            if (lowercase.endsWith(parentNodeName)) {
-                                println("当前父类节点下主类: [$splitClassName]")
-                                RSI_NODE_PATH = splitClassName
-                            }
-                            fileNames.add(transitionPackage(splitClassName))
+                    /**
+                     * 文件读取规则：
+                     * 1：只读取object结尾的文件
+                     * 2：只读取Enum结尾的文件
+                     * 3：只读取指定[RSI_NODE_NAME]包名结尾的文件
+                     */
+                    val nodeName = lowercase(RSI_NODE_NAME)
+                    val isApiFile = lowercaseFileName.endsWith(nodeName)
+                    if (((lowercaseFileName.endsWith("object")) || (lowercaseFileName.endsWith("enum"))) || (isApiFile)) {
+                        // 如果是以父类节点结束的，则保存这个节点的全属性包名
+                        if (lowercaseFileName.endsWith(nodeName)) {
+                            println("当前父类节点下主类: [$deleteFileFormat]")
+                            RSI_NODE_PATH = deleteFileFormat
                         }
+                        fileNames.add(transitionPackage(deleteFileFormat))
                     }
                 }
             }
@@ -515,7 +521,7 @@ object ReadJarFile {
                         }
                     }
                 }
-                println("父类节点[$RSI_PARENT_NODE_PATH]中Api列表：$RSI_TARGET_NODE_LIST")
+                println("父类节点[$RSI_NODE_NAME]中Api列表：$RSI_TARGET_NODE_LIST")
             } catch (e: ClassNotFoundException) {
                 throw RuntimeException(e)
             }
@@ -524,17 +530,8 @@ object ReadJarFile {
 
     private fun execute() {
         try {
-            // 1：读取指定目标节点下所有的object集合,例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
-            val filterNodePath: String =
-                transitionPath(
-                    Paths.get(RSI_ROOT_NODE_PATH)
-                        .resolve(Paths.get(RSI_PARENT_NODE_PATH))
-                        .resolve(Paths.get(RSI_PARENT_NODE_LEVEL))
-                        .toString()
-                )
-            println("过滤JAR包中的父节点为：[$filterNodePath]")
             // 2: 读取jar包中需要依赖的类名字
-            val needDependenciesClassNameList = readNeedDependenciesClassName(filterNodePath)
+            val needDependenciesClassNameList = readNeedDependenciesClassName()
             // 3:通过配置需要依赖的类，去构建一个classLoad
             getGlobalClassLoad(needDependenciesClassNameList)?.let {
                 mGlobalClassLoad = it
@@ -542,7 +539,7 @@ object ReadJarFile {
                 readApiNodeForParent(it)
                 // 5：从读取父类中的Api对象中去匹配节点
                 val filterBean =
-                    RSI_TARGET_NODE_LIST.find { filter -> lowercase(filter.apiName) == lowercase(RSI_CHILD_NODE_PATH) }
+                    RSI_TARGET_NODE_LIST.find { filter -> lowercase(filter.apiName) == lowercase(RSI_NODE_API_NAME) }
                 if (filterBean != null) {
                     // 6：读取Jar包中指定的class类
                     val jarClass =
@@ -553,8 +550,8 @@ object ReadJarFile {
                     val localPackage =
                         transitionPackage(
                             lowercase(
-                                Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_PARENT_NODE_PATH))
-                                    .resolve(Paths.get(RSI_CHILD_NODE_PATH)).toString()
+                                Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_NODE_NAME))
+                                    .resolve(Paths.get(RSI_NODE_API_NAME)).toString()
                             )
                         )
                     val localClassName = filterBean.apiObjectName.plus(OBJECT_SUFFIX)
@@ -570,8 +567,8 @@ object ReadJarFile {
                             lowercase(
                                 transitionPackage(
                                     Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                                        .resolve(Paths.get(RSI_PARENT_NODE_PATH))
-                                        .resolve(Paths.get(RSI_CHILD_NODE_PATH))
+                                        .resolve(Paths.get(RSI_NODE_NAME))
+                                        .resolve(Paths.get(RSI_NODE_API_NAME))
                                         .toString()
                                 )
                             )

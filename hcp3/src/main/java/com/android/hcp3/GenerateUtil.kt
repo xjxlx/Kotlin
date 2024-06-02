@@ -4,8 +4,8 @@ import com.android.hcp3.ClassTypeEnum.*
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
+import com.android.hcp3.Config.RSI_NODE_NAME
 import com.android.hcp3.Config.RSI_NODE_PATH
-import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.ReadJarFile.IGNORE_ARRAY
 import com.android.hcp3.ReadJarFile.getEnums
@@ -431,7 +431,7 @@ object GenerateUtil {
                     transitionPath(
                         Paths.get(BASE_OUT_PUT_PATH)
                             .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
-                            .resolve(Paths.get(RSI_PARENT_NODE_PATH))
+                            .resolve(Paths.get(RSI_NODE_NAME))
                             .toString()
                     )
                 )
@@ -635,7 +635,7 @@ object GenerateUtil {
         return lowercase(
             transitionPackage(
                 Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                    .resolve(Paths.get(RSI_PARENT_NODE_PATH)).resolve(
+                    .resolve(Paths.get(RSI_NODE_NAME)).resolve(
                         childNodePackage
                     ).toString()
             )

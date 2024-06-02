@@ -6,14 +6,6 @@ import java.io.File
 @Suppress("ktlint:standard:property-naming")
 object Config {
     /**
-     *  当前指定父类节点：[Config.RSI_PARENT_NODE_PATH]指定节点在RSI中的相对路径，这个是动态生成的，不要做任何的改动
-     * @return 例如：
-     *  父类节点是：HeadUpDisplay
-     *  则这个路径为：de/esolutions/fw/rudi/viwi/service/headupdisplay/v4/HeadUpDisplay
-     */
-    var RSI_NODE_PATH: String = ""
-
-    /**
      * 用来存储当前节点下的所有子节点名字，内容会自动生成，不要做任何的改动
      */
     val RSI_TARGET_NODE_LIST = LinkedHashSet<ApiNodeBean>()
@@ -42,11 +34,6 @@ object Config {
 //    var BASE_JAR_PATH: String = "hcp3${File.separator}libs${File.separator}oia${File.separator}"
 
     /**
-     *读取JAR包的路径，这个地方一般是死的，不会随意改动
-     */
-    var TARGET_JAR_PATH: String = "$BASE_JAR_PATH${File.separator}mib_rsi_android.jar"
-
-    /**
      * 生成代码的路径是由【主路径】 + 【主包名】构成的，这里是代码存放的主路径，一般不会改动
      * 生成的路径是以项目的根目录作为路径的起始点
      * @see {hcp3/src/main/java/}
@@ -60,20 +47,28 @@ object Config {
     var BASE_PROJECT_PACKAGE_PATH: String = "com${File.separator}android${File.separator}hcp3${File.separator}rsi"
 
     /**
-     *rsi中大项的节点路径，这个每次生成不同的模块，都要进行不同的改动
-     * @see {hvac}
+     * RSI中大项的名字，这个每次生成不同的模块，都要进行不同的改动
+     * 例如：headupdisplay
      */
-    const val RSI_PARENT_NODE_PATH = "headupdisplay"
+    const val RSI_NODE_NAME = "headupdisplay"
 
     /**
-     *rsi中大项的节点的等级，这个每次生成不同的模块，都要进行不同的改动
-     * @see {v3}
+     * RSI中大项的节点的等级，这个每次生成不同的模块，都要进行不同的改动
+     * 例如：v4
      */
-    const val RSI_PARENT_NODE_LEVEL = "v4"
+    const val RSI_NODE_LEVEL = "v4"
 
     /**
-     *rsi中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动
-     * @see {generalsettings}
+     * RSI中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动
+     * 例如：switchControls
      */
-    const val RSI_CHILD_NODE_PATH = "switchControls"
+    const val RSI_NODE_API_NAME = "switchControls"
+
+    /**
+     *  当前指定父类节点：[Config.RSI_NODE_NAME]指定节点在RSI中的相对路径，这个是动态生成的，不要做任何的改动
+     * @return 例如：
+     *  父类节点是：HeadUpDisplay
+     *  则这个路径为：de/esolutions/fw/rudi/viwi/service/headupdisplay/v4/HeadUpDisplay
+     */
+    var RSI_NODE_PATH: String = ""
 }
