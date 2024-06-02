@@ -49,14 +49,14 @@ object RandomAccessFileUtil {
             // 1.2：循环读取文件每一行的数据
             while ((random.readLine().also { readLine = it }) != null) {
                 readAfterPosition = random.filePointer
-                println("line: $readLine before:[$readBeforePosition] After:[$readAfterPosition]")
+                // println("line: $readLine before:[$readBeforePosition] After:[$readAfterPosition]")
                 readLine?.let { line ->
                     // 1.3：排查指定的节点，才开始后续的操作
                     if (line == deleteContent) {
                         // 1.4：读取文件的整个长度，用于后续读取和截取的操作
                         val fileLength = random.length()
                         var offset = 0
-                        println("【offset】: $offset")
+                        // println("【offset】: $offset")
                         // <editor-fold desc="2:读取剩余的内容"
                         // 2.1：把指针条跳转到当前行读取结束的地方，开始读取剩余的内容
                         random.seek(readAfterPosition)
@@ -65,7 +65,7 @@ object RandomAccessFileUtil {
                         // 2.3：读取这个字节数组，把剩余的内容放到字节数组中
                         random.read(byteArray)
                         val residueContent = String(byteArray)
-                        println("residueContent:$residueContent")
+                        // println("residueContent:$residueContent")
                         // </editor-fold>
 
                         // <editor-fold desc="3：从开始位置写入新的内容"
@@ -73,7 +73,7 @@ object RandomAccessFileUtil {
                         // 3.2：因为要覆盖掉原来的数据，所以会丢失一个换行符，所以要在后面写入的时候，手动在末尾加上一个换行符
                         val realNewContent = newContent + System.lineSeparator()
                         offset = realNewContent.length - line.length
-                        println("realNewContent:$realNewContent")
+                        // println("realNewContent:$realNewContent")
                         // 3.3：从匹配行开始的位置开始覆盖数据
                         random.seek(readBeforePosition)
                         // 3.4：写入需要替换的内容

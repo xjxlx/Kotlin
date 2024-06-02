@@ -7,10 +7,10 @@ import com.android.hcp3.Config.RSI_NODE_LEVEL
 import com.android.hcp3.Config.RSI_NODE_NAME
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
+import com.android.hcp3.GenerateUtil.getFileName
 import com.android.hcp3.ReadJarFile.getGlobalClassLoad
 import com.android.hcp3.ReadJarFile.readApiNodeForParent
 import com.android.hcp3.ReadJarFile.readNeedDependenciesClassName
-import com.android.hcp3.StringUtil.deleteFileFormat
 import com.android.hcp3.StringUtil.getFileNameForPath
 import com.android.hcp3.StringUtil.getPackageForProjectPath
 import com.android.hcp3.StringUtil.lowercase
@@ -26,6 +26,8 @@ import java.nio.file.Paths
 object FileUtil {
     @JvmStatic
     fun main(args: Array<String>) {
+        println()
+        println("文件生成完毕，开始移动文件到目标文件夹中--------->")
         // <editor-fold desc="1：读取本地JAR包的Api，返回一个list列表">
         readJarApiList()
         println("readJarApiFile:[$RSI_TARGET_NODE_LIST]")
@@ -160,10 +162,10 @@ object FileUtil {
                          */
                         val find =
                             RSI_TARGET_NODE_LIST.find { find ->
-                                find.apiObjectName + OBJECT_SUFFIX ==
-                                    deleteFileFormat(
-                                        file.name
-                                    )
+                                getFileName(
+                                    find.apiObjectPath,
+                                    ClassTypeEnum.OBJECT
+                                ) == StringUtil.deleteFileFormat(file.name)
                             }
 
                         // 存储文件路径

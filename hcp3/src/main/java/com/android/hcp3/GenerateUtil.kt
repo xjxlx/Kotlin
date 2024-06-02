@@ -551,7 +551,7 @@ object GenerateUtil {
         genericType: ClassTypeEnum,
         localPackage: String,
     ): String {
-        var realFileName = ""
+        val realFileName = getFileName(objectPackage, genericType)
 
         /**
          * 如果发现类的全路径地址在[RSI_TARGET_NODE_LIST]中的话，说明它是Api的ben，去生成对应api的类
@@ -559,14 +559,8 @@ object GenerateUtil {
         val apiBean = RSI_TARGET_NODE_LIST.find { filter -> filter.apiObjectPath == objectPackage }
         if (apiBean != null) {
             // 发现了api的Entity的类，则去生成对应的Api的类
-            val apiGenericName = apiBean.apiObjectName
-            if (apiGenericName.endsWith("Object")) {
-                // api节点下Entity的名字
-                realFileName = apiGenericName.substring(0, apiGenericName.lastIndexOf("Object")) + OBJECT_SUFFIX
-            }
             // 对应api的文件名字
             val apiNameName = StringUtil.capitalize(apiBean.apiName)
-
             val localApiFile =
                 File(BASE_OUT_PUT_PATH, transitionPath(localPackage)).listFiles()
                     ?.find { local -> deleteFileFormat(local.name) == apiNameName }
@@ -581,8 +575,6 @@ object GenerateUtil {
                     realFileName
                 )
             }
-        } else {
-            realFileName = getObjectOrEnumFileName(objectPackage, genericType)
         }
         return realFileName
     }
@@ -623,21 +615,36 @@ object GenerateUtil {
         )
     }
 
-    fun getObjectOrEnumFileName(
+    fun getFileName(
         objectPackage: String,
         genericType: ClassTypeEnum,
     ): String {
-        val jarFileName = StringUtil.getPackageSimple(objectPackage)
-        return if (genericType == OBJECT || genericType == LIST_OBJECT) {
-            if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == objectPackage } != null) {
-                jarFileName
-            } else {
-                "${jarFileName}$OBJECT_SUFFIX"
+        var realFileName = ""
+
+        /**
+         * 如果发现类的全路径地址在[RSI_TARGET_NODE_LIST]中的话，说明它是Api的ben，去生成对应api的Bean
+         */
+        val apiBean = RSI_TARGET_NODE_LIST.find { filter -> filter.apiObjectPath == objectPackage }
+        if (apiBean != null) {
+            // 发现了api的Entity的类，则去生成对应的Api的类
+            val apiGenericName = apiBean.apiObjectName
+            if (apiGenericName.endsWith("Object")) {
+                // api节点下Entity的名字
+                realFileName = apiGenericName.substring(0, apiGenericName.lastIndexOf("Object")) + OBJECT_SUFFIX
             }
-        } else if (genericType == ENUM || genericType == LIST_ENUM) {
-            "${Config.ENUM_PREFIX}$jarFileName"
         } else {
-            ""
+            val jarFileName = StringUtil.getPackageSimple(objectPackage)
+            if (genericType == OBJECT || genericType == LIST_OBJECT) {
+                realFileName =
+                    if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == objectPackage } != null) {
+                        jarFileName
+                    } else {
+                        "${jarFileName}$OBJECT_SUFFIX"
+                    }
+            } else if (genericType == ENUM || genericType == LIST_ENUM) {
+                realFileName = "${Config.ENUM_PREFIX}$jarFileName"
+            }
         }
+        return realFileName
     }
 }
