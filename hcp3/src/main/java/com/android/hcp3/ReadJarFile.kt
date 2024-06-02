@@ -467,16 +467,18 @@ object ReadJarFile {
                              * 1.1：方法不能是default类型的
                              * 1.2：方法不能是桥接方法和合成方法
                              * 1.3：方法的返回类型的泛型必须是class类型
+                             * 1.4：方法的返回值类型不能是URI类型的
                              */
+                            val uriName = URI::class.java.typeName
                             val methods =
                                 apiClass.declaredMethods.filter { method ->
                                     (!method.isDefault) &&
                                         (!method.isBridge) &&
                                         (!method.isSynthetic) &&
                                         (method.genericReturnType is ParameterizedType) &&
-                                        ((method.genericReturnType as ParameterizedType).actualTypeArguments[0] is Class<*>)
+                                        ((method.genericReturnType as ParameterizedType).actualTypeArguments[0] is Class<*>) &&
+                                        ((((method.genericReturnType as ParameterizedType).actualTypeArguments[0]).typeName) != uriName)
                                 }.toMutableList()
-
                             // <editor-fold desc="2：获取update的方法信息"
                             // 2.1：查找update的method
                             val updateMethod =
@@ -484,7 +486,6 @@ object ReadJarFile {
                                     (find.genericReturnType is ParameterizedType) &&
                                         ((find.genericReturnType as ParameterizedType).actualTypeArguments[0] == URI::class.javaObjectType)
                                 }
-
                             // 2.2：获取update的参数，并在使用完的时候删除它
                             updateMethod?.let { updateFun ->
                                 updateFun.parameterTypes.find { updateType ->
@@ -495,13 +496,20 @@ object ReadJarFile {
                                         apiNodeBean.updateObjectName = updateInfo[1]
                                     }
                                 }
-                                methods.remove(updateFun)
+                            }
+                            // 找到update方法就去使用它，用完就从方法结合中删掉他
+                            if (updateMethod != null) {
+                                methods.remove(updateMethod)
                             }
                             // </editor-fold>
 
                             // <editor-fold desc="3：查找entity的方法信息"
-                            val entityMethod =
-                                methods.find { it.returnType.typeName == "io.reactivex.rxjava3.core.Observable" }
+                            // val entityMethod = methods.find { it.returnType.typeName == "io.reactivex.rxjava3.core.Observable" }
+                            if (methods.size > 1) {
+                                throw IllegalStateException("[${apiClass.name}]--->获取方法的逻辑异常，请重新完善Api反射方法的逻辑！")
+                            }
+                            val entityMethod = methods[0]
+
                             entityMethod?.let {
                                 if (entityMethod.genericReturnType is ParameterizedType) {
                                     val parameterizedType = entityMethod.genericReturnType as ParameterizedType
