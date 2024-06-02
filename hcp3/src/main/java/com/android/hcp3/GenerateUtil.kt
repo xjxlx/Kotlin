@@ -31,24 +31,24 @@ object GenerateUtil {
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
     val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
 
-    private const val DEBUG = true
+    private const val DEBUG = false
 
     /**
      * @param parameterPackage 构造方法中参数的全路径包名，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject
      * @param jarMethodSet 生成代码里面需要写入的属性集合
-     * @param generateFilePackage 生成文件的包名，这里不包含存放代码的目录 例如：com.android.hcp3.rsi.hvac.generalsettings
+     * @param localApiPackage 生成文件的包名，这里不包含存放代码的目录 例如：com.android.hcp3.rsi.hvac.generalsettings
      * 动态生成代码
      */
     @JvmStatic
     fun generateObject(
-        parameterPackage: String,
+        objectPackage: String,
         jarMethodSet: LinkedHashSet<ObjectBean>,
-        generateFilePackage: String,
+        localApiPackage: String,
     ): AttributeBean {
         // <editor-fold desc="一：构建类对象">
-        println("开始生成Object类：[$parameterPackage] ------>")
-        val parameterInfo = getPackageInfo(parameterPackage)
-        val realFileName = getFileNameForType(parameterPackage, OBJECT, generateFilePackage)
+        println("开始生成Object类：[$objectPackage] ------>")
+        val parameterInfo = getPackageInfo(objectPackage)
+        val realFileName = getFileNameForType(objectPackage, OBJECT, localApiPackage)
 
         // 构建类的build对象，用于组装类中的数据
         val classTypeBuild =
@@ -193,7 +193,7 @@ object GenerateUtil {
         // </editor-fold>
 
         // <editor-fold desc="五：写入到类中">
-        val javaFile = JavaFile.builder(generateFilePackage, classTypeBuild.build()).build()
+        val javaFile = JavaFile.builder(localApiPackage, classTypeBuild.build()).build()
         if (DEBUG) {
             javaFile.writeTo(System.out)
         } else {
@@ -202,7 +202,7 @@ object GenerateUtil {
         }
         println("\r\n【写入结束！】\r\n")
         val typeBean = AttributeBean()
-        typeBean.attributePackage = generateFilePackage
+        typeBean.attributePackage = localApiPackage
         typeBean.name = realFileName
         return typeBean
         // </editor-fold>
@@ -547,16 +547,16 @@ object GenerateUtil {
      * 5：如果发现了Api的主类，则在这个时候去生成对应的Api的类
      */
     private fun getFileNameForType(
-        genericPackage: String,
+        objectPackage: String,
         genericType: ClassTypeEnum,
         localPackage: String,
     ): String {
         var realFileName = ""
 
         /**
-         * 如果发现类的全路径地址在[RSI_TARGET_NODE_LIST]中的话，则给他设置特殊的名字
+         * 如果发现类的全路径地址在[RSI_TARGET_NODE_LIST]中的话，说明它是Api的ben，去生成对应api的类
          */
-        val apiBean = RSI_TARGET_NODE_LIST.find { filter -> filter.apiObjectPath == genericPackage }
+        val apiBean = RSI_TARGET_NODE_LIST.find { filter -> filter.apiObjectPath == objectPackage }
         if (apiBean != null) {
             // 发现了api的Entity的类，则去生成对应的Api的类
             val apiGenericName = apiBean.apiObjectName
@@ -582,17 +582,7 @@ object GenerateUtil {
                 )
             }
         } else {
-            val jarFileName = StringUtil.getPackageSimple(genericPackage)
-            if (genericType == OBJECT || genericType == LIST_OBJECT) {
-                realFileName =
-                    if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == genericPackage } != null) {
-                        jarFileName
-                    } else {
-                        "${jarFileName}$OBJECT_SUFFIX"
-                    }
-            } else if (genericType == ENUM || genericType == LIST_ENUM) {
-                realFileName = "${Config.ENUM_PREFIX}$jarFileName"
-            }
+            realFileName = getObjectOrEnumFileName(objectPackage, genericType)
         }
         return realFileName
     }
@@ -603,15 +593,6 @@ object GenerateUtil {
     private fun getWriteFilPackage(genericPackage: String): String {
         // 1：从包名中去获取属性的类名
         val jarFileName = StringUtil.getPackageSimple(genericPackage)
-
-        // 2：对比泛型的类是不是属于Api的泛型类
-        //         val bean =
-        //             RSI_TARGET_NODE_LIST.find { filter ->
-        //                 lowercase(filter.apiGenericName) ==
-        //                     lowercase(
-        //                         jarFileName
-        //                     )
-        //             }
 
         /**
          * 对比泛型的类型是不是以[RSI_TARGET_NODE_LIST]中的泛型名字作为开头的，这样会把所有相关的类都写入一个包中
@@ -640,5 +621,23 @@ object GenerateUtil {
                     ).toString()
             )
         )
+    }
+
+    fun getObjectOrEnumFileName(
+        objectPackage: String,
+        genericType: ClassTypeEnum,
+    ): String {
+        val jarFileName = StringUtil.getPackageSimple(objectPackage)
+        return if (genericType == OBJECT || genericType == LIST_OBJECT) {
+            if (IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == objectPackage } != null) {
+                jarFileName
+            } else {
+                "${jarFileName}$OBJECT_SUFFIX"
+            }
+        } else if (genericType == ENUM || genericType == LIST_ENUM) {
+            "${Config.ENUM_PREFIX}$jarFileName"
+        } else {
+            ""
+        }
     }
 }
