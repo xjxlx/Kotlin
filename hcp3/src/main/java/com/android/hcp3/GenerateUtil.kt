@@ -36,7 +36,7 @@ object GenerateUtil {
         ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "ValueCallback")
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
     private val CLASSNAME_LIST = ClassName.get("java.util", "List")
-    private val CLASSNAME_STRING = ClassName.get("java.util", "String")
+    private val CLASSNAME_STRING = ClassName.get("java.lang", "String")
 
     private val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
 
@@ -813,12 +813,10 @@ object GenerateUtil {
                     )
                 val interfaceName = StringUtil.getPackageSimple(transitionPackage(RSI_NODE_PATH)) + "Interface"
                 try {
-                    ReadJarFile.mGlobalClassLoad
-                    Class.forName(interfacePackage + "." + interfaceName)
-                    println("接口存在")
+                    Class.forName("$interfacePackage.$interfaceName")
+                    println("接口存在，去动态添加接口的方法！")
                 } catch (e: ClassNotFoundException) {
-                    println("接口不存在")
-                    generateInterface()
+                    println("接口类不存在，请检查是否正常生成了接口类！")
                 }
             }
         }
