@@ -1,53 +1,105 @@
 package com.android.hcp3
 
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.util.concurrent.TimeUnit
 
 object TaskUtil {
+    private const val INTERFACE_CLASS_NAME = "com.android.hcp3.GenerateInterface"
+    private const val INTERFACE_METHOD_NAME = "generateInterface"
+
+    private const val READ_JAR_CLASS_NAME = "com.android.hcp3.ReadJarFile"
+    private const val READ_JAR_METHOD_NAME = "execute"
+
+    private const val FILE_CLASS_NAME = "com.android.hcp3.FileUtil"
+    private const val FILE_METHOD_NAME = "execute"
+
     @JvmStatic
     fun main(args: Array<String>) {
-        val executor = Executors.newScheduledThreadPool(1)
-        // 移动文件的等待时间
-        var moveDelayTime = 3
-
-        // 1：执行文件写入任务
-        executeAsync {
-            ReadJarFile.execute()
-        }
-
-        // 2：等待指定的时间后，去执行移动文件的任务
-        executor.scheduleAtFixedRate({
-            println("倒计时：$moveDelayTime 秒")
-            if (moveDelayTime == 0) {
-                executor.shutdown() // 停止计时器
-                FileUtil.execute()
+        // 启动第一个进程，用来生成interface的接口
+        val interfaceProcess = interfaceProcess()
+        if (interfaceProcess == 0) {
+            TimeUnit.MILLISECONDS.sleep(500)
+            val readProcess = readProcess()
+            if (readProcess == 0) {
+                TimeUnit.MILLISECONDS.sleep(500)
+                fileProcess()
             }
-            moveDelayTime--
-        }, 0, 1, TimeUnit.SECONDS) // 每隔一秒执行一次任务
+        }
     }
 
-    private fun executeAsync(block: () -> Unit): Boolean {
-        // 定义异步任务
-        val future =
-            CompletableFuture.supplyAsync {
-                try {
-                    block()
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-                "Async task completed"
-            }
-
-        // 判断任务是否完成
-        while (!future.isDone) {
-            println("Task not done yet...")
-            TimeUnit.MILLISECONDS.sleep(500)
+    private fun interfaceProcess(): Int {
+        println("生成接口的进程开始启动--->")
+        val processInterface =
+            ProcessBuilder(
+                "java",
+                "-cp",
+                System.getProperty("java.class.path"),
+                INTERFACE_CLASS_NAME,
+                INTERFACE_METHOD_NAME
+            )
+        val interfaceProcess = processInterface.start()
+        // 读取进程的输出
+        val reader = BufferedReader(InputStreamReader(interfaceProcess.inputStream))
+        var line: String?
+        while ((reader.readLine().also { line = it }) != null) {
+            println(line)
         }
+        // 等待进程结束
+        interfaceProcess.waitFor()
+        // 等待第一个进程完成
+        val exitCode = interfaceProcess.waitFor()
+        println("创建接口进程退出代码: $exitCode")
+        return exitCode
+    }
 
-        // 获取结果
-        val result = future.get()
-        println(result)
-        return true
+    private fun readProcess(): Int {
+        println("读取JAR的进程开始启动--->")
+        val processInterface =
+            ProcessBuilder(
+                "java",
+                "-cp",
+                System.getProperty("java.class.path"),
+                READ_JAR_CLASS_NAME,
+                READ_JAR_METHOD_NAME
+            )
+        val interfaceProcess = processInterface.start()
+        // 读取进程的输出
+        val reader = BufferedReader(InputStreamReader(interfaceProcess.inputStream))
+        var line: String?
+        while ((reader.readLine().also { line = it }) != null) {
+            println(line)
+        }
+        // 等待进程结束
+        interfaceProcess.waitFor()
+        // 等待第一个进程完成
+        val exitCode = interfaceProcess.waitFor()
+        println("读取JAR进程退出代码: $exitCode")
+        return exitCode
+    }
+
+    private fun fileProcess(): Int {
+        println("File移动文件的进程开始启动--->")
+        val processInterface =
+            ProcessBuilder(
+                "java",
+                "-cp",
+                System.getProperty("java.class.path"),
+                FILE_CLASS_NAME,
+                FILE_METHOD_NAME
+            )
+        val interfaceProcess = processInterface.start()
+        // 读取进程的输出
+        val reader = BufferedReader(InputStreamReader(interfaceProcess.inputStream))
+        var line: String?
+        while ((reader.readLine().also { line = it }) != null) {
+            println(line)
+        }
+        // 等待进程结束
+        interfaceProcess.waitFor()
+        // 等待第一个进程完成
+        val exitCode = interfaceProcess.waitFor()
+        println("File移动文件的进程退出代码: $exitCode")
+        return exitCode
     }
 }

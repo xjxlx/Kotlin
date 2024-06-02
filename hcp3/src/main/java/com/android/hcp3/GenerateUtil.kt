@@ -585,10 +585,13 @@ object GenerateUtil {
     }
 
     @JvmStatic
-    private fun generateInterface(
-        localPackage: String,
-        interfaceName: String,
-    ) {
+    fun generateInterface() {
+        val interfacePackage =
+            transitionPackage(
+                Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                    .resolve(Paths.get(RSI_NODE_NAME)).toString()
+            )
+        val interfaceName = StringUtil.getPackageSimple(transitionPackage(RSI_NODE_PATH)) + "Interface"
         // <editor-fold desc="一：构建接口类对象">
         println("开始生成Interface类：[$interfaceName] ------>")
 
@@ -604,7 +607,7 @@ object GenerateUtil {
                 .build()
 
         // <editor-fold desc="四：写入到类中">
-        val javaFile = JavaFile.builder(localPackage, interfaceSpec).build()
+        val javaFile = JavaFile.builder(interfacePackage, interfaceSpec).build()
         if (DEBUG) {
             javaFile.writeTo(System.out)
         } else {
@@ -802,13 +805,21 @@ object GenerateUtil {
                 generateManager(localPackage, apiBean.apiName, apiBean.apiObjectPath)
 
                 // 3：生成接口类
-                generateInterface(
+                // 检查接口是否已存在
+                val interfacePackage =
                     transitionPackage(
                         Paths.get(BASE_PROJECT_PACKAGE_PATH)
                             .resolve(Paths.get(RSI_NODE_NAME)).toString()
-                    ),
-                    StringUtil.getPackageSimple(transitionPackage(RSI_NODE_PATH)) + "Interface"
-                )
+                    )
+                val interfaceName = StringUtil.getPackageSimple(transitionPackage(RSI_NODE_PATH)) + "Interface"
+                try {
+                    ReadJarFile.mGlobalClassLoad
+                    Class.forName(interfacePackage + "." + interfaceName)
+                    println("接口存在")
+                } catch (e: ClassNotFoundException) {
+                    println("接口不存在")
+                    generateInterface()
+                }
             }
         }
         return realFileName
