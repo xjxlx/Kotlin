@@ -10,7 +10,7 @@ public class StatisticBean {
   private String apiNodePath;
 
   /*
-   * 父类节点下泛型类的路径，例如：hcp3/src/main/java/com/android/hcp3/rsi/hvac/airoutlets/AirOutletObjectEntity.java
+   * 父类节点下泛型类的路径，例如：hcp3/src/main/java/com/android/hcp3/rsi/hvac/airoutlets/AirOutletEntity.java
    * */
   private String apiChildPath;
 
