@@ -26,12 +26,16 @@ import javax.lang.model.element.Modifier
 object GenerateUtil {
     private val ANNOTATION_NONNULL = ClassName.get("androidx.annotation", "NonNull")
     private val ANNOTATION_NULLABLE = ClassName.get("androidx.annotation", "Nullable")
+    private val ANNOTATION_OVERRIDE = ClassName.get("java.lang", "Override")
 
     private val SUPER_CLASS_NAME = ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIValue")
     private val MANAGER_SUPER_CLASS_NAME =
         ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIService")
     private val MANAGER_I_RSI_ADMIN_NAME = ClassName.get("de.esolutions.fw.android.rsi.client.rx", "IRsiAdmin")
+    private val MANAGER_VALUE_CALL_BACK_NAME =
+        ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "ValueCallback")
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
+    private val CLASSNAME_LIST = ClassName.get("java.util", "List")
 
     private val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
 
@@ -400,9 +404,13 @@ object GenerateUtil {
     fun generateManager(
         localPackage: String,
         apiName: String,
+        apiObjectPath: String,
     ) {
         // <editor-fold desc="一：构建类对象">
-        val managerName = StringUtil.capitalize(apiName) + "Manager"
+        val realApiName = StringUtil.capitalize(apiName)
+        val entityFileName = getFileName(apiObjectPath, OBJECT)
+
+        val managerName = realApiName + "Manager"
         println("开始生成Manager类：[$managerName] ------>")
         // 1.1：创建超类，指定泛型参数
         val rsiNodeInfo = transitionPackage(RSI_NODE_PATH)
@@ -434,7 +442,85 @@ object GenerateUtil {
         classSpec.addMethod(methodConstructor)
         // </editor-fold>
 
-        // <editor-fold desc="三：写入到类中">
+        // <editor-fold desc="三：静态方法组装">
+        // <editor-fold desc="3.1：createApis"
+        val createApiCodeBuild = CodeBlock.builder()
+        createApiCodeBuild.addStatement(
+            "return createResourceInterface(\$T.class)",
+            ClassName.get(localPackage, realApiName)
+        )
+
+        val createApiMethod =
+            MethodSpec.methodBuilder("create$realApiName")
+                .addModifiers(Modifier.PRIVATE)
+                .addCode(createApiCodeBuild.build())
+                .returns(ClassName.get(localPackage, realApiName))
+                .build()
+        classSpec.addMethod(createApiMethod)
+        // </editor-fold>
+
+        // <editor-fold desc="3.2：register"
+        val registerCodeBuild = CodeBlock.builder()
+        registerCodeBuild.addStatement(
+            "create$realApiName().registerValueCallback(callback)",
+            ClassName.get(localPackage, realApiName)
+        )
+
+        val registerParameter =
+            ParameterSpec.builder(
+                ParameterizedTypeName.get(
+                    MANAGER_VALUE_CALL_BACK_NAME,
+                    ParameterizedTypeName.get(
+                        CLASSNAME_LIST,
+                        ClassName.get(localPackage, entityFileName)
+                    )
+                ),
+                "callback"
+            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+                .build()
+
+        val registerMethod =
+            MethodSpec.methodBuilder("register" + realApiName + "ValueCallback")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(registerParameter)
+                .addAnnotation(ANNOTATION_OVERRIDE)
+                .addCode(registerCodeBuild.build())
+                .build()
+        classSpec.addMethod(registerMethod)
+        // </editor-fold>
+
+        // <editor-fold desc="3.3：unregister"
+        val unregisterCodeBuild = CodeBlock.builder()
+        unregisterCodeBuild.addStatement(
+            "create$realApiName().unregisterValueCallback(callback)",
+            ClassName.get(localPackage, realApiName)
+        )
+
+        val unregisterParameter =
+            ParameterSpec.builder(
+                ParameterizedTypeName.get(
+                    MANAGER_VALUE_CALL_BACK_NAME,
+                    ParameterizedTypeName.get(
+                        CLASSNAME_LIST,
+                        ClassName.get(localPackage, entityFileName)
+                    )
+                ),
+                "callback"
+            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+                .build()
+
+        val unregisterMethod =
+            MethodSpec.methodBuilder("unregister" + realApiName + "ValueCallback")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(unregisterParameter)
+                .addAnnotation(ANNOTATION_OVERRIDE)
+                .addCode(unregisterCodeBuild.build())
+                .build()
+        classSpec.addMethod(unregisterMethod)
+        // </editor-fold>
+        // </editor-fold>
+
+        // <editor-fold desc="四：写入到类中">
         val javaFile = JavaFile.builder(localPackage, classSpec.build()).build()
         if (DEBUG) {
             javaFile.writeTo(System.out)
@@ -614,21 +700,23 @@ object GenerateUtil {
         if (apiBean != null) {
             // 发现了api的Entity的类，则去生成对应的Api的类
             // 对应api的文件名字
-            val apiNameName = StringUtil.capitalize(apiBean.apiName)
+            val apiName = StringUtil.capitalize(apiBean.apiName)
             val localApiFile =
                 File(BASE_OUT_PUT_PATH, transitionPath(localPackage)).listFiles()
-                    ?.find { local -> deleteFileFormat(local.name) == apiNameName }
+                    ?.find { local -> deleteFileFormat(local.name) == apiName }
             if ((localApiFile != null) && (localApiFile.exists())) {
                 println("本地的Api文件已经存在，不需要再次创建！")
             } else {
+                // 1：写入api的类
                 generateApi(
                     localPackage,
-                    apiNameName,
+                    apiName,
                     apiBean.updateObjectPackage,
                     apiBean.updateObjectName,
                     realFileName
                 )
-                generateManager(localPackage, apiBean.apiName)
+                // 2：写入manager的类
+                generateManager(localPackage, apiBean.apiName, apiBean.apiObjectPath)
             }
         }
         return realFileName

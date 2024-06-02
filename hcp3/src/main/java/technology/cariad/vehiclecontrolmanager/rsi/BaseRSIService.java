@@ -14,4 +14,10 @@ public abstract class BaseRSIService<S extends RsiService> implements ServicePro
   public S getServiceBlocking() {
     return null;
   }
+
+  @NonNull
+  protected <V extends BaseRSIValue, R extends BaseRSIResource<V>> R createResourceInterface(
+      @NonNull Class<R> tClass) {
+    return null;
+  }
 }
