@@ -160,7 +160,7 @@ object FileUtil {
                          */
                         val find =
                             RSI_TARGET_NODE_LIST.find { find ->
-                                find.apiGenericName + OBJECT_SUFFIX ==
+                                find.apiObjectName + OBJECT_SUFFIX ==
                                     deleteFileFormat(
                                         file.name
                                     )

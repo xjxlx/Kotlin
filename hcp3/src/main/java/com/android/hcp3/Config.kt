@@ -6,10 +6,12 @@ import java.io.File
 @Suppress("ktlint:standard:property-naming")
 object Config {
     /**
-     *  当前指定父类节点：[Config.RSI_PARENT_NODE_PATH]中泛型的相对路径，这个是动态生成的，不要做任何的改动
-     *  例如：de/esolutions/fw/rudi/viwi/service/hvac/v3/Hvac
+     *  当前指定父类节点：[Config.RSI_PARENT_NODE_PATH]指定节点在RSI中的相对路径，这个是动态生成的，不要做任何的改动
+     * @return 例如：
+     *  父类节点是：HeadUpDisplay
+     *  则这个路径为：de/esolutions/fw/rudi/viwi/service/headupdisplay/v4/HeadUpDisplay
      */
-    var PARENT_NODE_GENERIC_PATH: String = ""
+    var RSI_NODE_PATH: String = ""
 
     /**
      * 用来存储当前节点下的所有子节点名字，内容会自动生成，不要做任何的改动
@@ -61,18 +63,17 @@ object Config {
      *rsi中大项的节点路径，这个每次生成不同的模块，都要进行不同的改动
      * @see {hvac}
      */
-    const val RSI_PARENT_NODE_PATH = "seating"
+    const val RSI_PARENT_NODE_PATH = "headupdisplay"
 
     /**
      *rsi中大项的节点的等级，这个每次生成不同的模块，都要进行不同的改动
      * @see {v3}
      */
-    const val RSI_PARENT_NODE_LEVEL = "v9"
+    const val RSI_PARENT_NODE_LEVEL = "v4"
 
     /**
      *rsi中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动
      * @see {generalsettings}
      */
-    const val RSI_CHILD_NODE_PATH = "seats"
-//    const val RSI_CHILD_NODE_PATH = "preconditioningtimers"
+    const val RSI_CHILD_NODE_PATH = "switchControls"
 }

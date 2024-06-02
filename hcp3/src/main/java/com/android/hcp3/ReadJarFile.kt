@@ -3,8 +3,8 @@ package com.android.hcp3
 import com.android.hcp3.Config.BASE_JAR_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
-import com.android.hcp3.Config.PARENT_NODE_GENERIC_PATH
 import com.android.hcp3.Config.RSI_CHILD_NODE_PATH
+import com.android.hcp3.Config.RSI_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_LEVEL
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
@@ -29,7 +29,7 @@ import java.net.URLClassLoader
 import java.nio.file.Paths
 import java.time.LocalDate
 import java.time.OffsetTime
-import java.util.Locale
+import java.util.*
 import java.util.jar.JarFile
 
 object ReadJarFile {
@@ -91,7 +91,7 @@ object ReadJarFile {
                             // 如果是以父类节点结束的，则保存这个节点的全属性包名
                             if (lowercase.endsWith(parentNodeName)) {
                                 println("当前父类节点下主类: [$splitClassName]")
-                                PARENT_NODE_GENERIC_PATH = splitClassName
+                                RSI_NODE_PATH = splitClassName
                             }
                             fileNames.add(transitionPackage(splitClassName))
                         }
@@ -440,9 +440,9 @@ object ReadJarFile {
     fun readApiNodeForParent(globalClassLoad: URLClassLoader) {
         // println("读取主类[$RSI_PARENT_NODE_PATH]下所有的Api信息 --->")
         // 使用类加载器，读取父类中主节点的接口变量
-        if (PARENT_NODE_GENERIC_PATH.isNotEmpty()) {
+        if (RSI_NODE_PATH.isNotEmpty()) {
             try {
-                val parentNodeClass = globalClassLoad.loadClass(transitionPackage(PARENT_NODE_GENERIC_PATH))
+                val parentNodeClass = globalClassLoad.loadClass(transitionPackage(RSI_NODE_PATH))
                 // 获取类的所有的api方法
                 for (apiMethod in parentNodeClass.declaredMethods) {
                     val apiMethodName = apiMethod.name
@@ -454,7 +454,7 @@ object ReadJarFile {
                         if (apiClass != null) {
                             val apiNodeBean = ApiNodeBean()
                             apiNodeBean.apiName = apiMethodName // 父类中api方法的名字
-                            apiNodeBean.apiReturnTypePath = apiRunTypePath // 父类中api返回类型的全路径包名
+                            apiNodeBean.apiPath = apiRunTypePath // 父类中api返回类型的全路径包名
 
                             /**
                              * 1：过滤所有的方法
@@ -485,8 +485,8 @@ object ReadJarFile {
                                     getPackageSimple(updateType.typeName).startsWith("Update")
                                 }?.let { parameter ->
                                     getPackageInfo(parameter.typeName).let { updateInfo ->
-                                        apiNodeBean.updatePackage = updateInfo[0]
-                                        apiNodeBean.updateName = updateInfo[1]
+                                        apiNodeBean.updateObjectPackage = updateInfo[0]
+                                        apiNodeBean.updateObjectName = updateInfo[1]
                                     }
                                 }
                                 methods.remove(updateFun)
@@ -504,8 +504,8 @@ object ReadJarFile {
                                         val argument = actualTypeArguments[0]
                                         if (argument is Class<*>) {
                                             val typeName = argument.typeName
-                                            apiNodeBean.apiGenericName = getPackageSimple(typeName) // api类中匹配方法泛型的名字
-                                            apiNodeBean.apiGenericPath = typeName
+                                            apiNodeBean.apiObjectName = getPackageSimple(typeName) // api类中匹配方法泛型的名字
+                                            apiNodeBean.apiObjectPath = typeName
                                         }
                                     }
                                 }
@@ -546,7 +546,7 @@ object ReadJarFile {
                 if (filterBean != null) {
                     // 6：读取Jar包中指定的class类
                     val jarClass =
-                        readClass(it, filterBean.apiGenericPath, "读取JAR中的类：[${filterBean.apiGenericName}]")
+                        readClass(it, filterBean.apiObjectPath, "读取JAR中的类：[${filterBean.apiObjectName}]")
                     val jarSet = getMethods(jarClass, "JAR")
 
                     // 7：读取本地的方法
@@ -557,7 +557,7 @@ object ReadJarFile {
                                     .resolve(Paths.get(RSI_CHILD_NODE_PATH)).toString()
                             )
                         )
-                    val localClassName = filterBean.apiGenericName.plus(OBJECT_SUFFIX)
+                    val localClassName = filterBean.apiObjectName.plus(OBJECT_SUFFIX)
                     val localRealPackage = localPackage + localClassName
                     val localClass = readLocalClass(localRealPackage, "读取本地类：[$localRealPackage]")
                     // 8：读取class中的方法数量和内容
@@ -576,7 +576,7 @@ object ReadJarFile {
                                 )
                             )
                         // 10：写入当前的Object
-                        generateObject(filterBean.apiGenericPath, jarSet, packagePath)
+                        generateObject(filterBean.apiObjectPath, jarSet, packagePath)
                     }
                 } else {
                     println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")

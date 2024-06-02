@@ -4,7 +4,7 @@ import com.android.hcp3.ClassTypeEnum.*
 import com.android.hcp3.Config.BASE_OUT_PUT_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.OBJECT_SUFFIX
-import com.android.hcp3.Config.PARENT_NODE_GENERIC_PATH
+import com.android.hcp3.Config.RSI_NODE_PATH
 import com.android.hcp3.Config.RSI_PARENT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.ReadJarFile.IGNORE_ARRAY
@@ -31,7 +31,7 @@ object GenerateUtil {
     private val CLASSNAME_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
     val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>() // 本地指定节点下存储的文件集合
 
-    private const val DEBUG = false
+    private const val DEBUG = true
 
     /**
      * @param parameterPackage 构造方法中参数的全路径包名，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject
@@ -347,7 +347,7 @@ object GenerateUtil {
                 .addModifiers(Modifier.PUBLIC)
 
         // 3:把读取到的父类的主路径信息转换为包和类名
-        val packageInfo = getPackageInfo(transitionPackage(PARENT_NODE_GENERIC_PATH))
+        val packageInfo = getPackageInfo(transitionPackage(RSI_NODE_PATH))
 
         // 4:构造方法组装
         val firstParameter =
@@ -556,10 +556,10 @@ object GenerateUtil {
         /**
          * 如果发现类的全路径地址在[RSI_TARGET_NODE_LIST]中的话，则给他设置特殊的名字
          */
-        val apiBean = RSI_TARGET_NODE_LIST.find { filter -> filter.apiGenericPath == genericPackage }
+        val apiBean = RSI_TARGET_NODE_LIST.find { filter -> filter.apiObjectPath == genericPackage }
         if (apiBean != null) {
             // 发现了api的Entity的类，则去生成对应的Api的类
-            val apiGenericName = apiBean.apiGenericName
+            val apiGenericName = apiBean.apiObjectName
             if (apiGenericName.endsWith("Object")) {
                 // api节点下Entity的名字
                 realFileName = apiGenericName.substring(0, apiGenericName.lastIndexOf("Object")) + OBJECT_SUFFIX
@@ -576,8 +576,8 @@ object GenerateUtil {
                 generateApi(
                     localPackage,
                     apiNameName,
-                    apiBean.updatePackage,
-                    apiBean.updateName,
+                    apiBean.updateObjectPackage,
+                    apiBean.updateObjectName,
                     realFileName
                 )
             }
@@ -620,7 +620,7 @@ object GenerateUtil {
             RSI_TARGET_NODE_LIST.find { filter ->
                 lowercase(
                     jarFileName
-                ).startsWith(lowercase(filter.apiGenericName))
+                ).startsWith(lowercase(filter.apiObjectName))
             }
 
         // 3：如果是Api的泛型类，则写入到指定的包下，如果没有归属的话，则全部写入到父类的节点下面

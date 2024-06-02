@@ -1,16 +1,72 @@
 package com.android.hcp3.bean;
 
+import de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.HeadUpDisplay;
+
+/**
+ *
+ *
+ * <ol>
+ *   节点是： {@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.HeadUpDisplay}
+ *   <ol>
+ *     里面包含了以下Api
+ *     <li>ContentLocationsApi contentLocations();
+ *     <li>HudFieldsApi hudFields();
+ *     <li>HudSettingsApi hudSettings();
+ *     <li>SwitchControlsApi switchControls();
+ *     <li>ValueControlsApi valueControls();
+ *     <li>ViewsApi views();
+ *   </ol>
+ * </ol>
+ */
 public class ApiNodeBean {
-  /** 父类节点下，api方法的名字，例如：keys */
+  /**
+   * 节点下Api的名字，例如：
+   *
+   * <ul>
+   *   <li>节点是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.HeadUpDisplay}
+   *   <li>return 节点的名字是：{@link HeadUpDisplay#switchControls()}
+   * </ul>
+   */
   private String apiName;
 
-  private String apiReturnTypePath;
+  /**
+   * 节点下的Api路径，例如：
+   *
+   * <ul>
+   *   <li>节点是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.HeadUpDisplay}
+   *   <li>节点的名字是：{@link HeadUpDisplay#switchControls()}
+   *   <li>return 节点下的Api路径是：{@link
+   *       de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.SwitchControlsApi}
+   * </ul>
+   */
+  private String apiPath;
 
-  /** 父类节点下，api方法返回类型泛型类型的全路径包名 */
-  private String apiGenericPath;
+  /**
+   * 节点下Api的Object的路径，例如：
+   *
+   * <ul>
+   *   <li>节点是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.HeadUpDisplay}
+   *   <li>节点的名字是：{@link HeadUpDisplay#switchControls()}
+   *   <li>节点的路径是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.SwitchControlsApi}
+   *   <li>return 节点下Api的Object的路径是：{@link
+   *       de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.SwitchControlObject}
+   * </ul>
+   */
+  private String apiObjectPath;
 
-  /** 父类节点下api返回类型泛型类型的名字 */
-  private String apiGenericName;
+  /**
+   * 节点下Api的Object的名字，例如：
+   *
+   * <ul>
+   *   <li>节点是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.HeadUpDisplay}
+   *   <li>节点的名字是：{@link HeadUpDisplay#switchControls()}
+   *   <li>节点的路径是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.SwitchControlsApi}
+   *   <li>节点下Api的Object的路径是：{@link
+   *       de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.SwitchControlObject}
+   *   <li>return 节点下Api的Object的名字是：{SwitchControlObject}
+   * </ul>
+   */
+  private String apiObjectName;
 
   /**
    * api节点类中更新方法参数的名字 例如：
@@ -19,7 +75,20 @@ public class ApiNodeBean {
    * 参数为：UpdateSwitchControlsObject，
    * 所以返回的名字为：de.esolutions.fw.rudi.viwi.service.hvacvehiclepreconditioning.v101
    */
-  private String updatePackage = "";
+
+  /**
+   * 节点下Api的更新对象的包名，例如：
+   *
+   * <ul>
+   *   <li>节点是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.HeadUpDisplay}
+   *   <li>节点的名字是：{@link HeadUpDisplay#switchControls()}
+   *   <li>节点的路径是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.SwitchControlsApi}
+   *   <li>节点下Api的更新对象是：{@link
+   *       de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.UpdateSwitchControlObject}
+   *   <li>return 节点下Api的更新对象的包名是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4}
+   * </ul>
+   */
+  private String updateObjectPackage = "";
 
   /**
    * api节点类中更新方法参数的名字 例如：
@@ -27,7 +96,21 @@ public class ApiNodeBean {
    * 其中的更新方法为:Single<URI> updateSwitchControlsObject(UUID var1, UpdateSwitchControlsObject var2)
    * 参数为：UpdateSwitchControlsObject， 所以返回的名字为：UpdateSwitchControlsObject
    */
-  private String updateName = "";
+
+  /**
+   * 节点下Api的更新对象的名字，例如：
+   *
+   * <ul>
+   *   <li>节点是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.HeadUpDisplay}
+   *   <li>节点的名字是：{@link HeadUpDisplay#switchControls()}
+   *   <li>节点的路径是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.SwitchControlsApi}
+   *   <li>节点下Api的更新对象是：{@link
+   *       de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.UpdateSwitchControlObject}
+   *   <li>节点下Api的更新对象的包名是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4}
+   *   <li>节点下Api的更新对象的名字是：{UpdateSwitchControlObject}
+   * </ul>
+   */
+  private String updateObjectName = "";
 
   public String getApiName() {
     return apiName;
@@ -37,44 +120,44 @@ public class ApiNodeBean {
     this.apiName = apiName;
   }
 
-  public String getApiReturnTypePath() {
-    return apiReturnTypePath;
+  public String getApiPath() {
+    return apiPath;
   }
 
-  public void setApiReturnTypePath(String apiReturnTypePath) {
-    this.apiReturnTypePath = apiReturnTypePath;
+  public void setApiPath(String apiPath) {
+    this.apiPath = apiPath;
   }
 
-  public String getApiGenericPath() {
-    return apiGenericPath;
+  public String getApiObjectPath() {
+    return apiObjectPath;
   }
 
-  public void setApiGenericPath(String apiGenericPath) {
-    this.apiGenericPath = apiGenericPath;
+  public void setApiObjectPath(String apiObjectPath) {
+    this.apiObjectPath = apiObjectPath;
   }
 
-  public String getApiGenericName() {
-    return apiGenericName;
+  public String getApiObjectName() {
+    return apiObjectName;
   }
 
-  public void setApiGenericName(String apiGenericName) {
-    this.apiGenericName = apiGenericName;
+  public void setApiObjectName(String apiObjectName) {
+    this.apiObjectName = apiObjectName;
   }
 
-  public String getUpdatePackage() {
-    return updatePackage;
+  public String getUpdateObjectPackage() {
+    return updateObjectPackage;
   }
 
-  public void setUpdatePackage(String updatePackage) {
-    this.updatePackage = updatePackage;
+  public void setUpdateObjectPackage(String updateObjectPackage) {
+    this.updateObjectPackage = updateObjectPackage;
   }
 
-  public String getUpdateName() {
-    return updateName;
+  public String getUpdateObjectName() {
+    return updateObjectName;
   }
 
-  public void setUpdateName(String updateName) {
-    this.updateName = updateName;
+  public void setUpdateObjectName(String updateObjectName) {
+    this.updateObjectName = updateObjectName;
   }
 
   @Override
@@ -83,20 +166,20 @@ public class ApiNodeBean {
         + "apiName='"
         + apiName
         + '\''
-        + ", apiReturnTypePath='"
-        + apiReturnTypePath
+        + ", apiPath='"
+        + apiPath
         + '\''
-        + ", apiGenericPath='"
-        + apiGenericPath
+        + ", apiObjectPath='"
+        + apiObjectPath
         + '\''
-        + ", apiGenericName='"
-        + apiGenericName
+        + ", apiObjectName='"
+        + apiObjectName
         + '\''
-        + ", updatePackage='"
-        + updatePackage
+        + ", updateObjectPackage='"
+        + updateObjectPackage
         + '\''
-        + ", updateName='"
-        + updateName
+        + ", updateObjectName='"
+        + updateObjectName
         + '\''
         + '}';
   }
