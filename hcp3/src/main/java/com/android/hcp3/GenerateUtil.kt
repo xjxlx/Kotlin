@@ -584,6 +584,37 @@ object GenerateUtil {
         // </editor-fold>
     }
 
+    @JvmStatic
+    private fun generateInterface(
+        localPackage: String,
+        interfaceName: String,
+    ) {
+        // <editor-fold desc="一：构建接口类对象">
+        println("开始生成Interface类：[$interfaceName] ------>")
+
+        val interfaceSpec =
+            TypeSpec.interfaceBuilder(interfaceName)
+                .addModifiers(Modifier.PUBLIC)
+                .addMethod(
+                    MethodSpec.methodBuilder("someMethod")
+                        .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                        .returns(String::class.java)
+                        .build()
+                )
+                .build()
+
+        // <editor-fold desc="四：写入到类中">
+        val javaFile = JavaFile.builder(localPackage, interfaceSpec).build()
+        if (DEBUG) {
+            javaFile.writeTo(System.out)
+        } else {
+            val outPutFile = File(BASE_OUT_PUT_PATH)
+            javaFile.writeTo(outPutFile)
+        }
+        println("\r\n【写入结束！】\r\n")
+        // </editor-fold>
+    }
+
     /**
      * 每当读取到一个属性的时候，就需要判定这个类的重构类是否存在，如果不存在的话，则需要去主动生成这个类,然后返回这个类的全路径名字
      * @param genericPackage 泛型的包名
@@ -769,6 +800,15 @@ object GenerateUtil {
                 )
                 // 2：写入manager的类
                 generateManager(localPackage, apiBean.apiName, apiBean.apiObjectPath)
+
+                // 3：生成接口类
+                generateInterface(
+                    transitionPackage(
+                        Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                            .resolve(Paths.get(RSI_NODE_NAME)).toString()
+                    ),
+                    StringUtil.getPackageSimple(transitionPackage(RSI_NODE_PATH)) + "Interface"
+                )
             }
         }
         return realFileName
