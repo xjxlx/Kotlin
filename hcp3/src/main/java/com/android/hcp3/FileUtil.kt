@@ -26,6 +26,11 @@ import java.nio.file.Paths
 object FileUtil {
     @JvmStatic
     fun main(args: Array<String>) {
+        execute()
+    }
+
+    @JvmStatic
+    fun execute() {
         println()
         println("文件生成完毕，开始移动文件到目标文件夹中--------->")
         // <editor-fold desc="1：读取本地JAR包的Api，返回一个list列表">
