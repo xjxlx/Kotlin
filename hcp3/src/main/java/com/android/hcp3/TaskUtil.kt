@@ -18,12 +18,13 @@ object TaskUtil {
     fun main(args: Array<String>) {
         // 启动第一个进程，用来生成interface的接口
         val interfaceProcess = interfaceProcess()
+
         if (interfaceProcess == 0) {
             TimeUnit.MILLISECONDS.sleep(500)
             val readProcess = readProcess()
             if (readProcess == 0) {
                 TimeUnit.MILLISECONDS.sleep(500)
-                fileProcess()
+//                fileProcess()
             }
         }
     }
@@ -49,13 +50,14 @@ object TaskUtil {
         interfaceProcess.waitFor()
         // 等待第一个进程完成
         val exitCode = interfaceProcess.waitFor()
+        interfaceProcess.destroy()
         println("创建接口进程退出代码: $exitCode")
         return exitCode
     }
 
     private fun readProcess(): Int {
         println("读取JAR的进程开始启动--->")
-        val processInterface =
+        val processRead =
             ProcessBuilder(
                 "java",
                 "-cp",
@@ -63,18 +65,19 @@ object TaskUtil {
                 READ_JAR_CLASS_NAME,
                 READ_JAR_METHOD_NAME
             )
-        val interfaceProcess = processInterface.start()
+        val readProcess = processRead.start()
         // 读取进程的输出
-        val reader = BufferedReader(InputStreamReader(interfaceProcess.inputStream))
+        val reader = BufferedReader(InputStreamReader(readProcess.inputStream))
         var line: String?
         while ((reader.readLine().also { line = it }) != null) {
             println(line)
         }
         // 等待进程结束
-        interfaceProcess.waitFor()
+        readProcess.waitFor()
         // 等待第一个进程完成
-        val exitCode = interfaceProcess.waitFor()
+        val exitCode = readProcess.waitFor()
         println("读取JAR进程退出代码: $exitCode")
+        readProcess.destroy()
         return exitCode
     }
 
