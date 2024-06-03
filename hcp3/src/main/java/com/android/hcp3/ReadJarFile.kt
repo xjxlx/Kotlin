@@ -9,8 +9,8 @@ import com.android.hcp3.Config.RSI_NODE_NAME
 import com.android.hcp3.Config.RSI_NODE_PATH
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
-import com.android.hcp3.GenerateUtil.generateObject
-import com.android.hcp3.GenerateUtil.getPackageInfo
+import com.android.hcp3.Generate2Util.generateObject
+import com.android.hcp3.Generate2Util.getPackageInfo
 import com.android.hcp3.StringUtil.getPackageSimple
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
@@ -27,6 +27,7 @@ import java.net.URL
 import java.net.URLClassLoader
 import java.nio.file.Paths
 import java.time.LocalDate
+import java.time.OffsetDateTime
 import java.time.OffsetTime
 import java.util.*
 import java.util.jar.JarFile
@@ -438,9 +439,10 @@ object ReadJarFile {
             clazz == Byte::class.javaObjectType || clazz == Short::class.javaObjectType ||
             clazz == Long::class.javaObjectType || clazz == Float::class.javaObjectType ||
             clazz == String::class.javaObjectType || clazz == OffsetTime::class.javaObjectType ||
-            clazz == LocalDate::class.javaObjectType ||
-            (clazz.name == Duration::class.javaObjectType.name)
+            clazz == LocalDate::class.javaObjectType || clazz.name == Duration::class.javaObjectType.name ||
+            (clazz.name == OffsetDateTime::class.javaObjectType.name)
     }
+//    OffsetDateTime
 
     /** 读取大项中节点的Api信息  */
     fun readApiNodeForParent(globalClassLoad: URLClassLoader) {

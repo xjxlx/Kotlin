@@ -50,17 +50,6 @@ object StringUtil {
         return str.lowercase()
     }
 
-    @JvmStatic
-    fun getPackageSimple(str: String): String {
-        if (str.isEmpty()) {
-            return ""
-        }
-        if (str.contains(".")) {
-            return str.substring(str.lastIndexOf(".") + 1)
-        }
-        return ""
-    }
-
     /**
      * 把一个文件的的路径，删除后面的格式后，返回文件不带格式的路径，例如：com.android.hcp3.rsi.hvac.VcRestrictionReason.java
      * 返回：com.android.hcp3.rsi.hvac.VcRestrictionReason
@@ -109,5 +98,16 @@ object StringUtil {
         val deleteFormat = deleteFileFormat(transitionPackage)
         // 3：删除项目工程的路径，因为Class只支持相对路径
         return deleteFormat.replace("${transitionPackage(BASE_OUT_PUT_PATH)}.", "")
+    }
+
+    @JvmStatic
+    fun getPackageSimple(packageName: String): String {
+        if (packageName.isEmpty()) {
+            return ""
+        }
+        if (packageName.contains(".")) {
+            return packageName.substring(packageName.lastIndexOf(".") + 1)
+        }
+        return ""
     }
 }
