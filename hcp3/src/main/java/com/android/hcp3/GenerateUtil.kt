@@ -810,12 +810,15 @@ object GenerateUtil {
         val realFileName = getFileName(objectPackage, genericType)
 
         /**
-         * 如果发现类的全路径地址在[RSI_TARGET_NODE_LIST]中的话，说明它是Api的ben，去生成对应api的类
+         * 1：如果发现类的包名在[RSI_TARGET_NODE_LIST]的话，说明他是Api的bea
+         * 2：如果api的bean已经存在了，则去创建对应的Api，还有interface
          */
         val apiBean = RSI_TARGET_NODE_LIST.find { filter -> filter.apiObjectPath == objectPackage }
-        if (apiBean != null) {
-            // 发现了api的Entity的类，则去生成对应的Api的类
-            // 对应api的文件名字
+        val localApiBean =
+            File(localPackage, realFileName).listFiles()
+                ?.find { file -> StringUtil.deleteFileFormat(file.name) == realFileName }
+
+        if ((apiBean != null) && (localApiBean != null)) {
             val apiName = StringUtil.capitalize(apiBean.apiName)
             val localApiFile =
                 File(BASE_OUT_PUT_PATH, transitionPath(localPackage)).listFiles()
