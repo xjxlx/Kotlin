@@ -2,6 +2,8 @@ package com.android.hcp3
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 object TaskUtil {
@@ -13,20 +15,44 @@ object TaskUtil {
 
     private const val FILE_CLASS_NAME = "com.android.hcp3.FileUtil"
     private const val FILE_METHOD_NAME = "execute"
+    private val executor_read = Executors.newScheduledThreadPool(1)
+    private val executor_file = Executors.newScheduledThreadPool(1)
+
+    // 移动文件的等待时间
+    private var readJarDelayTime = 3
+    private var moveDelayTime = 5
 
     @JvmStatic
     fun main(args: Array<String>) {
         // 启动第一个进程，用来生成interface的接口
         val interfaceProcess = interfaceProcess()
-
         if (interfaceProcess == 0) {
-            TimeUnit.MILLISECONDS.sleep(500)
-            val readProcess = readProcess()
-            if (readProcess == 0) {
-                TimeUnit.MILLISECONDS.sleep(3000)
-                fileProcess()
+            countdown(executor_read, readJarDelayTime) {
+                val readProcess = readProcess()
+                if (readProcess == 0) {
+                    countdown(executor_file, moveDelayTime) {
+                        fileProcess()
+                    }
+                }
             }
         }
+    }
+
+    private fun countdown(
+        executor: ScheduledExecutorService,
+        delayTime: Int,
+        block: () -> Unit,
+    ) {
+        var tempTime = delayTime
+        executor.scheduleAtFixedRate({
+            println("倒计时：$tempTime 秒")
+            if (tempTime == 0) {
+                println("时间到！")
+                executor.shutdown() // 停止计时器
+                block()
+            }
+            tempTime--
+        }, 0, 1, TimeUnit.SECONDS) // 每隔一秒执行一次任务
     }
 
     private fun interfaceProcess(): Int {
@@ -73,7 +99,6 @@ object TaskUtil {
         // 等待第一个进程完成
         val exitCode = readProcess.waitFor()
         println("读取JAR进程退出代码: $exitCode")
-        readProcess.destroy()
         return exitCode
     }
 
