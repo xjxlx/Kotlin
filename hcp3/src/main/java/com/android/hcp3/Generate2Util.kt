@@ -72,6 +72,43 @@ object Generate2Util {
 
     private const val DEBUG = false
 
+    @JvmStatic
+    fun checkChildAttribute(
+        jarObjectPackage: String,
+        jarMethodSet: LinkedHashSet<ObjectBean>,
+        localApiPackage: String,
+    ) {
+        val objectSet = LinkedHashSet<String>()
+        jarMethodSet.forEach { item ->
+            val classType = item.classType
+            if (classType == OBJECT || classType == LIST_OBJECT) {
+                // println("item: ${item.genericPackage}")
+                objectSet.add(item.genericPackage)
+            }
+        }
+        println("objectSet: $objectSet")
+
+        val childAttributeMap = hashMapOf<String, LinkedHashSet<ObjectBean>>()
+        objectSet.forEach { obj ->
+            mGlobalClassLoad?.let { load ->
+                val readClass = readClass(load, obj)
+                val fields = getMethods(readClass, obj)
+                println("fields:$fields")
+                childAttributeMap[obj] = fields
+            }
+        }
+        println("childAttributeMap: $childAttributeMap")
+        println()
+
+        // 判断是否有交集
+        val keys = childAttributeMap.keys
+        childAttributeMap.values.forEach {
+            // kes 过滤 values的genericPackage 查看是否有交集
+            val filter = it.filter { filter -> keys.contains(filter.genericPackage) }
+            println("filter: $filter")
+        }
+    }
+
     /**
      * @param jarObjectPackage 生成对象在Jar中的包名，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject
      * @param jarMethodSet 生成代码里面需要写入的属性集合

@@ -9,7 +9,7 @@ import com.android.hcp3.Config.RSI_NODE_NAME
 import com.android.hcp3.Config.RSI_NODE_PATH
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
-import com.android.hcp3.Generate2Util.generateObject
+import com.android.hcp3.Generate2Util.checkChildAttribute
 import com.android.hcp3.Generate2Util.getPackageInfo
 import com.android.hcp3.StringUtil.getPackageSimple
 import com.android.hcp3.StringUtil.lowercase
@@ -325,7 +325,7 @@ object ReadJarFile {
      * 获取本类中所有的成员变量
      * @return 返回class中所有的成员属性
      */
-    private fun getFields(
+    fun getFields(
         clazz: Class<*>?,
         tag: String,
     ): LinkedHashSet<ObjectBean> {
@@ -583,7 +583,8 @@ object ReadJarFile {
                                 )
                             )
                         // 10：写入当前的Object
-                        generateObject(filterBean.apiObjectPath, jarSet, packagePath)
+//                        generateObject(filterBean.apiObjectPath, jarSet, packagePath)
+                        checkChildAttribute(filterBean.apiObjectPath, jarSet, packagePath)
                     }
                 } else {
                     println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")
