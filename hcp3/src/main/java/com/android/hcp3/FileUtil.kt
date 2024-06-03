@@ -7,7 +7,7 @@ import com.android.hcp3.Config.RSI_NODE_LEVEL
 import com.android.hcp3.Config.RSI_NODE_NAME
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
-import com.android.hcp3.GenerateUtil.getFileName
+import com.android.hcp3.Generate2Util.getFileName
 import com.android.hcp3.ReadJarFile.getGlobalClassLoad
 import com.android.hcp3.ReadJarFile.readApiNodeForParent
 import com.android.hcp3.ReadJarFile.readNeedDependenciesClassName
