@@ -22,6 +22,24 @@ import java.io.File
 import java.nio.file.Paths
 import javax.lang.model.element.Modifier
 
+/**
+ * 在写一个文件的时候，可能会出现一个情况：
+ * 当前类A ，里面有个属性B，在循环生成属性B的时候，B里面有个C，循环生成C的时候，C里面有个B，这样就会形成嵌套循环，造成异常
+ * 解决办法：
+ * 1：创建一个map集合A，以类名为ker,把里面的属性都给存入到value中
+ * 2：copy集合A得到一个副本A1
+ * 3：读取A1里面的object，找到里面所有的object的属性，把这些子object的属性都给存储起来
+ * 4：对比所有的子object的属性，以类名作为对比，查看是否有相互引用。
+ * 5：A---> B--->C C--->B
+ * 6：想办法打破循环
+ * 1：忽略掉相互引用的类，先让类生成了，然后对比类的属性，再次添加
+ * 2：先创建一个temp的类，把A1里面相互引用的类给替换掉，先让类生成，最后在检查对比属性，如果发现属性和原始类的属性不一致，则把对应的给替换掉
+ *
+ * 3：先要读取子类，查看里面是否有相互引用的类，然后对比是哪些类在相互引用
+ * 4：把其中一个被引用类的牵引属性上后缀上加上#007#，然后类型改为String类型的，先让类生成
+ * 5：读取原始类，建立真正的牵引类，重新生成对应的类
+ *
+ */
 object Generate2Util {
     private val ANNOTATION_NONNULL = ClassName.get("androidx.annotation", "NonNull")
     private val ANNOTATION_NULLABLE = ClassName.get("androidx.annotation", "Nullable")
