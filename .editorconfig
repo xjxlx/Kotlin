@@ -8,3 +8,8 @@ ktlint_standard_no-wildcard-imports = disabled
 
 # 尾部是否强制加入逗号
 ij_kotlin_allow_trailing_comma_on_call_site = false
+
+# 禁用变量属性检测
+ktlint_standard_property-naming = disabled
+# 禁用返回变量属性检测
+ktlint_standard_backing-property-naming = disabled

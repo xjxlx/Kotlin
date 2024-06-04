@@ -3,7 +3,6 @@ package com.android.hcp3
 import com.android.hcp3.bean.ApiNodeBean
 import java.io.File
 
-@Suppress("ktlint:standard:property-naming")
 object Config {
     /**
      * 用来存储当前节点下的所有子节点名字，内容会自动生成，不要做任何的改动
