@@ -161,25 +161,6 @@ object Generate2Util {
     }
 
     /**
-     * 创建一个空的对象，用来解除相互依赖的关系
-     */
-    private fun generateEmptyObject(
-        jarObjectPackage: String,
-        localApiPackage: String,
-    ) {
-        // 1:创建空类的对象
-        val fileName = getFileName(jarObjectPackage, OBJECT)
-        val classTypeBuild =
-            TypeSpec.classBuilder(fileName)
-                .addModifiers(Modifier.PUBLIC)
-        // 2:写入到类中
-        val javaFile = JavaFile.builder(localApiPackage, classTypeBuild.build()).build()
-        val outPutFile = File(BASE_OUT_PUT_PATH)
-        javaFile.writeTo(outPutFile)
-        println("\r\n【写入结束！】\r\n")
-    }
-
-    /**
      * @param jarObjectPackage 生成对象在Jar中的包名，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject
      * @param jarMethodSet 生成代码里面需要写入的属性集合
      * @param localApiPackage 生成文件的包名，这里指的是当前model的相对路径，不包含[BASE_OUT_PUT_PATH]
@@ -594,7 +575,6 @@ object Generate2Util {
                 val realPath =
                     transitionPackage(file.parent.substring(BASE_OUT_PUT_PATH.length + 1, file.parent.length))
                 // println("开始存储数据：name:[$realName] path:[$realPath]")
-
                 // 如果在集合中没有这个类，才去添加新的类进去，避免重复性的添加
                 val find = LOCAL_NODE_FILE_LIST.find { local -> local.name == realName }
                 if (find == null) {
