@@ -440,9 +440,9 @@ object ReadJarFile {
             clazz == Long::class.javaObjectType || clazz == Float::class.javaObjectType ||
             clazz == String::class.javaObjectType || clazz == OffsetTime::class.javaObjectType ||
             clazz == LocalDate::class.javaObjectType || clazz.name == Duration::class.javaObjectType.name ||
-            (clazz.name == OffsetDateTime::class.javaObjectType.name)
+            (clazz.name == OffsetDateTime::class.javaObjectType.name) ||
+            (clazz.name == URI::class.javaObjectType.name)
     }
-//    OffsetDateTime
 
     /** 读取大项中节点的Api信息  */
     fun readApiNodeForParent(globalClassLoad: URLClassLoader) {

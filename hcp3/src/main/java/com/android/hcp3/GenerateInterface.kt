@@ -4,6 +4,6 @@ object GenerateInterface {
     @JvmStatic
     fun main(args: Array<String>) {
         ReadJarFile.readNeedDependenciesClassName()
-        GenerateUtil.generateInterface()
+        // GenerateUtil.generateInterface()
     }
 }
