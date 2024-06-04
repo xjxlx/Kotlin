@@ -72,40 +72,69 @@ object Generate2Util {
 
     private const val DEBUG = false
 
+    /**
+     * 用来过滤属性是否会存在相互依赖，如果一旦发生了相互依赖，则会进入死循环，需要特殊处理
+     */
     @JvmStatic
-    fun checkChildAttribute(
+    fun filterAttributeInterdependence(
         jarObjectPackage: String,
         jarMethodSet: LinkedHashSet<ObjectBean>,
         localApiPackage: String,
     ) {
+        println()
+        println("开始检测object的相互依赖------>")
+
+        // 1：用来存储object或者list object的set集合，用来检查依赖属性
         val objectSet = LinkedHashSet<String>()
+        val interdependenceSet = LinkedHashSet<List<ObjectBean>>()
+
         jarMethodSet.forEach { item ->
             val classType = item.classType
             if (classType == OBJECT || classType == LIST_OBJECT) {
-                // println("item: ${item.genericPackage}")
                 objectSet.add(item.genericPackage)
             }
         }
-        println("objectSet: $objectSet")
 
-        val childAttributeMap = hashMapOf<String, LinkedHashSet<ObjectBean>>()
-        objectSet.forEach { obj ->
-            mGlobalClassLoad?.let { load ->
-                val readClass = readClass(load, obj)
-                val fields = getMethods(readClass, obj)
-                println("fields:$fields")
-                childAttributeMap[obj] = fields
+        if (objectSet.size > 0) {
+            objectSet.forEach { obj ->
+                println("      检测到object的类: [$obj]")
             }
-        }
-        println("childAttributeMap: $childAttributeMap")
-        println()
+            // 2：读取object中所有的方法，并存储在map集合中
+            println("开始读取object里面的包含的方法------>")
+            val objectAttributeMap = hashMapOf<String, LinkedHashSet<ObjectBean>>()
+            objectSet.forEach { obj ->
+                mGlobalClassLoad?.let { load ->
+                    val readClass = readClass(load, obj)
+                    val fields = getMethods(readClass, obj)
+                    objectAttributeMap[obj] = fields
+                }
+            }
+            objectAttributeMap.forEach { (obj, attributeSet) ->
+                println("object的类:[$obj] \r\n      属性集合：$attributeSet")
+            }
 
-        // 判断是否有交集
-        val keys = childAttributeMap.keys
-        childAttributeMap.values.forEach {
-            // kes 过滤 values的genericPackage 查看是否有交集
-            val filter = it.filter { filter -> keys.contains(filter.genericPackage) }
-            println("filter: $filter")
+            // 3：通过比对keys 去匹配values的genericPackage字段，判断出是否有交集
+            println("开始过滤object的属性集合是否有交集------>")
+            objectAttributeMap.values.forEach { set ->
+                // kes 过滤 values的genericPackage 查看是否有交集
+                // 遍历排查类的属性集合中genericPackage属性是否包含在了kes中，如果有包含的话，则判定为有相互依赖的关系
+                val filter = set.filter { bean -> objectAttributeMap.keys.contains(bean.genericPackage) }
+                interdependenceSet.add(filter)
+            }
+            // 4：判断相互依赖的集合中是否有内容
+            interdependenceSet.forEach { interdependence ->
+                println("      相互的依赖:$interdependence")
+            }
+        } else {
+            println("      对象中object的集合为空，停止后续的检测!")
+        }
+
+        if (interdependenceSet.size > 0) {
+            println("相互依赖的内容不为空，执行依赖的操作！")
+        } else {
+            println("没有发现相互依赖的类，直接去生成对应的代码------>")
+            println()
+            generateObject(jarObjectPackage, jarMethodSet, localApiPackage)
         }
     }
 
