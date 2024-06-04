@@ -86,6 +86,7 @@ object Generate2Util {
 
         // 1：用来存储object或者list object的set集合，用来检查依赖属性
         val objectSet = LinkedHashSet<String>()
+        val objectAttributeMap = hashMapOf<String, LinkedHashSet<ObjectBean>>()
         val interdependenceSet = LinkedHashSet<List<ObjectBean>>()
 
         jarMethodSet.forEach { item ->
@@ -101,7 +102,6 @@ object Generate2Util {
             }
             // 2：读取object中所有的方法，并存储在map集合中
             println("开始读取object里面的包含的方法------>")
-            val objectAttributeMap = hashMapOf<String, LinkedHashSet<ObjectBean>>()
             objectSet.forEach { obj ->
                 mGlobalClassLoad?.let { load ->
                     val readClass = readClass(load, obj)
@@ -131,11 +131,52 @@ object Generate2Util {
 
         if (interdependenceSet.size > 0) {
             println("相互依赖的内容不为空，执行依赖的操作！")
+            /**
+             * 解绑相互依赖的思路是：
+             * 1：先把其中一个类的信息添加到本地存储对象的集合中去，默认该类已经生成过了，避免相互依赖
+             * 2：生成原有的数据
+             * 3：在生成完原有数据之后，把本地假设生成的类给移除本地的集合
+             * 4：重新生成这个假设的类
+             */
+            val objectBean = interdependenceSet.toList()[0][0]
+            val genericPackage = objectBean.genericPackage
+            val writeFilPackage = getWriteFilPackage(genericPackage)
+
+            // 1：把假数据给添加到本地集合中，避免重复性的生成
+            val mockBean = AttributeBean()
+            mockBean.name = getFileName(genericPackage, OBJECT)
+            mockBean.attributePackage = writeFilPackage
+            LOCAL_NODE_FILE_LIST.add(mockBean)
+            // 2：生成除了mock之外的数据
+            generateObject(jarObjectPackage, jarMethodSet, localApiPackage)
+            // 3：移除本地集合中对应的mock
+            LOCAL_NODE_FILE_LIST.remove(mockBean)
+            // 4：重新生成真实的mock数据
+            generateObject(genericPackage, objectAttributeMap[genericPackage]!!, writeFilPackage)
         } else {
             println("没有发现相互依赖的类，直接去生成对应的代码------>")
             println()
             generateObject(jarObjectPackage, jarMethodSet, localApiPackage)
         }
+    }
+
+    /**
+     * 创建一个空的对象，用来解除相互依赖的关系
+     */
+    private fun generateEmptyObject(
+        jarObjectPackage: String,
+        localApiPackage: String,
+    ) {
+        // 1:创建空类的对象
+        val fileName = getFileName(jarObjectPackage, OBJECT)
+        val classTypeBuild =
+            TypeSpec.classBuilder(fileName)
+                .addModifiers(Modifier.PUBLIC)
+        // 2:写入到类中
+        val javaFile = JavaFile.builder(localApiPackage, classTypeBuild.build()).build()
+        val outPutFile = File(BASE_OUT_PUT_PATH)
+        javaFile.writeTo(outPutFile)
+        println("\r\n【写入结束！】\r\n")
     }
 
     /**
