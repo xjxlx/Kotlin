@@ -112,6 +112,35 @@ public class ApiNodeBean {
    */
   private String updateObjectName = "";
 
+  /**
+   * 节点下Api的Object的路径，例如：
+   *
+   * <ul>
+   *   <li>节点是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.HeadUpDisplay}
+   *   <li>节点的名字是：{@link HeadUpDisplay#switchControls()}
+   *   <li>节点的路径是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.SwitchControlsApi}
+   *   <li>return 节点下Api的Object的路径是：{@link
+   *       de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.SwitchControlObject}
+   *   <li>return 本地object的名字是：[SwitchControlEntity]
+   * </ul>
+   */
+  private String localObjectName;
+
+  /**
+   * 节点下Api的Object的路径，例如：
+   *
+   * <ul>
+   *   <li>节点是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.HeadUpDisplay}
+   *   <li>节点的名字是：{@link HeadUpDisplay#switchControls()}
+   *   <li>节点的路径是：{@link de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.SwitchControlsApi}
+   *   <li>return 节点下Api的Object的路径是：{@link
+   *       de.esolutions.fw.rudi.viwi.service.headupdisplay.v4.SwitchControlObject}
+   *   <li>return
+   *       本地object的路径是：[com.android.hcp3.rsi.HeadUpDisplay.switchControls.SwitchControlEntity]
+   * </ul>
+   */
+  private String localObjectPath;
+
   public String getApiName() {
     return apiName;
   }
@@ -160,6 +189,22 @@ public class ApiNodeBean {
     this.updateObjectName = updateObjectName;
   }
 
+  public String getLocalObjectName() {
+    return localObjectName;
+  }
+
+  public void setLocalObjectName(String localObjectName) {
+    this.localObjectName = localObjectName;
+  }
+
+  public String getLocalObjectPath() {
+    return localObjectPath;
+  }
+
+  public void setLocalObjectPath(String localObjectPath) {
+    this.localObjectPath = localObjectPath;
+  }
+
   @Override
   public String toString() {
     return "ApiNodeBean{"
@@ -180,6 +225,12 @@ public class ApiNodeBean {
         + '\''
         + ", updateObjectName='"
         + updateObjectName
+        + '\''
+        + ", localObjectName='"
+        + localObjectName
+        + '\''
+        + ", localObjectPath='"
+        + localObjectPath
         + '\''
         + '}';
   }

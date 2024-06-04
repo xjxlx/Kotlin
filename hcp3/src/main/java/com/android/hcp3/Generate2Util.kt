@@ -23,6 +23,7 @@ import com.android.hcp3.bean.ObjectBean
 import com.squareup.javapoet.*
 import java.io.File
 import java.nio.file.Paths
+import java.util.stream.Collectors
 import javax.lang.model.element.Modifier
 
 /**
@@ -74,6 +75,13 @@ object Generate2Util {
             .toString()
 
     private const val DEBUG = false
+
+    /**
+     * 本地节点的路径，主要用来生成本地的interface的路径
+     */
+    private val LOCAL_NODE_PACKAGE =
+        transitionPackage(Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_NODE_NAME)).toString())
+
     // </editor-fold>
 
     // <editor-fold  desc="2：过滤类中的属性，用于判断是否存在相互依赖的关系"
@@ -172,6 +180,9 @@ object Generate2Util {
             println()
             generateObject(jarObjectPackage, jarMethodSet, localApiPackage)
         }
+
+        // 最后在生成Api、Manager、Interface的类
+        checkGenerateOther()
     }
     // </editor-fold>
 
@@ -197,7 +208,7 @@ object Generate2Util {
         val realFileName = getFileName(jarObjectPackage, OBJECT)
 
         // 构建类的build对象，用于组装类中的数据
-        val classTypeBuild =
+        val classBuild =
             TypeSpec.classBuilder(realFileName)
                 .addAnnotations(getAddAnnotations())
                 .superclass(SUPER_CLASS_BASE_RSI_VALUE)
@@ -208,16 +219,15 @@ object Generate2Util {
         // 2.1：构造方法的参数类型
         val methodPackage = parameterInfo[0]
         println("Object类的名字为：[$realFileName] 构造类参数的路径为：[$methodPackage]")
-        val methodParameterClassType = ClassName.get(methodPackage, parameterInfo[1])
 
         // 2.2：方法的参数
         val methodParameter =
-            ParameterSpec.builder(methodParameterClassType, "object")
+            ParameterSpec.builder(ClassName.get(methodPackage, parameterInfo[1]), "object")
                 .addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                 .build()
 
         // 2.3:组装方法的修饰符和参数
-        val methodSpecBuild =
+        val methodBuild =
             MethodSpec.constructorBuilder() // 标注是构造犯法
                 .addModifiers(Modifier.PUBLIC) // 方法的修饰符
                 .addParameter(methodParameter) // 方法的参数
@@ -323,7 +333,7 @@ object Generate2Util {
 
             // println("      attribute:[$attributeName]  attributeType:[$genericPackage]")
             // 把生成的属性对象添加到类中
-            classTypeBuild.addField(fieldSpec.build())
+            classBuild.addField(fieldSpec.build())
             try {
             } catch (e: Exception) {
                 println("写入属性异常：${e.message}")
@@ -334,18 +344,18 @@ object Generate2Util {
 
         // <editor-fold desc="四：构建方法体对象">
         // 添加完成的方法内容
-        classTypeBuild.addMethod(methodSpecBuild.addCode(codeBuild.build()).build())
+        classBuild.addMethod(methodBuild.addCode(codeBuild.build()).build())
         // </editor-fold>
 
         // <editor-fold desc="五：写入到类中">
-        val javaFile = JavaFile.builder(localApiPackage, classTypeBuild.build()).build()
+        val javaFile = JavaFile.builder(localApiPackage, classBuild.build()).build()
         if (DEBUG) {
             javaFile.writeTo(System.out)
         } else {
             val outPutFile = File(BASE_OUT_PUT_PATH)
             javaFile.writeTo(outPutFile)
         }
-        println("\r\n【写入结束！】\r\n")
+        println("[写入结束！]\r\n")
         val typeBean = AttributeBean()
         typeBean.attributePackage = localApiPackage
         typeBean.name = realFileName
@@ -376,7 +386,7 @@ object Generate2Util {
                 .build()
 
         // 2:构造方法组装
-        val methodSpecBuildConstructor =
+        val methodConstructor =
             MethodSpec.constructorBuilder()
                 .addParameter(ParameterSpec.builder(JAVA__STRING, "object").build())
                 .addCode(CodeBlock.builder().add("this.value = object;").build()).build()
@@ -400,7 +410,7 @@ object Generate2Util {
             TypeSpec.enumBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
                 .addField(fieldSpec)
-                .addMethod(methodSpecBuildConstructor)
+                .addMethod(methodConstructor)
                 .addMethod(methodSpecBuildStatic)
         // </editor-fold>
 
@@ -431,7 +441,7 @@ object Generate2Util {
             val outPutFile = File(BASE_OUT_PUT_PATH)
             javaFile.writeTo(outPutFile)
         }
-        println("\r\n【写入结束！】\r\n")
+        println("[写入结束！]\r\n")
         val typeBean = AttributeBean()
         typeBean.attributePackage = packagePath
         typeBean.name = className
@@ -440,39 +450,20 @@ object Generate2Util {
     }
 
     @JvmStatic
-    fun dynamicAddInterfaceMethod() {
-        val interfacePackage =
-            transitionPackage(
-                Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                    .resolve(Paths.get(RSI_NODE_NAME)).toString()
-            )
-        val interfaceName = StringUtil.getPackageSimple(transitionPackage(RSI_NODE_PATH)) + "Interface"
-        // <editor-fold desc="一：构建接口类对象">
-        println("开始动态添加Interface方法：[$interfaceName] ------>")
-
-        // 创建一个新的方法
-        val newMethod =
-            MethodSpec.methodBuilder("newMethod")
-                .addModifiers(Modifier.ABSTRACT)
-                .returns(Void.TYPE)
+    fun dynamicAddInterfaceMethod(
+        interfaceSpec: TypeSpec.Builder,
+        apiBean: ApiNodeBean,
+    ): MethodSpec {
+        println("开始动态添加Interface方法:------>[${apiBean.apiName}]")
+        val realMethodName = capitalize(apiBean.apiName)
+        println("realMethodName:[$realMethodName]")
+        val register =
+            MethodSpec.methodBuilder("register${realMethodName}ValueCallback")
+                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .build()
 
-        val interfaceSpec =
-            TypeSpec.interfaceBuilder(interfaceName)
-                .addModifiers(Modifier.PUBLIC)
-                .addMethod(newMethod)
-                .build()
-
-        // <editor-fold desc="四：写入到类中">
-        val javaFile = JavaFile.builder(interfacePackage, interfaceSpec).build()
-        if (DEBUG) {
-            javaFile.writeTo(System.out)
-        } else {
-            val outPutFile = File(BASE_OUT_PUT_PATH)
-            javaFile.writeTo(outPutFile)
-        }
-        println("\r\n【写入结束！】\r\n")
-        // </editor-fold>
+        interfaceSpec.addMethod(register)
+        return register
     }
 
     /**
@@ -488,43 +479,43 @@ object Generate2Util {
         updateName: String,
         apiEntityName: String,
     ) {
-        println("updatePackage:$updatePackage updateName:$updateName apiEntityName:$apiEntityName")
+        println("updatePackage:[$updatePackage] updateName:[$updateName] apiEntityName:[$apiEntityName]")
         // <editor-fold desc="一：构建类对象">
         println("开始生成Api类：[$localApiName] ------>")
         // 1:创建继承类对象
-        val superclassParameterFirst: TypeName = ClassName.get(localApiPackage, apiEntityName)
+        val superParameterFirst: TypeName = ClassName.get(localApiPackage, apiEntityName)
         val superclass =
             if ((updatePackage.isEmpty()) or (updateName.isEmpty())) { // 没有更新对象，使用api的Entity作为参数
                 ParameterizedTypeName.get(
                     ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIResource"),
-                    superclassParameterFirst
+                    superParameterFirst
                 )
             } else { // 有更新对象，使用api的Entity 和 update的类作为参数
                 // 创建第二个泛型参数
-                val superclassParameterSecond: TypeName = ClassName.get(updatePackage, updateName)
+                val superParameterSecond: TypeName = ClassName.get(updatePackage, updateName)
                 // 创建超类，指定多个泛型参数
                 ParameterizedTypeName.get(
                     ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIResourceUpdate"),
-                    superclassParameterFirst,
-                    superclassParameterSecond
+                    superParameterFirst,
+                    superParameterSecond
                 )
             }
 
         // 2:构建类的对象
-        val classSpec =
+        val classBuild =
             TypeSpec.classBuilder(ClassName.get(localApiPackage, localApiName))
                 .superclass(superclass)
                 .addModifiers(Modifier.PUBLIC)
 
         // 3:把读取到的父类的主路径信息转换为包和类名
-        val packageInfo = getPackageInfo(transitionPackage(RSI_NODE_PATH))
+        val rsiInfo = getPackageInfo(transitionPackage(RSI_NODE_PATH))
 
         // 4:构造方法组装
         val firstParameter =
             ParameterSpec.builder(
                 ClassName.get(
-                    packageInfo[0],
-                    packageInfo[1]
+                    rsiInfo[0],
+                    rsiInfo[1]
                 ),
                 "service"
             ).addAnnotation(ANNOTATION_NULLABLE)
@@ -534,7 +525,7 @@ object Generate2Util {
             ParameterSpec.builder(
                 ParameterizedTypeName.get(
                     ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "ServiceProvider"),
-                    TypeVariableName.get(packageInfo[1])
+                    TypeVariableName.get(rsiInfo[1])
                 ),
                 "serviceProvider"
             ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
@@ -548,17 +539,17 @@ object Generate2Util {
                 .addModifiers(Modifier.PROTECTED)
                 .build()
 
-        classSpec.addMethod(methodConstructor)
+        classBuild.addMethod(methodConstructor)
 
         // <editor-fold desc="三：写入到类中">
-        val javaFile = JavaFile.builder(localApiPackage, classSpec.build()).build()
+        val javaFile = JavaFile.builder(localApiPackage, classBuild.build()).build()
         if (DEBUG) {
             javaFile.writeTo(System.out)
         } else {
             val outPutFile = File(BASE_OUT_PUT_PATH)
             javaFile.writeTo(outPutFile)
         }
-        println("\r\n【写入结束！】\r\n")
+        println("[写入结束！]\r\n")
         // </editor-fold>
     }
 
@@ -569,35 +560,28 @@ object Generate2Util {
         apiObjectPath: String,
     ) {
         // <editor-fold desc="一：构建类对象">
-        val realApiName = StringUtil.capitalize(apiName)
+        val realApiName = capitalize(apiName)
         val entityFileName = getFileName(apiObjectPath, OBJECT)
         val apiObjectEntity = ClassName.get(localPackage, entityFileName)
 
         val managerName = realApiName + "Manager"
         println("开始生成Manager类：[$managerName] ------>")
         // 1.1：创建超类，指定泛型参数
-        val rsiNodeInfo = transitionPackage(RSI_NODE_PATH)
-        val rsiInfo = getPackageInfo(rsiNodeInfo)
-        val superClass =
-            ParameterizedTypeName.get(
-                SUPER_CLASS_BASE_RSI_SERVICE,
-                ClassName.get(rsiInfo[0], rsiInfo[1])
-            )
+        val rsiInfo = getPackageInfo(transitionPackage(RSI_NODE_PATH))
+        val superClass = ParameterizedTypeName.get(SUPER_CLASS_BASE_RSI_SERVICE, ClassName.get(rsiInfo[0], rsiInfo[1]))
         // 1.2：构造类对象
         val classSpec =
             TypeSpec.classBuilder(ClassName.get(localPackage, managerName))
                 .superclass(superClass)
                 .addModifiers(Modifier.PUBLIC)
 
-        val parameter =
-            ParameterSpec.builder(PARAMETER_I_RSI_ADMIN, "rsiAdmin")
-                .build()
+        val methodParameter = ParameterSpec.builder(PARAMETER_I_RSI_ADMIN, "rsiAdmin").build()
         // </editor-fold>
 
         // <editor-fold desc="二：构造方法组装">
         val methodConstructor =
             MethodSpec.constructorBuilder()
-                .addParameter(parameter) // 添加构造方法参数
+                .addParameter(methodParameter) // 添加构造方法参数
                 .addStatement("super(rsiAdmin)") // 调用父类构造函数
                 .addModifiers(Modifier.PROTECTED)
                 .build()
@@ -607,19 +591,19 @@ object Generate2Util {
 
         // <editor-fold desc="三：静态方法组装">
         // <editor-fold desc="3.1：createApis"
-        val createApiCodeBuild = CodeBlock.builder()
-        createApiCodeBuild.addStatement(
+        val createCodeBuild = CodeBlock.builder()
+        createCodeBuild.addStatement(
             "return createResourceInterface(\$T.class)",
             ClassName.get(localPackage, realApiName)
         )
 
-        val createApiMethod =
+        val createApiMethodSpec =
             MethodSpec.methodBuilder("create$realApiName")
                 .addModifiers(Modifier.PRIVATE)
-                .addCode(createApiCodeBuild.build())
+                .addCode(createCodeBuild.build())
                 .returns(ClassName.get(localPackage, realApiName))
                 .build()
-        classSpec.addMethod(createApiMethod)
+        classSpec.addMethod(createApiMethodSpec)
         // </editor-fold>
 
         // <editor-fold desc="3.2：register"
@@ -633,10 +617,7 @@ object Generate2Util {
             ParameterSpec.builder(
                 ParameterizedTypeName.get(
                     PARAMETER_VALUE_CALL_BACK,
-                    ParameterizedTypeName.get(
-                        JAVA_LIST,
-                        apiObjectEntity
-                    )
+                    ParameterizedTypeName.get(JAVA_LIST, apiObjectEntity)
                 ),
                 "callback"
             ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
@@ -663,10 +644,7 @@ object Generate2Util {
             ParameterSpec.builder(
                 ParameterizedTypeName.get(
                     PARAMETER_VALUE_CALL_BACK,
-                    ParameterizedTypeName.get(
-                        JAVA_LIST,
-                        apiObjectEntity
-                    )
+                    ParameterizedTypeName.get(JAVA_LIST, apiObjectEntity)
                 ),
                 "callback"
             ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
@@ -689,12 +667,7 @@ object Generate2Util {
             ClassName.get(localPackage, realApiName)
         )
 
-        val getAllReturnType =
-            ParameterizedTypeName.get(
-                JAVA_LIST,
-                apiObjectEntity
-            )
-
+        val getAllReturnType = ParameterizedTypeName.get(JAVA_LIST, apiObjectEntity)
         val getAllMethod =
             MethodSpec.methodBuilder("getAll" + realApiName + "EntitiesSync")
                 .addModifiers(Modifier.PUBLIC)
@@ -712,12 +685,10 @@ object Generate2Util {
             "return create$realApiName().getValueSync(name)",
             ClassName.get(localPackage, realApiName)
         )
+
+        // 设置方法的注解
         val getEntitiesParameter =
-            ParameterSpec.builder(
-                JAVA__STRING,
-                "name"
-            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
-                .build()
+            ParameterSpec.builder(JAVA__STRING, "name").addAnnotation(ANNOTATION_NONNULL).build()
 
         val getEntitiesMethod =
             MethodSpec.methodBuilder("get" + realApiName + "EntitiesSync")
@@ -741,36 +712,15 @@ object Generate2Util {
             val outPutFile = File(BASE_OUT_PUT_PATH)
             javaFile.writeTo(outPutFile)
         }
-        println("\r\n【写入结束！】\r\n")
+        println("[写入结束！]\r\n")
         // </editor-fold>
     }
 
     @JvmStatic
-    fun generateInterface() {
-        val interfacePackage =
-            transitionPackage(
-                Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                    .resolve(Paths.get(RSI_NODE_NAME)).toString()
-            )
-        val interfaceName = StringUtil.getPackageSimple(transitionPackage(RSI_NODE_PATH)) + "Interface"
-        // <editor-fold desc="一：构建接口类对象">
+    fun generateInterface(): TypeSpec.Builder {
+        val interfaceName = getPackageSimple(LOCAL_NODE_PACKAGE) + "Interface"
         println("开始生成Interface类：[$interfaceName] ------>")
-
-        val interfaceSpec =
-            TypeSpec.interfaceBuilder(interfaceName)
-                .addModifiers(Modifier.PUBLIC)
-                .build()
-
-        // <editor-fold desc="四：写入到类中">
-        val javaFile = JavaFile.builder(interfacePackage, interfaceSpec).build()
-        if (DEBUG) {
-            javaFile.writeTo(System.out)
-        } else {
-            val outPutFile = File(BASE_OUT_PUT_PATH)
-            javaFile.writeTo(outPutFile)
-        }
-        println("\r\n【写入结束！】\r\n")
-        // </editor-fold>
+        return TypeSpec.interfaceBuilder(interfaceName).addModifiers(Modifier.PUBLIC)
     }
 
     /**
@@ -893,13 +843,6 @@ object Generate2Util {
             val apiGenericName = apiBean.apiObjectName
             if (apiGenericName.endsWith("Object")) {
                 realFileName = apiGenericName.substring(0, apiGenericName.lastIndexOf("Object")) + OBJECT_SUFFIX
-
-                if (realFileName == "SettingEntity") {
-                    println("------>")
-                }
-                checkGenerateOther(objectPackage, realFileName, apiBean)
-                // 生成其他的类，api、manager、interface
-//                checkGenerateOther(objectPackage, realFileName, apiBean)
             }
         } else {
             // 不是rsi的bean
@@ -975,33 +918,56 @@ object Generate2Util {
         return array
     }
 
-    /**
-     * todo ---->
-     */
-    private fun checkGenerateOther(
-        objectPackage: String,
-        realFileName: String,
-        apiBean: ApiNodeBean,
-    ) {
+    private fun checkGenerateOther() {
         /**
-         * 写入Api、manager、interface的逻辑
-         * 1：首先要判定api的bean是否存在，如果存在了在去创建对应的其他类，否则就不创建
-         * 2：要判断本身的类是否存在，如果不存在就创建，否则就不创建
+         * 生成对应的Api、Manager、interface
+         * 1：必须要先调用一次[readNodeLocalFile]方法，因为如果是相互依赖的类，最后生成真实的数据，有可能全部都是已经生成过得类，
+         *    就不会再走[readNodeLocalFile]方法，导致最后一个Bean没有被添加到本地集合中，这里要在调用一次，去再次检测
+         * 2：要拿Rsi的集合，对比本地的Entity进行判断，是否有这个api的Entity，如果能匹配的上，就把local的名字和路径复制到rsi的内容中
+         * 3：如果有这个对应的Api实体，择取获取jar的包名，对应的生成api、manager、interface
          */
-        val localApiBean = LOCAL_NODE_FILE_LIST.find { find -> find.name == realFileName }
-        if (localApiBean != null) {
-            val writeFilPackage = getWriteFilPackage(objectPackage)
-            // 写入api
-            val apiFile = LOCAL_NODE_FILE_LIST.find { local -> local.name == apiBean.apiName }
-            if (apiFile == null) {
-                generateApi(
-                    writeFilPackage,
-                    capitalize(apiBean.apiName),
-                    apiBean.updateObjectPackage,
-                    apiBean.updateObjectName,
-                    realFileName
-                )
-            }
+        readNodeLocalFile(Local_Folder_Path)
+
+        // 匹配过滤
+        val otherSet =
+            RSI_TARGET_NODE_LIST.stream()
+                .filter { rsi ->
+                    LOCAL_NODE_FILE_LIST.stream().anyMatch { local ->
+                        val fileName = getFileName(rsi.apiObjectPath, OBJECT)
+                        val localName = local.name
+                        if (fileName == localName) {
+                            // 把local的内容复制到rsi中
+                            rsi.localObjectPath = local.attributePackage
+                            rsi.localObjectName = localName
+                        }
+                        fileName == localName
+                    }
+                }
+                .collect(Collectors.toSet())
+
+        println("otherSet:$otherSet")
+        println()
+
+        // 生成interface的类
+        val interfaceSpec = generateInterface()
+
+        otherSet.forEach { other ->
+            val localPackage = getWriteFilPackage(other.apiObjectPath)
+            val localApiName = capitalize(other.apiName)
+            val fileName = getFileName(other.apiObjectPath, OBJECT)
+            println("fileName:$fileName")
+            // 1：生成Api的类
+            generateApi(localPackage, localApiName, other.updateObjectPackage, other.updateObjectName, fileName)
+
+            // 2：生成manager的类
+            generateManager(localPackage, other.apiName, other.apiObjectPath)
+
+            // 3：动态生成interface的内容
+            dynamicAddInterfaceMethod(interfaceSpec, other)
         }
+
+        // <editor-fold desc="四：写入到类中">
+        val javaFile = JavaFile.builder(LOCAL_NODE_PACKAGE, interfaceSpec.build()).build()
+        javaFile.writeTo(File(BASE_OUT_PUT_PATH))
     }
 }
