@@ -40,7 +40,6 @@ import javax.lang.model.element.Modifier
  * 3：先要读取子类，查看里面是否有相互引用的类，然后对比是哪些类在相互引用
  * 4：把其中一个被引用类的牵引属性上后缀上加上#007#，然后类型改为String类型的，先让类生成
  * 5：读取原始类，建立真正的牵引类，重新生成对应的类
- *
  */
 object Generate2Util {
     // <editor-fold desc="1：公共属性"
