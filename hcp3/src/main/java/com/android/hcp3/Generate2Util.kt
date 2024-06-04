@@ -12,6 +12,7 @@ import com.android.hcp3.ReadJarFile.getEnums
 import com.android.hcp3.ReadJarFile.getMethods
 import com.android.hcp3.ReadJarFile.mGlobalClassLoad
 import com.android.hcp3.ReadJarFile.readClass
+import com.android.hcp3.StringUtil.capitalize
 import com.android.hcp3.StringUtil.deleteFileFormat
 import com.android.hcp3.StringUtil.getPackageSimple
 import com.android.hcp3.StringUtil.lowercase
@@ -995,7 +996,7 @@ object Generate2Util {
             if (apiFile == null) {
                 generateApi(
                     writeFilPackage,
-                    apiBean.apiName,
+                    capitalize(apiBean.apiName),
                     apiBean.updateObjectPackage,
                     apiBean.updateObjectName,
                     realFileName
