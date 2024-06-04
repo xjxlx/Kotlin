@@ -101,6 +101,12 @@ object Generate2Util {
                 objectSet.add(item.genericPackage)
             }
         }
+        /**
+         * 如果集合不为空，说明里面有object的类型，则把自身也添加到集合里面，因为可能存在当前类应用属性类，属性类又引用当前类的情况
+         */
+        if (objectSet.size > 0) {
+            objectSet.add(jarObjectPackage)
+        }
 
         if (objectSet.size > 0) {
             objectSet.forEach { obj ->
@@ -125,7 +131,9 @@ object Generate2Util {
                 // kes 过滤 values的genericPackage 查看是否有交集
                 // 遍历排查类的属性集合中genericPackage属性是否包含在了kes中，如果有包含的话，则判定为有相互依赖的关系
                 val filter = set.filter { bean -> objectAttributeMap.keys.contains(bean.genericPackage) }
-                interdependenceSet.add(filter)
+                if (filter.isNotEmpty()) {
+                    interdependenceSet.add(filter)
+                }
             }
             // 4：判断相互依赖的集合中是否有内容
             interdependenceSet.forEach { interdependence ->
@@ -166,6 +174,11 @@ object Generate2Util {
         }
     }
     // </editor-fold>
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        ReadJarFile.execute()
+    }
 
     /**
      * @param jarObjectPackage 生成对象在Jar中的包名，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.GeneralSettingObject
