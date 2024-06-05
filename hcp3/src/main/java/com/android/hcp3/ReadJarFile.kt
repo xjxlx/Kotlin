@@ -48,6 +48,20 @@ object ReadJarFile {
             ObjectBean("de.esolutions.fw.rudi.services.rsiglobal.RGBA", "com.android.hcp3.RGBAEntity")
         )
 
+    // 自定义比较器，将带有 "$" 符号的字段排在最前面
+    private var ENUM_COMPARATOR: Comparator<Field> =
+        Comparator { f1: Field, f2: Field ->
+            val f1HasDollar = f1.name.contains("_")
+            val f2HasDollar = f2.name.contains("_")
+            if (f1HasDollar && !f2HasDollar) {
+                return@Comparator -1
+            } else if (!f1HasDollar && f2HasDollar) {
+                return@Comparator 1
+            } else {
+                return@Comparator f1.name.compareTo(f2.name)
+            }
+        }
+
     @JvmStatic
     fun main(args: Array<String>) {
         execute()
@@ -306,8 +320,8 @@ object ReadJarFile {
             if (clazz != null) {
                 // 将数组转换为集合
                 val declaredFields = clazz.getDeclaredFields()
-                // 按照字段名进行排序
-                Arrays.sort(declaredFields, Comparator.comparing(Field::getName))
+                // 按照自定义比较器进行排序
+                Arrays.sort(declaredFields, ENUM_COMPARATOR.thenComparing(Field::getName))
                 declaredFields.forEach { field ->
                     if (field.isEnumConstant) {
                         val bean = ObjectBean()
