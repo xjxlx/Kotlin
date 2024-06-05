@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import de.esolutions.fw.rudi.services.RsiService;
 import java.util.List;
+import technology.cariad.vehiclecontrolmanager.ValueCallback;
 
 public abstract class BaseRSIResource<E extends BaseRSIValue> {
 
