@@ -75,13 +75,6 @@ object Generate2Util {
             .toString()
 
     private const val DEBUG = false
-
-    /**
-     * 本地节点的路径，主要用来生成本地的interface的路径
-     */
-    private val LOCAL_NODE_PACKAGE =
-        transitionPackage(Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_NODE_NAME)).toString())
-
     // </editor-fold>
 
     // <editor-fold  desc="2：过滤类中的属性，用于判断是否存在相互依赖的关系"
@@ -604,6 +597,7 @@ object Generate2Util {
         localPackage: String,
         apiName: String,
         apiObjectPath: String,
+        interfaceName: String,
     ) {
         // <editor-fold desc="一：构建类对象">
         val realApiName = capitalize(apiName)
@@ -616,9 +610,12 @@ object Generate2Util {
         val rsiInfo = getPackageInfo(transitionPackage(RSI_NODE_PATH))
         val superClass = ParameterizedTypeName.get(SUPER_CLASS_BASE_RSI_SERVICE, ClassName.get(rsiInfo[0], rsiInfo[1]))
         // 1.2：构造类对象
+        val interfaceClass = ClassName.get(localPackage, interfaceName)
+
         val classSpec =
             TypeSpec.classBuilder(ClassName.get(localPackage, managerName))
                 .superclass(superClass)
+                .addSuperinterface(interfaceClass)
                 .addModifiers(Modifier.PUBLIC)
 
         val methodParameter = ParameterSpec.builder(PARAMETER_I_RSI_ADMIN, "rsiAdmin").build()
@@ -717,7 +714,7 @@ object Generate2Util {
         val getAllMethod =
             MethodSpec.methodBuilder("getAll" + realApiName + "EntitiesSync")
                 .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(ANNOTATION_NULLABLE)
+                .addAnnotation(ANNOTATION_NONNULL)
                 .addAnnotation(ANNOTATION_OVERRIDE)
                 .addCode(getAllCodeBuild.build())
                 .returns(getAllReturnType)
@@ -763,10 +760,77 @@ object Generate2Util {
     }
 
     @JvmStatic
-    fun generateInterface(): TypeSpec.Builder {
-        val interfaceName = getPackageSimple(LOCAL_NODE_PACKAGE) + "Interface"
-        println("开始生成Interface类：[$interfaceName] ------>")
-        return TypeSpec.interfaceBuilder(interfaceName).addModifiers(Modifier.PUBLIC)
+    fun generateInterface(
+        localPackage: String,
+        localApiName: String,
+        apiBean: ApiNodeBean,
+    ): String {
+        val realInterfaceName = "${localApiName}Interface"
+        println("开始生成Interface类：[$realInterfaceName] ------>")
+        val interfaceBuilder =
+            TypeSpec
+                .interfaceBuilder(realInterfaceName)
+                .addModifiers(Modifier.PUBLIC)
+
+        val classEntity = ClassName.get(apiBean.localObjectPath, apiBean.localObjectName)
+
+        val registerParameter =
+            ParameterSpec.builder(
+                ParameterizedTypeName.get(
+                    PARAMETER_VALUE_CALL_BACK,
+                    ParameterizedTypeName.get(JAVA_LIST, classEntity)
+                ),
+                "callback"
+            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+                .build()
+
+        // 1: 生成register方法
+        val register =
+            MethodSpec.methodBuilder("register${localApiName}ValueCallback")
+                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                .addParameter(registerParameter)
+                .build()
+        interfaceBuilder.addMethod(register)
+
+        // 2：生成unregister的方法
+        val unregister =
+            MethodSpec.methodBuilder("unregister${localApiName}ValueCallback")
+                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                .addParameter(registerParameter)
+                .build()
+        interfaceBuilder.addMethod(unregister)
+
+        // 3：生成getAllEntitiesSync的方法
+        val getAllEntitiesSync =
+            MethodSpec.methodBuilder("getAll${localApiName}EntitiesSync")
+                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                .returns(
+                    ParameterizedTypeName.get(JAVA_LIST, classEntity)
+                ).addAnnotation(ANNOTATION_NONNULL)
+                .build()
+        interfaceBuilder.addMethod(getAllEntitiesSync)
+
+        // 4：生成getEntitiesSync的方法
+
+        val getEntitiesSyncParameter =
+            ParameterSpec.builder(
+                JAVA__STRING,
+                "name"
+            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+                .build()
+        val getEntitiesSync =
+            MethodSpec.methodBuilder("get${localApiName}EntitiesSync")
+                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                .addParameter(getEntitiesSyncParameter)
+                .addAnnotation(ANNOTATION_NULLABLE)
+                .returns(classEntity)
+                .build()
+        interfaceBuilder.addMethod(getEntitiesSync)
+
+        val javaFile = JavaFile.builder(localPackage, interfaceBuilder.build()).build()
+        javaFile.writeTo(File(BASE_OUT_PUT_PATH))
+
+        return realInterfaceName
     }
 
     /**
@@ -994,9 +1058,6 @@ object Generate2Util {
         println("otherSet:$otherSet")
         println()
 
-        // 生成interface的类
-        val interfaceSpec = generateInterface()
-
         otherSet.forEach { other ->
             val localPackage = getWriteFilPackage(other.apiObjectPath)
             val localApiName = capitalize(other.apiName)
@@ -1005,15 +1066,12 @@ object Generate2Util {
             // 1：生成Api的类
             generateApi(localPackage, localApiName, other.updateObjectPackage, other.updateObjectName, fileName)
 
+            // 2：生成接口类
+            val interfaceName = generateInterface(localPackage, localApiName, other)
+            readNodeLocalFile(Local_Folder_Path)
+
             // 2：生成manager的类
-            generateManager(localPackage, other.apiName, other.apiObjectPath)
-
-            // 3：动态生成interface的内容
-            dynamicAddInterfaceMethod(interfaceSpec, other)
+            generateManager(localPackage, other.apiName, other.apiObjectPath, interfaceName)
         }
-
-        // <editor-fold desc="四：写入到类中">
-        val javaFile = JavaFile.builder(LOCAL_NODE_PACKAGE, interfaceSpec.build()).build()
-        javaFile.writeTo(File(BASE_OUT_PUT_PATH))
     }
 }
