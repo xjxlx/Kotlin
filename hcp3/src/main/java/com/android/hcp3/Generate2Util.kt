@@ -457,12 +457,58 @@ object Generate2Util {
         println("开始动态添加Interface方法:------>[${apiBean.apiName}]")
         val realMethodName = capitalize(apiBean.apiName)
         println("realMethodName:[$realMethodName]")
+
+        val classEntity = ClassName.get(apiBean.localObjectPath, apiBean.localObjectName)
+
+        val registerParameter =
+            ParameterSpec.builder(
+                ParameterizedTypeName.get(
+                    PARAMETER_VALUE_CALL_BACK,
+                    ParameterizedTypeName.get(JAVA_LIST, classEntity)
+                ),
+                "callback"
+            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+                .build()
+
+        // 1: 生成register方法
         val register =
             MethodSpec.methodBuilder("register${realMethodName}ValueCallback")
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                .addParameter(registerParameter)
                 .build()
 
-        interfaceSpec.addMethod(register)
+        // 2：生成unregister的方法
+        val unregister =
+            MethodSpec.methodBuilder("unregister${realMethodName}ValueCallback")
+                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                .addParameter(registerParameter)
+                .build()
+
+        // 3：生成getAllEntitiesSync的方法
+        val getAllEntitiesSync =
+            MethodSpec.methodBuilder("getAll${realMethodName}EntitiesSync")
+                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                .returns(
+                    ParameterizedTypeName.get(JAVA_LIST, classEntity)
+                ).addAnnotation(ANNOTATION_NONNULL)
+                .build()
+
+        // 4：生成getEntitiesSync的方法
+
+        val getEntitiesSyncParameter =
+            ParameterSpec.builder(
+                JAVA__STRING,
+                "name"
+            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+                .build()
+        val getEntitiesSync =
+            MethodSpec.methodBuilder("get${realMethodName}EntitiesSync")
+                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                .addParameter(getEntitiesSyncParameter)
+                .addAnnotation(ANNOTATION_NULLABLE)
+                .returns(classEntity)
+                .build()
+        interfaceSpec.addMethod(register).addMethod(unregister).addMethod(getAllEntitiesSync).addMethod(getEntitiesSync)
         return register
     }
 
