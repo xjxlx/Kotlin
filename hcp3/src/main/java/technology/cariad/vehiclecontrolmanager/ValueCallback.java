@@ -1,4 +1,4 @@
-package technology.cariad.vehiclecontrolmanager.rsi;
+package technology.cariad.vehiclecontrolmanager;
 
 import androidx.annotation.NonNull;
 

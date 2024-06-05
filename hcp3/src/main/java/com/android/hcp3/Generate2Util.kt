@@ -56,7 +56,7 @@ object Generate2Util {
 
     private val PARAMETER_I_RSI_ADMIN = ClassName.get("de.esolutions.fw.android.rsi.client.rx", "IRsiAdmin")
     private val PARAMETER_VALUE_CALL_BACK =
-        ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "ValueCallback")
+        ClassName.get("technology.cariad.vehiclecontrolmanager", "ValueCallback")
 
     private val JAVA_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
     private val JAVA_LIST = ClassName.get("java.util", "List")
