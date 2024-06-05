@@ -96,15 +96,14 @@ object Generate2Util {
         val objectAttributeMap = hashMapOf<String, LinkedHashSet<ObjectBean>>()
         val interdependenceSet = LinkedHashSet<List<ObjectBean>>()
 
+        // 2：遍历生成主类包含的所有变量，查看是否有object类型或者ListObject类型的数据，如果有就添加到集合中
         jarMethodSet.forEach { item ->
             val classType = item.classType
             if (classType == OBJECT || classType == LIST_OBJECT) {
                 objectSet.add(item.genericPackage)
             }
         }
-        /**
-         * 如果集合不为空，说明里面有object的类型，则把自身也添加到集合里面，因为可能存在当前类应用属性类，属性类又引用当前类的情况
-         */
+        // 3:如果集合不为空，说明里面有object的类型，则把自身也添加到集合里面，因为可能存在当前类应用属性类，属性类又引用当前类的情况
         if (objectSet.size > 0) {
             objectSet.add(jarObjectPackage)
         }
@@ -113,7 +112,7 @@ object Generate2Util {
             objectSet.forEach { obj ->
                 println("      检测到object的类: [$obj]")
             }
-            // 2：读取object中所有的方法，并存储在map集合中
+            // 4：读取排查到的object方法，把他们的所有属性都存入到集合中去
             println("开始读取object里面的包含的方法------>")
             objectSet.forEach { obj ->
                 mGlobalClassLoad?.let { load ->
@@ -126,7 +125,7 @@ object Generate2Util {
                 println("object的类:[$obj] \r\n      属性集合：$attributeSet")
             }
 
-            // 3：通过比对keys 去匹配values的genericPackage字段，判断出是否有交集
+            // 5：通过比对keys 去匹配values的genericPackage字段，判断出是否有交集
             println("开始过滤object的属性集合是否有交集------>")
             objectAttributeMap.values.forEach { set ->
                 // kes 过滤 values的genericPackage 查看是否有交集
@@ -136,7 +135,6 @@ object Generate2Util {
                     interdependenceSet.add(filter)
                 }
             }
-            // 4：判断相互依赖的集合中是否有内容
             interdependenceSet.forEach { interdependence ->
                 println("      相互的依赖:$interdependence")
             }
@@ -144,6 +142,7 @@ object Generate2Util {
             println("      对象中object的集合为空，停止后续的检测!")
         }
 
+        // 6：如果有相互依赖，则去执行解耦的操作
         if (interdependenceSet.size > 0) {
             println("相互依赖的内容不为空，执行依赖的操作！")
             /**
@@ -174,7 +173,7 @@ object Generate2Util {
             generateObject(jarObjectPackage, jarMethodSet, localApiPackage)
         }
 
-        // 最后在生成Api、Manager、Interface的类
+        // 7：最后在生成Api、Manager、Interface的类
         checkGenerateOther()
     }
     // </editor-fold>
