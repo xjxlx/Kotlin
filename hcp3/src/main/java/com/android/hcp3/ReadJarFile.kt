@@ -20,6 +20,7 @@ import com.android.hcp3.bean.ObjectBean
 import de.esolutions.fw.rudi.services.rsiglobal.Duration
 import java.io.File
 import java.io.IOException
+import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -304,7 +305,10 @@ object ReadJarFile {
         try {
             if (clazz != null) {
                 // 将数组转换为集合
-                clazz.getDeclaredFields().forEach { field ->
+                val declaredFields = clazz.getDeclaredFields()
+                // 按照字段名进行排序
+                Arrays.sort(declaredFields, Comparator.comparing(Field::getName))
+                declaredFields.forEach { field ->
                     if (field.isEnumConstant) {
                         val bean = ObjectBean()
                         val key = field.name
@@ -338,6 +342,8 @@ object ReadJarFile {
             if (clazz != null) {
                 // 将数组转换为集合
                 val declaredFields = clazz.getDeclaredFields()
+                // 按照字段名进行排序
+                Arrays.sort(declaredFields, Comparator.comparing(Field::getName))
                 declaredFields.forEach { field ->
                     val bean = ObjectBean()
                     bean.attributeName = field.name
