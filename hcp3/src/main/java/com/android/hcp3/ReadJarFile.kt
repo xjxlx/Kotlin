@@ -20,6 +20,7 @@ import com.android.hcp3.bean.ObjectBean
 import de.esolutions.fw.rudi.services.rsiglobal.Duration
 import java.io.File
 import java.io.IOException
+import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.net.URI
@@ -225,7 +226,10 @@ object ReadJarFile {
         try {
             if (clazz != null) {
                 // 遍历指定类中的所有方法
-                for (method in clazz.declaredMethods) {
+                val declaredMethods = clazz.declaredMethods
+                // 按照方法名进行排序,避免随机读取到顺序混乱
+                Arrays.sort(declaredMethods, Comparator.comparing(Method::getName))
+                for (method in declaredMethods) {
                     val methodName = method.name
                     var attributeName: String
                     // 1： 必须是以get开头的方法
@@ -235,8 +239,7 @@ object ReadJarFile {
                         if (!method.isBridge && !method.isSynthetic) {
                             // 3:去掉get并转换首字母为小写
                             val splitGetName =
-                                methodName.split("get".toRegex()).dropLastWhile { it.isEmpty() }
-                                    .toTypedArray()[1]
+                                methodName.split("get".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
                             attributeName =
                                 splitGetName.substring(0, 1).lowercase(Locale.getDefault()) + splitGetName.substring(1)
 
@@ -334,7 +337,8 @@ object ReadJarFile {
         try {
             if (clazz != null) {
                 // 将数组转换为集合
-                clazz.getDeclaredFields().forEach { field ->
+                val declaredFields = clazz.getDeclaredFields()
+                declaredFields.forEach { field ->
                     val bean = ObjectBean()
                     bean.attributeName = field.name
                     val genericType = field.genericType
