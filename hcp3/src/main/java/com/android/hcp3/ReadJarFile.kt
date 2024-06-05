@@ -583,7 +583,6 @@ object ReadJarFile {
                                 )
                             )
                         // 10：写入当前的Object
-//                        generateObject(filterBean.apiObjectPath, jarSet, packagePath)
                         filterAttributeInterdependence(filterBean.apiObjectPath, jarSet, packagePath)
                     }
                 } else {
