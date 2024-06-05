@@ -594,13 +594,12 @@ object Generate2Util {
     @JvmStatic
     fun generateManager(
         localPackage: String,
-        apiName: String,
-        apiObjectPath: String,
+        apiBean: ApiNodeBean,
         interfaceName: String,
     ) {
         // <editor-fold desc="一：构建类对象">
-        val realApiName = capitalize(apiName)
-        val entityFileName = getFileName(apiObjectPath, OBJECT)
+        val realApiName = capitalize(apiBean.apiName)
+        val entityFileName = getFileName(apiBean.apiObjectPath, OBJECT)
         val apiObjectEntity = ClassName.get(localPackage, entityFileName)
 
         val managerName = realApiName + "Manager"
@@ -633,6 +632,8 @@ object Generate2Util {
 
         // <editor-fold desc="三：静态方法组装">
         // <editor-fold desc="3.1：createApis"
+        val realEntityName = apiBean.apiObjectName.substring(0, apiBean.apiObjectName.lastIndexOf("Object"))
+
         val createCodeBuild = CodeBlock.builder()
         createCodeBuild.addStatement(
             "return createResourceInterface(\$T.class)",
@@ -666,7 +667,7 @@ object Generate2Util {
                 .build()
 
         val registerMethod =
-            MethodSpec.methodBuilder("register" + realApiName + "ValueCallback")
+            MethodSpec.methodBuilder("register" + realEntityName + "ValueCallback")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(registerParameter)
                 .addAnnotation(ANNOTATION_OVERRIDE)
@@ -693,7 +694,7 @@ object Generate2Util {
                 .build()
 
         val unregisterMethod =
-            MethodSpec.methodBuilder("unregister" + realApiName + "ValueCallback")
+            MethodSpec.methodBuilder("unregister" + realEntityName + "ValueCallback")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(unregisterParameter)
                 .addAnnotation(ANNOTATION_OVERRIDE)
@@ -711,7 +712,7 @@ object Generate2Util {
 
         val getAllReturnType = ParameterizedTypeName.get(JAVA_LIST, apiObjectEntity)
         val getAllMethod =
-            MethodSpec.methodBuilder("getAll" + realApiName + "EntitiesSync")
+            MethodSpec.methodBuilder("getAll" + realEntityName + "EntitiesSync")
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(ANNOTATION_NONNULL)
                 .addAnnotation(ANNOTATION_OVERRIDE)
@@ -733,7 +734,7 @@ object Generate2Util {
             ParameterSpec.builder(JAVA__STRING, "name").addAnnotation(ANNOTATION_NONNULL).build()
 
         val getEntitiesMethod =
-            MethodSpec.methodBuilder("get" + realApiName + "EntitiesSync")
+            MethodSpec.methodBuilder("get" + realEntityName + "EntitiesSync")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(getEntitiesParameter)
                 .addAnnotation(ANNOTATION_NULLABLE)
@@ -761,10 +762,10 @@ object Generate2Util {
     @JvmStatic
     fun generateInterface(
         localPackage: String,
-        localApiName: String,
         apiBean: ApiNodeBean,
     ): String {
-        val realInterfaceName = "${localApiName}Interface"
+        val realEntityName = apiBean.apiObjectName.substring(0, apiBean.apiObjectName.lastIndexOf("Object"))
+        val realInterfaceName = "${realEntityName}Interface"
         println("开始生成Interface类：[$realInterfaceName] ------>")
         val interfaceBuilder =
             TypeSpec
@@ -785,7 +786,7 @@ object Generate2Util {
 
         // 1: 生成register方法
         val register =
-            MethodSpec.methodBuilder("register${localApiName}ValueCallback")
+            MethodSpec.methodBuilder("register${realEntityName}ValueCallback")
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .addParameter(registerParameter)
                 .build()
@@ -793,7 +794,7 @@ object Generate2Util {
 
         // 2：生成unregister的方法
         val unregister =
-            MethodSpec.methodBuilder("unregister${localApiName}ValueCallback")
+            MethodSpec.methodBuilder("unregister${realEntityName}ValueCallback")
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .addParameter(registerParameter)
                 .build()
@@ -801,7 +802,7 @@ object Generate2Util {
 
         // 3：生成getAllEntitiesSync的方法
         val getAllEntitiesSync =
-            MethodSpec.methodBuilder("getAll${localApiName}EntitiesSync")
+            MethodSpec.methodBuilder("getAll${realEntityName}EntitiesSync")
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .returns(
                     ParameterizedTypeName.get(JAVA_LIST, classEntity)
@@ -818,7 +819,7 @@ object Generate2Util {
             ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                 .build()
         val getEntitiesSync =
-            MethodSpec.methodBuilder("get${localApiName}EntitiesSync")
+            MethodSpec.methodBuilder("get${realEntityName}EntitiesSync")
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .addParameter(getEntitiesSyncParameter)
                 .addAnnotation(ANNOTATION_NULLABLE)
@@ -1066,11 +1067,11 @@ object Generate2Util {
             generateApi(localPackage, localApiName, other.updateObjectPackage, other.updateObjectName, fileName)
 
             // 2：生成接口类
-            val interfaceName = generateInterface(localPackage, localApiName, other)
+            val interfaceName = generateInterface(localPackage, other)
             readNodeLocalFile(Local_Folder_Path)
 
             // 2：生成manager的类
-            generateManager(localPackage, other.apiName, other.apiObjectPath, interfaceName)
+            generateManager(localPackage, other, interfaceName)
         }
     }
 }
