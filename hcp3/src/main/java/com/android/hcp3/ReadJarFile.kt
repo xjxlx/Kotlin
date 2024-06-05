@@ -9,8 +9,8 @@ import com.android.hcp3.Config.RSI_NODE_NAME
 import com.android.hcp3.Config.RSI_NODE_PATH
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
-import com.android.hcp3.Generate2Util.filterAttributeInterdependence
-import com.android.hcp3.Generate2Util.getPackageInfo
+import com.android.hcp3.GenerateUtil.filterAttributeInterdependence
+import com.android.hcp3.GenerateUtil.getPackageInfo
 import com.android.hcp3.StringUtil.getPackageSimple
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
