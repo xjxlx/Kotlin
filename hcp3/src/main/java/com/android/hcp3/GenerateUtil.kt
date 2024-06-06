@@ -62,7 +62,7 @@ object GenerateUtil {
     private val JAVA__STRING = ClassName.get("java.lang", "String")
 
     // 用来存储本地已经生成的文件的集合
-    private val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>()
+    val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>()
 
     /**
      * 本地指定位置的文件夹，用于每次写入的时候，遍历本地文件夹下当前的文件，然后存储到[LOCAL_NODE_FILE_LIST]集合中去，用于后续的查找使用
