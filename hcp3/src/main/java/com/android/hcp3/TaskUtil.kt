@@ -1,5 +1,6 @@
 package com.android.hcp3
 
+import com.android.hcp3.GenerateUtil.LOCAL_FOLDER_PATH
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.concurrent.Executors
@@ -7,33 +8,24 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 object TaskUtil {
-    private const val INTERFACE_CLASS_NAME = "com.android.hcp3.GenerateInterface"
-    private const val INTERFACE_METHOD_NAME = "generateInterface"
-
     private const val READ_JAR_CLASS_NAME = "com.android.hcp3.ReadJarFile"
     private const val READ_JAR_METHOD_NAME = "execute"
 
     private const val FILE_CLASS_NAME = "com.android.hcp3.FileUtil"
     private const val FILE_METHOD_NAME = "execute"
-    private val executor_read = Executors.newScheduledThreadPool(1)
-    private val executor_file = Executors.newScheduledThreadPool(1)
+    private val executor = Executors.newScheduledThreadPool(1)
 
     // 移动文件的等待时间
-    private var readJarDelayTime = 3
-    private var moveDelayTime = 5
+    private var moveDelayTime = 2
 
     @JvmStatic
     fun main(args: Array<String>) {
-        // 启动第一个进程，用来生成interface的接口
-        val interfaceProcess = interfaceProcess()
-        if (interfaceProcess == 0) {
-            countdown(executor_read, readJarDelayTime) {
-                val readProcess = readProcess()
-                if (readProcess == 0) {
-                    countdown(executor_file, moveDelayTime) {
-                        fileProcess()
-                    }
-                }
+        val readProcess = readProcess()
+        if (readProcess == 0) {
+            // 刷新文件夹以及子级文件夹的所有文件
+            FileUtil.refreshFolder(LOCAL_FOLDER_PATH)
+            countdown(executor, moveDelayTime) {
+                fileProcess()
             }
         }
     }
@@ -53,30 +45,6 @@ object TaskUtil {
             }
             tempTime--
         }, 0, 1, TimeUnit.SECONDS) // 每隔一秒执行一次任务
-    }
-
-    private fun interfaceProcess(): Int {
-        println("生成接口的进程开始启动--->")
-        val processInterface =
-            ProcessBuilder(
-                "java",
-                "-cp",
-                System.getProperty("java.class.path"),
-                INTERFACE_CLASS_NAME,
-                INTERFACE_METHOD_NAME
-            )
-        val interfaceProcess = processInterface.start()
-        // 读取进程的输出
-        val reader = BufferedReader(InputStreamReader(interfaceProcess.inputStream))
-        var line: String?
-        while ((reader.readLine().also { line = it }) != null) {
-            println(line)
-        }
-        // 等待第一个进程完成
-        val exitCode = interfaceProcess.waitFor()
-        interfaceProcess.destroy()
-        println("创建接口进程退出代码: $exitCode")
-        return exitCode
     }
 
     private fun readProcess(): Int {

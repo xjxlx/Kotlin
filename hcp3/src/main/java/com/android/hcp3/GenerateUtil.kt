@@ -67,7 +67,7 @@ object GenerateUtil {
     /**
      * 本地指定位置的文件夹，用于每次写入的时候，遍历本地文件夹下当前的文件，然后存储到[LOCAL_NODE_FILE_LIST]集合中去，用于后续的查找使用
      */
-    private val Local_Folder_Path =
+    val LOCAL_FOLDER_PATH =
         Paths.get(BASE_OUT_PUT_PATH)
             .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
             .resolve(Paths.get(RSI_NODE_NAME))
@@ -879,7 +879,7 @@ object GenerateUtil {
             // 2：根据文件的类型去获取文件名字
             val realFileName = getFileName(genericPackage, genericType)
             // 3：读取本地指定文件夹下的所有文件，用于后续的查找
-            readNodeLocalFile(Local_Folder_Path)
+            readNodeLocalFile(LOCAL_FOLDER_PATH)
             val localBean = LOCAL_NODE_FILE_LIST.find { local -> local.name == realFileName }
             // 4：如果文件存在，则直接返回文件的路径
             if (localBean != null) {
@@ -1035,7 +1035,7 @@ object GenerateUtil {
          * 2：要拿Rsi的集合，对比本地的Entity进行判断，是否有这个api的Entity，如果能匹配的上，就把local的名字和路径复制到rsi的内容中
          * 3：如果有这个对应的Api实体，择取获取jar的包名，对应的生成api、manager、interface
          */
-        readNodeLocalFile(Local_Folder_Path)
+        readNodeLocalFile(LOCAL_FOLDER_PATH)
 
         // 匹配过滤
         val otherSet =
@@ -1067,7 +1067,7 @@ object GenerateUtil {
 
             // 2：生成接口类
             val interfaceName = generateInterface(localPackage, other)
-            readNodeLocalFile(Local_Folder_Path)
+            readNodeLocalFile(LOCAL_FOLDER_PATH)
 
             // 2：生成manager的类
             generateManager(localPackage, other, interfaceName)

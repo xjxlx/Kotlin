@@ -21,6 +21,7 @@ import com.android.hcp3.bean.StatisticBean
 import java.io.File
 import java.io.IOException
 import java.lang.reflect.ParameterizedType
+import java.nio.file.Files
 import java.nio.file.Paths
 
 object FileUtil {
@@ -317,5 +318,20 @@ object FileUtil {
         deleteImport: String,
     ): Boolean {
         return RandomAccessFileUtil.deleteFileContent(importPath, "import $deleteImport;")
+    }
+
+    @JvmStatic
+    fun refreshFolder(folderPath: String) {
+        try {
+            // 使用Files.walk遍历文件夹及其子文件夹
+            Files.walk(Paths.get(folderPath))
+                .filter(Files::isRegularFile)
+                .forEach { childPath ->
+                    // 仅筛选出普通文件
+                    println("child file is: [$childPath]")
+                }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 }
