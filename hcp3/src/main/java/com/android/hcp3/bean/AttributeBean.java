@@ -10,7 +10,7 @@ public class AttributeBean {
   private String name;
 
   /** 当前类所在的父类集合 */
-  private LinkedHashSet<String> parentSet;
+  private LinkedHashSet<String> parentSet = new LinkedHashSet<>();
 
   public String getAttributePackage() {
     return attributePackage;

@@ -978,9 +978,13 @@ object GenerateUtil {
 
     /**
      * 递归读取本地指定节点下的文件，把所有文件都存储到一个set集合中
+     * todo 需要添加父类路径到集合中
      */
     @JvmStatic
-    fun readNodeLocalFile(dir: String) {
+    fun readNodeLocalFile(
+        dir: String,
+        parentPath: String = "",
+    ) {
         val file = File(dir)
         if (file.exists()) {
             if (file.isFile) {
@@ -994,6 +998,7 @@ object GenerateUtil {
                     val bean = AttributeBean()
                     bean.name = realName
                     bean.attributePackage = realPath
+                    bean.parentSet.add(parentPath)
                     LOCAL_NODE_FILE_LIST.add(bean)
                 }
             } else if (file.isDirectory) {
