@@ -239,7 +239,7 @@ object GenerateUtil {
             val genericType = next.classType // 参数的具体数据类型,也就是泛型的类型
 
             // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
-            val attributeTypeBean = checkChildRunType(genericPackage, genericType)
+            val attributeTypeBean = checkChildRunType(genericPackage, genericType, localApiPackage)
             // println("attributeName:[$attributeName] attributeTypeBean:$attributeTypeBean")
             val attributeInfo = getPackageInfo(genericPackage, genericType)
 
@@ -858,6 +858,7 @@ object GenerateUtil {
     private fun checkChildRunType(
         genericPackage: String,
         genericType: ClassTypeEnum,
+        parentPackage: String,
     ): AttributeBean? {
         /**
          * 1：基础类型的数据，直接返回对象信息
@@ -886,6 +887,7 @@ object GenerateUtil {
                 val attributeBean = AttributeBean()
                 attributeBean.name = localBean.name
                 attributeBean.attributePackage = localBean.attributePackage
+                attributeBean.parentSet.add(parentPackage)
                 println("     文件[$realFileName]存在，直接返回文件信息：$attributeBean")
                 return attributeBean
             } else {
