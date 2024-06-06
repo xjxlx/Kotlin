@@ -328,7 +328,7 @@ object FileUtil {
                 .filter(Files::isRegularFile)
                 .forEach { childPath ->
                     // 仅筛选出普通文件
-                    println("child file is: [$childPath]")
+                    println("当前刷新的文件是：[$childPath]")
                 }
         } catch (e: IOException) {
             e.printStackTrace()

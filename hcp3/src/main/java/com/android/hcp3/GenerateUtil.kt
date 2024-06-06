@@ -1061,7 +1061,7 @@ object GenerateUtil {
             val localPackage = getWriteFilPackage(other.apiObjectPath)
             val localApiName = capitalize(other.apiName)
             val fileName = getFileName(other.apiObjectPath, OBJECT)
-            println("fileName:$fileName")
+            // println("fileName:$fileName")
             // 1：生成Api的类
             generateApi(localPackage, localApiName, other.updateObjectPackage, other.updateObjectName, fileName)
 
