@@ -9,6 +9,7 @@ import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
 import com.android.hcp3.GenerateUtil.getFileName
 import com.android.hcp3.ReadJarFile.getGlobalClassLoad
+import com.android.hcp3.ReadJarFile.mGlobalClassLoad
 import com.android.hcp3.ReadJarFile.readApiNodeForParent
 import com.android.hcp3.ReadJarFile.readNeedDependenciesClassName
 import com.android.hcp3.StringUtil.getFileNameForPath
@@ -200,12 +201,21 @@ object FileUtil {
             val packagePath = transitionPackage(outPath)
             val indexOf = packagePath.lastIndexOf(".")
             val substring = packagePath.substring(0, indexOf)
-            val cls = Class.forName(substring)
+            println("substring:$substring")
+            var cls: Class<*>? = null
+            try {
+                cls = Class.forName(substring)
+            } catch (e: Exception) {
+                if (mGlobalClassLoad != null) {
+                    cls = ReadJarFile.readClass(mGlobalClassLoad!!, substring, "")
+                }
+            }
+
             var objectGenericSet = bean.objectGenericSet
             if (objectGenericSet == null) {
                 objectGenericSet = LinkedHashSet()
             }
-            for (field in cls.declaredFields) {
+            for (field in cls!!.declaredFields) {
                 val genericType = field.genericType
                 if (genericType is Class<*>) {
                     val primitiveOrWrapper = ReadJarFile.isPrimitiveOrWrapper(genericType)

@@ -21,9 +21,6 @@ object TaskUtil {
     private const val FILE_CLASS_NAME = "com.android.hcp3.FileUtil"
     private const val FILE_METHOD_NAME = "execute"
 
-    private const val REFRESH_CLASS_NAME = "com.android.hcp3.RefreshFile"
-    private const val REFRESH_METHOD_NAME = "main"
-
     private val BASE_COMMAND by lazy {
         val javaHome = System.getProperty("java.home")
         val javaBin = javaHome + File.separator + "bin" + File.separator + "java"
@@ -42,7 +39,8 @@ object TaskUtil {
     fun main(args: Array<String>) {
         readProcessCountdown {
             executeAsync {
-                fileProcess()
+                // fileProcess()
+                process(FILE_CLASS_NAME)
             }
         }
     }
@@ -180,7 +178,7 @@ object TaskUtil {
             body += "\n"
         }
         if (body.isNotEmpty()) {
-            println("exec:$body")
+            println("process:$body")
         }
 
         // 3：读取异常的内容
@@ -193,7 +191,7 @@ object TaskUtil {
             errorBody += "\n"
         }
         if (errorBody.isNotEmpty()) {
-            println("exec:[error]:$errorBody")
+            println("process:[error]:$errorBody")
         }
 
         // 等待
