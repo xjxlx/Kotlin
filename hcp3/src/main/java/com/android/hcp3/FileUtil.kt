@@ -23,6 +23,8 @@ import java.io.IOException
 import java.lang.reflect.ParameterizedType
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.io.path.exists
+import kotlin.io.path.name
 
 object FileUtil {
     @JvmStatic
@@ -333,5 +335,50 @@ object FileUtil {
         } catch (e: IOException) {
             e.printStackTrace()
         }
+    }
+
+    @JvmStatic
+    fun flushFolder(folder: File) {
+        val files = folder.listFiles()
+        if (files != null) {
+            for (file: File in files) {
+                if (file.isDirectory) {
+                    flushFolder(file) // 递归刷新子目录
+                } else {
+                    // 可以在这里添加代码来处理文件，例如输出文件信息
+                    println("刷新的文件是：[${file.name}] 文件是否存在：[${file.exists()}] length:[${file.length()}]")
+                }
+            }
+        }
+    }
+
+    @JvmStatic
+    fun flushFolder(path: String) {
+        flushFolder(File(path))
+    }
+
+    @JvmStatic
+    fun checkFolder(path: String): Boolean {
+        var isExists = false
+        val files = File(path).listFiles()
+        if (files != null) {
+            println("[$path]文件夹下列表不为空...")
+            Files.walk(Paths.get(path))
+                .filter(Files::isRegularFile)
+                .forEach { file ->
+                    val exists = file.exists()
+                    if (exists) {
+                        // println("file:[${file.name}] 存在！")
+                        isExists = true
+                    } else {
+                        println("file:[${file.name}] 不存在！")
+                        isExists = false
+                        return@forEach
+                    }
+                }
+        } else {
+            println("files列表为空！")
+        }
+        return isExists
     }
 }
