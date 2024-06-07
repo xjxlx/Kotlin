@@ -2,12 +2,13 @@
 
 #忽略掉指定文件夹下的所有文件
 /src/main/java/com/android/hcp3/rsi/*
-/technology/cariad/vehiclecontrolmanager/rsi/*
+/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/*
 
 #排除掉指定文件不被忽略
-!/technology/cariad/vehiclecontrolmanager/rsi/BaseRSIResource.java
-!/technology/cariad/vehiclecontrolmanager/rsi/BaseRSIResourceUpdate.java
-!/technology/cariad/vehiclecontrolmanager/rsi/BaseRSIService.java
-!/technology/cariad/vehiclecontrolmanager/rsi/BaseRSIValue.java
-!/technology/cariad/vehiclecontrolmanager/rsi/ServiceProvider.java
-!/technology.cariad.vehiclecontrolmanager.ValueCallback.java
+!/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/BaseRSIResource.java
+!/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/BaseRSIResourceUpdate.java
+!/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/BaseRSIService.java
+!/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/BaseRSIValue.java
+!/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/ServiceProvider.java
+!/src/main/java/technology/cariad/vehiclecontrolmanager/ValueCallback.java
+#!/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/
