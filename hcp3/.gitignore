@@ -10,5 +10,6 @@
 !/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/BaseRSIService.java
 !/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/BaseRSIValue.java
 !/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/ServiceProvider.java
+!/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/RGBAEntity.java
 !/src/main/java/technology/cariad/vehiclecontrolmanager/ValueCallback.java
 #!/src/main/java/technology/cariad/vehiclecontrolmanager/rsi/

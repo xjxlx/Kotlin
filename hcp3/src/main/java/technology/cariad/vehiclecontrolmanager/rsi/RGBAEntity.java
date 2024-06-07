@@ -1,4 +1,4 @@
-package com.android.hcp3;
+package technology.cariad.vehiclecontrolmanager.rsi;
 
 import de.esolutions.fw.rudi.services.rsiglobal.RGBA;
 import lombok.Getter;

@@ -45,7 +45,10 @@ object ReadJarFile {
      */
     val IGNORE_ARRAY: Array<ObjectBean> =
         arrayOf(
-            ObjectBean("de.esolutions.fw.rudi.services.rsiglobal.RGBA", "com.android.hcp3.RGBAEntity")
+            ObjectBean(
+                "de.esolutions.fw.rudi.services.rsiglobal.RGBA",
+                "technology.cariad.vehiclecontrolmanager.rsi.RGBAEntity"
+            )
         )
 
     // 自定义比较器，将带有 "$" 符号的字段排在最前面
