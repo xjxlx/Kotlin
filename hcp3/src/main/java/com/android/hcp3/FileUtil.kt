@@ -273,7 +273,7 @@ object FileUtil {
     }
 
     /**
-     * @param packagePath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
+     * @param packagePath 当前文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
      * @param deletePackage 原来的包名，例如：com.android.hcp3.rsi.hvac.valueindications
      * @param newPackage 被替换的内容包,不包含; 例如："com.xjx.android"
      */
@@ -309,15 +309,17 @@ object FileUtil {
     }
 
     /**
-     * @param importPath 原来文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
-     * @param deleteImport 需要import的内容
+     * @param deleteFilePath 被修改文件的路径，例如：hcp3/src/main/java/com/android/hcp3/TestFile.java
+     * @param deleteImport 需要删除import的内容，例如："com.android.hcp3.rsi.hvac.VcSwitchValueEnum'
      */
     @JvmStatic
-    private fun deleteFileImport(
-        importPath: String,
+    fun deleteFileImport(
+        deleteFilePath: String,
         deleteImport: String,
     ): Boolean {
-        return RandomAccessFileUtil.deleteFileContent(importPath, "import $deleteImport;")
+        val deleteFileContent = RandomAccessFileUtil.deleteFileContent(deleteFilePath, "import $deleteImport;")
+        println("【Delete-content】内容删除成功: 文件是:[$deleteFilePath] 内容是:[$deleteImport]")
+        return deleteFileContent
     }
 
     @JvmStatic

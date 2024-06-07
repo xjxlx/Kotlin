@@ -131,8 +131,7 @@ object RandomAccessFileUtil {
         deleteContent: String,
     ): Boolean {
         try {
-            println("deleteFileContent -  path:[$filePath] deleteContent: [$deleteContent]")
-
+            // println("deleteFileContent -  path:[$filePath] deleteContent: [$deleteContent]")
             // 1:设置文件的格式为【读写】
             val random = RandomAccessFile(filePath, "rw")
             var readLine: String? = null
