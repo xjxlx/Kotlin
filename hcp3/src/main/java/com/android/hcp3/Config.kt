@@ -47,7 +47,10 @@ object Config {
      * @see {com.android.hcp3.rsi}
      */
     val BASE_PROJECT_PACKAGE_PATH: String by lazy {
-        return@lazy StringUtil.lowercase("com${File.separator}android${File.separator}hcp3${File.separator}rsi")
+        // return@lazy StringUtil.lowercase("com${File.separator}android${File.separator}hcp3${File.separator}rsi")
+        return@lazy StringUtil.lowercase(
+            "technology${File.separator}cariad${File.separator}vehiclecontrolmanager${File.separator}rsi${File.separator}"
+        )
     }
 
     /**
