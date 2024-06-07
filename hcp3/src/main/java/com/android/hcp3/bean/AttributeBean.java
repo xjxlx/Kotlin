@@ -10,7 +10,7 @@ public class AttributeBean {
   private String name;
 
   /** 当前类所在的父类集合 */
-  private LinkedHashSet<String> parentSet = new LinkedHashSet<>();
+  private LinkedHashSet<ParentBean> parentSet = new LinkedHashSet<>();
 
   public String getAttributePackage() {
     return attributePackage;
@@ -28,11 +28,11 @@ public class AttributeBean {
     this.name = name;
   }
 
-  public LinkedHashSet<String> getParentSet() {
+  public LinkedHashSet<ParentBean> getParentSet() {
     return parentSet;
   }
 
-  public void setParentSet(LinkedHashSet<String> parentSet) {
+  public void setParentSet(LinkedHashSet<ParentBean> parentSet) {
     this.parentSet = parentSet;
   }
 
