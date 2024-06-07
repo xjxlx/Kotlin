@@ -151,6 +151,7 @@ object GenerateUtil {
              * 2：生成原有的数据
              * 3：在生成完原有数据之后，把本地假设生成的类给移除本地的集合
              * 4：重新生成这个假设的类
+             * 5：把假类的parent信息给复制到新的parent类中
              */
             val objectBean = interdependenceSet.toList()[0][0]
             val genericPackage = objectBean.genericPackage
@@ -167,6 +168,13 @@ object GenerateUtil {
             LOCAL_NODE_FILE_LIST.remove(mockBean)
             // 4：重新生成真实的mock数据
             generateObject(genericPackage, objectAttributeMap[genericPackage]!!, writeFilPackage)
+            // 5:更新重新生成的那个数据，因为这个时候，已经过了集合遍历的阶段了，会找不到他们的父类信息，这里需要手动去添加父类信息
+            val newBean = LOCAL_NODE_FILE_LIST.find { local -> local.name == mockBean.name }
+            if (newBean != null) {
+                newBean.parentSet = mockBean.parentSet
+            } else {
+                LOCAL_NODE_FILE_LIST.add(mockBean)
+            }
         } else {
             println("没有发现相互依赖的类，直接去生成对应的代码------>")
             println()
@@ -881,16 +889,13 @@ object GenerateUtil {
             val writeLocalFilPackage = getWriteFilPackage(genericPackage)
             // 2：根据文件的类型去获取文件名字
             val realFileName = getFileName(genericPackage, genericType)
-            if (realFileName == "KeyEntity") {
-                println("-------------------------------->")
-            }
             // 3：读取本地指定文件夹下的所有文件，用于后续的查找
             readNodeLocalFile(LOCAL_FOLDER_PATH)
             val localBean = LOCAL_NODE_FILE_LIST.find { local -> local.name == realFileName }
             // 4：如果文件存在，则直接返回文件的路径
             if (localBean != null) {
                 println("     文件[$realFileName]存在，直接返回文件信息：$localBean")
-                // 添加父类的信息
+                // 添加父类的信息，这里的逻辑是必须得，因为第一次会手动添加一个假的信息到本地集合中，就会走入到这个逻辑中
                 updateParentInfo(localBean, parentPackage, parentEntityName)
                 return localBean
             } else {
@@ -991,7 +996,6 @@ object GenerateUtil {
 
     /**
      * 递归读取本地指定节点下的文件，把所有文件都存储到一个set集合中
-     * todo 需要添加父类路径到集合中
      */
     @JvmStatic
     fun readNodeLocalFile(dir: String) {
