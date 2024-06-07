@@ -164,6 +164,7 @@ object ProcessUtil {
         timer.schedule(timerTask, seconds, 1000)
     }
 
+    @JvmStatic
     fun process(javaPath: String): Int {
         // 1：构建command命令
         val runtime = Runtime.getRuntime()
