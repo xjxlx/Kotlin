@@ -15,7 +15,6 @@ import com.android.hcp3.ReadJarFile.readClass
 import com.android.hcp3.StringUtil.capitalize
 import com.android.hcp3.StringUtil.deleteFileFormat
 import com.android.hcp3.StringUtil.getPackageSimple
-import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.bean.ApiNodeBean
 import com.android.hcp3.bean.AttributeBean
@@ -945,13 +944,11 @@ object GenerateUtil {
         // 3：如果是Api的泛型类，则写入到指定的包下，如果没有归属的话，则全部写入到父类的节点下面
         val childNodePackage = if (bean != null) bean.apiName else ""
         // 4：使用指定的路径和节点去生成指定位置的包名路径
-        return lowercase(
-            transitionPackage(
-                Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                    .resolve(Paths.get(RSI_NODE_NAME))
-                    .resolve(childNodePackage)
-                    .toString()
-            )
+        return transitionPackage(
+            Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                .resolve(Paths.get(RSI_NODE_NAME))
+                .resolve(childNodePackage)
+                .toString()
         )
     }
 

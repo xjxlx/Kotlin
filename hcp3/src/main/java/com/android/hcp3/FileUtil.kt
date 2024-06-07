@@ -13,7 +13,6 @@ import com.android.hcp3.ReadJarFile.readApiNodeForParent
 import com.android.hcp3.ReadJarFile.readNeedDependenciesClassName
 import com.android.hcp3.StringUtil.getFileNameForPath
 import com.android.hcp3.StringUtil.getPackageForProjectPath
-import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.StringUtil.transitionPath
 import com.android.hcp3.bean.EnumBean
@@ -43,13 +42,11 @@ object FileUtil {
 
         // <editor-fold desc="2：读取本地指定目录中的Api的路径，返回一个set集合">
         val localTargetPath =
-            lowercase(
-                transitionPath(
-                    Paths.get(BASE_OUT_PUT_PATH)
-                        .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
-                        .resolve(Paths.get(RSI_NODE_NAME))
-                        .toString()
-                )
+            transitionPath(
+                Paths.get(BASE_OUT_PUT_PATH)
+                    .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
+                    .resolve(Paths.get(RSI_NODE_NAME))
+                    .toString()
             )
         val readLocalApiPath = readLocalApiPath(localTargetPath)
         println("2：readLocalApiPath:[$readLocalApiPath]")

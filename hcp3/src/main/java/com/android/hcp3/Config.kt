@@ -29,21 +29,26 @@ object Config {
      * 存放JAR包的位置，这个会根据项目的不同，进行一次性的改动，不会随意改动
      * @see {hcp3/src/main/java/com/android/hcp3/jar/}
      */
-    var BASE_JAR_PATH: String = "hcp3${File.separator}libs${File.separator}cluster46_12_7_0${File.separator}"
-//    var BASE_JAR_PATH: String = "hcp3${File.separator}libs${File.separator}oia${File.separator}"
+    val BASE_JAR_PATH: String by lazy {
+        return@lazy StringUtil.lowercase("hcp3${File.separator}libs${File.separator}cluster46_12_7_0${File.separator}")
+    }
 
     /**
      * 生成代码的路径是由【主路径】 + 【主包名】构成的，这里是代码存放的主路径，一般不会改动
      * 生成的路径是以项目的根目录作为路径的起始点
      * @see {hcp3/src/main/java/}
      */
-    var BASE_OUT_PUT_PATH: String = "hcp3${File.separator}src${File.separator}main${File.separator}java"
+    val BASE_OUT_PUT_PATH: String by lazy {
+        return@lazy StringUtil.lowercase("hcp3${File.separator}src${File.separator}main${File.separator}java")
+    }
 
     /**
      * 生成代码的路径是由【主路径】+【主包名】构成的，这个是包名，所有生成的代码都会放入到这个目录下面
      * @see {com.android.hcp3.rsi}
      */
-    var BASE_PROJECT_PACKAGE_PATH: String = "com${File.separator}android${File.separator}hcp3${File.separator}rsi"
+    val BASE_PROJECT_PACKAGE_PATH: String by lazy {
+        return@lazy StringUtil.lowercase("com${File.separator}android${File.separator}hcp3${File.separator}rsi")
+    }
 
     /**
      * RSI中大项的名字，这个每次生成不同的模块，都要进行不同的改动
@@ -57,7 +62,9 @@ object Config {
      * RSI中大项的节点的等级，这个每次生成不同的模块，都要进行不同的改动
      * 例如：v4
      */
-    const val RSI_NODE_LEVEL = "v3"
+    val RSI_NODE_LEVEL by lazy {
+        return@lazy StringUtil.lowercase("v3")
+    }
 
     /**
      * RSI中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动

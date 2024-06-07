@@ -583,10 +583,9 @@ object ReadJarFile {
                     // 7：读取本地的方法
                     val localPackage =
                         transitionPackage(
-                            lowercase(
-                                Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_NODE_NAME))
-                                    .resolve(Paths.get(RSI_NODE_API_NAME)).toString()
-                            )
+                            Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                                .resolve(Paths.get(RSI_NODE_NAME))
+                                .resolve(Paths.get(RSI_NODE_API_NAME)).toString()
                         )
                     val localClassName = filterBean.apiObjectName.plus(OBJECT_SUFFIX)
                     val localRealPackage = localPackage + localClassName
@@ -598,13 +597,11 @@ object ReadJarFile {
                         println("属性完全相同，不需要重新写入属性！")
                     } else {
                         val packagePath =
-                            lowercase(
-                                transitionPackage(
-                                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                                        .resolve(Paths.get(RSI_NODE_NAME))
-                                        .resolve(Paths.get(RSI_NODE_API_NAME))
-                                        .toString()
-                                )
+                            transitionPackage(
+                                Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                                    .resolve(Paths.get(RSI_NODE_NAME))
+                                    .resolve(Paths.get(RSI_NODE_API_NAME))
+                                    .toString()
                             )
                         // 10：写入当前的Object
                         filterAttributeInterdependence(filterBean.apiObjectPath, jarSet, packagePath)
