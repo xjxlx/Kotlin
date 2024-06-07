@@ -7,7 +7,9 @@ object File2Util {
     @JvmStatic
     fun main(args: Array<String>) {
         ReadJarFile.execute()
-        LOCAL_NODE_FILE_LIST
+        LOCAL_NODE_FILE_LIST.forEach { item ->
+            println("item: ${item.name}  set:${item.parentSet}")
+        }
 
         RSI_TARGET_NODE_LIST
     }

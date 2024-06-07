@@ -20,6 +20,7 @@ import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.bean.ApiNodeBean
 import com.android.hcp3.bean.AttributeBean
 import com.android.hcp3.bean.ObjectBean
+import com.android.hcp3.bean.ParentBean
 import com.squareup.javapoet.*
 import java.io.File
 import java.nio.file.Paths
@@ -239,7 +240,7 @@ object GenerateUtil {
             val genericType = next.classType // 参数的具体数据类型,也就是泛型的类型
 
             // 3.2：根据返回属性的全路径包名和属性的类型，去获取构建属性和方法内容的type
-            val attributeTypeBean = checkChildRunType(genericPackage, genericType, localApiPackage)
+            val attributeTypeBean = checkChildRunType(genericPackage, genericType, localApiPackage, realFileName)
             // println("attributeName:[$attributeName] attributeTypeBean:$attributeTypeBean")
             val attributeInfo = getPackageInfo(genericPackage, genericType)
 
@@ -859,6 +860,7 @@ object GenerateUtil {
         genericPackage: String,
         genericType: ClassTypeEnum,
         parentPackage: String,
+        parentEntityName: String,
     ): AttributeBean? {
         /**
          * 1：基础类型的数据，直接返回对象信息
@@ -879,17 +881,18 @@ object GenerateUtil {
             val writeLocalFilPackage = getWriteFilPackage(genericPackage)
             // 2：根据文件的类型去获取文件名字
             val realFileName = getFileName(genericPackage, genericType)
+            if (realFileName == "KeyEntity") {
+                println("-------------------------------->")
+            }
             // 3：读取本地指定文件夹下的所有文件，用于后续的查找
             readNodeLocalFile(LOCAL_FOLDER_PATH)
             val localBean = LOCAL_NODE_FILE_LIST.find { local -> local.name == realFileName }
             // 4：如果文件存在，则直接返回文件的路径
             if (localBean != null) {
-                val attributeBean = AttributeBean()
-                attributeBean.name = localBean.name
-                attributeBean.attributePackage = localBean.attributePackage
-                attributeBean.parentSet.add(parentPackage)
-                println("     文件[$realFileName]存在，直接返回文件信息：$attributeBean")
-                return attributeBean
+                println("     文件[$realFileName]存在，直接返回文件信息：$localBean")
+                // 添加父类的信息
+                updateParentInfo(localBean, parentPackage, parentEntityName)
+                return localBean
             } else {
                 // 5:读取jar包中属性的字段
                 mGlobalClassLoad?.let { classLoad ->
@@ -899,11 +902,19 @@ object GenerateUtil {
                         if (genericType == OBJECT || genericType == LIST_OBJECT) {
                             println("子对象：[$realFileName]不存在，去创建object对象！")
                             val jarMethodSet = getMethods(readClass, simpleName)
-                            return generateObject(genericPackage, jarMethodSet, writeLocalFilPackage)
+                            // 1：生成object对象
+                            val generateObject = generateObject(genericPackage, jarMethodSet, writeLocalFilPackage)
+                            // 2：再次读取本地集合内容,如果发现了内容，就把内容添加到集合中
+                            addParentInfo(realFileName, parentPackage, parentEntityName)
+                            return generateObject
                         } else if (genericType == ENUM || genericType == LIST_ENUM) {
                             println("子Enum：[$realFileName]不存在，去创建Enum对象！")
                             val fieldSet = getEnums(readClass, simpleName)
-                            return generateEnum(genericPackage, fieldSet, writeLocalFilPackage)
+                            // 1：生成enum对象
+                            val generateEnum = generateEnum(genericPackage, fieldSet, writeLocalFilPackage)
+                            // 2：再次读取本地集合内容,如果发现了内容，就把内容添加到集合中
+                            addParentInfo(realFileName, parentPackage, parentEntityName)
+                            return generateEnum
                         }
                     } else {
                         println("     读取到的class:[$genericPackage]为空，请重读取class!")
@@ -983,10 +994,7 @@ object GenerateUtil {
      * todo 需要添加父类路径到集合中
      */
     @JvmStatic
-    fun readNodeLocalFile(
-        dir: String,
-        parentPath: String = "",
-    ) {
+    fun readNodeLocalFile(dir: String) {
         val file = File(dir)
         if (file.exists()) {
             if (file.isFile) {
@@ -1000,7 +1008,6 @@ object GenerateUtil {
                     val bean = AttributeBean()
                     bean.name = realName
                     bean.attributePackage = realPath
-                    bean.parentSet.add(parentPath)
                     LOCAL_NODE_FILE_LIST.add(bean)
                 }
             } else if (file.isDirectory) {
@@ -1078,6 +1085,58 @@ object GenerateUtil {
 
             // 2：生成manager的类
             generateManager(localPackage, other, interfaceName)
+        }
+    }
+
+    /**
+     *
+     */
+    private fun updateParentInfo(
+        localBean: AttributeBean,
+        parentPackage: String,
+        parentEntityName: String,
+    ): ParentBean? {
+        /**
+         * 添加父类信息的逻辑
+         * 1：如果父类中集合信息为空，则直接添加
+         * 2：如果父类中信息不为空，则便利是否已经有了这个名字的对象，如果没有才去添加
+         */
+        val parentSet = localBean.parentSet
+        if (parentSet.isEmpty()) {
+            val parentBean = ParentBean()
+            parentBean.parentPath = parentPackage
+            parentBean.parentEntityName = parentEntityName
+            localBean.parentSet.add(parentBean)
+            return parentBean
+        } else {
+            val find =
+                parentSet.find { parent ->
+                    (parent.parentEntityName == parentEntityName) && (parent.parentPath == parentPackage)
+                }
+            // 如果找不到这个对象，才去主动添加
+            if (find == null) {
+                val parentBean = ParentBean()
+                parentBean.parentPath = parentPackage
+                parentBean.parentEntityName = parentEntityName
+                localBean.parentSet.add(parentBean)
+                return parentBean
+            }
+        }
+        return null
+    }
+
+    private fun addParentInfo(
+        fileName: String,
+        parentPackage: String,
+        parentEntityName: String,
+    ) {
+        // 1:读取本地集合
+        readNodeLocalFile(LOCAL_FOLDER_PATH)
+        val localObjectBean = LOCAL_NODE_FILE_LIST.find { local -> local.name == fileName }
+        // 2:如果内容不为空，就把内容给添加到集合中去
+        if (localObjectBean != null) {
+            // 添加父类的信息
+            updateParentInfo(localObjectBean, parentPackage, parentEntityName)
         }
     }
 }
