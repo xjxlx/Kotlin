@@ -76,13 +76,11 @@ object ReadJarFile {
         val fileNames: MutableList<String> = ArrayList()
         // 1：读取JAB包中指定节点下文件,例如：de/esolutions/fw/rudi/viwi/service/headupdisplay/v4
         var filterNodePath: String =
-            lowercase(
-                transitionPath(
-                    Paths.get(RSI_ROOT_NODE_PATH)
-                        .resolve(Paths.get(RSI_NODE_NAME))
-                        .resolve(Paths.get(RSI_NODE_LEVEL))
-                        .toString()
-                )
+            transitionPath(
+                Paths.get(RSI_ROOT_NODE_PATH)
+                    .resolve(Paths.get(RSI_NODE_NAME))
+                    .resolve(Paths.get(RSI_NODE_LEVEL))
+                    .toString()
             )
         println("过滤JAR包中的父节点为：[$filterNodePath]")
         // 2：读取指定jar包中的文件

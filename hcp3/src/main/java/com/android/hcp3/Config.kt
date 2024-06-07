@@ -49,19 +49,23 @@ object Config {
      * RSI中大项的名字，这个每次生成不同的模块，都要进行不同的改动
      * 例如：headupdisplay
      */
-    const val RSI_NODE_NAME = "usermanagement"
+    val RSI_NODE_NAME by lazy {
+        return@lazy StringUtil.lowercase("HVAC")
+    }
 
     /**
      * RSI中大项的节点的等级，这个每次生成不同的模块，都要进行不同的改动
      * 例如：v4
      */
-    const val RSI_NODE_LEVEL = "v4"
+    const val RSI_NODE_LEVEL = "v3"
 
     /**
      * RSI中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动
      * 例如：switchControls
      */
-    const val RSI_NODE_API_NAME = "settings"
+    val RSI_NODE_API_NAME by lazy {
+        return@lazy StringUtil.lowercase("switchControls")
+    }
 
     /**
      *  当前指定父类节点：[Config.RSI_NODE_NAME]指定节点在RSI中的相对路径，这个是动态生成的，不要做任何的改动
