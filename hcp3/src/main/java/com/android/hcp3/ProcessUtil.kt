@@ -14,11 +14,11 @@ import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 import kotlin.concurrent.timerTask
 
-object TaskUtil {
+object ProcessUtil {
     private const val READ_JAR_CLASS_NAME = "com.android.hcp3.ReadJarFile"
     private const val READ_JAR_METHOD_NAME = "execute"
 
-    private const val FILE_CLASS_NAME = "com.android.hcp3.FileUtil"
+    private const val FILE_CLASS_NAME = "com.android.hcp3.File2Util"
     private const val FILE_METHOD_NAME = "execute"
 
     private val BASE_COMMAND by lazy {
