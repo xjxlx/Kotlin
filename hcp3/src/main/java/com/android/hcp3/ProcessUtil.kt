@@ -164,7 +164,7 @@ object ProcessUtil {
         timer.schedule(timerTask, seconds, 1000)
     }
 
-    private fun process(javaPath: String): Int {
+    fun process(javaPath: String): Int {
         // 1：构建command命令
         val runtime = Runtime.getRuntime()
         val process = runtime.exec("$BASE_COMMAND $javaPath")
