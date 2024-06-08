@@ -159,8 +159,9 @@ object GenerateUtil {
 
             // 1：把假数据给添加到本地集合中，避免重复性的生成
             val mockBean = LocalBean()
-            mockBean.name = getFileName(genericPackage, OBJECT)
-            mockBean.attributePackage = writeFilPackage
+            mockBean.localFileName = getFileName(genericPackage, OBJECT)
+            mockBean.localFileParentPackage = writeFilPackage
+            mockBean.jarOriginFilePath = genericPackage
             LOCAL_NODE_FILE_LIST.add(mockBean)
             // 2：生成除了mock之外的数据
             generateObject(jarObjectPackage, jarMethodSet, localApiPackage)
@@ -169,9 +170,10 @@ object GenerateUtil {
             // 4：重新生成真实的mock数据
             generateObject(genericPackage, objectAttributeMap[genericPackage]!!, writeFilPackage)
             // 5:更新重新生成的那个数据，因为这个时候，已经过了集合遍历的阶段了，会找不到他们的父类信息，这里需要手动去添加父类信息
-            val newBean = LOCAL_NODE_FILE_LIST.find { local -> local.name == mockBean.name }
+            val newBean = LOCAL_NODE_FILE_LIST.find { local -> local.localFileName == mockBean.localFileName }
             if (newBean != null) {
                 newBean.parentSet = mockBean.parentSet
+                newBean.jarOriginFilePath = mockBean.jarOriginFilePath
             } else {
                 LOCAL_NODE_FILE_LIST.add(mockBean)
             }
@@ -206,6 +208,9 @@ object GenerateUtil {
         println("开始生成Object类：[$jarObjectPackage] ------>")
         val parameterInfo = getPackageInfo(jarObjectPackage)
         val realFileName = getFileName(jarObjectPackage, OBJECT)
+        if (realFileName == "SwitchControlEntity") {
+            println("-------")
+        }
 
         // 构建类的build对象，用于组装类中的数据
         val classBuild =
@@ -262,16 +267,16 @@ object GenerateUtil {
 
                 OBJECT.name -> { // object类型的数据
                     attributeTypeBean?.let { att ->
-                        fieldTypeName = ClassName.get(transitionPackage(att.attributePackage), att.name)
-                        codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::new).orElse(null)")
+                        fieldTypeName = ClassName.get(transitionPackage(att.localFileParentPackage), att.localFileName)
+                        codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.localFileName}::new).orElse(null)")
                     }
                 }
 
                 ENUM.name -> { // object类型的数据
                     attributeTypeBean?.let { att ->
-                        fieldTypeName = ClassName.get(transitionPackage(att.attributePackage), att.name)
+                        fieldTypeName = ClassName.get(transitionPackage(att.localFileParentPackage), att.localFileName)
                         //     countryInformation = object.getCountryInformation().map(AirQualityEntityCountryInformationEnum::fromObjectEnum).orElse(null);
-                        codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.name}::fromRSI).orElse(null)")
+                        codeBuild.addStatement("this.$attributeName = object.$methodName().map(${att.localFileName}::fromRSI).orElse(null)")
                     }
                 }
 
@@ -295,11 +300,11 @@ object GenerateUtil {
                         fieldTypeName =
                             ParameterizedTypeName.get(
                                 ClassName.get("java.util", "List"),
-                                ClassName.get(transitionPackage(att.attributePackage), att.name)
+                                ClassName.get(transitionPackage(att.localFileParentPackage), att.localFileName)
                             )
                         codeBuild.addStatement(
                             "this.$attributeName = object.$methodName().map(list ->list.stream()" +
-                                ".map(${att.name}::new).collect(\$T.toList())).orElse(null)",
+                                ".map(${att.localFileName}::new).collect(\$T.toList())).orElse(null)",
                             JAVA_COLLECTORS
                         )
                     }
@@ -310,12 +315,12 @@ object GenerateUtil {
                         fieldTypeName =
                             ParameterizedTypeName.get(
                                 ClassName.get("java.util", "List"),
-                                ClassName.get(transitionPackage(att.attributePackage), att.name)
+                                ClassName.get(transitionPackage(att.localFileParentPackage), att.localFileName)
                             )
 
                         codeBuild.addStatement(
                             "this.$attributeName = object.$methodName().map(list ->list.stream()" +
-                                ".map(${att.name}::fromRSI).collect(\$T.toList())).orElse(null)",
+                                ".map(${att.localFileName}::fromRSI).collect(\$T.toList())).orElse(null)",
                             JAVA_COLLECTORS
                         )
                     }
@@ -357,8 +362,8 @@ object GenerateUtil {
         }
         println("[写入结束！]\r\n")
         val typeBean = LocalBean()
-        typeBean.attributePackage = localApiPackage
-        typeBean.name = realFileName
+        typeBean.localFileParentPackage = localApiPackage
+        typeBean.localFileName = realFileName
         return typeBean
         // </editor-fold>
     }
@@ -443,8 +448,8 @@ object GenerateUtil {
         }
         println("[写入结束！]\r\n")
         val typeBean = LocalBean()
-        typeBean.attributePackage = packagePath
-        typeBean.name = className
+        typeBean.localFileParentPackage = packagePath
+        typeBean.localFileName = className
         return typeBean
         // </editor-fold>
     }
@@ -880,8 +885,9 @@ object GenerateUtil {
             println("      当前属性[$genericPackage]是基础类型，不做额外处理，直接返回类的名字和包名!")
             val attributeBean = LocalBean()
             val otherInfo = getPackageInfo(genericPackage)
-            attributeBean.name = otherInfo[1]
-            attributeBean.attributePackage = otherInfo[0]
+            attributeBean.localFileName = otherInfo[1]
+            attributeBean.localFileParentPackage = otherInfo[0]
+            attributeBean.jarOriginFilePath = genericPackage
             println("     文件[$genericPackage]存在，直接返回文件信息：$attributeBean")
             return attributeBean
         } else {
@@ -891,12 +897,12 @@ object GenerateUtil {
             val realFileName = getFileName(genericPackage, genericType)
             // 3：读取本地指定文件夹下的所有文件，用于后续的查找
             readNodeLocalFile(LOCAL_FOLDER_PATH)
-            val localBean = LOCAL_NODE_FILE_LIST.find { local -> local.name == realFileName }
+            val localBean = LOCAL_NODE_FILE_LIST.find { local -> local.localFileName == realFileName }
             // 4：如果文件存在，则直接返回文件的路径
             if (localBean != null) {
                 println("     文件[$realFileName]存在，直接返回文件信息：$localBean")
                 // 添加父类的信息，这里的逻辑是必须得，因为第一次会手动添加一个假的信息到本地集合中，就会走入到这个逻辑中
-                updateParentInfo(localBean, parentPackage, parentEntityName)
+                updateParentInfo(localBean, parentPackage, parentEntityName, genericPackage)
                 return localBean
             } else {
                 // 5:读取jar包中属性的字段
@@ -910,7 +916,7 @@ object GenerateUtil {
                             // 1：生成object对象
                             val generateObject = generateObject(genericPackage, jarMethodSet, writeLocalFilPackage)
                             // 2：再次读取本地集合内容,如果发现了内容，就把内容添加到集合中
-                            addParentInfo(realFileName, parentPackage, parentEntityName)
+                            addParentInfo(realFileName, parentPackage, parentEntityName, genericPackage)
                             return generateObject
                         } else if (genericType == ENUM || genericType == LIST_ENUM) {
                             println("子Enum：[$realFileName]不存在，去创建Enum对象！")
@@ -918,7 +924,7 @@ object GenerateUtil {
                             // 1：生成enum对象
                             val generateEnum = generateEnum(genericPackage, fieldSet, writeLocalFilPackage)
                             // 2：再次读取本地集合内容,如果发现了内容，就把内容添加到集合中
-                            addParentInfo(realFileName, parentPackage, parentEntityName)
+                            addParentInfo(realFileName, parentPackage, parentEntityName, genericPackage)
                             return generateEnum
                         }
                     } else {
@@ -1007,11 +1013,11 @@ object GenerateUtil {
                     transitionPackage(file.parent.substring(BASE_OUT_PUT_PATH.length + 1, file.parent.length))
                 // println("开始存储数据：name:[$realName] path:[$realPath]")
                 // 如果在集合中没有这个类，才去添加新的类进去，避免重复性的添加
-                val find = LOCAL_NODE_FILE_LIST.find { local -> local.name == realName }
+                val find = LOCAL_NODE_FILE_LIST.find { local -> local.localFileName == realName }
                 if (find == null) {
                     val bean = LocalBean()
-                    bean.name = realName
-                    bean.attributePackage = realPath
+                    bean.localFileName = realName
+                    bean.localFileParentPackage = realPath
                     LOCAL_NODE_FILE_LIST.add(bean)
                 }
             } else if (file.isDirectory) {
@@ -1061,10 +1067,10 @@ object GenerateUtil {
                 .filter { rsi ->
                     LOCAL_NODE_FILE_LIST.stream().anyMatch { local ->
                         val fileName = getFileName(rsi.apiObjectPath, OBJECT)
-                        val localName = local.name
+                        val localName = local.localFileName
                         if (fileName == localName) {
                             // 把local的内容复制到rsi中
-                            rsi.localObjectPath = local.attributePackage
+                            rsi.localObjectPath = local.localFileParentPackage
                             rsi.localObjectName = localName
                         }
                         fileName == localName
@@ -1099,6 +1105,7 @@ object GenerateUtil {
         localBean: LocalBean,
         parentPackage: String,
         parentEntityName: String,
+        originFilePackage: String,
     ): ParentBean? {
         /**
          * 添加父类信息的逻辑
@@ -1111,6 +1118,7 @@ object GenerateUtil {
             parentBean.parentPath = parentPackage
             parentBean.parentEntityName = parentEntityName
             localBean.parentSet.add(parentBean)
+            localBean.jarOriginFilePath = originFilePackage
             return parentBean
         } else {
             val find =
@@ -1123,6 +1131,7 @@ object GenerateUtil {
                 parentBean.parentPath = parentPackage
                 parentBean.parentEntityName = parentEntityName
                 localBean.parentSet.add(parentBean)
+                localBean.jarOriginFilePath = originFilePackage
                 return parentBean
             }
         }
@@ -1133,14 +1142,15 @@ object GenerateUtil {
         fileName: String,
         parentPackage: String,
         parentEntityName: String,
+        originFilePackage: String,
     ) {
         // 1:读取本地集合
         readNodeLocalFile(LOCAL_FOLDER_PATH)
-        val localObjectBean = LOCAL_NODE_FILE_LIST.find { local -> local.name == fileName }
+        val localObjectBean = LOCAL_NODE_FILE_LIST.find { local -> local.localFileName == fileName }
         // 2:如果内容不为空，就把内容给添加到集合中去
         if (localObjectBean != null) {
             // 添加父类的信息
-            updateParentInfo(localObjectBean, parentPackage, parentEntityName)
+            updateParentInfo(localObjectBean, parentPackage, parentEntityName, originFilePackage)
         }
     }
 }

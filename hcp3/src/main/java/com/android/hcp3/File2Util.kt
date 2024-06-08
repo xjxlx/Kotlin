@@ -19,8 +19,8 @@ object File2Util {
             val parentSet = local.parentSet
             // 1：只有parent的数量等于1的时候，才有移动的价值
             if (parentSet.size == 1) {
-                val originFileName = local.name
-                val originFilePackage = local.attributePackage
+                val originFileName = local.localFileName
+                val originFilePackage = local.localFileParentPackage
                 val parentBean = parentSet.toMutableList()[0]
                 val newPackage = parentBean.parentPath
                 val parentEntityName = parentBean.parentEntityName

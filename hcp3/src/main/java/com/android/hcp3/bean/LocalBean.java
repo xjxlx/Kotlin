@@ -2,30 +2,41 @@ package com.android.hcp3.bean;
 
 import java.util.LinkedHashSet;
 
-public class LocalBean {
-  /** 生成属性类的路径，这个是全路径，例如：com.android.hcp3.rsi.hvac */
-  private String attributePackage;
+public class LocalBean implements Cloneable {
+  /** 本地类的父目录的包名地址，例如：com.android.hcp3.rsi.hvac */
+  private String localFileParentPackage = "";
 
-  /** 1：生成属性类的名字，例如：VcSpecialIndicationValue 2：基础类型或者忽略类型的名字，例如：String */
-  private String name;
+  /** 本地类文件的名字，例如：VcSpecialIndicationValue */
+  private String localFileName = "";
+
+  /** jar中原始类的全路径地址，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchValue */
+  private String jarOriginFilePath = "";
 
   /** 当前类所在的父类集合 */
   private LinkedHashSet<ParentBean> parentSet = new LinkedHashSet<>();
 
-  public String getAttributePackage() {
-    return attributePackage;
+  public String getLocalFileParentPackage() {
+    return localFileParentPackage;
   }
 
-  public void setAttributePackage(String attributePackage) {
-    this.attributePackage = attributePackage;
+  public void setLocalFileParentPackage(String localFileParentPackage) {
+    this.localFileParentPackage = localFileParentPackage;
   }
 
-  public String getName() {
-    return name;
+  public String getLocalFileName() {
+    return localFileName;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setLocalFileName(String localFileName) {
+    this.localFileName = localFileName;
+  }
+
+  public String getJarOriginFilePath() {
+    return jarOriginFilePath;
+  }
+
+  public void setJarOriginFilePath(String jarOriginFilePath) {
+    this.jarOriginFilePath = jarOriginFilePath;
   }
 
   public LinkedHashSet<ParentBean> getParentSet() {
@@ -38,12 +49,15 @@ public class LocalBean {
 
   @Override
   public String toString() {
-    return "AttributeBean{"
-        + "attributePackage='"
-        + attributePackage
+    return "LocalBean{"
+        + "localFileParentPackage='"
+        + localFileParentPackage
         + '\''
-        + ", name='"
-        + name
+        + ", localFileName='"
+        + localFileName
+        + '\''
+        + ", jarOriginFilePath='"
+        + jarOriginFilePath
         + '\''
         + ", parentSet="
         + parentSet
