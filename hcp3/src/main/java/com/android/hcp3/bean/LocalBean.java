@@ -10,10 +10,16 @@ public class LocalBean implements Cloneable {
   /** 本地类文件的名字，例如：VcSpecialIndicationValue */
   private String localFileName = "";
 
-  /** jar中原始类的全路径地址，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchValue */
+  /**
+   * 1：jar中原始类的全路径地址，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchValue
+   * 2：需要注意的是，只有第一次生成的时候会有数据，在运行第二次的时候，子类的Entity下的类不会有任何的数据，因为子类的Entity已经生成了，就不会再去遍历了
+   */
   private String jarOriginFilePath = "";
 
-  /** 当前类的类型，用于区分被挪移的死那哪种类，目前只需要挪移Enum的类就可以了 */
+  /**
+   * 1：当前类的类型，用于区分被挪移的死那哪种类，目前只需要挪移Enum的类就可以了
+   * 2：需要注意的是，只有第一次生成的时候会有数据，在运行第二次的时候，子类的Entity下的类不会有任何的数据，因为子类的Entity已经生成了，就不会再去遍历了
+   */
   private ClassTypeEnum classTypeEnum = ClassTypeEnum.INVALID;
 
   /** 当前类所在的父类集合 */
