@@ -171,7 +171,6 @@ object GenerateUtil {
             val writeFilPackage = getWriteFilPackage(genericPackage)
 
             // 1：把假数据给添加到本地集合中，避免重复性的生成
-            val localBean = LOCAL_NODE_FILE_LIST.find { local -> local.jarOriginFilePath == genericPackage }
             val mockBean = LocalBean()
             mockBean.localFileName = getFileName(genericPackage, OBJECT)
             mockBean.localFileParentPackage = writeFilPackage
@@ -199,6 +198,7 @@ object GenerateUtil {
 
         // 7：最后在生成Api、Manager、Interface的类
         checkGenerateOther()
+        readNodeLocalFile(LOCAL_FOLDER_PATH)
         // 8:给生成的主类添加类型信息
         addMasterInfo(jarObjectPackage)
     }
