@@ -1176,6 +1176,7 @@ object GenerateUtil {
         val fileName = getFileName(jarObjectPackage, OBJECT)
         LOCAL_NODE_FILE_LIST.find { local -> local.localFileName == fileName }?.let { master ->
             master.classTypeEnum = OBJECT
+            master.jarOriginFilePath = jarObjectPackage
         }
     }
 }
