@@ -2,7 +2,7 @@ package com.android.hcp3.bean;
 
 import java.util.LinkedHashSet;
 
-public class AttributeBean {
+public class LocalBean {
   /** 生成属性类的路径，这个是全路径，例如：com.android.hcp3.rsi.hvac */
   private String attributePackage;
 

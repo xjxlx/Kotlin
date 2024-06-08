@@ -18,7 +18,7 @@ import com.android.hcp3.StringUtil.getPackageSimple
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
 import com.android.hcp3.bean.ApiNodeBean
-import com.android.hcp3.bean.AttributeBean
+import com.android.hcp3.bean.LocalBean
 import com.android.hcp3.bean.ObjectBean
 import com.android.hcp3.bean.ParentBean
 import com.squareup.javapoet.*
@@ -63,7 +63,7 @@ object GenerateUtil {
     private val JAVA__STRING = ClassName.get("java.lang", "String")
 
     // 用来存储本地已经生成的文件的集合
-    val LOCAL_NODE_FILE_LIST = LinkedHashSet<AttributeBean>()
+    val LOCAL_NODE_FILE_LIST = LinkedHashSet<LocalBean>()
 
     /**
      * 本地指定位置的文件夹，用于每次写入的时候，遍历本地文件夹下当前的文件，然后存储到[LOCAL_NODE_FILE_LIST]集合中去，用于后续的查找使用
@@ -158,7 +158,7 @@ object GenerateUtil {
             val writeFilPackage = getWriteFilPackage(genericPackage)
 
             // 1：把假数据给添加到本地集合中，避免重复性的生成
-            val mockBean = AttributeBean()
+            val mockBean = LocalBean()
             mockBean.name = getFileName(genericPackage, OBJECT)
             mockBean.attributePackage = writeFilPackage
             LOCAL_NODE_FILE_LIST.add(mockBean)
@@ -201,7 +201,7 @@ object GenerateUtil {
         jarObjectPackage: String,
         jarMethodSet: LinkedHashSet<ObjectBean>,
         localApiPackage: String,
-    ): AttributeBean {
+    ): LocalBean {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Object类：[$jarObjectPackage] ------>")
         val parameterInfo = getPackageInfo(jarObjectPackage)
@@ -356,7 +356,7 @@ object GenerateUtil {
             javaFile.writeTo(outPutFile)
         }
         println("[写入结束！]\r\n")
-        val typeBean = AttributeBean()
+        val typeBean = LocalBean()
         typeBean.attributePackage = localApiPackage
         typeBean.name = realFileName
         return typeBean
@@ -374,7 +374,7 @@ object GenerateUtil {
         objectClassPath: String,
         jarMethodSet: LinkedHashSet<ObjectBean>,
         packagePath: String,
-    ): AttributeBean {
+    ): LocalBean {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Enum类：[$objectClassPath] ------>")
         val className = getFileName(objectClassPath, ENUM)
@@ -442,7 +442,7 @@ object GenerateUtil {
             javaFile.writeTo(outPutFile)
         }
         println("[写入结束！]\r\n")
-        val typeBean = AttributeBean()
+        val typeBean = LocalBean()
         typeBean.attributePackage = packagePath
         typeBean.name = className
         return typeBean
@@ -869,7 +869,7 @@ object GenerateUtil {
         genericType: ClassTypeEnum,
         parentPackage: String,
         parentEntityName: String,
-    ): AttributeBean? {
+    ): LocalBean? {
         /**
          * 1：基础类型的数据，直接返回对象信息
          * 2：基础数据类型的集合，直接返回对象信息
@@ -878,7 +878,7 @@ object GenerateUtil {
         val ignore = IGNORE_ARRAY.find { ignore -> ignore.ignorePackage == genericPackage }
         if ((genericType == PRIMITIVE) || (genericType == LIST_PRIMITIVE) || (ignore != null)) {
             println("      当前属性[$genericPackage]是基础类型，不做额外处理，直接返回类的名字和包名!")
-            val attributeBean = AttributeBean()
+            val attributeBean = LocalBean()
             val otherInfo = getPackageInfo(genericPackage)
             attributeBean.name = otherInfo[1]
             attributeBean.attributePackage = otherInfo[0]
@@ -1009,7 +1009,7 @@ object GenerateUtil {
                 // 如果在集合中没有这个类，才去添加新的类进去，避免重复性的添加
                 val find = LOCAL_NODE_FILE_LIST.find { local -> local.name == realName }
                 if (find == null) {
-                    val bean = AttributeBean()
+                    val bean = LocalBean()
                     bean.name = realName
                     bean.attributePackage = realPath
                     LOCAL_NODE_FILE_LIST.add(bean)
@@ -1096,7 +1096,7 @@ object GenerateUtil {
      *
      */
     private fun updateParentInfo(
-        localBean: AttributeBean,
+        localBean: LocalBean,
         parentPackage: String,
         parentEntityName: String,
     ): ParentBean? {
