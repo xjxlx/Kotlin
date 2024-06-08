@@ -19,3 +19,19 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.30")
     implementation("androidx.annotation:annotation-jvm:1.8.0")
 }
+
+tasks.jar {
+    // 设置重复模式
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes["Main-Class"] = "com.android.hcp3.File2Util"
+    }
+    dependsOn(configurations.runtimeClasspath)
+
+    // 将运行时依赖项打包到 JAR 文件中
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+    // 将资源文件一并打包到jar包中
+    from(sourceSets.main.get().output)
+}
