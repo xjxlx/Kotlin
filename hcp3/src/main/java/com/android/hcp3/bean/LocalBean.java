@@ -1,5 +1,6 @@
 package com.android.hcp3.bean;
 
+import com.android.hcp3.ClassTypeEnum;
 import java.util.LinkedHashSet;
 
 public class LocalBean implements Cloneable {
@@ -11,6 +12,9 @@ public class LocalBean implements Cloneable {
 
   /** jar中原始类的全路径地址，例如：de.esolutions.fw.rudi.viwi.service.hvac.v3.SwitchValue */
   private String jarOriginFilePath = "";
+
+  /** 当前类的类型，用于区分被挪移的死那哪种类，目前只需要挪移Enum的类就可以了 */
+  private ClassTypeEnum classTypeEnum = ClassTypeEnum.INVALID;
 
   /** 当前类所在的父类集合 */
   private LinkedHashSet<ParentBean> parentSet = new LinkedHashSet<>();
@@ -39,6 +43,14 @@ public class LocalBean implements Cloneable {
     this.jarOriginFilePath = jarOriginFilePath;
   }
 
+  public ClassTypeEnum getClassTypeEnum() {
+    return classTypeEnum;
+  }
+
+  public void setClassTypeEnum(ClassTypeEnum classTypeEnum) {
+    this.classTypeEnum = classTypeEnum;
+  }
+
   public LinkedHashSet<ParentBean> getParentSet() {
     return parentSet;
   }
@@ -59,6 +71,8 @@ public class LocalBean implements Cloneable {
         + ", jarOriginFilePath='"
         + jarOriginFilePath
         + '\''
+        + ", classTypeEnum="
+        + classTypeEnum
         + ", parentSet="
         + parentSet
         + '}';

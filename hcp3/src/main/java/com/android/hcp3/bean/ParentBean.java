@@ -7,6 +7,11 @@ public class ParentBean {
   /** 本地类所在的是哪个类的名字，例如：SwitchControlEntity */
   private String parentEntityName;
 
+  public ParentBean(String parentPath, String parentEntityName) {
+    this.parentPath = parentPath;
+    this.parentEntityName = parentEntityName;
+  }
+
   public String getParentPath() {
     return parentPath;
   }

@@ -888,6 +888,7 @@ object GenerateUtil {
             attributeBean.localFileName = otherInfo[1]
             attributeBean.localFileParentPackage = otherInfo[0]
             attributeBean.jarOriginFilePath = genericPackage
+            attributeBean.classTypeEnum = genericType
             println("     文件[$genericPackage]存在，直接返回文件信息：$attributeBean")
             return attributeBean
         } else {
@@ -902,7 +903,7 @@ object GenerateUtil {
             if (localBean != null) {
                 println("     文件[$realFileName]存在，直接返回文件信息：$localBean")
                 // 添加父类的信息，这里的逻辑是必须得，因为第一次会手动添加一个假的信息到本地集合中，就会走入到这个逻辑中
-                updateParentInfo(localBean, parentPackage, parentEntityName, genericPackage)
+                updateParentInfo(localBean, parentPackage, parentEntityName, genericPackage, genericType)
                 return localBean
             } else {
                 // 5:读取jar包中属性的字段
@@ -916,7 +917,7 @@ object GenerateUtil {
                             // 1：生成object对象
                             val generateObject = generateObject(genericPackage, jarMethodSet, writeLocalFilPackage)
                             // 2：再次读取本地集合内容,如果发现了内容，就把内容添加到集合中
-                            addParentInfo(realFileName, parentPackage, parentEntityName, genericPackage)
+                            addParentInfo(realFileName, parentPackage, parentEntityName, genericPackage, genericType)
                             return generateObject
                         } else if (genericType == ENUM || genericType == LIST_ENUM) {
                             println("子Enum：[$realFileName]不存在，去创建Enum对象！")
@@ -924,7 +925,7 @@ object GenerateUtil {
                             // 1：生成enum对象
                             val generateEnum = generateEnum(genericPackage, fieldSet, writeLocalFilPackage)
                             // 2：再次读取本地集合内容,如果发现了内容，就把内容添加到集合中
-                            addParentInfo(realFileName, parentPackage, parentEntityName, genericPackage)
+                            addParentInfo(realFileName, parentPackage, parentEntityName, genericPackage, genericType)
                             return generateEnum
                         }
                     } else {
@@ -1106,6 +1107,7 @@ object GenerateUtil {
         parentPackage: String,
         parentEntityName: String,
         originFilePackage: String,
+        typeEnum: ClassTypeEnum,
     ): ParentBean? {
         /**
          * 添加父类信息的逻辑
@@ -1114,11 +1116,10 @@ object GenerateUtil {
          */
         val parentSet = localBean.parentSet
         if (parentSet.isEmpty()) {
-            val parentBean = ParentBean()
-            parentBean.parentPath = parentPackage
-            parentBean.parentEntityName = parentEntityName
+            val parentBean = ParentBean(parentPackage, parentEntityName)
             localBean.parentSet.add(parentBean)
             localBean.jarOriginFilePath = originFilePackage
+            localBean.classTypeEnum = typeEnum
             return parentBean
         } else {
             val find =
@@ -1127,11 +1128,10 @@ object GenerateUtil {
                 }
             // 如果找不到这个对象，才去主动添加
             if (find == null) {
-                val parentBean = ParentBean()
-                parentBean.parentPath = parentPackage
-                parentBean.parentEntityName = parentEntityName
+                val parentBean = ParentBean(parentPackage, parentEntityName)
                 localBean.parentSet.add(parentBean)
                 localBean.jarOriginFilePath = originFilePackage
+                localBean.classTypeEnum = typeEnum
                 return parentBean
             }
         }
@@ -1143,6 +1143,7 @@ object GenerateUtil {
         parentPackage: String,
         parentEntityName: String,
         originFilePackage: String,
+        typeEnum: ClassTypeEnum,
     ) {
         // 1:读取本地集合
         readNodeLocalFile(LOCAL_FOLDER_PATH)
@@ -1150,7 +1151,7 @@ object GenerateUtil {
         // 2:如果内容不为空，就把内容给添加到集合中去
         if (localObjectBean != null) {
             // 添加父类的信息
-            updateParentInfo(localObjectBean, parentPackage, parentEntityName, originFilePackage)
+            updateParentInfo(localObjectBean, parentPackage, parentEntityName, originFilePackage, typeEnum)
         }
     }
 }
