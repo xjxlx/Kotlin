@@ -11,7 +11,7 @@ import java.nio.file.Paths
 object File2Util {
     @JvmStatic
     fun main(args: Array<String>) {
-        // 1:先去生成文件
+        // 1:先去读取jar，并生成本地文件
         ReadJarFile.execute()
 
         // 2:遍历本地的文件夹，去修改文件的位置以及内容，目前只去过滤枚举和枚举的集合类型

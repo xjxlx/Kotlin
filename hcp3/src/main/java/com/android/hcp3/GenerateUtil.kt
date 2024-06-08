@@ -91,9 +91,23 @@ object GenerateUtil {
         println()
         println("开始检测object的相互依赖------>")
 
-        // 1：用来存储object或者list object的set集合，用来检查依赖属性
+        // 1:创建数据类型的集合，用来存储检查期间的数据
+
+        /**
+         * 主类中成员变量如果是object或者List<Object>类型的数据，则把成员变量在jar中原始的路径存储起来
+         */
         val objectSet = LinkedHashSet<String>()
+
+        /**
+         * 1：遍历主类中所有的类型是object或者是List<Object>成员变量，把他们的成员变量的属性给存储起来
+         * 2：key：主类中成员变量object或者List<object>属性的原始地址
+         * 3：value:主类中成员变量object或者List<object>类中包含的所有方法
+         */
         val objectAttributeMap = hashMapOf<String, LinkedHashSet<ObjectBean>>()
+
+        /**
+         * 用来存储有相互依赖的类的对象，过滤出来的属性可能是个集合，所以主类用集合去存储
+         */
         val interdependenceSet = LinkedHashSet<List<ObjectBean>>()
 
         // 2：遍历生成主类包含的所有变量，查看是否有object类型或者ListObject类型的数据，如果有就添加到集合中
