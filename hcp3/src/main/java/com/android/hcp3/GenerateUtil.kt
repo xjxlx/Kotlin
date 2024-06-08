@@ -199,6 +199,8 @@ object GenerateUtil {
 
         // 7：最后在生成Api、Manager、Interface的类
         checkGenerateOther()
+        // 8:给生成的主类添加类型信息
+        addMasterInfo(jarObjectPackage)
     }
     // </editor-fold>
 
@@ -1157,6 +1159,16 @@ object GenerateUtil {
         if (localObjectBean != null) {
             // 添加父类的信息
             updateParentInfo(localObjectBean, parentPackage, parentEntityName, originFilePackage, typeEnum)
+        }
+    }
+
+    /**
+     * 给主类补充信息
+     */
+    private fun addMasterInfo(jarObjectPackage: String) {
+        val fileName = getFileName(jarObjectPackage, OBJECT)
+        LOCAL_NODE_FILE_LIST.find { local -> local.localFileName == fileName }?.let { master ->
+            master.classTypeEnum = OBJECT
         }
     }
 }
