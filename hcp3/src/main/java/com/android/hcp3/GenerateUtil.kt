@@ -901,8 +901,6 @@ object GenerateUtil {
             val otherInfo = getPackageInfo(genericPackage)
             attributeBean.localFileName = otherInfo[1]
             attributeBean.localFileParentPackage = otherInfo[0]
-            attributeBean.jarOriginFilePath = genericPackage
-            attributeBean.classTypeEnum = genericType
             println("     文件[$genericPackage]存在，直接返回文件信息：$attributeBean")
             return attributeBean
         } else {
@@ -1122,34 +1120,27 @@ object GenerateUtil {
         parentEntityName: String,
         originFilePackage: String,
         typeEnum: ClassTypeEnum,
-    ): ParentBean? {
+    ): ParentBean {
         /**
          * 添加父类信息的逻辑
-         * 1：如果父类中集合信息为空，则直接添加
-         * 2：如果父类中信息不为空，则便利是否已经有了这个名字的对象，如果没有才去添加
+         * 1：现在父类的集合中去查找，如果有，就把对象返回
+         * 2：如果没有，就去重新创建一个，并把对象添加到集合里面
          */
+        println("fileName：${localBean.localFileName}")
+        // 获取集合中的parent集合
         val parentSet = localBean.parentSet
-        if (parentSet.isEmpty()) {
-            val parentBean = ParentBean(parentPackage, parentEntityName)
-            localBean.parentSet.add(parentBean)
-            localBean.jarOriginFilePath = originFilePackage
-            localBean.classTypeEnum = typeEnum
-            return parentBean
-        } else {
-            val find =
-                parentSet.find { parent ->
-                    (parent.parentEntityName == parentEntityName) && (parent.parentPath == parentPackage)
-                }
-            // 如果找不到这个对象，才去主动添加
-            if (find == null) {
-                val parentBean = ParentBean(parentPackage, parentEntityName)
-                localBean.parentSet.add(parentBean)
-                localBean.jarOriginFilePath = originFilePackage
-                localBean.classTypeEnum = typeEnum
-                return parentBean
+        var parentBean =
+            parentSet.find { parent ->
+                (parent.parentEntityName == parentEntityName) && (parent.parentPath == parentPackage)
             }
+        if (parentBean == null) {
+            parentBean = ParentBean(parentPackage, parentEntityName)
+            localBean.parentSet.add(parentBean)
         }
-        return null
+        // 添加类型信息以及原始类的信息
+        localBean.jarOriginFilePath = originFilePackage
+        localBean.classTypeEnum = typeEnum
+        return parentBean
     }
 
     private fun addParentInfo(
