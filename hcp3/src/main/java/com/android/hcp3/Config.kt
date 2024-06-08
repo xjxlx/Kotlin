@@ -55,26 +55,26 @@ object Config {
 
     /**
      * RSI中大项的名字，这个每次生成不同的模块，都要进行不同的改动
-     * 例如：headupdisplay
+     * 例如：headupdisplay、usermanagement
      */
     val RSI_NODE_NAME by lazy {
-        return@lazy StringUtil.lowercase("HVAC")
+        return@lazy StringUtil.lowercase("usermanagement")
     }
 
     /**
      * RSI中大项的节点的等级，这个每次生成不同的模块，都要进行不同的改动
-     * 例如：v4
+     * 例如：v4、v3
      */
     val RSI_NODE_LEVEL by lazy {
-        return@lazy StringUtil.lowercase("v3")
+        return@lazy StringUtil.lowercase("v4")
     }
 
     /**
      * RSI中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动
-     * 例如：switchControls
+     * 例如：switchControls、settings
      */
     val RSI_NODE_API_NAME by lazy {
-        return@lazy StringUtil.lowercase("switchControls")
+        return@lazy StringUtil.lowercase("settings")
     }
 
     /**

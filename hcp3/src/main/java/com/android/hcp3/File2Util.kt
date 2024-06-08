@@ -55,5 +55,7 @@ object File2Util {
                 }
             }
         }
+
+        println()
     }
 }
