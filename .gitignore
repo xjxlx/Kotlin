@@ -21,3 +21,4 @@ local.properties
 /app/release/
 /gradle/buddy/
 /gradle/34/
+/java/build/

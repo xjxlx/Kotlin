@@ -12,6 +12,9 @@ pluginManagement {
         mavenCentral()
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
+}
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -54,3 +57,4 @@ include(":refresh")
 include(":model")
 include(":compose")
 include(":hcp3")
+include(":java")
