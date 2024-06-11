@@ -57,6 +57,9 @@ object GenerateUtil {
     private val SUPER_CLASS_BASE_VIEW_MODEL =
         ClassName.get("androidx.lifecycle", "ViewModel")
 
+    private val CLASS_RSI_MANAGER =
+        ClassName.get("technology.cariad.vehiclecontrolmanager", "RSIManager")
+
     private val PARAMETER_I_RSI_ADMIN = ClassName.get("de.esolutions.fw.android.rsi.client.rx", "IRsiAdmin")
     private val PARAMETER_VALUE_CALL_BACK =
         ClassName.get("technology.cariad.vehiclecontrolmanager", "ValueCallback")
@@ -227,9 +230,6 @@ object GenerateUtil {
         println("开始生成Object类：[$jarObjectPackage] ------>")
         val parameterInfo = getPackageInfo(jarObjectPackage)
         val realFileName = getFileName(jarObjectPackage, OBJECT)
-        if (realFileName == "SwitchControlEntity") {
-            println("-------")
-        }
 
         // 构建类的build对象，用于组装类中的数据
         val classBuild =
@@ -798,8 +798,46 @@ object GenerateUtil {
 
         val javaFile = JavaFile.builder(localPackage, interfaceBuilder.build()).build()
         javaFile.writeTo(File(BASE_OUT_PUT_PATH))
-
         return realInterfaceName
+    }
+
+    @JvmStatic
+    fun generateRsiManager() {
+        println("开始生成RsiManager------>")
+        // 1：构建类的build对象
+        val classBuild = TypeSpec.classBuilder(CLASS_RSI_MANAGER.simpleName())
+        // 组装方法的修饰符和参数
+        val managerPackage =
+            lowercase(
+                transitionPackage(
+                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                        .resolve(Paths.get(RSI_NODE_NAME))
+                        .toString()
+                )
+            )
+        val manager = ClassName.get(managerPackage, "MessagesManager")
+        val codeBuild =
+            CodeBlock
+                .builder()
+                .addStatement(
+                    "return getService(\$T.class)",
+                    manager
+                ).build()
+
+        val method =
+            MethodSpec.methodBuilder("get${manager.simpleName()}")
+                .addModifiers(Modifier.PUBLIC) // 方法的修饰符
+                .addStatement("checkInit()")
+                .addCode(codeBuild)
+                .returns(manager)
+                .build()
+
+        // 添加完成的方法内容
+        classBuild.addMethod(method).build()
+        val javaFile =
+            JavaFile.builder("technology.cariad.vehiclecontrolmanager", classBuild.build()).build()
+        javaFile.writeTo(System.out)
+        println("[写入结束！]\r\n")
     }
 
     @JvmStatic
@@ -1103,6 +1141,8 @@ object GenerateUtil {
             // 3：生成manager的类
             generateManager(localPackage, other, interfaceName)
         }
+        // 4：生成rsiManager
+        generateRsiManager()
     }
 
     private fun updateLocalParentInfo(
