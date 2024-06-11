@@ -63,7 +63,7 @@ object GenerateUtil {
 
     private val JAVA_COLLECTORS: ClassName = ClassName.get("java.util.stream", "Collectors")
     private val JAVA_LIST = ClassName.get("java.util", "List")
-    private val JAVA__STRING = ClassName.get("java.lang", "String")
+    private val JAVA_STRING = ClassName.get("java.lang", "String")
 
     // 用来存储本地已经生成的文件的集合
     val LOCAL_NODE_FILE_LIST = LinkedHashSet<LocalBean>()
@@ -405,14 +405,14 @@ object GenerateUtil {
 
         // 1：构建固定属性对象
         val fieldSpec =
-            FieldSpec.builder(JAVA__STRING, "value")
+            FieldSpec.builder(JAVA_STRING, "value")
                 .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
                 .build()
 
         // 2:构造方法组装
         val methodConstructor =
             MethodSpec.constructorBuilder()
-                .addParameter(ParameterSpec.builder(JAVA__STRING, "object").build())
+                .addParameter(ParameterSpec.builder(JAVA_STRING, "object").build())
                 .addCode(CodeBlock.builder().add("this.value = object;").build()).build()
 
         // 3:静态方法组装
@@ -700,7 +700,7 @@ object GenerateUtil {
 
         // 设置方法的注解
         val getEntitiesParameter =
-            ParameterSpec.builder(JAVA__STRING, "name").addAnnotation(ANNOTATION_NONNULL).build()
+            ParameterSpec.builder(JAVA_STRING, "name").addAnnotation(ANNOTATION_NONNULL).build()
 
         val getEntitiesMethod =
             MethodSpec.methodBuilder("get" + realEntityName + "EntitiesSync")
@@ -783,7 +783,7 @@ object GenerateUtil {
 
         val getEntitiesSyncParameter =
             ParameterSpec.builder(
-                JAVA__STRING,
+                JAVA_STRING,
                 "name"
             ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                 .build()
@@ -1102,9 +1102,6 @@ object GenerateUtil {
 
             // 3：生成manager的类
             generateManager(localPackage, other, interfaceName)
-
-            // 4：生成ViewModel的类
-            generateViewModel(localPackage, other)
         }
     }
 
