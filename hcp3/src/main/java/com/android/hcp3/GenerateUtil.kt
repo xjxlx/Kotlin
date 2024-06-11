@@ -54,6 +54,9 @@ object GenerateUtil {
     private val SUPER_CLASS_BASE_RSI_SERVICE =
         ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIService")
 
+    private val SUPER_CLASS_BASE_VIEW_MODEL =
+        ClassName.get("androidx.lifecycle", "ViewModel")
+
     private val PARAMETER_I_RSI_ADMIN = ClassName.get("de.esolutions.fw.android.rsi.client.rx", "IRsiAdmin")
     private val PARAMETER_VALUE_CALL_BACK =
         ClassName.get("technology.cariad.vehiclecontrolmanager", "ValueCallback")
@@ -470,69 +473,6 @@ object GenerateUtil {
         // </editor-fold>
     }
 
-    @JvmStatic
-    fun dynamicAddInterfaceMethod(
-        interfaceSpec: TypeSpec.Builder,
-        apiBean: ApiNodeBean,
-    ): MethodSpec {
-        println("开始动态添加Interface方法:------>[${apiBean.apiName}]")
-        val realMethodName = capitalize(apiBean.apiName)
-        println("realMethodName:[$realMethodName]")
-
-        val classEntity = ClassName.get(apiBean.localObjectPath, apiBean.localObjectName)
-
-        val registerParameter =
-            ParameterSpec.builder(
-                ParameterizedTypeName.get(
-                    PARAMETER_VALUE_CALL_BACK,
-                    ParameterizedTypeName.get(JAVA_LIST, classEntity)
-                ),
-                "callback"
-            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
-                .build()
-
-        // 1: 生成register方法
-        val register =
-            MethodSpec.methodBuilder("register${realMethodName}ValueCallback")
-                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                .addParameter(registerParameter)
-                .build()
-
-        // 2：生成unregister的方法
-        val unregister =
-            MethodSpec.methodBuilder("unregister${realMethodName}ValueCallback")
-                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                .addParameter(registerParameter)
-                .build()
-
-        // 3：生成getAllEntitiesSync的方法
-        val getAllEntitiesSync =
-            MethodSpec.methodBuilder("getAll${realMethodName}EntitiesSync")
-                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                .returns(
-                    ParameterizedTypeName.get(JAVA_LIST, classEntity)
-                ).addAnnotation(ANNOTATION_NONNULL)
-                .build()
-
-        // 4：生成getEntitiesSync的方法
-
-        val getEntitiesSyncParameter =
-            ParameterSpec.builder(
-                JAVA__STRING,
-                "name"
-            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
-                .build()
-        val getEntitiesSync =
-            MethodSpec.methodBuilder("get${realMethodName}EntitiesSync")
-                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                .addParameter(getEntitiesSyncParameter)
-                .addAnnotation(ANNOTATION_NULLABLE)
-                .returns(classEntity)
-                .build()
-        interfaceSpec.addMethod(register).addMethod(unregister).addMethod(getAllEntitiesSync).addMethod(getEntitiesSync)
-        return register
-    }
-
     /**
      * @param localApiPackage 生成api类的包名，例如：technology.cariad.vehiclecontrolmanager.rsi.hvacvehiclepreconditioning.switchindications
      * @param localApiName 生成类的名字，例如：SwitchIndications
@@ -862,6 +802,46 @@ object GenerateUtil {
         return realInterfaceName
     }
 
+    @JvmStatic
+    fun generateViewModel(
+        localPackage: String,
+        apiBean: ApiNodeBean,
+    ) {
+        val realName = capitalize(apiBean.apiName) + "ViewModel"
+        println("开始生成ViewModel类：[$realName] ------>")
+
+        // 构建类的build对象，用于组装类中的数据
+        val classBuild =
+            TypeSpec.classBuilder(realName)
+                .addAnnotations(getAddAnnotations())
+                .superclass(SUPER_CLASS_BASE_VIEW_MODEL)
+
+        // 3.3：构建[manager]属性对象
+        val fieldManagerTyp = ClassName.get(localPackage, capitalize(apiBean.apiName) + "Manager")
+
+        val fieldManagerCode = CodeBlock.builder()
+        fieldManagerCode.addStatement(
+            " VehicleControlManager.getInstance().get${fieldManagerTyp.simpleName()}()",
+            fieldManagerTyp
+        )
+
+        val fieldManager =
+            FieldSpec.builder(fieldManagerTyp, "manager")
+                .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                .initializer(fieldManagerCode.build())
+
+        classBuild.addField(fieldManager.build())
+
+        // <editor-fold desc="五：写入到类中">
+        val javaFile = JavaFile.builder(localPackage, classBuild.build()).build()
+        if (DEBUG) {
+            javaFile.writeTo(System.out)
+        } else {
+            val outPutFile = File(BASE_OUT_PUT_PATH)
+            javaFile.writeTo(outPutFile)
+        }
+    }
+
     /**
      * 类的注解
      */
@@ -1120,8 +1100,11 @@ object GenerateUtil {
             val interfaceName = generateInterface(localPackage, other)
             readNodeLocalFile(LOCAL_FOLDER_PATH)
 
-            // 2：生成manager的类
+            // 3：生成manager的类
             generateManager(localPackage, other, interfaceName)
+
+            // 4：生成ViewModel的类
+            generateViewModel(localPackage, other)
         }
     }
 
