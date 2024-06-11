@@ -488,7 +488,7 @@ object GenerateUtil {
         updateName: String,
         apiEntityName: String,
     ) {
-        println("updatePackage:[$updatePackage] updateName:[$updateName] apiEntityName:[$apiEntityName]")
+        // println("updatePackage:[$updatePackage] updateName:[$updateName] apiEntityName:[$apiEntityName]")
         // <editor-fold desc="一：构建类对象">
         println("开始生成Api类：[$localApiName] ------>")
         // 1:创建继承类对象
@@ -800,6 +800,7 @@ object GenerateUtil {
 
         val javaFile = JavaFile.builder(localPackage, interfaceBuilder.build()).build()
         javaFile.writeTo(File(BASE_OUT_PUT_PATH))
+        println("[写入结束！]\r\n")
         return realInterfaceName
     }
 
@@ -1162,7 +1163,7 @@ object GenerateUtil {
                 }
                 .collect(Collectors.toSet())
 
-        println("otherSet:$otherSet")
+        // println("otherSet:$otherSet")
         println()
 
         otherSet.forEach { other ->
