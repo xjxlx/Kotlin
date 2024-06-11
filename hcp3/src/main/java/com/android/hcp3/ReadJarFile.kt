@@ -9,11 +9,8 @@ import com.android.hcp3.Config.RSI_NODE_NAME
 import com.android.hcp3.Config.RSI_NODE_PATH
 import com.android.hcp3.Config.RSI_ROOT_NODE_PATH
 import com.android.hcp3.Config.RSI_TARGET_NODE_LIST
-import com.android.hcp3.GenerateUtil.LOCAL_FOLDER_PATH
-import com.android.hcp3.GenerateUtil.LOCAL_NODE_FILE_LIST
 import com.android.hcp3.GenerateUtil.filterAttributeInterdependence
 import com.android.hcp3.GenerateUtil.getPackageInfo
-import com.android.hcp3.GenerateUtil.readNodeLocalFile
 import com.android.hcp3.StringUtil.getPackageSimple
 import com.android.hcp3.StringUtil.lowercase
 import com.android.hcp3.StringUtil.transitionPackage
@@ -570,60 +567,53 @@ object ReadJarFile {
 
     fun execute() {
         try {
-            // 1：先刷新本地的集合，防止已经生成的对象被覆盖
-            readNodeLocalFile(LOCAL_FOLDER_PATH)
-            val size = LOCAL_NODE_FILE_LIST.size
-            if (size == 0) {
-                // 2: 读取jar包中需要依赖的类名字
-                val needDependenciesClassNameList = readNeedDependenciesClassName()
-                // 3:通过配置需要依赖的类，去构建一个classLoad
-                getGlobalClassLoad(needDependenciesClassNameList)?.let {
-                    mGlobalClassLoad = it
-                    // 4：读取父节点下所有的api方法，获取所有api的方法的名字以及返回类型的全路径包名
-                    readApiNodeForParent(it)
-                    // 5：从读取父类中的Api对象中去匹配节点
-                    val filterBean =
-                        RSI_TARGET_NODE_LIST.find { filter -> lowercase(filter.apiName) == lowercase(RSI_NODE_API_NAME) }
-                    if (filterBean != null) {
-                        // 6：读取Jar包中指定的class类
-                        val jarClass =
-                            readClass(it, filterBean.apiObjectPath, "读取JAR中的类：[${filterBean.apiObjectName}]")
-                        val jarSet = getMethods(jarClass, "JAR")
+            // 2: 读取jar包中需要依赖的类名字
+            val needDependenciesClassNameList = readNeedDependenciesClassName()
+            // 3:通过配置需要依赖的类，去构建一个classLoad
+            getGlobalClassLoad(needDependenciesClassNameList)?.let {
+                mGlobalClassLoad = it
+                // 4：读取父节点下所有的api方法，获取所有api的方法的名字以及返回类型的全路径包名
+                readApiNodeForParent(it)
+                // 5：从读取父类中的Api对象中去匹配节点
+                val filterBean =
+                    RSI_TARGET_NODE_LIST.find { filter -> lowercase(filter.apiName) == lowercase(RSI_NODE_API_NAME) }
+                if (filterBean != null) {
+                    // 6：读取Jar包中指定的class类
+                    val jarClass =
+                        readClass(it, filterBean.apiObjectPath, "读取JAR中的类：[${filterBean.apiObjectName}]")
+                    val jarSet = getMethods(jarClass, "JAR")
 
-                        // 7：读取本地的方法
-                        val localPackage =
+                    // 7：读取本地的方法
+                    val localPackage =
+                        transitionPackage(
+                            Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                                .resolve(Paths.get(RSI_NODE_NAME))
+                                .resolve(Paths.get(RSI_NODE_API_NAME)).toString()
+                        )
+                    val localClassName = filterBean.apiObjectName.plus(OBJECT_SUFFIX)
+                    val localRealPackage = localPackage + localClassName
+                    val localClass = readLocalClass(localRealPackage, "读取本地类：[$localRealPackage]")
+                    // 8：读取class中的方法数量和内容
+                    val localSet = getFields(localClass, "Local")
+                    // 9:对比本地和jar中类的方法信息，如果不匹配则需要动态生成代码
+                    if (checkNeedWriteVariable(jarSet, localSet)) {
+                        println("属性完全相同，不需要重新写入属性！")
+                    } else {
+                        val packagePath =
                             transitionPackage(
                                 Paths.get(BASE_PROJECT_PACKAGE_PATH)
                                     .resolve(Paths.get(RSI_NODE_NAME))
-                                    .resolve(Paths.get(RSI_NODE_API_NAME)).toString()
+                                    .resolve(Paths.get(RSI_NODE_API_NAME))
+                                    .toString()
                             )
-                        val localClassName = filterBean.apiObjectName.plus(OBJECT_SUFFIX)
-                        val localRealPackage = localPackage + localClassName
-                        val localClass = readLocalClass(localRealPackage, "读取本地类：[$localRealPackage]")
-                        // 8：读取class中的方法数量和内容
-                        val localSet = getFields(localClass, "Local")
-                        // 9:对比本地和jar中类的方法信息，如果不匹配则需要动态生成代码
-                        if (checkNeedWriteVariable(jarSet, localSet)) {
-                            println("属性完全相同，不需要重新写入属性！")
-                        } else {
-                            val packagePath =
-                                transitionPackage(
-                                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                                        .resolve(Paths.get(RSI_NODE_NAME))
-                                        .resolve(Paths.get(RSI_NODE_API_NAME))
-                                        .toString()
-                                )
-                            // 10：写入当前的Object
-                            filterAttributeInterdependence(filterBean.apiObjectPath, jarSet, packagePath)
-                        }
-                    } else {
-                        println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")
+                        // 10：写入当前的Object
+                        filterAttributeInterdependence(filterBean.apiObjectPath, jarSet, packagePath)
                     }
-                    // 关闭ClassLoader释放资源
-                    it.close()
+                } else {
+                    println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")
                 }
-            } else {
-                println("本地数据已经存在，不必进行二次处理！")
+                // 关闭ClassLoader释放资源
+                it.close()
             }
         } catch (e: Exception) {
             e.printStackTrace()

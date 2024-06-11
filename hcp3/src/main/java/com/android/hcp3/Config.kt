@@ -54,11 +54,19 @@ object Config {
     }
 
     /**
+     *  当前指定父类节点：[Config.RSI_NODE_NAME]指定节点在RSI中的相对路径，这个是动态生成的，不要做任何的改动
+     * @return 例如：
+     *  父类节点是：HeadUpDisplay
+     *  则这个路径为：de/esolutions/fw/rudi/viwi/service/headupdisplay/v4/HeadUpDisplay
+     */
+    var RSI_NODE_PATH: String = ""
+
+    /**
      * RSI中大项的名字，这个每次生成不同的模块，都要进行不同的改动
      * 例如：headupdisplay、usermanagement
      */
     val RSI_NODE_NAME by lazy {
-        return@lazy StringUtil.lowercase("usermanagement")
+        return@lazy StringUtil.lowercase("CarGlobal")
     }
 
     /**
@@ -66,7 +74,7 @@ object Config {
      * 例如：v4、v3
      */
     val RSI_NODE_LEVEL by lazy {
-        return@lazy StringUtil.lowercase("v4")
+        return@lazy StringUtil.lowercase("v2")
     }
 
     /**
@@ -74,14 +82,6 @@ object Config {
      * 例如：switchControls、settings
      */
     val RSI_NODE_API_NAME by lazy {
-        return@lazy StringUtil.lowercase("settings")
+        return@lazy StringUtil.lowercase("messages")
     }
-
-    /**
-     *  当前指定父类节点：[Config.RSI_NODE_NAME]指定节点在RSI中的相对路径，这个是动态生成的，不要做任何的改动
-     * @return 例如：
-     *  父类节点是：HeadUpDisplay
-     *  则这个路径为：de/esolutions/fw/rudi/viwi/service/headupdisplay/v4/HeadUpDisplay
-     */
-    var RSI_NODE_PATH: String = ""
 }
