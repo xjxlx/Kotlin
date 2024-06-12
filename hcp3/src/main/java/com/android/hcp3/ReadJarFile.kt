@@ -3,6 +3,7 @@ package com.android.hcp3
 import com.android.hcp3.Config.BASE_JAR_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
 import com.android.hcp3.Config.FLAG_ALL
+import com.android.hcp3.Config.FLAG_LEVEL
 import com.android.hcp3.Config.RSI_NODE_API_NAME
 import com.android.hcp3.Config.RSI_NODE_LEVEL
 import com.android.hcp3.Config.RSI_NODE_NAME
@@ -70,6 +71,56 @@ object ReadJarFile {
         execute()
     }
 
+    private fun filterLevel() {
+        if (FLAG_LEVEL) {
+            var filterNodePath: String =
+                transitionPath(
+                    Paths
+                        .get(RSI_ROOT_NODE_PATH)
+                        .resolve(Paths.get(RSI_NODE_NAME))
+                        .toString()
+                )
+            val jarName = "${BASE_JAR_PATH}mib_rsi_android.jar"
+            try {
+                // 打开Jar文件
+                val jarFile = JarFile(jarName)
+                // 获取Jar包中的所有文件和目录条目
+                val entries = jarFile.entries()
+                // 替换不同平台的分隔符
+                filterNodePath = filterNodePath.replace(File.separator, "/")
+                while (entries.hasMoreElements()) {
+                    val entryName = entries.nextElement().name
+                    // 收集指定路径下的所有文件名称
+                    if (entryName.startsWith(filterNodePath)) {
+                        // 删除掉文件的格式
+                        val deleteFileFormat = StringUtil.deleteFileFormat(entryName)
+                        // 把包名给全部转换成小写，进行比对
+                        val lowercaseFileName = lowercase(deleteFileFormat)
+
+                        /**
+                         * 文件读取规则：
+                         * 1：只读取object结尾的文件
+                         * 2：只读取Enum结尾的文件
+                         * 3：只读取指定[RSI_NODE_NAME]包名结尾的文件
+                         */
+                        val nodeName = lowercase(RSI_NODE_NAME)
+                        val isApiFile = lowercaseFileName.endsWith(nodeName)
+                        if (((lowercaseFileName.endsWith("object")) || (lowercaseFileName.endsWith("enum"))) || (isApiFile)) {
+                            // 如果是以父类节点结束的，则保存这个节点的全属性包名
+                            if (lowercaseFileName.endsWith(nodeName)) {
+                                println("当前父类节点下主类: [$deleteFileFormat]")
+                                RSI_NODE_PATH = deleteFileFormat
+                            }
+                        }
+                    }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                println("读取指定列表中Object列表失败：" + e.message)
+            }
+        }
+    }
+
     /**
      * @return 读取指定JAR包中,指定节点下所有的object和Enum的文件，返回一个读取到的文件相对路径列表，用于加载到classLoad里面，避免
      * 反射class类中有依赖其他类的情况。注意，这里读取的是路径，不是包名
@@ -78,15 +129,15 @@ object ReadJarFile {
     fun readNeedDependenciesClassName(): List<String> {
         val fileNames: MutableList<String> = ArrayList()
         // 1：读取JAB包中指定节点下文件,例如：de/esolutions/fw/rudi/viwi/service/headupdisplay/v4
-        var filterNodePath: String =
-            transitionPath(
+        val filterNodePackage: String =
+            transitionPackage(
                 Paths
                     .get(RSI_ROOT_NODE_PATH)
                     .resolve(Paths.get(RSI_NODE_NAME))
                     .resolve(Paths.get(RSI_NODE_LEVEL))
                     .toString()
             )
-        println("过滤JAR包中的父节点为：[$filterNodePath]")
+        println("过滤JAR包中的父节点为：[$filterNodePackage]")
         // 2：读取指定jar包中的文件
         val jarName = "${BASE_JAR_PATH}mib_rsi_android.jar"
         println("读取JAR的名字为：[$jarName]")
@@ -98,10 +149,8 @@ object ReadJarFile {
             val entries = jarFile.entries()
             while (entries.hasMoreElements()) {
                 val entryName = entries.nextElement().name
-                // 替换不同平台的分隔符
-                filterNodePath = filterNodePath.replace(File.separator, "/")
                 // 收集指定路径下的所有文件名称
-                if (entryName.startsWith(filterNodePath)) {
+                if (entryName.startsWith(filterNodePackage)) {
                     // 删除掉文件的格式
                     val deleteFileFormat = StringUtil.deleteFileFormat(entryName)
                     // 把包名给全部转换成小写，进行比对
@@ -324,16 +373,8 @@ object ReadJarFile {
             if (clazz != null) {
                 // 将数组转换为集合
                 val declaredFields = clazz.getDeclaredFields()
-                declaredFields.forEach { field ->
-                    println("item:${field.name}")
-                }
-
                 // 按照自定义比较器进行排序
                 Arrays.sort(declaredFields, ENUM_COMPARATOR.thenComparing(Field::getName))
-
-                declaredFields.forEach { field ->
-                    println("item-2:${field.name}")
-                }
                 declaredFields.forEach { field ->
                     if (field.isEnumConstant) {
                         val bean = ObjectBean()
@@ -615,6 +656,8 @@ object ReadJarFile {
 
     fun execute() {
         try {
+            // 1:过滤level
+            filterLevel()
             // 2: 读取jar包中需要依赖的类名字
             val needDependenciesClassNameList = readNeedDependenciesClassName()
             // 3:通过配置需要依赖的类，去构建一个classLoad

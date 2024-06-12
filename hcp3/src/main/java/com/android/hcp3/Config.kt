@@ -60,6 +60,12 @@ object Config {
     const val FLAG_ALL = false
 
     /**
+     * 1：如果为true，则去执行排查lv的逻辑
+     * 2：如果为false,则不去执行排查LV的逻辑
+     */
+    const val FLAG_LEVEL = true
+
+    /**
      *  当前指定父类节点：[Config.RSI_NODE_NAME]指定节点在RSI中的相对路径，这个是动态生成的，不要做任何的改动
      * @return 例如：
      *  父类节点是：HeadUpDisplay
