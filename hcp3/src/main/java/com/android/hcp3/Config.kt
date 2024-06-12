@@ -54,6 +54,12 @@ object Config {
     }
 
     /**
+     * 1：如果为true，则要写入所有api的内容
+     * 2：如果为false，则只写入单独的api节点内容
+     */
+    const val FLAG_ALL = true
+
+    /**
      *  当前指定父类节点：[Config.RSI_NODE_NAME]指定节点在RSI中的相对路径，这个是动态生成的，不要做任何的改动
      * @return 例如：
      *  父类节点是：HeadUpDisplay

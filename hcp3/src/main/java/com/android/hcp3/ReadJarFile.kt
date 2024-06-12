@@ -2,7 +2,7 @@ package com.android.hcp3
 
 import com.android.hcp3.Config.BASE_JAR_PATH
 import com.android.hcp3.Config.BASE_PROJECT_PACKAGE_PATH
-import com.android.hcp3.Config.OBJECT_SUFFIX
+import com.android.hcp3.Config.FLAG_ALL
 import com.android.hcp3.Config.RSI_NODE_API_NAME
 import com.android.hcp3.Config.RSI_NODE_LEVEL
 import com.android.hcp3.Config.RSI_NODE_NAME
@@ -80,7 +80,8 @@ object ReadJarFile {
         // 1：读取JAB包中指定节点下文件,例如：de/esolutions/fw/rudi/viwi/service/headupdisplay/v4
         var filterNodePath: String =
             transitionPath(
-                Paths.get(RSI_ROOT_NODE_PATH)
+                Paths
+                    .get(RSI_ROOT_NODE_PATH)
                     .resolve(Paths.get(RSI_NODE_NAME))
                     .resolve(Paths.get(RSI_NODE_LEVEL))
                     .toString()
@@ -460,16 +461,22 @@ object ReadJarFile {
      * @param clazz class的对象
      * @return 判断是否是基本数据类型，这里可以手动去添加自己需要的类型
      */
-    fun isPrimitiveOrWrapper(clazz: Class<*>): Boolean {
-        return clazz.isPrimitive || clazz == Int::class.javaObjectType || clazz == Double::class.javaObjectType ||
-            clazz == Boolean::class.javaObjectType || clazz == Char::class.javaObjectType ||
-            clazz == Byte::class.javaObjectType || clazz == Short::class.javaObjectType ||
-            clazz == Long::class.javaObjectType || clazz == Float::class.javaObjectType ||
-            clazz == String::class.javaObjectType || clazz == OffsetTime::class.javaObjectType ||
-            clazz == LocalDate::class.javaObjectType || clazz.name == Duration::class.javaObjectType.name ||
+    fun isPrimitiveOrWrapper(clazz: Class<*>): Boolean =
+        clazz.isPrimitive ||
+            clazz == Int::class.javaObjectType ||
+            clazz == Double::class.javaObjectType ||
+            clazz == Boolean::class.javaObjectType ||
+            clazz == Char::class.javaObjectType ||
+            clazz == Byte::class.javaObjectType ||
+            clazz == Short::class.javaObjectType ||
+            clazz == Long::class.javaObjectType ||
+            clazz == Float::class.javaObjectType ||
+            clazz == String::class.javaObjectType ||
+            clazz == OffsetTime::class.javaObjectType ||
+            clazz == LocalDate::class.javaObjectType ||
+            clazz.name == Duration::class.javaObjectType.name ||
             (clazz.name == OffsetDateTime::class.javaObjectType.name) ||
             (clazz.name == URI::class.javaObjectType.name)
-    }
 
     /** 读取大项中节点的Api信息  */
     fun readApiNodeForParent(globalClassLoad: URLClassLoader) {
@@ -500,31 +507,39 @@ object ReadJarFile {
                              */
                             val uriName = URI::class.java.typeName
                             val methods =
-                                apiClass.declaredMethods.filter { method ->
-                                    (!method.isDefault) &&
-                                        (!method.isBridge) &&
-                                        (!method.isSynthetic) &&
-                                        (method.genericReturnType is ParameterizedType) &&
-                                        ((method.genericReturnType as ParameterizedType).actualTypeArguments[0] is Class<*>) &&
-                                        ((((method.genericReturnType as ParameterizedType).actualTypeArguments[0]).typeName) != uriName)
-                                }.toMutableList()
+                                apiClass.declaredMethods
+                                    .filter { method ->
+                                        (!method.isDefault) &&
+                                            (!method.isBridge) &&
+                                            (!method.isSynthetic) &&
+                                            (method.genericReturnType is ParameterizedType) &&
+                                            ((method.genericReturnType as ParameterizedType).actualTypeArguments[0] is Class<*>) &&
+                                            (
+                                                (((method.genericReturnType as ParameterizedType).actualTypeArguments[0]).typeName) !=
+                                                    uriName
+                                            )
+                                    }.toMutableList()
                             // <editor-fold desc="2：获取update的方法信息"
                             // 2.1：查找update的method
                             val updateMethod =
                                 methods.find { find ->
                                     (find.genericReturnType is ParameterizedType) &&
-                                        ((find.genericReturnType as ParameterizedType).actualTypeArguments[0] == URI::class.javaObjectType)
+                                            (
+                                                    (find.genericReturnType as ParameterizedType).actualTypeArguments[0] ==
+                                                URI::class.javaObjectType
+                                        )
                                 }
                             // 2.2：获取update的参数，并在使用完的时候删除它
                             updateMethod?.let { updateFun ->
-                                updateFun.parameterTypes.find { updateType ->
-                                    getPackageSimple(updateType.typeName).startsWith("Update")
-                                }?.let { parameter ->
-                                    getPackageInfo(parameter.typeName).let { updateInfo ->
-                                        apiNodeBean.updateObjectPackage = updateInfo[0]
-                                        apiNodeBean.updateObjectName = updateInfo[1]
+                                updateFun.parameterTypes
+                                    .find { updateType ->
+                                        getPackageSimple(updateType.typeName).startsWith("Update")
+                                    }?.let { parameter ->
+                                        getPackageInfo(parameter.typeName).let { updateInfo ->
+                                            apiNodeBean.updateObjectPackage = updateInfo[0]
+                                            apiNodeBean.updateObjectName = updateInfo[1]
+                                        }
                                     }
-                                }
                             }
                             // 找到update方法就去使用它，用完就从方法结合中删掉他
                             if (updateMethod != null) {
@@ -565,6 +580,31 @@ object ReadJarFile {
         }
     }
 
+    private fun generateCode(classLoad: URLClassLoader) {
+        // 6：从读取父类中的Api对象中去匹配节点
+        val filterBean =
+            RSI_TARGET_NODE_LIST.find { filter -> lowercase(filter.apiName) == lowercase(RSI_NODE_API_NAME) }
+        if (filterBean != null) {
+            // 7：读取Jar包中指定的class类
+            val jarClass =
+                readClass(classLoad, filterBean.apiObjectPath, "读取JAR中的类：[${filterBean.apiObjectName}]")
+            val jarSet = getMethods(jarClass, "JAR")
+            // 8：本地写入的路径
+            val localPackage =
+                transitionPackage(
+                    Paths
+                        .get(BASE_PROJECT_PACKAGE_PATH)
+                        .resolve(Paths.get(RSI_NODE_NAME))
+                        .resolve(Paths.get(RSI_NODE_API_NAME))
+                        .toString()
+                )
+            // 9：写入当前的Object
+            filterAttributeInterdependence(filterBean.apiObjectPath, jarSet, localPackage)
+        } else {
+            println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")
+        }
+    }
+
     fun execute() {
         try {
             // 2: 读取jar包中需要依赖的类名字
@@ -574,44 +614,17 @@ object ReadJarFile {
                 mGlobalClassLoad = it
                 // 4：读取父节点下所有的api方法，获取所有api的方法的名字以及返回类型的全路径包名
                 readApiNodeForParent(it)
-                // 5：从读取父类中的Api对象中去匹配节点
-                val filterBean =
-                    RSI_TARGET_NODE_LIST.find { filter -> lowercase(filter.apiName) == lowercase(RSI_NODE_API_NAME) }
-                if (filterBean != null) {
-                    // 6：读取Jar包中指定的class类
-                    val jarClass =
-                        readClass(it, filterBean.apiObjectPath, "读取JAR中的类：[${filterBean.apiObjectName}]")
-                    val jarSet = getMethods(jarClass, "JAR")
-
-                    // 7：读取本地的方法
-                    val localPackage =
-                        transitionPackage(
-                            Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                                .resolve(Paths.get(RSI_NODE_NAME))
-                                .resolve(Paths.get(RSI_NODE_API_NAME)).toString()
-                        )
-                    val localClassName = filterBean.apiObjectName.plus(OBJECT_SUFFIX)
-                    val localRealPackage = localPackage + localClassName
-                    val localClass = readLocalClass(localRealPackage, "读取本地类：[$localRealPackage]")
-                    // 8：读取class中的方法数量和内容
-                    val localSet = getFields(localClass, "Local")
-                    // 9:对比本地和jar中类的方法信息，如果不匹配则需要动态生成代码
-                    if (checkNeedWriteVariable(jarSet, localSet)) {
-                        println("属性完全相同，不需要重新写入属性！")
-                    } else {
-                        val packagePath =
-                            transitionPackage(
-                                Paths.get(BASE_PROJECT_PACKAGE_PATH)
-                                    .resolve(Paths.get(RSI_NODE_NAME))
-                                    .resolve(Paths.get(RSI_NODE_API_NAME))
-                                    .toString()
-                            )
-                        // 10：写入当前的Object
-                        filterAttributeInterdependence(filterBean.apiObjectPath, jarSet, packagePath)
+                // 5.1：遍历Node节点下所有的api，然后去生成对应的api代码
+                if (FLAG_ALL) {
+                    RSI_TARGET_NODE_LIST.forEach { api ->
+                        RSI_NODE_API_NAME = api.apiName
+                        generateCode(it)
                     }
                 } else {
-                    println("从父类的Api中找不到对应的Object,请检查是节点是否有误！")
+                    // 5.2：生成指定api的代码
+                    generateCode(it)
                 }
+
                 // 关闭ClassLoader释放资源
                 it.close()
             }
