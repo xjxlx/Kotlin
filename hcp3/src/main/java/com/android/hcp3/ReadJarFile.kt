@@ -21,6 +21,7 @@ import de.esolutions.fw.rudi.services.rsiglobal.Duration
 import java.io.File
 import java.io.IOException
 import java.lang.reflect.Field
+import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.net.URI
@@ -246,7 +247,7 @@ object ReadJarFile {
                 // 遍历指定类中的所有方法
                 val declaredMethods = clazz.declaredMethods
                 // 按照方法名进行排序,避免随机读取到顺序混乱
-                Arrays.sort(declaredMethods)
+                Arrays.sort(declaredMethods, Comparator.comparing(Method::getName))
                 for (method in declaredMethods) {
                     val methodName = method.name
                     var attributeName: String
@@ -368,7 +369,7 @@ object ReadJarFile {
                 // 将数组转换为集合
                 val declaredFields = clazz.getDeclaredFields()
                 // 按照字段名进行排序
-                Arrays.sort(declaredFields)
+                Arrays.sort(declaredFields, Comparator.comparing(Field::getName))
                 declaredFields.forEach { field ->
                     val bean = ObjectBean()
                     bean.attributeName = field.name
