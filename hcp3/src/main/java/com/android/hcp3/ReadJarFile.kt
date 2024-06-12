@@ -54,14 +54,14 @@ object ReadJarFile {
     // 自定义比较器，将带有 "$" 符号的字段排在最前面
     private var ENUM_COMPARATOR: Comparator<Field> =
         Comparator { f1: Field, f2: Field ->
-            val f1HasDollar = f1.name.contains("_")
-            val f2HasDollar = f2.name.contains("_")
-            if (f1HasDollar && !f2HasDollar) {
-                return@Comparator -1
-            } else if (!f1HasDollar && f2HasDollar) {
-                return@Comparator 1
+            val isF1StartsWith = f1.name.startsWith("_")
+            val isF2StartsWith = f2.name.startsWith("_")
+            if ((isF1StartsWith) && (!isF2StartsWith)) {
+                return@Comparator -1 // 将以_开头的字符串排在前面
+            } else if ((!isF1StartsWith) && (isF2StartsWith)) {
+                return@Comparator 1 // 将不以_开头的字符串排在后面
             } else {
-                return@Comparator f1.name.compareTo(f2.name)
+                return@Comparator f1.name.compareTo(f2.name); // 对其他字符串按字母顺序排序
             }
         }
 
@@ -324,8 +324,16 @@ object ReadJarFile {
             if (clazz != null) {
                 // 将数组转换为集合
                 val declaredFields = clazz.getDeclaredFields()
+                declaredFields.forEach { field ->
+                    println("item:${field.name}")
+                }
+
                 // 按照自定义比较器进行排序
-                Arrays.sort(declaredFields, ENUM_COMPARATOR.thenComparing(Field::getName))
+                Arrays.sort(declaredFields, ENUM_COMPARATOR)
+
+                declaredFields.forEach { field ->
+                    println("item-2:${field.name}")
+                }
                 declaredFields.forEach { field ->
                     if (field.isEnumConstant) {
                         val bean = ObjectBean()
@@ -524,8 +532,8 @@ object ReadJarFile {
                             val updateMethod =
                                 methods.find { find ->
                                     (find.genericReturnType is ParameterizedType) &&
-                                            (
-                                                    (find.genericReturnType as ParameterizedType).actualTypeArguments[0] ==
+                                        (
+                                            (find.genericReturnType as ParameterizedType).actualTypeArguments[0] ==
                                                 URI::class.javaObjectType
                                         )
                                 }

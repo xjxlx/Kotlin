@@ -57,7 +57,7 @@ object Config {
      * 1：如果为true，则要写入所有api的内容
      * 2：如果为false，则只写入单独的api节点内容
      */
-    const val FLAG_ALL = true
+    const val FLAG_ALL = false
 
     /**
      *  当前指定父类节点：[Config.RSI_NODE_NAME]指定节点在RSI中的相对路径，这个是动态生成的，不要做任何的改动
@@ -89,7 +89,7 @@ object Config {
      * RSI中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动
      * 例如：switchControls、settings
      */
-    var RSI_NODE_API_NAME: String = "activities"
+    var RSI_NODE_API_NAME: String = "carinformation"
         get() {
             return StringUtil.lowercase(field)
         }
