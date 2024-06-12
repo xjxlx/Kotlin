@@ -329,7 +329,7 @@ object ReadJarFile {
                 }
 
                 // 按照自定义比较器进行排序
-                Arrays.sort(declaredFields, ENUM_COMPARATOR)
+                Arrays.sort(declaredFields, ENUM_COMPARATOR.thenComparing(Field::getName))
 
                 declaredFields.forEach { field ->
                     println("item-2:${field.name}")
