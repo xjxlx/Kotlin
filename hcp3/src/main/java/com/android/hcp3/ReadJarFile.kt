@@ -646,6 +646,7 @@ object ReadJarFile {
 
     private fun generateCode(classLoad: URLClassLoader) {
         // 6：从读取父类中的Api对象中去匹配节点
+        println("当前的Api：[$RSI_NODE_API_NAME]")
         val filterBean =
             RSI_TARGET_NODE_LIST.find { filter -> lowercase(filter.apiName) == lowercase(RSI_NODE_API_NAME) }
         if (filterBean != null) {
