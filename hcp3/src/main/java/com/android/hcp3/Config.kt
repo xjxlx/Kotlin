@@ -30,7 +30,8 @@ object Config {
      * @see {hcp3/src/main/java/com/android/hcp3/jar/}
      */
     val BASE_JAR_PATH: String by lazy {
-        return@lazy StringUtil.lowercase("hcp3${File.separator}libs${File.separator}cluster46_12_7_0${File.separator}")
+        // return@lazy StringUtil.lowercase("hcp3${File.separator}libs${File.separator}cluster46_12_7_0${File.separator}")
+        return@lazy StringUtil.lowercase("hcp3${File.separator}libs${File.separator}oia${File.separator}")
     }
 
     /**
@@ -64,23 +65,26 @@ object Config {
      * RSI中大项的名字，这个每次生成不同的模块，都要进行不同的改动
      * 例如：headupdisplay、usermanagement
      */
-    val RSI_NODE_NAME by lazy {
-        return@lazy StringUtil.lowercase("CarGlobal")
-    }
+    val RSI_NODE_NAME: String = "CarGlobal"
+        get() {
+            return StringUtil.lowercase(field)
+        }
 
     /**
      * RSI中大项的节点的等级，这个每次生成不同的模块，都要进行不同的改动
      * 例如：v4、v3
      */
-    val RSI_NODE_LEVEL by lazy {
-        return@lazy StringUtil.lowercase("v2")
-    }
+    var RSI_NODE_LEVEL: String = "v2"
+        get() {
+            return StringUtil.lowercase(field)
+        }
 
     /**
      * RSI中大项中子节点路径，这个每次生成不同的模块，都要进行不同的改动
      * 例如：switchControls、settings
      */
-    val RSI_NODE_API_NAME by lazy {
-        return@lazy StringUtil.lowercase("messages")
-    }
+    var RSI_NODE_API_NAME: String = "activities"
+        get() {
+            return StringUtil.lowercase(field)
+        }
 }
