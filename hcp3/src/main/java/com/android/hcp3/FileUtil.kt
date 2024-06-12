@@ -43,7 +43,8 @@ object FileUtil {
         // <editor-fold desc="2：读取本地指定目录中的Api的路径，返回一个set集合">
         val localTargetPath =
             transitionPath(
-                Paths.get(BASE_OUT_PUT_PATH)
+                Paths
+                    .get(BASE_OUT_PUT_PATH)
                     .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
                     .resolve(Paths.get(RSI_NODE_NAME))
                     .toString()
@@ -95,8 +96,11 @@ object FileUtil {
                     // 3.1:被删除的import内容
                     val deleteImport =
                         transitionPackage(
-                            Paths.get(BASE_PROJECT_PACKAGE_PATH).resolve(Paths.get(RSI_NODE_NAME))
-                                .resolve(enum.name).toString()
+                            Paths
+                                .get(BASE_PROJECT_PACKAGE_PATH)
+                                .resolve(Paths.get(RSI_NODE_NAME))
+                                .resolve(enum.name)
+                                .toString()
                         )
                     deleteFileImport(enum.apiChildPath, deleteImport)
                 }
@@ -112,7 +116,8 @@ object FileUtil {
             // 1：读取指定目标节点下所有的object集合,例如：de/esolutions/fw/rudi/viwi/service/hvac/v3
             val filterNodePath: String =
                 transitionPath(
-                    Paths.get(RSI_ROOT_NODE_PATH)
+                    Paths
+                        .get(RSI_ROOT_NODE_PATH)
                         .resolve(Paths.get(RSI_NODE_NAME))
                         .resolve(Paths.get(RSI_NODE_LEVEL))
                         .toString()
@@ -326,7 +331,8 @@ object FileUtil {
     fun refreshFolder(folderPath: String) {
         try {
             // 使用Files.walk遍历文件夹及其子文件夹
-            Files.walk(Paths.get(folderPath))
+            Files
+                .walk(Paths.get(folderPath))
                 .filter(Files::isRegularFile)
                 .forEach { childPath ->
                     // 仅筛选出普通文件
@@ -363,7 +369,8 @@ object FileUtil {
         val files = File(path).listFiles()
         if (files != null) {
             println("[$path]文件夹下列表不为空...")
-            Files.walk(Paths.get(path))
+            Files
+                .walk(Paths.get(path))
                 .filter(Files::isRegularFile)
                 .forEach { file ->
                     val exists = file.exists()
