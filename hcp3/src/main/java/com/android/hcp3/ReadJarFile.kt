@@ -152,7 +152,7 @@ object ReadJarFile {
                     .resolve(Paths.get(RSI_NODE_LEVEL))
                     .toString()
             )
-        println("过滤JAR包中的父节点为：[$filterNodePackage]")
+        println("过滤JAR包中的父节点为：[$filterNodePath]")
         // 2：读取指定jar包中的文件
         val jarName = "${BASE_JAR_PATH}mib_rsi_android.jar"
         println("读取JAR的名字为：[$jarName]")
@@ -165,7 +165,7 @@ object ReadJarFile {
             while (entries.hasMoreElements()) {
                 val entryName = entries.nextElement().name
                 // 收集指定路径下的所有文件名称
-                if (entryName.startsWith(filterNodePackage)) {
+                if (entryName.startsWith(filterNodePath)) {
                     // 删除掉文件的格式
                     val deleteFileFormat = StringUtil.deleteFileFormat(entryName)
                     // 把包名给全部转换成小写，进行比对
