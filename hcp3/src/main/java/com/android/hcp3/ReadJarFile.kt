@@ -144,7 +144,7 @@ object ReadJarFile {
     fun readNeedDependenciesClassName(): List<String> {
         val fileNames: MutableList<String> = ArrayList()
         // 1：读取JAB包中指定节点下文件,例如：de/esolutions/fw/rudi/viwi/service/headupdisplay/v4
-        var filterNodePath: String =
+        val filterNodePath: String =
             transitionPath(
                 Paths
                     .get(RSI_ROOT_NODE_PATH)

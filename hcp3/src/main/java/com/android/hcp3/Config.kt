@@ -57,7 +57,7 @@ object Config {
      * 1：如果为true，则要写入所有api的内容
      * 2：如果为false，则只写入单独的api节点内容
      */
-    const val FLAG_ALL = false
+    const val FLAG_ALL = true
 
     /**
      * 1：如果为true，则去执行排查lv的逻辑
