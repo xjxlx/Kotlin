@@ -74,7 +74,7 @@ object ReadJarFile {
     private fun filterLevel() {
         if (FLAG_LEVEL) {
             println("开始过滤JAR包中的Level--->")
-            val levelMap = mutableMapOf<String, String>()
+            val levelParentSet = LinkedHashSet<String>()
             val filterNodePath: String =
                 transitionPath(
                     Paths
@@ -98,35 +98,34 @@ object ReadJarFile {
                             val file = File(deleteFileFormat)
                             val parentFile = file.parentFile
                             if (parentFile.path == filterNodePath) {
-                                levelMap[parentFile.path] = file.path
+                                levelParentSet.add(parentFile.path)
                                 continue
                             }
                             val parentFile1 = parentFile.parentFile
                             if (parentFile1.path == filterNodePath) {
-                                levelMap[parentFile.path] = parentFile1.path
+                                levelParentSet.add(parentFile.path)
                                 continue
                             }
                             val parentFile2 = parentFile1.parentFile
                             if (parentFile2.path == filterNodePath) {
-                                levelMap[parentFile1.path] = parentFile2.path
+                                levelParentSet.add(parentFile1.path)
                                 continue
                             }
                         }
                     }
                 }
-                println("levelMap:$levelMap")
-                val keys = levelMap.keys
-                val keyMap =
-                    keys.map { key ->
-                        val split = key.split(filterNodePath + File.separator)
+                println("levelSet:$levelParentSet")
+                val levelList =
+                    levelParentSet.map { level ->
+                        val split = level.split(filterNodePath + File.separator)
                         if (split.size > 1) {
                             split[1]
                         } else {
                             ""
                         }
                     }
-                println("keyMap:$keyMap")
-                val last = keyMap.last()
+
+                val last = levelList.last()
                 RSI_NODE_LEVEL = last
                 println("筛选出来的Level:[${RSI_NODE_LEVEL}]")
             } catch (e: IOException) {
