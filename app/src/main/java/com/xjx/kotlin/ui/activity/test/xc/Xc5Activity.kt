@@ -21,20 +21,19 @@ import kotlin.coroutines.suspendCoroutine
  * ```
  */
 class Xc5Activity : BaseBindingTitleActivity<ActivityXc5Binding>() {
+    override fun getTitleContent(): String = "协程进阶"
 
-    override fun getTitleContent(): String {
-        return "协程进阶"
-    }
-
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityXc5Binding {
-        return ActivityXc5Binding.inflate(inflater, container, true)
-    }
+    override fun getBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ): ActivityXc5Binding = ActivityXc5Binding.inflate(inflater, container, true)
 
     override fun initData(savedInstanceState: Bundle?) {
         // runSingleCallBackInterface()
 
         LogUtil.e("job started")
-        val job = lifecycleScope.launch {
+        lifecycleScope.launch {
             val singleCoroutine = runSingleCallBackCoroutine()
             LogUtil.e("singleCoroutine: $singleCoroutine")
         }
@@ -42,14 +41,15 @@ class Xc5Activity : BaseBindingTitleActivity<ActivityXc5Binding>() {
         // job.cancel()
 
         // more
-        val job1 = lifecycleScope.launch {
-            try {
-                val moreCoroutine = moreCoroutine()
-                LogUtil.e("moreCoroutine ->success: $moreCoroutine")
-            } catch (e: Exception) {
-                LogUtil.e("moreCoroutine ->failure: ${e}")
+        val job1 =
+            lifecycleScope.launch {
+                try {
+                    val moreCoroutine = moreCoroutine()
+                    LogUtil.e("moreCoroutine ->success: $moreCoroutine")
+                } catch (e: Exception) {
+                    LogUtil.e("moreCoroutine ->failure: $e")
+                }
             }
-        }
 
         // 携程结束的回调
         job1.invokeOnCompletion { LogUtil.e("job1: ---> invokeOnCompletion") }
@@ -59,24 +59,27 @@ class Xc5Activity : BaseBindingTitleActivity<ActivityXc5Binding>() {
     }
 
     /** 1：the usage of coroutine callbacks */
-    private suspend fun runSingleCallBackCoroutine(): String {
-        return suspendCoroutine { continuation ->
-            runTask(object : SingleMethodCallback {
-                override fun onCallBack(value: String) {
-                    // send the result
-                    continuation.resume(value)
+    private suspend fun runSingleCallBackCoroutine(): String =
+        suspendCoroutine { continuation ->
+            runTask(
+                object : SingleMethodCallback {
+                    override fun onCallBack(value: String) {
+                        // send the result
+                        continuation.resume(value)
+                    }
                 }
-            })
+            )
         }
-    }
 
     /** 1：the usage of interface callbacks */
     private fun runSingleCallBackInterface() {
-        runTask(object : SingleMethodCallback {
-            override fun onCallBack(value: String) {
-                LogUtil.e(" method is called ")
+        runTask(
+            object : SingleMethodCallback {
+                override fun onCallBack(value: String) {
+                    LogUtil.e(" method is called ")
+                }
             }
-        })
+        )
     }
 
     /** 1：模拟一个耗时操作 */
@@ -95,6 +98,7 @@ class Xc5Activity : BaseBindingTitleActivity<ActivityXc5Binding>() {
     /** 2：success and failure */
     interface ICallBack {
         fun onSuccess(data: String)
+
         fun onFailure(t: Throwable)
     }
 
@@ -111,17 +115,19 @@ class Xc5Activity : BaseBindingTitleActivity<ActivityXc5Binding>() {
     }
 
     /** 2: call the method */
-    private suspend fun moreCoroutine(): String {
-        return suspendCancellableCoroutine { cancellableContinuation ->
-            request(object : ICallBack {
-                override fun onSuccess(data: String) {
-                    cancellableContinuation.resume(data)
-                }
+    private suspend fun moreCoroutine(): String =
+        suspendCancellableCoroutine { cancellableContinuation ->
+            request(
+                object : ICallBack {
+                    override fun onSuccess(data: String) {
+                        cancellableContinuation.resume(data)
+                    }
 
-                override fun onFailure(t: Throwable) {
-                    cancellableContinuation.resumeWithException(t)
+                    override fun onFailure(t: Throwable) {
+                        cancellableContinuation.resumeWithException(t)
+                    }
                 }
-            })
+            )
 
             // 注册一个响应协程取消请求的回调函数，只有在取消的时候才会响应，如果正常结束了，则不会响应
             cancellableContinuation.invokeOnCancellation {
@@ -129,5 +135,4 @@ class Xc5Activity : BaseBindingTitleActivity<ActivityXc5Binding>() {
                 LogUtil.e("-----> job -1 >>>> invokeOnCancellation")
             }
         }
-    }
 }

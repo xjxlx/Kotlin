@@ -8,18 +8,13 @@ import com.android.common.utils.LogUtil
 import com.android.common.utils.LogWriteUtil
 import com.xjx.kotlin.utils.JsonWriteUtil
 import com.xjx.kotlin.utils.zmq.TCP
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import org.zeromq.SocketType
 import org.zeromq.ZMQ
 import java.util.concurrent.atomic.AtomicBoolean
 
 object ZmqUtil2 {
-
     private val mAtomicStatus: AtomicBoolean by lazy {
         return@lazy AtomicBoolean()
     }
@@ -187,9 +182,7 @@ object ZmqUtil2 {
         }
     }
 
-    fun isBindSocket(): Boolean {
-        return mBinding
-    }
+    fun isBindSocket(): Boolean = mBinding
 
     fun setCallBackListener(block: (String) -> Unit) {
         if (ZMQ_SWITCH) {

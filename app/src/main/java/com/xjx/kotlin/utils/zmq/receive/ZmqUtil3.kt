@@ -13,7 +13,6 @@ import java.net.Socket
 import java.util.concurrent.atomic.AtomicBoolean
 
 class ZmqUtil3 {
-
     private var mIp: String = "192.168.124.5"
     private var mPort: Int = 9998
     private var mClientBufferedReader: BufferedReader? = null
@@ -49,7 +48,7 @@ class ZmqUtil3 {
                     mClientBufferedReader = BufferedReader(InputStreamReader(socket.getInputStream(), encoding))
                     log("start loop get data ---->")
                     mClientBufferedReader?.let { reader ->
-                        var content = ""
+                        var content: String
                         while (reader.readLine().also { content = it } != null) {
                             log("info: $content")
                             if (!mAtomicStatus.get()) {

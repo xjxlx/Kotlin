@@ -5,19 +5,13 @@ import android.widget.Button
 import androidx.fragment.app.FragmentActivity
 import com.android.common.utils.LogUtil
 import com.xjx.kotlin.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
 
 class TestConcurrenceThreadActivity : FragmentActivity() {
-
     //    private val atomicBoolean: AtomicBoolean = AtomicBoolean()
-    val counterContext = newSingleThreadContext("CounterContext")
+    // val counterContext = newSingleThreadContext("CounterContext")
     var counter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +57,7 @@ class TestConcurrenceThreadActivity : FragmentActivity() {
         }
     }
 
+    @OptIn(ObsoleteCoroutinesApi::class)
     fun initData() {
         findViewById<Button>(R.id.btn_start).setOnClickListener {
             start()
@@ -72,20 +67,21 @@ class TestConcurrenceThreadActivity : FragmentActivity() {
         }
 
         mScope.launch(Dispatchers.IO) {
-            mSendChannel = actor {
-                val iterator = iterator()
-                while (true) {
-                    if (iterator.hasNext()) {
-                        if (!isPauseFlag) {
-                            val next = iterator.next()
-                            // delay(10)
+            mSendChannel =
+                actor {
+                    val iterator = iterator()
+                    while (true) {
+                        if (iterator.hasNext()) {
                             if (!isPauseFlag) {
-                                LogUtil.e(" 收集 --->flag: $isPauseFlag  $next")
+                                val next = iterator.next()
+                                // delay(10)
+                                if (!isPauseFlag) {
+                                    LogUtil.e(" 收集 --->flag: $isPauseFlag  $next")
+                                }
                             }
                         }
                     }
                 }
-            }
         }
     }
 

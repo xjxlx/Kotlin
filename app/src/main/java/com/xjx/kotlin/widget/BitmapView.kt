@@ -2,11 +2,7 @@ package com.xjx.kotlin.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Matrix
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import androidx.appcompat.content.res.AppCompatResources
@@ -14,15 +10,22 @@ import com.android.common.base.BaseView
 import com.android.common.utils.ResourcesUtil
 import com.xjx.kotlin.R
 
-class BitmapView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet) : BaseView(context, attributeSet, 0) {
-
-    private val mRoundWidth = ResourcesUtil.px(160F)
-        .toInt()
-    private val mRoundHeight = ResourcesUtil.px(208F)
-        .toInt()
+class BitmapView(
+    context: Context,
+    attributeSet: AttributeSet
+) : BaseView(context, attributeSet, 0) {
+    private val mRoundWidth =
+        ResourcesUtil
+            .px(160F)
+            .toInt()
+    private val mRoundHeight =
+        ResourcesUtil
+            .px(208F)
+            .toInt()
 
     private val mRoundBitmap: Bitmap? by lazy {
-        AppCompatResources.getDrawable(context, R.drawable.icon_selector_time_bg)
+        AppCompatResources
+            .getDrawable(context, R.drawable.icon_selector_time_bg)
             ?.let {
                 if (it is BitmapDrawable) {
                     return@lazy resizeImage(it.bitmap, mRoundWidth, mRoundHeight)
@@ -30,11 +33,15 @@ class BitmapView @JvmOverloads constructor(context: Context, attributeSet: Attri
             }
         return@lazy null
     }
-    private val mPaint = Paint().also {
-        it.isAntiAlias = true
-    }
+    private val mPaint =
+        Paint().also {
+            it.isAntiAlias = true
+        }
 
-    override fun initView(context: Context, attrs: AttributeSet?) {
+    override fun initView(
+        context: Context,
+        attrs: AttributeSet?
+    ) {
     }
 
 //    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -60,7 +67,11 @@ class BitmapView @JvmOverloads constructor(context: Context, attributeSet: Attri
         }
     }
 
-    private fun resizeImage(bitmap: Bitmap, width: Int, height: Int): Bitmap? {
+    private fun resizeImage(
+        bitmap: Bitmap,
+        width: Int,
+        height: Int
+    ): Bitmap? {
         val bmpWidth = bitmap.width
         val bmpHeight = bitmap.height
         val scaleWidth = width.toFloat() / bmpWidth

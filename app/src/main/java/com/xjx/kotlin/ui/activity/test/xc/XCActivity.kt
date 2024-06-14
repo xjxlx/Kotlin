@@ -9,19 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityXcactivityBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
-import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
 
 class XCActivity : BaseBindingTitleActivity<ActivityXcactivityBinding>() {
@@ -29,28 +17,33 @@ class XCActivity : BaseBindingTitleActivity<ActivityXcactivityBinding>() {
     private lateinit var launchTestAsynchronous: Job
     private var viewModel: TestVM? = null
 
-    override fun getTitleContent(): String {
-        return "协程"
-    }
+    override fun getTitleContent(): String = "协程"
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityXcactivityBinding {
-        return ActivityXcactivityBinding.inflate(inflater, container, true)
-    }
+    override fun getBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ): ActivityXcactivityBinding = ActivityXcactivityBinding.inflate(inflater, container, true)
 
     override fun initListener() {
         super.initListener()
 
         mBinding.btnStart.setOnClickListener {
-            launchTestAsynchronous = GlobalScope.launch {
-                TAG = "test-asynchronous"
-                LogUtil.e(TAG, "asynchronous launch ...")
-                val measureTimeMillis = measureTimeMillis {
-                    val async1 = async { testAsynchronous1() }
-                    val async2 = async { testAsynchronous2() }
-                    LogUtil.e(TAG, "asynchronous launch --- result ---> ${async1.await()} --- ${async2.await()}")
+            launchTestAsynchronous =
+                lifecycleScope.launch {
+                    TAG = "test-asynchronous"
+                    LogUtil.e(TAG, "asynchronous launch ...")
+                    val measureTimeMillis =
+                        measureTimeMillis {
+                            val async1 = async { testAsynchronous1() }
+                            val async2 = async { testAsynchronous2() }
+                            LogUtil.e(
+                                TAG,
+                                "asynchronous launch --- result ---> ${async1.await()} --- ${async2.await()}"
+                            )
+                        }
+                    LogUtil.e(TAG, "asynchronous launch --- time --->  $measureTimeMillis")
                 }
-                LogUtil.e(TAG, "asynchronous launch --- time --->  $measureTimeMillis")
-            }
         }
     }
 
@@ -202,19 +195,21 @@ class XCActivity : BaseBindingTitleActivity<ActivityXcactivityBinding>() {
     }
 
     private suspend fun timeOutOrNull(): String? {
-        val withTimeoutOrNull = withTimeoutOrNull(4000) {
-            delay(3999)
-            "time out null"
-        }
+        val withTimeoutOrNull =
+            withTimeoutOrNull(4000) {
+                delay(3999)
+                "time out null"
+            }
         return withTimeoutOrNull
     }
 
     private suspend fun timeout(): String {
         val timeOut = 4001L
-        val withTimeout = withTimeout(4000) {
-            delay(timeOut)
-            "time out "
-        }
+        val withTimeout =
+            withTimeout(4000) {
+                delay(timeOut)
+                "time out "
+            }
         return withTimeout
     }
 
@@ -238,54 +233,66 @@ class XCActivity : BaseBindingTitleActivity<ActivityXcactivityBinding>() {
         return "test - 2"
     }
 
-    private fun test_zyy_1() = runBlocking {
-        LogUtil.e(TAG, "test_zyy ... luanch !")
-        launch { // 在 runBlocking 作用域中启动一个新协程
-            delay(1000L)
-            LogUtil.e(TAG, "World!")
-        }
-        LogUtil.e(TAG, "Hello,")
-    }
-
-    private fun test_zyy_2() = GlobalScope.launch {
-        LogUtil.e(TAG, "test_zyy -2  ... luanch !")
-        repeat(100) {
-            LogUtil.e(TAG, "test_zyy -2  ... repeat:  $it")
-            delay(500)
-        }
-
-        launch { // 在 runBlocking 作用域中启动一个新协程
-            delay(1000L)
-            LogUtil.e(TAG, "World!")
-        }
-        LogUtil.e(TAG, "Hello,")
-    }
-
-    private fun test_zyy_3() = runBlocking { // this: CoroutineScope
-        coroutineScope { // 创建一个协程作用域
+    private fun testZyy1() =
+        runBlocking {
+            LogUtil.e(TAG, "test_zyy ... luanch !")
             launch {
-                delay(500L)
-                LogUtil.e(TAG, "Task from nested launch")
+                // 在 runBlocking 作用域中启动一个新协程
+                delay(1000L)
+                LogUtil.e(TAG, "World!")
             }
-
-            delay(100L)
-            LogUtil.e(TAG, "Task from coroutine scope") // 这一行会在内嵌 launch 之前输出
+            LogUtil.e(TAG, "Hello,")
         }
-        LogUtil.e(TAG, "Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
-    }
 
-    private fun test_zyy_4() = runBlocking { // this: CoroutineScope
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun testZyy2() =
         GlobalScope.launch {
-            repeat(100) { i ->
-                LogUtil.e(TAG, "I'm sleeping $i ..." + this.isActive)
-                delay(500L)
+            LogUtil.e(TAG, "test_zyy -2  ... luanch !")
+            repeat(100) {
+                LogUtil.e(TAG, "test_zyy -2  ... repeat:  $it")
+                delay(500)
             }
-        }
-        delay(1300L) // 在延迟后退出
-        LogUtil.e(TAG, "Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
-    }
 
-    fun test_xc_5() {
+            launch {
+                // 在 runBlocking 作用域中启动一个新协程
+                delay(1000L)
+                LogUtil.e(TAG, "World!")
+            }
+            LogUtil.e(TAG, "Hello,")
+        }
+
+    private fun testZyy3() =
+        runBlocking {
+            // this: CoroutineScope
+            coroutineScope {
+                // 创建一个协程作用域
+                launch {
+                    delay(500L)
+                    LogUtil.e(TAG, "Task from nested launch")
+                }
+
+                delay(100L)
+                LogUtil.e(TAG, "Task from coroutine scope") // 这一行会在内嵌 launch 之前输出
+            }
+            LogUtil.e(TAG, "Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
+        }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun testXyy4() =
+        runBlocking {
+            // this: CoroutineScope
+            GlobalScope.launch {
+                repeat(100) { i ->
+                    LogUtil.e(TAG, "I'm sleeping $i ..." + this.isActive)
+                    delay(500L)
+                }
+            }
+            delay(1300L) // 在延迟后退出
+            LogUtil.e(TAG, "Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
+        }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun testXc5() {
         GlobalScope.launch {
             repeat(20) {
                 delay(1000)

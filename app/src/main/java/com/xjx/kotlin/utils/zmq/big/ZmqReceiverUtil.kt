@@ -11,7 +11,6 @@ import org.zeromq.ZMQ
 import java.util.concurrent.atomic.AtomicBoolean
 
 class ZmqReceiverUtil {
-
     private val mScope: CoroutineScope by lazy {
         return@lazy CoroutineScope(Dispatchers.IO)
     }
@@ -44,26 +43,27 @@ class ZmqReceiverUtil {
         trace("tcp:[ $tcpAddress ]")
         initZContext()
 
-        mJob = mScope.launch {
-            try {
-                trace("create socket !")
-                socketClient = mContext?.createSocket(SocketType.PULL)
-                socketClient?.let { socket ->
-                    var connected = false
-                    try {
-                        connected = socket.connect(tcpAddress)
-                        mIp = tcpAddress
-                        trace("connect success!")
-                    } catch (it: Throwable) {
-                        connected = false
-                        trace("connect failure : $it")
-                        it.printStackTrace()
-                    }
+        mJob =
+            mScope.launch {
+                try {
+                    trace("create socket !")
+                    socketClient = mContext?.createSocket(SocketType.PULL)
+                    socketClient?.let { socket ->
+                        var connected: Boolean
+                        try {
+                            connected = socket.connect(tcpAddress)
+                            mIp = tcpAddress
+                            trace("connect success!")
+                        } catch (it: Throwable) {
+                            connected = false
+                            trace("connect failure : $it")
+                            it.printStackTrace()
+                        }
 
-                    if (!connected) {
-                        trace("connect failure , break!")
-                        return@launch
-                    }
+                        if (!connected) {
+                            trace("connect failure , break!")
+                            return@launch
+                        }
 
 //                    mScope.launch {
 //                        try {
@@ -74,36 +74,36 @@ class ZmqReceiverUtil {
 //                        }
 //                    }
 
-                    mScope.launch {
-                        while (!Thread.currentThread().isInterrupted && !mLoopFlag.get()) {
-                            try {
-                                val receiver = socket.recv(0)
-                                if (!mReceiverFlag.get()) {
-                                    trace("【 server connect success ！】")
+                        mScope.launch {
+                            while (!Thread.currentThread().isInterrupted && !mLoopFlag.get()) {
+                                try {
+                                    val receiver = socket.recv(0)
+                                    if (!mReceiverFlag.get()) {
+                                        trace("【 server connect success ！】")
+                                    }
+                                    mReceiverFlag.set(true)
+                                    if (receiver != null) {
+                                        val content = String(receiver, ZMQ.CHARSET)
+                                        mReceiverListener?.onCallBack(content)
+                                    }
+                                } catch (it: Throwable) {
+                                    mReceiverFlag.set(false)
+                                    trace("receiver msg failure: $it")
+                                    it.printStackTrace()
                                 }
-                                mReceiverFlag.set(true)
-                                if (receiver != null) {
-                                    val content = String(receiver, ZMQ.CHARSET)
-                                    mReceiverListener?.onCallBack(content)
-                                }
-                            } catch (it: Throwable) {
-                                mReceiverFlag.set(false)
-                                trace("receiver msg failure: $it")
-                                it.printStackTrace()
                             }
                         }
                     }
+                } catch (it: Throwable) {
+                    it.printStackTrace()
+                    trace("initSocket failure: $it")
                 }
-            } catch (it: Throwable) {
-                it.printStackTrace()
-                trace("initSocket failure: $it")
             }
-        }
     }
 
     fun send(): Boolean {
         try {
-            val response = "接收端-->发送-->：(${mNumber})"
+            val response = "接收端-->发送-->：($mNumber)"
             socketClient?.send(response.toByteArray(ZMQ.CHARSET), 0)
             mNumber++
             mSendListener?.onCallBack(response)
