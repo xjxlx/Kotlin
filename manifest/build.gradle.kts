@@ -1,3 +1,6 @@
+import com.android.build.api.artifact.ScopedArtifact
+import com.android.build.api.artifact.SingleArtifact
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -41,4 +44,24 @@ dependencies {
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
+}
+
+androidComponents {
+    onVariants {
+        val taskTaskProvider =
+            project.tasks.register<TestTask>("${it.name}Manifest") {
+                // 获取合并后的清单文件
+                mergedManifest.set(it.artifacts.get(SingleArtifact.MERGED_MANIFEST))
+            }
+
+        it.artifacts
+            .forScope(com.android.build.api.variant.ScopedArtifacts.Scope.PROJECT)
+            .use(taskTaskProvider)
+            .toTransform(
+                ScopedArtifact.CLASSES,
+                TestTask::allJars,
+                TestTask::allDirectories,
+                TestTask::output
+            )
+    }
 }
