@@ -6,14 +6,20 @@ plugins {
 
 android {
     namespace = "com.xjx.kotlin"
-    compileSdk = libs.versions.compileSdks.get().toInt()
+    compileSdk =
+        libs.versions.compileSdks
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = "com.xjx.kotlin"
         // minSdk = libs.versions.minSdk.get().toInt()
         minSdk = 28
         //noinspection ExpiredTargetSdkVersion
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        targetSdk =
+            libs.versions.targetSdk
+                .get()
+                .toInt()
         versionCode = 1
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
