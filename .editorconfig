@@ -5,7 +5,9 @@ ktlint_function_naming_ignore_when_annotated_with = Composable
 # 忽略导包时候通配符*引起的错误提示，如果不使用通配符*的话，则可以忽略这个配置
 ktlint_standard_no-wildcard-imports = disabled
 # 尾部是否强制加入逗号
+ij_kotlin_allow_trailing_comma = false
 ij_kotlin_allow_trailing_comma_on_call_site = false
+
 # 禁用变量属性检测
 ktlint_standard_property-naming = disabled
 # 禁用返回变量属性检测
