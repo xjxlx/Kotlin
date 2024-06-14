@@ -6,27 +6,25 @@ package com.xjx.kotlin.ui.activity.test.nl
  * @Description: 测试内联类
  */
 class TestNl {
-    fun testNL(value: LineTimes) {
+    fun testNL() {
     }
 
     fun test() {
-        testNL(Type.value_1)
+        testNL()
     }
 }
 
-inline class LineTimes(private val value: Int) {
+inline class LineTimes(
+    private val value: Int
+) {
     // 可以设置变量
     val toString: String
         get() = "$value"
 
     // 可以设置方法
-    fun toHours(): Int {
-        return value * 60
-    }
+    fun toHours(): Int = value * 60
 
-    fun toMinutes(): Int {
-        return value * 60 * 60
-    }
+    fun toMinutes(): Int = value * 60 * 60
 }
 
 object Type {

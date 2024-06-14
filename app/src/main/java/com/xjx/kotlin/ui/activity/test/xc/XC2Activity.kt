@@ -3,38 +3,24 @@ package com.xjx.kotlin.ui.activity.test.xc
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityXc2Binding
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
 
 class XC2Activity : BaseBindingTitleActivity<ActivityXc2Binding>() {
-
     private var TAG = "XC - 2 "
     private val mainScope = MainScope()
 
-    override fun getTitleContent(): String {
-        return "协程 - 2"
-    }
+    override fun getTitleContent(): String = "协程 - 2"
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityXc2Binding {
-        return ActivityXc2Binding.inflate(inflater, container, true)
-    }
+    override fun getBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ): ActivityXc2Binding = ActivityXc2Binding.inflate(inflater, container, true)
 
     override fun initListener() {
         super.initListener()
@@ -47,7 +33,6 @@ class XC2Activity : BaseBindingTitleActivity<ActivityXc2Binding>() {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
         // test_1()
 
         // test_2()
@@ -83,82 +68,91 @@ class XC2Activity : BaseBindingTitleActivity<ActivityXc2Binding>() {
     }
 
     private fun test_coroutineName() {
-        GlobalScope.launch {
-            val async1 = async(CoroutineName("async - 1")) {
-                delay(2000)
-                LogUtil.e(TAG, "async -----> result -1")
-                "result -1"
-            }
-            val async2 = async(CoroutineName("async - 2")) {
-                delay(2000)
-                LogUtil.e(TAG, "async -----> result -2")
-                "result -2"
-            }
+        lifecycleScope.launch {
+            val async1 =
+                async(CoroutineName("async - 1")) {
+                    delay(2000)
+                    LogUtil.e(TAG, "async -----> result -1")
+                    "result -1"
+                }
+            val async2 =
+                async(CoroutineName("async - 2")) {
+                    delay(2000)
+                    LogUtil.e(TAG, "async -----> result -2")
+                    "result -2"
+                }
             LogUtil.e(TAG, "result ---> " + async1.await() + " --- " + async2.await())
             LogUtil.e(TAG, "result ---> ")
         }
     }
 
-    private fun test_1() = runBlocking {
-        val job = launch(Dispatchers.Default) {
-            repeat(100) {
-                LogUtil.e(TAG, "job: I'm sleeping $it ...")
-                delay(500)
-            }
+    private fun test_1() =
+        runBlocking {
+            val job =
+                launch(Dispatchers.Default) {
+                    repeat(100) {
+                        LogUtil.e(TAG, "job: I'm sleeping $it ...")
+                        delay(500)
+                    }
+                }
+            delay(1300L) // 等待一段时间
+            LogUtil.e(TAG, "main: I'm tired of waiting!")
+            job.cancelAndJoin() // 取消一个作业并且等待它结束
+            LogUtil.e(TAG, "main: Now I can quit.")
         }
-        delay(1300L) // 等待一段时间
-        LogUtil.e(TAG, "main: I'm tired of waiting!")
-        job.cancelAndJoin() // 取消一个作业并且等待它结束
-        LogUtil.e(TAG, "main: Now I can quit.")
-    }
 
-    private fun test_2() = runBlocking {
-        val job = launch(Dispatchers.Default) {
-            repeat(100) {
-                if (isActive) {
-                    LogUtil.e(TAG, "job: I'm sleeping $it ...")
+    private fun test_2() =
+        runBlocking {
+            val job =
+                launch(Dispatchers.Default) {
+                    repeat(100) {
+                        if (isActive) {
+                            LogUtil.e(TAG, "job: I'm sleeping $it ...")
+                        }
+                        delay(500)
+                    }
                 }
-                delay(500)
-            }
+            delay(1300L) // 等待一段时间
+            LogUtil.e(TAG, "main: I'm tired of waiting!")
+            job.cancelAndJoin() // 取消一个作业并且等待它结束
+            LogUtil.e(TAG, "main: Now I can quit.")
         }
-        delay(1300L) // 等待一段时间
-        LogUtil.e(TAG, "main: I'm tired of waiting!")
-        job.cancelAndJoin() // 取消一个作业并且等待它结束
-        LogUtil.e(TAG, "main: Now I can quit.")
-    }
 
-    private fun test_3() = runBlocking {
-        val job = launch {
-            try {
-                repeat(1000) { i ->
-                    LogUtil.e(TAG, "job: I'm sleeping $i ...")
-                    delay(500L)
+    private fun test_3() =
+        runBlocking {
+            val job =
+                launch {
+                    try {
+                        repeat(1000) { i ->
+                            LogUtil.e(TAG, "job: I'm sleeping $i ...")
+                            delay(500L)
+                        }
+                    } finally {
+                        withContext(NonCancellable) {
+                            LogUtil.e(TAG, "job: I'm running finally")
+                            delay(1000L)
+                            LogUtil.e(TAG, "job: And I've just delayed for 1 sec because I'm non-cancellable")
+                        }
+                    }
                 }
-            } finally {
-                withContext(NonCancellable) {
-                    LogUtil.e(TAG, "job: I'm running finally")
-                    delay(1000L)
-                    LogUtil.e(TAG, "job: And I've just delayed for 1 sec because I'm non-cancellable")
-                }
-            }
+            delay(1300L) // 延迟一段时间
+            LogUtil.e(TAG, "main: I'm tired of waiting!")
+            job.cancelAndJoin() // 取消该作业并等待它结束
+            LogUtil.e(TAG, "main: Now I can quit.")
         }
-        delay(1300L) // 延迟一段时间
-        LogUtil.e(TAG, "main: I'm tired of waiting!")
-        job.cancelAndJoin() // 取消该作业并等待它结束
-        LogUtil.e(TAG, "main: Now I can quit.")
-    }
 
     private fun test_async() {
-        GlobalScope.launch {
+        lifecycleScope.launch {
             LogUtil.e(TAG, "test_async  launch ...")
-            val time = measureTimeMillis {
-                val async1 = async(start = CoroutineStart.LAZY) { doSomethingUsefulOne() }
-                val async2 = async(start = CoroutineStart.LAZY) { doSomethingUsefulTwo() }
-                // 如果async 设置了惰性启动，则会在 .await() 的时候，或者 .start()的时候，才会去启动
-                //                async1.start()
-                //                async2.start()
-                LogUtil.e(TAG, "test_async ---> " + async1.await() + " --- " + async2.await())
-            }
+            val time =
+                measureTimeMillis {
+                    val async1 = async(start = CoroutineStart.LAZY) { doSomethingUsefulOne() }
+                    val async2 = async(start = CoroutineStart.LAZY) { doSomethingUsefulTwo() }
+                    // 如果async 设置了惰性启动，则会在 .await() 的时候，或者 .start()的时候，才会去启动
+                    //                async1.start()
+                    //                async2.start()
+                    LogUtil.e(TAG, "test_async ---> " + async1.await() + " --- " + async2.await())
+                }
             LogUtil.e(TAG, "test_async --->  time : $time")
         }
     }
@@ -173,25 +167,28 @@ class XC2Activity : BaseBindingTitleActivity<ActivityXc2Binding>() {
         return "doSomethingUsefulTwo"
     }
 
-    private suspend fun failedConcurrentSum(): Int = coroutineScope {
-        val one = async {
-            try {
-                delay(Long.MAX_VALUE) // 模拟一个长时间的运算
-                42
-            } finally {
-                LogUtil.e(TAG, "First child was cancelled")
-            }
-        }
+    private suspend fun failedConcurrentSum(): Int =
+        coroutineScope {
+            val one =
+                async {
+                    try {
+                        delay(Long.MAX_VALUE) // 模拟一个长时间的运算
+                        42
+                    } finally {
+                        LogUtil.e(TAG, "First child was cancelled")
+                    }
+                }
 
-        val two = async<Int> {
-            LogUtil.e(TAG, "Second child throws an exception")
-            throw ArithmeticException()
+            val two =
+                async<Int> {
+                    LogUtil.e(TAG, "Second child throws an exception")
+                    throw ArithmeticException()
+                }
+            one.await() + two.await()
         }
-        one.await() + two.await()
-    }
 
     private fun asyncMoreBf() {
-        GlobalScope.launch {
+        lifecycleScope.launch {
             try {
                 failedConcurrentSum()
             } catch (e: ArithmeticException) {
@@ -201,9 +198,8 @@ class XC2Activity : BaseBindingTitleActivity<ActivityXc2Binding>() {
     }
 
     private fun test_Dispatchers() {
+        lifecycleScope.launch(Dispatchers.IO) {}
 
-        GlobalScope.launch(Dispatchers.IO) {}
-
-        GlobalScope.launch(newSingleThreadContext("")) {}
+        lifecycleScope.launch(newSingleThreadContext("")) {}
     }
 }

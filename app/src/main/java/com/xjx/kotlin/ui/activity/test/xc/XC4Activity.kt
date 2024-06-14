@@ -3,39 +3,31 @@ package com.xjx.kotlin.ui.activity.test.xc
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.android.common.base.BaseBindingTitleActivity
 import com.android.common.utils.LogUtil
 import com.xjx.kotlin.databinding.ActivityXc4Binding
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
-import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class XC4Activity : BaseBindingTitleActivity<ActivityXc4Binding>() {
+    override fun getTitleContent(): String = "协程 - 4 - 管道"
 
-    override fun getTitleContent(): String {
-        return "协程 - 4 - 管道"
-    }
-
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityXc4Binding {
-        return ActivityXc4Binding.inflate(inflater, container, true)
-    }
+    override fun getBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ): ActivityXc4Binding = ActivityXc4Binding.inflate(inflater, container, true)
 
     override fun initData(savedInstanceState: Bundle?) {
         val channel = Channel<Int>(1)
 
-        val rendezvousChannel = Channel<String>()
-        val bufferedChannel = Channel<String>(10)
-        val conflatedChannel = Channel<String>(CONFLATED)
-        val unlimitedChannel = Channel<String>(UNLIMITED)
+//        val rendezvousChannel = Channel<String>()
+//        val bufferedChannel = Channel<String>(10)
+//        val conflatedChannel = Channel<String>(CONFLATED)
+//        val unlimitedChannel = Channel<String>(UNLIMITED)
 
-        GlobalScope.launch {
-
+        lifecycleScope.launch {
             //            launch {
             //                // 这里可能是消耗大量 CPU 运算的异步逻辑，我们将仅仅做 5 次整数的平方并发送
             //                for (x in 1..5) {
@@ -143,31 +135,36 @@ class XC4Activity : BaseBindingTitleActivity<ActivityXc4Binding>() {
             //                }
             //            }
 
-            val handler = CoroutineExceptionHandler { _, exception ->
-                LogUtil.e("handler: ", "CoroutineExceptionHandler got $exception")
-            }
+            val handler =
+                CoroutineExceptionHandler { _, exception ->
+                    LogUtil.e("handler: ", "CoroutineExceptionHandler got $exception")
+                }
 
-            val job = GlobalScope.launch(handler) {
-                // 第一个子协程
-                launch {
-                    try {
-                        delay(Long.MAX_VALUE)
-                    } finally {
-                        withContext(NonCancellable) {
-                            LogUtil.e("handler: ", "Children are cancelled, but exception is not handled until all children terminate")
-                            delay(100)
-                            LogUtil.e("handler: ", "The first child finished its non cancellable block")
+            val job =
+                lifecycleScope.launch(handler) {
+                    // 第一个子协程
+                    launch {
+                        try {
+                            delay(Long.MAX_VALUE)
+                        } finally {
+                            withContext(NonCancellable) {
+                                LogUtil.e(
+                                    "handler: ",
+                                    "Children are cancelled, but exception is not handled until all children terminate"
+                                )
+                                delay(100)
+                                LogUtil.e("handler: ", "The first child finished its non cancellable block")
+                            }
                         }
                     }
-                }
 
-                // 第二个子协程
-                launch {
-                    delay(10)
-                    LogUtil.e("handler: ", "Second child throws an exception")
-                    throw ArithmeticException()
+                    // 第二个子协程
+                    launch {
+                        delay(10)
+                        LogUtil.e("handler: ", "Second child throws an exception")
+                        throw ArithmeticException()
+                    }
                 }
-            }
             job.join()
         }
     }

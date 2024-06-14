@@ -15,100 +15,99 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class TestMutableFlowActivity : BaseBindingTitleActivity<ActivityTestMutableFlowBinding>() {
+    private var count = 1
+    private val mSharedFlow2: MutableSharedFlow<Int> = MutableStateFlow(0)
+    private val TAG = "FLOW"
+    private val mLiveData: MutableLiveData<Int> = MutableLiveData<Int>()
+    private var mCount = 0
+    private val mStateFlow: MutableStateFlow<Data> = MutableStateFlow(Data())
+    private var mEntity: Data = Data()
 
-	private var count = 1
-	private val mSharedFlow2: MutableSharedFlow<Int> = MutableStateFlow(0)
-	private val TAG = "FLOW"
-	private val mLiveData: MutableLiveData<Int> = MutableLiveData<Int>()
-	private var mCount = 0
-	private val mStateFlow: MutableStateFlow<Data> = MutableStateFlow(Data())
-	private var mEntity: Data = Data()
+    override fun getTitleContent(): String = "测试mutableFlow"
 
-	override fun getTitleContent(): String {
-		return "测试mutableFlow"
-	}
+    override fun getBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ): ActivityTestMutableFlowBinding = ActivityTestMutableFlowBinding.inflate(inflater, container, true)
 
-	override fun getBinding(inflater: LayoutInflater, container: ViewGroup?,
-		attachToRoot: Boolean): ActivityTestMutableFlowBinding {
-		return ActivityTestMutableFlowBinding.inflate(inflater, container, true)
-	}
+    override fun initData(savedInstanceState: Bundle?) {
+        mLiveData.observe(
+            this,
+            object : Observer<Int> {
+                override fun onChanged(value: Int) {
+                    LogUtil.e(TAG, "value1：$value")
+                }
+            }
+        )
+        mLiveData.observe(
+            this,
+            object : Observer<Int> {
+                override fun onChanged(value: Int) {
+                    LogUtil.e(TAG, "value2：$value")
+                }
+            }
+        )
+        mLiveData.observe(
+            this,
+            object : Observer<Int> {
+                override fun onChanged(value: Int) {
+                    LogUtil.e(TAG, "value3：$value")
+                }
+            }
+        )
+        lifecycleScope.launch {
+            mLiveData.asFlow().collect {
+                LogUtil.e(TAG, "value-flow-1：$it")
+            }
+        }
+        lifecycleScope.launch {
+            mLiveData.asFlow().collect {
+                LogUtil.e(TAG, "value-flow-2：$it")
+            }
+        }
+        lifecycleScope.launch {
+            mLiveData.asFlow().collect {
+                LogUtil.e(TAG, "value-flow-3：$it")
+            }
+        }
+        lifecycleScope.launch {
+            mStateFlow.collect {
+                LogUtil.e("state-flow-:$it")
+            }
+        }
 
-	override fun initData(savedInstanceState: Bundle?) {
-		val dataManager = DataManager()
+        mBinding.btnSendLiveData.setOnClickListener {
+            mLiveData.value = mCount++
+        }
 
-		mLiveData.observe(this, object : Observer<Int> {
-			override fun onChanged(value: Int) {
-				LogUtil.e(TAG, "value1：$value")
-			}
-		})
-		mLiveData.observe(this, object : Observer<Int> {
-			override fun onChanged(value: Int) {
-				LogUtil.e(TAG, "value2：$value")
-			}
-		})
-		mLiveData.observe(this, object : Observer<Int> {
-			override fun onChanged(value: Int) {
-				LogUtil.e(TAG, "value3：$value")
-			}
-		})
-		lifecycleScope.launch {
-			mLiveData.asFlow().collect() {
-				LogUtil.e(TAG, "value-flow-1：$it")
-			}
-		}
-		lifecycleScope.launch {
-			mLiveData.asFlow().collect() {
-				LogUtil.e(TAG, "value-flow-2：$it")
-			}
-		}
-		lifecycleScope.launch {
-			mLiveData.asFlow().collect() {
-				LogUtil.e(TAG, "value-flow-3：$it")
-			}
-		}
-		lifecycleScope.launch {
-			mStateFlow.collect {
-				LogUtil.e("state-flow-:$it")
-			}
-		}
+        mBinding.btnSendStateData.setOnClickListener {
+            mEntity.finishFlag += 1
+            mStateFlow.value = mEntity
+        }
+    }
 
-		mBinding.btnSendLiveData.setOnClickListener {
-			mLiveData.value = mCount++
-		}
+    class DataManager {
+        val mSharedFlow: MutableSharedFlow<Int> = MutableStateFlow(0)
 
-		mBinding.btnSendStateData.setOnClickListener {
-			mEntity.finishFlag += 1
-			mStateFlow.value = mEntity
-		}
-	}
+        // 发送数据
+        fun sendData(data: Int) {
+            mSharedFlow.tryEmit(data)
+        }
+    }
 
-	class DataManager {
+    class Data : Cloneable {
+        var finishFlag = 1
+        var dataType: DataType = DataType()
 
-		val mSharedFlow: MutableSharedFlow<Int> = MutableStateFlow(0)
-		// 发送数据
-		fun sendData(data: Int) {
-			mSharedFlow.tryEmit(data)
-		}
-	}
+        override fun toString(): String = "Data(finishFlag=$finishFlag, dataType=$dataType)"
 
-	class Data : Cloneable {
+        public override fun clone(): Data = super.clone() as Data
+    }
 
-		var finishFlag = 1
-		var dataType: DataType = DataType()
-		override fun toString(): String {
-			return "Data(finishFlag=$finishFlag, dataType=$dataType)"
-		}
+    class DataType {
+        var type: Int = 0
 
-		public override fun clone(): Data {
-			return super.clone() as Data
-		}
-	}
-
-	class DataType {
-
-		var type: Int = 0
-		override fun toString(): String {
-			return "DataType(type=$type)"
-		}
-	}
+        override fun toString(): String = "DataType(type=$type)"
+    }
 }
