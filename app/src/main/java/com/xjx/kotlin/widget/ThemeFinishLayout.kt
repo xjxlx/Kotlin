@@ -62,7 +62,6 @@ class ThemeFinishLayout
             bottom: Int
         ) {
             val h = bottom - top
-            val w = right - left
             // scoreView + progressView
 
             // descriptionView
@@ -75,14 +74,11 @@ class ThemeFinishLayout
             }
         }
 
-    fun onScore(
-        score: Int,
-        exhaleScore: Int,
-        inhaleScore: Int,
-        holdScore: Int,
-        comment: String?
-    ) {
-        descriptionView.score = score
-        descriptionView.description = comment
+        fun onScore(
+            score: Int,
+            comment: String?
+        ) {
+            descriptionView.score = score
+            descriptionView.description = comment
     }
 }
