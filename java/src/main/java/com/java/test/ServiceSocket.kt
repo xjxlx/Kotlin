@@ -35,8 +35,8 @@ object ServiceSocket {
     }
 
     private fun session() {
-        var dis: DataInputStream? = null
-        var dos: DataOutputStream? = null
+        val dis: DataInputStream?
+        val dos: DataOutputStream?
         try {
             dis = DataInputStream(mSocket!!.getInputStream())
             dos = DataOutputStream(mSocket!!.getOutputStream())

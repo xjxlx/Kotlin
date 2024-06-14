@@ -37,14 +37,14 @@ object RandomAccessFileUtil {
     fun changeFileContent(
         filePath: String,
         deleteContent: String,
-        newContent: String,
+        newContent: String
     ): Boolean {
         try {
             // 1.1:设置文件的格式为【读写】
             val random = RandomAccessFile(filePath, "rw")
-            var readLine: String? = null
+            var readLine: String?
             var readBeforePosition: Long = 0
-            var readAfterPosition: Long = 0
+            var readAfterPosition: Long
 
             // 1.2：循环读取文件每一行的数据
             while ((random.readLine().also { readLine = it }) != null) {
@@ -55,7 +55,6 @@ object RandomAccessFileUtil {
                     if (line == deleteContent) {
                         // 1.4：读取文件的整个长度，用于后续读取和截取的操作
                         val fileLength = random.length()
-                        var offset = 0
                         // println("【offset】: $offset")
                         // <editor-fold desc="2:读取剩余的内容"
                         // 2.1：把指针条跳转到当前行读取结束的地方，开始读取剩余的内容
@@ -72,7 +71,6 @@ object RandomAccessFileUtil {
                         // 3.1：因为要覆盖原来的数据，所以这里要从从读取开始的position写入
                         // 3.2：因为要覆盖掉原来的数据，所以会丢失一个换行符，所以要在后面写入的时候，手动在末尾加上一个换行符
                         val realNewContent = newContent + System.lineSeparator()
-                        offset = realNewContent.length - line.length
                         // println("realNewContent:$realNewContent")
                         // 3.3：从匹配行开始的位置开始覆盖数据
                         random.seek(readBeforePosition)
@@ -113,7 +111,7 @@ object RandomAccessFileUtil {
     fun changeFileArrayContent(
         filePath: String,
         deleteArray: Array<String>,
-        newArray: Array<String>,
+        newArray: Array<String>
     ): Boolean {
         if (deleteArray.size != newArray.size) {
             println("替换内容的数组长度必须相同，否则会出现异常！")
@@ -128,15 +126,15 @@ object RandomAccessFileUtil {
     @JvmStatic
     fun deleteFileContent(
         filePath: String,
-        deleteContent: String,
+        deleteContent: String
     ): Boolean {
         try {
             // println("deleteFileContent -  path:[$filePath] deleteContent: [$deleteContent]")
             // 1:设置文件的格式为【读写】
             val random = RandomAccessFile(filePath, "rw")
-            var readLine: String? = null
+            var readLine: String?
             var readBeforePosition: Long = 0 // 读取当前行开始的position
-            var readAfterPosition: Long = 0 // 读取当前行结束的position
+            var readAfterPosition: Long // 读取当前行结束的position
             var deleteFlag = false
 
             // 2：循环读取文件每一行的数据

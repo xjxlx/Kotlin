@@ -39,7 +39,7 @@ fun Items(@PreviewParameter(ItemsProvider::class) items: ItemsParameter) {
     }
 }
 
-data class ItemsParameter @JvmOverloads constructor(
+data class ItemsParameter(
     val title: String, val onClick: () -> Unit
 )
 
