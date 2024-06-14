@@ -106,6 +106,7 @@ dependencies {
     implementation(project(":refresh"))
     implementation(project(":http"))
     implementation(project(":common"))
+    implementation(project(":manifest"))
 
     implementation(libs.appcompat)
     implementation(libs.material)
