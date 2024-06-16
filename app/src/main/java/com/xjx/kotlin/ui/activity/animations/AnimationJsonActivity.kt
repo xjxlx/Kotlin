@@ -24,13 +24,13 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
      * 4: breath out h
      */
     private var ANIMATION_TYPE = 0
-    override fun getTitleContent(): String {
-        return "JSON动画"
-    }
+
+    override fun getTitleContent(): String = "JSON动画"
 
     override fun initData(savedInstanceState: Bundle?) {
         /** 开始 **/
-        mBinding.bt1Start.setOnClickListener {            // mBinding.lav1.setAnimation(R.raw.breath_in)
+        mBinding.bt1Start.setOnClickListener {
+            // mBinding.lav1.setAnimation(R.raw.breath_in)
             mBinding.lav1.visibility = View.VISIBLE
             mBinding.lav2.visibility = View.INVISIBLE
             mBinding.lav3.visibility = View.INVISIBLE
@@ -55,21 +55,25 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
             cancelAll()
         }
         /** 监听 暂停 / 恢复 **/
-        mBinding.lav1.addAnimatorPauseListener(object : Animator.AnimatorPauseListener {
-            override fun onAnimationPause(animation: Animator) {
-                ToastUtil.show("动画暂停")
-            }
+        mBinding.lav1.addAnimatorPauseListener(
+            object : Animator.AnimatorPauseListener {
+                override fun onAnimationPause(animation: Animator) {
+                    ToastUtil.show("动画暂停")
+                }
 
-            override fun onAnimationResume(animation: Animator) {
-                ToastUtil.show("动画重新开始")
+                override fun onAnimationResume(animation: Animator) {
+                    ToastUtil.show("动画重新开始")
+                }
             }
-        })
+        )
         /** 动画进度 **/
-        mBinding.lav1.addAnimatorUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
-            override fun onAnimationUpdate(animation: ValueAnimator) {
-                LogUtil.e("当前进度：${animation.animatedValue}")
+        mBinding.lav1.addAnimatorUpdateListener(
+            object : ValueAnimator.AnimatorUpdateListener {
+                override fun onAnimationUpdate(animation: ValueAnimator) {
+                    LogUtil.e("当前进度：${animation.animatedValue}")
+                }
             }
-        })
+        )
         /** 全部呼吸法 **/
         mBinding.bt1AnimationAll.setOnClickListener {
             cancelAll()
@@ -121,7 +125,6 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
                 LogUtil.e("--------release----->")
             } else {
                 mBinding.btn1.removeView(get)
-                get = null
                 animator = null
                 System.gc()
             }
@@ -129,10 +132,10 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
     }
 
     override fun getBinding(
-        inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean
-    ): ActivityAnimationJsonBinding {
-        return ActivityAnimationJsonBinding.inflate(inflater, container, true)
-    }
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ): ActivityAnimationJsonBinding = ActivityAnimationJsonBinding.inflate(inflater, container, true)
 
     private fun cancelAll() {
         mBinding.lav1.cancelAnimation()
@@ -146,7 +149,7 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
     /**
      * 普通呼吸法
      */
-    fun defaultAnimationListener() {        // mBinding.lav1.setAnimation(R.raw.breath_in)
+    fun defaultAnimationListener() { // mBinding.lav1.setAnimation(R.raw.breath_in)
         mBinding.lav1.visibility = View.VISIBLE
         mBinding.lav2.visibility = View.INVISIBLE
         mBinding.lav3.visibility = View.INVISIBLE
@@ -155,92 +158,100 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.lav6.visibility = View.INVISIBLE
         mBinding.lav1.playAnimation()
 
-        mBinding.lav1.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-                ToastUtil.show("播放吸气动画")
-            }
+        mBinding.lav1.addAnimatorListener(
+            object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                    ToastUtil.show("播放吸气动画")
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                ToastUtil.show("播放吸气屏气动画")
-                mBinding.lav1.visibility = View.INVISIBLE
-                mBinding.lav2.visibility = View.VISIBLE
-                mBinding.lav3.visibility = View.INVISIBLE
-                mBinding.lav4.visibility = View.INVISIBLE
-                mBinding.lav5.visibility = View.INVISIBLE
-                mBinding.lav6.visibility = View.INVISIBLE
-                mBinding.lav2.playAnimation()
-            }
+                override fun onAnimationEnd(animation: Animator) {
+                    ToastUtil.show("播放吸气屏气动画")
+                    mBinding.lav1.visibility = View.INVISIBLE
+                    mBinding.lav2.visibility = View.VISIBLE
+                    mBinding.lav3.visibility = View.INVISIBLE
+                    mBinding.lav4.visibility = View.INVISIBLE
+                    mBinding.lav5.visibility = View.INVISIBLE
+                    mBinding.lav6.visibility = View.INVISIBLE
+                    mBinding.lav2.playAnimation()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
-            }
+                override fun onAnimationCancel(animation: Animator) {
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
+                }
             }
-        })
-        mBinding.lav2.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-            }
+        )
+        mBinding.lav2.addAnimatorListener(
+            object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                ToastUtil.show("播放呼气动画")
+                override fun onAnimationEnd(animation: Animator) {
+                    ToastUtil.show("播放呼气动画")
 
-                mBinding.lav1.visibility = View.INVISIBLE
-                mBinding.lav2.visibility = View.INVISIBLE
-                mBinding.lav3.visibility = View.VISIBLE
-                mBinding.lav4.visibility = View.INVISIBLE
-                mBinding.lav5.visibility = View.INVISIBLE
-                mBinding.lav6.visibility = View.INVISIBLE
-                mBinding.lav3.playAnimation()
-            }
+                    mBinding.lav1.visibility = View.INVISIBLE
+                    mBinding.lav2.visibility = View.INVISIBLE
+                    mBinding.lav3.visibility = View.VISIBLE
+                    mBinding.lav4.visibility = View.INVISIBLE
+                    mBinding.lav5.visibility = View.INVISIBLE
+                    mBinding.lav6.visibility = View.INVISIBLE
+                    mBinding.lav3.playAnimation()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
-            }
+                override fun onAnimationCancel(animation: Animator) {
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
+                }
             }
-        })
-        mBinding.lav3.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-            }
+        )
+        mBinding.lav3.addAnimatorListener(
+            object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                ToastUtil.show("播放呼气屏气动画")
-                mBinding.lav1.visibility = View.INVISIBLE
-                mBinding.lav2.visibility = View.INVISIBLE
-                mBinding.lav3.visibility = View.INVISIBLE
-                mBinding.lav4.visibility = View.VISIBLE
-                mBinding.lav5.visibility = View.INVISIBLE
-                mBinding.lav6.visibility = View.INVISIBLE
-                mBinding.lav4.playAnimation()
-            }
+                override fun onAnimationEnd(animation: Animator) {
+                    ToastUtil.show("播放呼气屏气动画")
+                    mBinding.lav1.visibility = View.INVISIBLE
+                    mBinding.lav2.visibility = View.INVISIBLE
+                    mBinding.lav3.visibility = View.INVISIBLE
+                    mBinding.lav4.visibility = View.VISIBLE
+                    mBinding.lav5.visibility = View.INVISIBLE
+                    mBinding.lav6.visibility = View.INVISIBLE
+                    mBinding.lav4.playAnimation()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
-            }
+                override fun onAnimationCancel(animation: Animator) {
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
+                }
             }
-        })
-        mBinding.lav4.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-            }
+        )
+        mBinding.lav4.addAnimatorListener(
+            object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                mBinding.lav1.visibility = View.VISIBLE
-                mBinding.lav2.visibility = View.INVISIBLE
-                mBinding.lav3.visibility = View.INVISIBLE
-                mBinding.lav4.visibility = View.INVISIBLE
-                mBinding.lav5.visibility = View.INVISIBLE
-                mBinding.lav6.visibility = View.INVISIBLE
+                override fun onAnimationEnd(animation: Animator) {
+                    mBinding.lav1.visibility = View.VISIBLE
+                    mBinding.lav2.visibility = View.INVISIBLE
+                    mBinding.lav3.visibility = View.INVISIBLE
+                    mBinding.lav4.visibility = View.INVISIBLE
+                    mBinding.lav5.visibility = View.INVISIBLE
+                    mBinding.lav6.visibility = View.INVISIBLE
 
-                mBinding.lav1.playAnimation()
-            }
+                    mBinding.lav1.playAnimation()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
-            }
+                override fun onAnimationCancel(animation: Animator) {
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
+                }
             }
-        })
+        )
     }
 
     /**
@@ -255,28 +266,30 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.lav6.visibility = View.INVISIBLE
         mBinding.lav1.playAnimation()
 
-        mBinding.lav1.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-                ToastUtil.show("播放吸气动画")
-            }
+        mBinding.lav1.addAnimatorListener(
+            object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                    ToastUtil.show("播放吸气动画")
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                ToastUtil.show("播放吸气屏气动画")
-                mBinding.lav1.visibility = View.INVISIBLE
-                mBinding.lav2.visibility = View.INVISIBLE
-                mBinding.lav3.visibility = View.VISIBLE
-                mBinding.lav4.visibility = View.INVISIBLE
-                mBinding.lav5.visibility = View.INVISIBLE
-                mBinding.lav6.visibility = View.INVISIBLE
-                mBinding.lav3.playAnimation()
-            }
+                override fun onAnimationEnd(animation: Animator) {
+                    ToastUtil.show("播放吸气屏气动画")
+                    mBinding.lav1.visibility = View.INVISIBLE
+                    mBinding.lav2.visibility = View.INVISIBLE
+                    mBinding.lav3.visibility = View.VISIBLE
+                    mBinding.lav4.visibility = View.INVISIBLE
+                    mBinding.lav5.visibility = View.INVISIBLE
+                    mBinding.lav6.visibility = View.INVISIBLE
+                    mBinding.lav3.playAnimation()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
-            }
+                override fun onAnimationCancel(animation: Animator) {
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
+                }
             }
-        }) //        mBinding.lav2.addAnimatorListener(object : Animator.AnimatorListener {
+        ) //        mBinding.lav2.addAnimatorListener(object : Animator.AnimatorListener {
         //            override fun onAnimationStart(animation: Animator) {
         //            }
         //
@@ -296,27 +309,29 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         //            override fun onAnimationRepeat(animation: Animator) {
         //            }
         //        })
-        mBinding.lav3.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-            }
+        mBinding.lav3.addAnimatorListener(
+            object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                ToastUtil.show("播放呼气屏气动画")
-                mBinding.lav1.visibility = View.VISIBLE
-                mBinding.lav2.visibility = View.INVISIBLE
-                mBinding.lav3.visibility = View.INVISIBLE
-                mBinding.lav4.visibility = View.INVISIBLE
-                mBinding.lav5.visibility = View.INVISIBLE
-                mBinding.lav6.visibility = View.INVISIBLE
-                mBinding.lav1.playAnimation()
-            }
+                override fun onAnimationEnd(animation: Animator) {
+                    ToastUtil.show("播放呼气屏气动画")
+                    mBinding.lav1.visibility = View.VISIBLE
+                    mBinding.lav2.visibility = View.INVISIBLE
+                    mBinding.lav3.visibility = View.INVISIBLE
+                    mBinding.lav4.visibility = View.INVISIBLE
+                    mBinding.lav5.visibility = View.INVISIBLE
+                    mBinding.lav6.visibility = View.INVISIBLE
+                    mBinding.lav1.playAnimation()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
-            }
+                override fun onAnimationCancel(animation: Animator) {
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
+                }
             }
-        }) //        mBinding.lav4.addAnimatorListener(object : Animator.AnimatorListener {
+        ) //        mBinding.lav4.addAnimatorListener(object : Animator.AnimatorListener {
         //            override fun onAnimationStart(animation: Animator) {
         //            }
         //
@@ -349,71 +364,77 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.lav6.visibility = View.INVISIBLE
         mBinding.lav1.playAnimation()
 
-        mBinding.lav1.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-                ToastUtil.show("播放吸气动画")
-            }
+        mBinding.lav1.addAnimatorListener(
+            object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                    ToastUtil.show("播放吸气动画")
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                ToastUtil.show("播放吸气屏气动画")
-                mBinding.lav1.visibility = View.INVISIBLE
-                mBinding.lav2.visibility = View.VISIBLE
-                mBinding.lav3.visibility = View.INVISIBLE
-                mBinding.lav4.visibility = View.INVISIBLE
-                mBinding.lav5.visibility = View.INVISIBLE
-                mBinding.lav6.visibility = View.INVISIBLE
-                mBinding.lav2.playAnimation()
-            }
+                override fun onAnimationEnd(animation: Animator) {
+                    ToastUtil.show("播放吸气屏气动画")
+                    mBinding.lav1.visibility = View.INVISIBLE
+                    mBinding.lav2.visibility = View.VISIBLE
+                    mBinding.lav3.visibility = View.INVISIBLE
+                    mBinding.lav4.visibility = View.INVISIBLE
+                    mBinding.lav5.visibility = View.INVISIBLE
+                    mBinding.lav6.visibility = View.INVISIBLE
+                    mBinding.lav2.playAnimation()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
-            }
+                override fun onAnimationCancel(animation: Animator) {
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
+                }
             }
-        })
-        mBinding.lav2.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-            }
+        )
+        mBinding.lav2.addAnimatorListener(
+            object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                ToastUtil.show("播放呼气动画")
+                override fun onAnimationEnd(animation: Animator) {
+                    ToastUtil.show("播放呼气动画")
 
-                mBinding.lav1.visibility = View.INVISIBLE
-                mBinding.lav2.visibility = View.INVISIBLE
-                mBinding.lav3.visibility = View.VISIBLE
-                mBinding.lav4.visibility = View.INVISIBLE
-                mBinding.lav5.visibility = View.INVISIBLE
-                mBinding.lav6.visibility = View.INVISIBLE
-                mBinding.lav3.playAnimation()
-            }
+                    mBinding.lav1.visibility = View.INVISIBLE
+                    mBinding.lav2.visibility = View.INVISIBLE
+                    mBinding.lav3.visibility = View.VISIBLE
+                    mBinding.lav4.visibility = View.INVISIBLE
+                    mBinding.lav5.visibility = View.INVISIBLE
+                    mBinding.lav6.visibility = View.INVISIBLE
+                    mBinding.lav3.playAnimation()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
-            }
+                override fun onAnimationCancel(animation: Animator) {
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
+                }
             }
-        })
-        mBinding.lav3.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-            }
+        )
+        mBinding.lav3.addAnimatorListener(
+            object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                ToastUtil.show("播放呼气屏气动画")
-                mBinding.lav1.visibility = View.VISIBLE
-                mBinding.lav2.visibility = View.INVISIBLE
-                mBinding.lav3.visibility = View.INVISIBLE
-                mBinding.lav4.visibility = View.INVISIBLE
-                mBinding.lav5.visibility = View.INVISIBLE
-                mBinding.lav6.visibility = View.INVISIBLE
-                mBinding.lav1.playAnimation()
-            }
+                override fun onAnimationEnd(animation: Animator) {
+                    ToastUtil.show("播放呼气屏气动画")
+                    mBinding.lav1.visibility = View.VISIBLE
+                    mBinding.lav2.visibility = View.INVISIBLE
+                    mBinding.lav3.visibility = View.INVISIBLE
+                    mBinding.lav4.visibility = View.INVISIBLE
+                    mBinding.lav5.visibility = View.INVISIBLE
+                    mBinding.lav6.visibility = View.INVISIBLE
+                    mBinding.lav1.playAnimation()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
-            }
+                override fun onAnimationCancel(animation: Animator) {
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
+                }
             }
-        })
+        )
     }
 
     /**
@@ -428,25 +449,27 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.lav6.visibility = View.INVISIBLE
         mBinding.lav1.playAnimation()
 
-        mBinding.lav1.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-                ToastUtil.show("播放吸气动画")
-            }
+        mBinding.lav1.addAnimatorListener(
+            object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                    ToastUtil.show("播放吸气动画")
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                ToastUtil.show("播放吸气屏气动画") //                mBinding.lav1.visibility = View.INVISIBLE
-                //                mBinding.lav2.visibility = View.VISIBLE
-                //                mBinding.lav3.visibility = View.INVISIBLE
-                //                mBinding.lav4.visibility = View.INVISIBLE
-                //                mBinding.lav2.playAnimation()
-            }
+                override fun onAnimationEnd(animation: Animator) {
+                    ToastUtil.show("播放吸气屏气动画") //                mBinding.lav1.visibility = View.INVISIBLE
+                    //                mBinding.lav2.visibility = View.VISIBLE
+                    //                mBinding.lav3.visibility = View.INVISIBLE
+                    //                mBinding.lav4.visibility = View.INVISIBLE
+                    //                mBinding.lav2.playAnimation()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
-            }
+                override fun onAnimationCancel(animation: Animator) {
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
+                }
             }
-        })
+        )
     }
 
     /**
@@ -461,24 +484,26 @@ class AnimationJsonActivity : BaseBindingTitleActivity<ActivityAnimationJsonBind
         mBinding.lav6.visibility = View.INVISIBLE
         mBinding.lav5.playAnimation()
 
-        mBinding.lav1.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-            }
+        mBinding.lav1.addAnimatorListener(
+            object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                ToastUtil.show("播放倒计时动画") //                mBinding.lav1.visibility = View.INVISIBLE
-                //                mBinding.lav2.visibility = View.VISIBLE
-                //                mBinding.lav3.visibility = View.INVISIBLE
-                //                mBinding.lav4.visibility = View.INVISIBLE
-                //                mBinding.lav2.playAnimation()
-            }
+                override fun onAnimationEnd(animation: Animator) {
+                    ToastUtil.show("播放倒计时动画") //                mBinding.lav1.visibility = View.INVISIBLE
+                    //                mBinding.lav2.visibility = View.VISIBLE
+                    //                mBinding.lav3.visibility = View.INVISIBLE
+                    //                mBinding.lav4.visibility = View.INVISIBLE
+                    //                mBinding.lav2.playAnimation()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
-            }
+                override fun onAnimationCancel(animation: Animator) {
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
+                }
             }
-        })
+        )
     }
 
     override fun onDestroy() {

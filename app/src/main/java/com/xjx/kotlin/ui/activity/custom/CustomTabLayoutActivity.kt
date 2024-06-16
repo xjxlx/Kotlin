@@ -13,7 +13,6 @@ import com.xjx.kotlin.databinding.ActivityCustomTabLayoutBinding
 import com.xjx.kotlin.ui.activity.fragments.ClueNeedFragment
 
 class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayoutBinding>() {
-
     private val mFragmentList: MutableList<Fragment> = mutableListOf()
     private val mTitleArray: Array<String> by lazy {
         return@lazy arrayOf("线索", "需求1111111", "商城", "我", "我的2", "我的3")
@@ -27,7 +26,8 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
 //        // 2：滑动方式
         mBinding.tbLayout.tabMode = TabLayout.MODE_AUTO // tablelayout的滑动方式，这里只有两个，所以设置为固定模式
         val adapter = BaseViewPager2FragmentAdapter(supportFragmentManager, this.lifecycle, mFragmentList)
-        TabLayoutUtil2.Build()
+        TabLayoutUtil2
+            .Build()
             .setTabLayout(mBinding.tbLayout)
             .setViewPager2(mBinding.vp)
             .setAdapter(adapter)
@@ -38,19 +38,22 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
 //            .setIndicatorRatio(1f)
             .isIndicatorFullWidth(false)
 //            .setIndicatorOffsetX(100)
-            .addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    setWidth()
-                }
+            .addOnTabSelectedListener(
+                object : TabLayout.OnTabSelectedListener {
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        setWidth()
+                    }
 
-                override fun onTabUnselected(tab: TabLayout.Tab?) {
-                }
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    }
 
-                override fun onTabReselected(tab: TabLayout.Tab?) {
+                    override fun onTabReselected(tab: TabLayout.Tab?) {
+                    }
                 }
-            })
+            )
 
-        mBinding.tb.setItemBackgroundColor(Color.YELLOW)
+        mBinding.tb
+            .setItemBackgroundColor(Color.YELLOW)
             .setItemSize(50F)
             .withViewPager2(mBinding.vp, mTitleArray)
     }
@@ -58,17 +61,13 @@ class CustomTabLayoutActivity : BaseBindingTitleActivity<ActivityCustomTabLayout
     override fun getBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        attachToRoot: Boolean,
-    ): ActivityCustomTabLayoutBinding {
-        return ActivityCustomTabLayoutBinding.inflate(inflater, container, true)
-    }
+        attachToRoot: Boolean
+    ): ActivityCustomTabLayoutBinding = ActivityCustomTabLayoutBinding.inflate(inflater, container, true)
 
-    override fun getTitleContent(): String {
-        return "TabLayout"
-    }
+    override fun getTitleContent(): String = "TabLayout"
 
     fun setWidth() {
-        val selectedTabPosition = mBinding.tbLayout.selectedTabPosition
+        mBinding.tbLayout.selectedTabPosition
 
 //        val tabSelectedIndicator = mBinding.tbLayout.tabSelectedIndicator
 //        if (tabSelectedIndicator is LayerDrawable) {

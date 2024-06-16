@@ -26,5 +26,7 @@ abstract class TestTask : DefaultTask() {
         println("taskAction-------------------------------->")
         val mergedManifest = mergedManifest.asFile.get()
         println("mergedManifest:$mergedManifest")
+        val readText = mergedManifest.readText()
+        println("readText:$readText")
     }
 }

@@ -13,19 +13,20 @@ import com.xjx.kotlin.R
 import com.xjx.kotlin.databinding.ActivityGsyPlayerBinding
 
 class GsyPlayerActivity : BaseBindingTitleActivity<ActivityGsyPlayerBinding>() {
-    override fun getTitleContent(): String {
-        return "测试GsyPlayer"
-    }
+    override fun getTitleContent(): String = "测试GsyPlayer"
 
-    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ActivityGsyPlayerBinding {
-        return ActivityGsyPlayerBinding.inflate(inflater, container, true)
-    }
+    override fun getBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ): ActivityGsyPlayerBinding = ActivityGsyPlayerBinding.inflate(inflater, container, true)
 
     override fun initData(savedInstanceState: Bundle?) {
-        val inflate = LayoutInflater.from(this)
-            .inflate(R.layout.item_gsyplayer, null, false)
+        val inflate =
+            LayoutInflater
+                .from(this)
+                .inflate(R.layout.item_gsyplayer, null, false)
         val video = inflate.findViewById<BaseBuddyVideoPlayer>(R.id.iv_today_video)
-
 
         findViewById<ViewGroup>(R.id.ll_parent).addView(inflate)
 
@@ -33,13 +34,14 @@ class GsyPlayerActivity : BaseBindingTitleActivity<ActivityGsyPlayerBinding>() {
     }
 
     private fun player(video: BaseBuddyVideoPlayer) {
-        //外部辅助的旋转，帮助全屏
+        // 外部辅助的旋转，帮助全屏
         val orientationUtils = OrientationUtils(this, video)
-        //初始化不打开外部的旋转
+        // 初始化不打开外部的旋转
         orientationUtils.isEnable = false
         val videoUrl = "http://7xjmzj.com1.z0.glb.clouddn.com/20171026175005_JObCxCE2.mp4"
         val gsyVideoOption = GSYVideoOptionBuilder()
-        gsyVideoOption.setIsTouchWiget(true)
+        gsyVideoOption
+            .setIsTouchWiget(true)
             .setRotateViewAuto(false)
             .setLockLand(false)
             .setAutoFullWithSize(true)
@@ -48,27 +50,37 @@ class GsyPlayerActivity : BaseBindingTitleActivity<ActivityGsyPlayerBinding>() {
             .setUrl(videoUrl)
             .setCacheWithPlay(false)
             .setVideoTitle("测试视频")
-            .setVideoAllCallBack(object : GSYSampleCallBack() {
-                override fun onPrepared(url: String, vararg objects: Any) {
-                    super.onPrepared(url, *objects)
-                    //开始播放了才能旋转和全屏
-                    orientationUtils.isEnable = true
-                }
+            .setVideoAllCallBack(
+                object : GSYSampleCallBack() {
+                    override fun onPrepared(
+                        url: String,
+                        vararg objects: Any
+                    ) {
+                        super.onPrepared(url, *objects)
+                        // 开始播放了才能旋转和全屏
+                        orientationUtils.isEnable = true
+                    }
 
-                override fun onQuitFullscreen(url: String, vararg objects: Any) {
-                    super.onQuitFullscreen(url, *objects)
-                    orientationUtils.backToProtVideo()
+                    override fun onQuitFullscreen(
+                        url: String,
+                        vararg objects: Any
+                    ) {
+                        super.onQuitFullscreen(url, *objects)
+                        orientationUtils.backToProtVideo()
+                    }
                 }
-            })
-            .setLockClickListener { view, lock -> //配合下方的onConfigurationChanged
+            ).setLockClickListener { _, lock ->
+                // 配合下方的onConfigurationChanged
                 orientationUtils.isEnable = !lock
-            }
-            .build(video)
-        video.getFullscreenButton()
-            .setOnClickListener(View.OnClickListener {
-                orientationUtils.resolveByClick() //直接横屏
-                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-                video.startWindowFullscreen(mActivity, true, true)
-            })
+            }.build(video)
+        video
+            .getFullscreenButton()
+            .setOnClickListener(
+                View.OnClickListener {
+                    orientationUtils.resolveByClick() // 直接横屏
+                    // 第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+                    video.startWindowFullscreen(mActivity, true, true)
+                }
+            )
     }
 }
