@@ -844,127 +844,6 @@ object GenerateUtil {
         return realInterfaceName
     }
 
-    @JvmStatic
-    fun generateRsiManager() {
-        println("开始生成RsiManager------>")
-        // 1：构建类的build对象
-        val classBuild = TypeSpec.classBuilder(CLASS_RSI_MANAGER.simpleName())
-        // 2：组装rsiManager方法
-        val managerPackage =
-            lowercase(
-                transitionPackage(
-                    Paths
-                        .get(BASE_PROJECT_PACKAGE_PATH)
-                        .resolve(Paths.get(RSI_NODE_NAME))
-                        .toString()
-                )
-            )
-
-        val managerClass = ClassName.get(managerPackage, "${getPackageSimple(transitionPackage(RSI_NODE_PATH))}Manager")
-        val codeBuild =
-            CodeBlock
-                .builder()
-                .addStatement(
-                    "return getService(\$T.class)",
-                    managerClass
-                ).build()
-
-        val rsiMethod =
-            MethodSpec
-                .methodBuilder("get${managerClass.simpleName()}")
-                .addModifiers(Modifier.PUBLIC) // 方法的修饰符
-                .addStatement("checkInit()")
-                .addCode(codeBuild)
-                .returns(managerClass)
-                .build()
-        classBuild.addMethod(rsiMethod).build()
-
-        val javaFile =
-            JavaFile.builder("technology.cariad.vehiclecontrolmanager", classBuild.build()).build()
-        javaFile.writeTo(System.out)
-        println("[写入结束！]\r\n")
-    }
-
-    @JvmStatic
-    fun generateVehicleManager() {
-        println("开始生成VehicleManager------>")
-        // 1：构建类的build对象
-        val classBuild = TypeSpec.classBuilder(CLASS_VEHICLE_MANAGER.simpleName())
-        // 2：组装VehicleManager方法
-        val managerPackage =
-            lowercase(
-                transitionPackage(
-                    Paths
-                        .get(BASE_PROJECT_PACKAGE_PATH)
-                        .resolve(Paths.get(RSI_NODE_NAME))
-                        .toString()
-                )
-            )
-
-        val managerClass = ClassName.get(managerPackage, "${getPackageSimple(transitionPackage(RSI_NODE_PATH))}Manager")
-        val codeBuild =
-            CodeBlock
-                .builder()
-                .addStatement(
-                    "return rsiManager.get${managerClass.simpleName()}()"
-                ).build()
-
-        val rsiMethod =
-            MethodSpec
-                .methodBuilder("get${managerClass.simpleName()}")
-                .addModifiers(Modifier.PUBLIC) // 方法的修饰符
-                .addCode(codeBuild)
-                .returns(managerClass)
-                .build()
-        classBuild.addMethod(rsiMethod).build()
-
-        val javaFile =
-            JavaFile.builder("technology.cariad.vehiclecontrolmanager", classBuild.build()).build()
-        javaFile.writeTo(System.out)
-        println("[写入结束！]\r\n")
-    }
-
-    @JvmStatic
-    fun generateViewModel(
-        localPackage: String,
-        apiBean: ApiNodeBean
-    ) {
-        val realName = capitalize(apiBean.apiName) + "ViewModel"
-        println("开始生成ViewModel类：[$realName] ------>")
-
-        // 构建类的build对象，用于组装类中的数据
-        val classBuild =
-            TypeSpec
-                .classBuilder(realName)
-                .superclass(SUPER_CLASS_BASE_VIEW_MODEL)
-
-        // 3.3：构建[manager]属性对象
-        val fieldManagerTyp = ClassName.get(localPackage, capitalize(apiBean.apiName) + "Manager")
-
-        val fieldManagerCode = CodeBlock.builder()
-        fieldManagerCode.addStatement(
-            " VehicleControlManager.getInstance().get${fieldManagerTyp.simpleName()}()",
-            fieldManagerTyp
-        )
-
-        val fieldManager =
-            FieldSpec
-                .builder(fieldManagerTyp, "manager")
-                .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-                .initializer(fieldManagerCode.build())
-
-        classBuild.addField(fieldManager.build())
-
-        // <editor-fold desc="五：写入到类中">
-        val javaFile = JavaFile.builder(localPackage, classBuild.build()).build()
-        if (DEBUG) {
-            javaFile.writeTo(System.out)
-        } else {
-            val outPutFile = File(BASE_OUT_PUT_PATH)
-            javaFile.writeTo(outPutFile)
-        }
-    }
-
     /**
      * 类的注解
      */
@@ -1226,14 +1105,7 @@ object GenerateUtil {
 
             // 3：生成manager的类
             generateManager(localPackage, other, interfaceName)
-
-            // 4：生成ViewModel的类
-            generateViewModel(localPackage, other)
         }
-        // 4：生成rsiManager
-//        generateRsiManager()
-        // 5：生成vehicleManager
-//        generateVehicleManager()
     }
 
     private fun updateLocalParentInfo(
