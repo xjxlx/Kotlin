@@ -127,5 +127,10 @@
             android:id="@+id/tv_item_split_str"
             style="@style/click_item_style"
             android:text="分割字符串" />
+
+        <TextView
+            android:id="@+id/tv_item_test_stream"
+            style="@style/click_item_style"
+            android:text="测试Stream" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

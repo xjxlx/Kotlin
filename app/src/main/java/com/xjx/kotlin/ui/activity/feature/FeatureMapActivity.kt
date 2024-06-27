@@ -17,14 +17,10 @@ class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>()
     override fun getBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        attachToRoot: Boolean,
-    ): ActivityFeatureMapBinding {
-        return ActivityFeatureMapBinding.inflate(inflater, container, true)
-    }
+        attachToRoot: Boolean
+    ): ActivityFeatureMapBinding = ActivityFeatureMapBinding.inflate(inflater, container, true)
 
-    override fun getTitleContent(): String {
-        return "功能测试"
-    }
+    override fun getTitleContent(): String = "功能测试"
 
     override fun initData(savedInstanceState: Bundle?) {
         setonClickListener(R.id.tv_item_recording_video)
@@ -52,6 +48,7 @@ class FeatureMapActivity : BaseBindingTitleActivity<ActivityFeatureMapBinding>()
         mBinding.tvItemTextSpeech.setOnClickListener { startActivity(TextToSpeechActivity::class.java) }
         mBinding.tvItemConvertEnum.setOnClickListener { startActivity(ConvertEnumActivity::class.java) }
         mBinding.tvItemSplitStr.setOnClickListener { startActivity(SplitStrActivity::class.java) }
+        mBinding.tvItemTestStream.setOnClickListener { startActivity(TestStreamActivity::class.java) }
     }
 
     override fun onClick(v: View?) {
