@@ -740,18 +740,6 @@ object GenerateUtil {
         classSpec.addMethod(getEntitiesMethod)
         // </editor-fold>
 
-        // getManager
-        val managerEntity = ClassName.get(localPackage, managerName)
-        val managerCodeBuild = CodeBlock.builder().addStatement("return this", managerEntity)
-        val getManagerMethod =
-            MethodSpec
-                .methodBuilder("get" + realEntityName + "Manager")
-                .addModifiers(Modifier.PUBLIC)
-                .addCode(managerCodeBuild.build())
-                .returns(managerEntity)
-                .build()
-        classSpec.addMethod(getManagerMethod)
-
         // <editor-fold desc="四：写入到类中">
         val javaFile = JavaFile.builder(localPackage, classSpec.build()).build()
         if (DEBUG) {
