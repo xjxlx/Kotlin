@@ -77,7 +77,7 @@ object Config {
      * RSI中大项的名字，这个每次生成不同的模块，都要进行不同的改动
      * 例如：headupdisplay、usermanagement
      */
-    val RSI_NODE_NAME: String = "usermanagement"
+    val RSI_NODE_NAME: String = "seating"
         get() {
             return StringUtil.lowercase(field)
         }
