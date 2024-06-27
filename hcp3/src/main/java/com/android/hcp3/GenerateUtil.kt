@@ -55,7 +55,7 @@ object GenerateUtil {
         ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "BaseRSIService")
 
     private val SUPER_CLASS_BASE_VIEW_MODEL =
-        ClassName.get("androidx.lifecycle", "ViewModel")
+        ClassName.get("technology.cariad.vehiclecontrolmanager.demo.viewmodel", "BaseViewModel")
 
     private val CLASS_RSI_MANAGER =
         ClassName.get("technology.cariad.vehiclecontrolmanager", "RSIManager")
@@ -77,7 +77,8 @@ object GenerateUtil {
      * 本地指定位置的文件夹，用于每次写入的时候，遍历本地文件夹下当前的文件，然后存储到[LOCAL_NODE_FILE_LIST]集合中去，用于后续的查找使用
      */
     val LOCAL_FOLDER_PATH =
-        Paths.get(BASE_OUT_PUT_PATH)
+        Paths
+            .get(BASE_OUT_PUT_PATH)
             .resolve(Paths.get(BASE_PROJECT_PACKAGE_PATH))
             .resolve(Paths.get(RSI_NODE_NAME))
             .toString()
@@ -94,7 +95,7 @@ object GenerateUtil {
     fun filterAttributeInterdependence(
         jarObjectPackage: String,
         jarMethodSet: LinkedHashSet<ObjectBean>,
-        localApiPackage: String,
+        localApiPackage: String
     ) {
         println()
         println("开始检测object的相互依赖------>")
@@ -226,7 +227,7 @@ object GenerateUtil {
     fun generateObject(
         jarObjectPackage: String,
         jarMethodSet: LinkedHashSet<ObjectBean>,
-        localApiPackage: String,
+        localApiPackage: String
     ): LocalBean {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Object类：[$jarObjectPackage] ------>")
@@ -235,7 +236,8 @@ object GenerateUtil {
 
         // 构建类的build对象，用于组装类中的数据
         val classBuild =
-            TypeSpec.classBuilder(realFileName)
+            TypeSpec
+                .classBuilder(realFileName)
                 .addAnnotations(getAddAnnotations())
                 .superclass(SUPER_CLASS_BASE_RSI_VALUE)
                 .addModifiers(Modifier.PUBLIC)
@@ -248,13 +250,15 @@ object GenerateUtil {
 
         // 2.2：方法的参数
         val methodParameter =
-            ParameterSpec.builder(ClassName.get(methodPackage, parameterInfo[1]), "object")
+            ParameterSpec
+                .builder(ClassName.get(methodPackage, parameterInfo[1]), "object")
                 .addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                 .build()
 
         // 2.3:组装方法的修饰符和参数
         val methodBuild =
-            MethodSpec.constructorBuilder() // 标注是构造犯法
+            MethodSpec
+                .constructorBuilder() // 标注是构造犯法
                 .addModifiers(Modifier.PUBLIC) // 方法的修饰符
                 .addParameter(methodParameter) // 方法的参数
                 .addStatement("super(object)") // 调用父类构造函数
@@ -354,7 +358,9 @@ object GenerateUtil {
 
             // 3.3：构建属性对象
             val fieldSpec =
-                FieldSpec.builder(fieldTypeName, attributeName).addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                FieldSpec
+                    .builder(fieldTypeName, attributeName)
+                    .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
                     .addAnnotation(AnnotationSpec.builder(ANNOTATION_NULLABLE).build()) // 添加属性修饰符
 
             // println("      attribute:[$attributeName]  attributeType:[$genericPackage]")
@@ -399,7 +405,7 @@ object GenerateUtil {
     fun generateEnum(
         objectClassPath: String,
         jarMethodSet: LinkedHashSet<ObjectBean>,
-        packagePath: String,
+        packagePath: String
     ): LocalBean {
         // <editor-fold desc="一：构建类对象">
         println("开始生成Enum类：[$objectClassPath] ------>")
@@ -407,33 +413,38 @@ object GenerateUtil {
 
         // 1：构建固定属性对象
         val fieldSpec =
-            FieldSpec.builder(JAVA_STRING, "value")
+            FieldSpec
+                .builder(JAVA_STRING, "value")
                 .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
                 .build()
 
         // 2:构造方法组装
         val methodConstructor =
-            MethodSpec.constructorBuilder()
+            MethodSpec
+                .constructorBuilder()
                 .addParameter(ParameterSpec.builder(JAVA_STRING, "object").build())
-                .addCode(CodeBlock.builder().add("this.value = object;").build()).build()
+                .addCode(CodeBlock.builder().add("this.value = object;").build())
+                .build()
 
         // 3:静态方法组装
         val parameterInfo = getPackageInfo(objectClassPath)
         val methodSpecBuildStatic =
-            MethodSpec.methodBuilder("fromRSI")
+            MethodSpec
+                .methodBuilder("fromRSI")
                 .addModifiers(Modifier.STATIC, Modifier.PUBLIC)
                 .addParameter(
-                    ParameterSpec.builder(ClassName.get(parameterInfo[0], parameterInfo[1]), "enumObject")
+                    ParameterSpec
+                        .builder(ClassName.get(parameterInfo[0], parameterInfo[1]), "enumObject")
                         .addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                         .build()
-                )
-                .addCode(CodeBlock.builder().add("return valueOf(enumObject.name());").build())
+                ).addCode(CodeBlock.builder().add("return valueOf(enumObject.name());").build())
                 .returns(ClassName.get(packagePath, className))
                 .build()
 
         // 3：组装类对象
         val classBuild =
-            TypeSpec.enumBuilder(className)
+            TypeSpec
+                .enumBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
                 .addField(fieldSpec)
                 .addMethod(methodConstructor)
@@ -486,7 +497,7 @@ object GenerateUtil {
         localApiName: String,
         updatePackage: String,
         updateName: String,
-        apiEntityName: String,
+        apiEntityName: String
     ) {
         // println("updatePackage:[$updatePackage] updateName:[$updateName] apiEntityName:[$apiEntityName]")
         // <editor-fold desc="一：构建类对象">
@@ -512,7 +523,8 @@ object GenerateUtil {
 
         // 2:构建类的对象
         val classBuild =
-            TypeSpec.classBuilder(ClassName.get(localApiPackage, localApiName))
+            TypeSpec
+                .classBuilder(ClassName.get(localApiPackage, localApiName))
                 .superclass(superclass)
                 .addModifiers(Modifier.PUBLIC)
 
@@ -521,27 +533,30 @@ object GenerateUtil {
 
         // 4:构造方法组装
         val firstParameter =
-            ParameterSpec.builder(
-                ClassName.get(
-                    rsiInfo[0],
-                    rsiInfo[1]
-                ),
-                "service"
-            ).addAnnotation(ANNOTATION_NULLABLE)
+            ParameterSpec
+                .builder(
+                    ClassName.get(
+                        rsiInfo[0],
+                        rsiInfo[1]
+                    ),
+                    "service"
+                ).addAnnotation(ANNOTATION_NULLABLE)
                 .build()
 
         val secondParameter =
-            ParameterSpec.builder(
-                ParameterizedTypeName.get(
-                    ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "ServiceProvider"),
-                    TypeVariableName.get(rsiInfo[1])
-                ),
-                "serviceProvider"
-            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+            ParameterSpec
+                .builder(
+                    ParameterizedTypeName.get(
+                        ClassName.get("technology.cariad.vehiclecontrolmanager.rsi", "ServiceProvider"),
+                        TypeVariableName.get(rsiInfo[1])
+                    ),
+                    "serviceProvider"
+                ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                 .build()
 
         val methodConstructor =
-            MethodSpec.constructorBuilder()
+            MethodSpec
+                .constructorBuilder()
                 .addParameter(firstParameter) // 添加构造方法的第一个参数
                 .addParameter(secondParameter) // 添加构造方法的第二个参数
                 .addStatement("super(service, serviceProvider)") // 调用父类构造函数
@@ -566,7 +581,7 @@ object GenerateUtil {
     fun generateManager(
         localPackage: String,
         apiBean: ApiNodeBean,
-        interfaceName: String,
+        interfaceName: String
     ) {
         // <editor-fold desc="一：构建类对象">
         val realApiName = capitalize(apiBean.apiName)
@@ -582,7 +597,8 @@ object GenerateUtil {
         val interfaceClass = ClassName.get(localPackage, interfaceName)
 
         val classSpec =
-            TypeSpec.classBuilder(ClassName.get(localPackage, managerName))
+            TypeSpec
+                .classBuilder(ClassName.get(localPackage, managerName))
                 .superclass(superClass)
                 .addSuperinterface(interfaceClass)
                 .addModifiers(Modifier.PUBLIC)
@@ -592,7 +608,8 @@ object GenerateUtil {
 
         // <editor-fold desc="二：构造方法组装">
         val methodConstructor =
-            MethodSpec.constructorBuilder()
+            MethodSpec
+                .constructorBuilder()
                 .addParameter(methodParameter) // 添加构造方法参数
                 .addStatement("super(rsiAdmin)") // 调用父类构造函数
                 .addModifiers(Modifier.PROTECTED)
@@ -612,7 +629,8 @@ object GenerateUtil {
         )
 
         val createApiMethodSpec =
-            MethodSpec.methodBuilder("create$realApiName")
+            MethodSpec
+                .methodBuilder("create$realApiName")
                 .addModifiers(Modifier.PRIVATE)
                 .addCode(createCodeBuild.build())
                 .returns(ClassName.get(localPackage, realApiName))
@@ -628,17 +646,19 @@ object GenerateUtil {
         )
 
         val registerParameter =
-            ParameterSpec.builder(
-                ParameterizedTypeName.get(
-                    PARAMETER_VALUE_CALL_BACK,
-                    ParameterizedTypeName.get(JAVA_LIST, apiObjectEntity)
-                ),
-                "callback"
-            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+            ParameterSpec
+                .builder(
+                    ParameterizedTypeName.get(
+                        PARAMETER_VALUE_CALL_BACK,
+                        ParameterizedTypeName.get(JAVA_LIST, apiObjectEntity)
+                    ),
+                    "callback"
+                ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                 .build()
 
         val registerMethod =
-            MethodSpec.methodBuilder("register" + realEntityName + "ValueCallback")
+            MethodSpec
+                .methodBuilder("register" + realEntityName + "ValueCallback")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(registerParameter)
                 .addAnnotation(ANNOTATION_OVERRIDE)
@@ -655,17 +675,19 @@ object GenerateUtil {
         )
 
         val unregisterParameter =
-            ParameterSpec.builder(
-                ParameterizedTypeName.get(
-                    PARAMETER_VALUE_CALL_BACK,
-                    ParameterizedTypeName.get(JAVA_LIST, apiObjectEntity)
-                ),
-                "callback"
-            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+            ParameterSpec
+                .builder(
+                    ParameterizedTypeName.get(
+                        PARAMETER_VALUE_CALL_BACK,
+                        ParameterizedTypeName.get(JAVA_LIST, apiObjectEntity)
+                    ),
+                    "callback"
+                ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                 .build()
 
         val unregisterMethod =
-            MethodSpec.methodBuilder("unregister" + realEntityName + "ValueCallback")
+            MethodSpec
+                .methodBuilder("unregister" + realEntityName + "ValueCallback")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(unregisterParameter)
                 .addAnnotation(ANNOTATION_OVERRIDE)
@@ -683,7 +705,8 @@ object GenerateUtil {
 
         val getAllReturnType = ParameterizedTypeName.get(JAVA_LIST, apiObjectEntity)
         val getAllMethod =
-            MethodSpec.methodBuilder("getAll" + realEntityName + "EntitiesSync")
+            MethodSpec
+                .methodBuilder("getAll" + realEntityName + "EntitiesSync")
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(ANNOTATION_NONNULL)
                 .addAnnotation(ANNOTATION_OVERRIDE)
@@ -705,7 +728,8 @@ object GenerateUtil {
             ParameterSpec.builder(JAVA_STRING, "name").addAnnotation(ANNOTATION_NONNULL).build()
 
         val getEntitiesMethod =
-            MethodSpec.methodBuilder("get" + realEntityName + "EntitiesSync")
+            MethodSpec
+                .methodBuilder("get" + realEntityName + "EntitiesSync")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(getEntitiesParameter)
                 .addAnnotation(ANNOTATION_NULLABLE)
@@ -716,7 +740,17 @@ object GenerateUtil {
         classSpec.addMethod(getEntitiesMethod)
         // </editor-fold>
 
-        // </editor-fold>
+        // getManager
+        val managerEntity = ClassName.get(localPackage, managerName)
+        val managerCodeBuild = CodeBlock.builder().addStatement("return this", managerEntity)
+        val getManagerMethod =
+            MethodSpec
+                .methodBuilder("get" + realEntityName + "Manager")
+                .addModifiers(Modifier.PUBLIC)
+                .addCode(managerCodeBuild.build())
+                .returns(managerEntity)
+                .build()
+        classSpec.addMethod(getManagerMethod)
 
         // <editor-fold desc="四：写入到类中">
         val javaFile = JavaFile.builder(localPackage, classSpec.build()).build()
@@ -733,7 +767,7 @@ object GenerateUtil {
     @JvmStatic
     fun generateInterface(
         localPackage: String,
-        apiBean: ApiNodeBean,
+        apiBean: ApiNodeBean
     ): String {
         val realEntityName = apiBean.apiObjectName.substring(0, apiBean.apiObjectName.lastIndexOf("Object"))
         val realInterfaceName = "${realEntityName}Interface"
@@ -746,18 +780,20 @@ object GenerateUtil {
         val classEntity = ClassName.get(apiBean.localObjectPath, apiBean.localObjectName)
 
         val registerParameter =
-            ParameterSpec.builder(
-                ParameterizedTypeName.get(
-                    PARAMETER_VALUE_CALL_BACK,
-                    ParameterizedTypeName.get(JAVA_LIST, classEntity)
-                ),
-                "callback"
-            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+            ParameterSpec
+                .builder(
+                    ParameterizedTypeName.get(
+                        PARAMETER_VALUE_CALL_BACK,
+                        ParameterizedTypeName.get(JAVA_LIST, classEntity)
+                    ),
+                    "callback"
+                ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                 .build()
 
         // 1: 生成register方法
         val register =
-            MethodSpec.methodBuilder("register${realEntityName}ValueCallback")
+            MethodSpec
+                .methodBuilder("register${realEntityName}ValueCallback")
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .addParameter(registerParameter)
                 .build()
@@ -765,7 +801,8 @@ object GenerateUtil {
 
         // 2：生成unregister的方法
         val unregister =
-            MethodSpec.methodBuilder("unregister${realEntityName}ValueCallback")
+            MethodSpec
+                .methodBuilder("unregister${realEntityName}ValueCallback")
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .addParameter(registerParameter)
                 .build()
@@ -773,7 +810,8 @@ object GenerateUtil {
 
         // 3：生成getAllEntitiesSync的方法
         val getAllEntitiesSync =
-            MethodSpec.methodBuilder("getAll${realEntityName}EntitiesSync")
+            MethodSpec
+                .methodBuilder("getAll${realEntityName}EntitiesSync")
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .returns(
                     ParameterizedTypeName.get(JAVA_LIST, classEntity)
@@ -784,13 +822,15 @@ object GenerateUtil {
         // 4：生成getEntitiesSync的方法
 
         val getEntitiesSyncParameter =
-            ParameterSpec.builder(
-                JAVA_STRING,
-                "name"
-            ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
+            ParameterSpec
+                .builder(
+                    JAVA_STRING,
+                    "name"
+                ).addAnnotation(ANNOTATION_NONNULL) // 设置方法的注解
                 .build()
         val getEntitiesSync =
-            MethodSpec.methodBuilder("get${realEntityName}EntitiesSync")
+            MethodSpec
+                .methodBuilder("get${realEntityName}EntitiesSync")
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .addParameter(getEntitiesSyncParameter)
                 .addAnnotation(ANNOTATION_NULLABLE)
@@ -813,7 +853,8 @@ object GenerateUtil {
         val managerPackage =
             lowercase(
                 transitionPackage(
-                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                    Paths
+                        .get(BASE_PROJECT_PACKAGE_PATH)
                         .resolve(Paths.get(RSI_NODE_NAME))
                         .toString()
                 )
@@ -829,7 +870,8 @@ object GenerateUtil {
                 ).build()
 
         val rsiMethod =
-            MethodSpec.methodBuilder("get${managerClass.simpleName()}")
+            MethodSpec
+                .methodBuilder("get${managerClass.simpleName()}")
                 .addModifiers(Modifier.PUBLIC) // 方法的修饰符
                 .addStatement("checkInit()")
                 .addCode(codeBuild)
@@ -852,7 +894,8 @@ object GenerateUtil {
         val managerPackage =
             lowercase(
                 transitionPackage(
-                    Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                    Paths
+                        .get(BASE_PROJECT_PACKAGE_PATH)
                         .resolve(Paths.get(RSI_NODE_NAME))
                         .toString()
                 )
@@ -867,7 +910,8 @@ object GenerateUtil {
                 ).build()
 
         val rsiMethod =
-            MethodSpec.methodBuilder("get${managerClass.simpleName()}")
+            MethodSpec
+                .methodBuilder("get${managerClass.simpleName()}")
                 .addModifiers(Modifier.PUBLIC) // 方法的修饰符
                 .addCode(codeBuild)
                 .returns(managerClass)
@@ -883,15 +927,15 @@ object GenerateUtil {
     @JvmStatic
     fun generateViewModel(
         localPackage: String,
-        apiBean: ApiNodeBean,
+        apiBean: ApiNodeBean
     ) {
         val realName = capitalize(apiBean.apiName) + "ViewModel"
         println("开始生成ViewModel类：[$realName] ------>")
 
         // 构建类的build对象，用于组装类中的数据
         val classBuild =
-            TypeSpec.classBuilder(realName)
-                .addAnnotations(getAddAnnotations())
+            TypeSpec
+                .classBuilder(realName)
                 .superclass(SUPER_CLASS_BASE_VIEW_MODEL)
 
         // 3.3：构建[manager]属性对象
@@ -904,7 +948,8 @@ object GenerateUtil {
         )
 
         val fieldManager =
-            FieldSpec.builder(fieldManagerTyp, "manager")
+            FieldSpec
+                .builder(fieldManagerTyp, "manager")
                 .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
                 .initializer(fieldManagerCode.build())
 
@@ -947,7 +992,7 @@ object GenerateUtil {
         genericPackage: String,
         genericType: ClassTypeEnum,
         parentPackage: String,
-        parentEntityName: String,
+        parentEntityName: String
     ): LocalBean? {
         /**
          * 1：基础类型的数据，直接返回对象信息
@@ -1038,7 +1083,8 @@ object GenerateUtil {
         // 4：使用指定的路径和节点去生成指定位置的包名路径
         return lowercase(
             transitionPackage(
-                Paths.get(BASE_PROJECT_PACKAGE_PATH)
+                Paths
+                    .get(BASE_PROJECT_PACKAGE_PATH)
                     .resolve(Paths.get(RSI_NODE_NAME))
                     .resolve(childNodePackage)
                     .toString()
@@ -1048,7 +1094,7 @@ object GenerateUtil {
 
     fun getFileName(
         objectPackage: String,
-        genericType: ClassTypeEnum,
+        genericType: ClassTypeEnum
     ): String {
         var realFileName = ""
 
@@ -1122,7 +1168,7 @@ object GenerateUtil {
      */
     fun getPackageInfo(
         parameterPackage: String,
-        classType: ClassTypeEnum = INVALID,
+        classType: ClassTypeEnum = INVALID
     ): Array<String> {
         val array = Array(2) { "" }
         try {
@@ -1148,7 +1194,8 @@ object GenerateUtil {
 
         // 匹配过滤
         val otherSet =
-            RSI_TARGET_NODE_LIST.stream()
+            RSI_TARGET_NODE_LIST
+                .stream()
                 .filter { rsi ->
                     LOCAL_NODE_FILE_LIST.stream().anyMatch { local ->
                         val fileName = getFileName(rsi.apiObjectPath, OBJECT)
@@ -1160,8 +1207,7 @@ object GenerateUtil {
                         }
                         fileName == localName
                     }
-                }
-                .collect(Collectors.toSet())
+                }.collect(Collectors.toSet())
 
         // println("otherSet:$otherSet")
         println()
@@ -1180,11 +1226,14 @@ object GenerateUtil {
 
             // 3：生成manager的类
             generateManager(localPackage, other, interfaceName)
+
+            // 4：生成ViewModel的类
+            generateViewModel(localPackage, other)
         }
         // 4：生成rsiManager
-        generateRsiManager()
+//        generateRsiManager()
         // 5：生成vehicleManager
-        generateVehicleManager()
+//        generateVehicleManager()
     }
 
     private fun updateLocalParentInfo(
@@ -1192,7 +1241,7 @@ object GenerateUtil {
         parentPackage: String,
         parentEntityName: String,
         originFilePackage: String,
-        typeEnum: ClassTypeEnum,
+        typeEnum: ClassTypeEnum
     ): ParentBean {
         /**
          * 添加父类信息的逻辑
@@ -1219,7 +1268,7 @@ object GenerateUtil {
         parentPackage: String,
         parentEntityName: String,
         originFilePackage: String,
-        typeEnum: ClassTypeEnum,
+        typeEnum: ClassTypeEnum
     ) {
         // 1:读取本地集合
         readNodeLocalFile(LOCAL_FOLDER_PATH)
