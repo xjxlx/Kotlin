@@ -254,7 +254,7 @@ object ReadJarFile {
     fun readClass(
         classLoader: URLClassLoader,
         packageName: String,
-        tag: String = "",
+        tag: String = ""
     ): Class<*>? {
         try {
             if (tag.isNotEmpty()) {
@@ -279,7 +279,7 @@ object ReadJarFile {
 
     private fun readLocalClass(
         packageName: String,
-        tag: String = "",
+        tag: String = ""
     ): Class<*>? {
         try {
             if (tag.isNotEmpty()) {
@@ -301,7 +301,7 @@ object ReadJarFile {
      */
     fun getMethods(
         clazz: Class<*>?,
-        tag: String,
+        tag: String
     ): LinkedHashSet<ObjectBean> {
         println("开始读取[$tag]的所有方法---->")
         val set = LinkedHashSet<ObjectBean>()
@@ -379,7 +379,7 @@ object ReadJarFile {
      */
     fun getEnums(
         clazz: Class<*>?,
-        tag: String,
+        tag: String
     ): LinkedHashSet<ObjectBean> {
         println("开始读取[$tag]的所有属性---->")
         val set = LinkedHashSet<ObjectBean>()
@@ -415,7 +415,7 @@ object ReadJarFile {
      */
     fun getFields(
         clazz: Class<*>?,
-        tag: String,
+        tag: String
     ): LinkedHashSet<ObjectBean> {
         println("开始读取[$tag]的所有属性---->")
         val set = LinkedHashSet<ObjectBean>()
@@ -453,7 +453,7 @@ object ReadJarFile {
      */
     private fun checkNeedWriteVariable(
         jarMethodSet: LinkedHashSet<ObjectBean>,
-        localMethodSet: LinkedHashSet<ObjectBean>,
+        localMethodSet: LinkedHashSet<ObjectBean>
     ): Boolean {
         var equals = false
         if (jarMethodSet.size != localMethodSet.size) {
@@ -562,15 +562,18 @@ object ReadJarFile {
                             apiNodeBean.apiPath = apiRunTypePath // 父类中api返回类型的全路径包名
 
                             /**
-                             * 1：过滤所有的方法
+                             * 1：拿到object的返回类型，必须要先过滤掉其他不相关的方法
                              * 1.1：方法不能是default类型的
                              * 1.2：方法不能是桥接方法和合成方法
                              * 1.3：方法的返回类型的泛型必须是class类型
                              * 1.4：方法的返回值类型不能是URI类型的
                              */
                             val uriName = URI::class.java.typeName
+
+                            val declaredMethods = apiClass.declaredMethods
+
                             val methods =
-                                apiClass.declaredMethods
+                                declaredMethods
                                     .filter { method ->
                                         (!method.isDefault) &&
                                             (!method.isBridge) &&
@@ -583,18 +586,15 @@ object ReadJarFile {
                                             )
                                     }.toMutableList()
                             // <editor-fold desc="2：获取update的方法信息"
-                            // 2.1：查找update的method
+
+                            // 2.1：查找update的method,通过比对方法名字是不是以[update]开始，且是以[Object]结尾的作为判断
                             val updateMethod =
-                                methods.find { find ->
-                                    (find.genericReturnType is ParameterizedType) &&
-                                        (
-                                            (find.genericReturnType as ParameterizedType).actualTypeArguments[0] ==
-                                                URI::class.javaObjectType
-                                        )
+                                declaredMethods.find { update ->
+                                    (update.name.startsWith("update")) && (update.name.endsWith("Object"))
                                 }
-                            // 2.2：获取update的参数，并在使用完的时候删除它
-                            updateMethod?.let { updateFun ->
-                                updateFun.parameterTypes
+                            // 2.2：获取update的参数,通过比对参数的名字是不是以Update作为开始的
+                            updateMethod?.let { update ->
+                                update.parameterTypes
                                     .find { updateType ->
                                         getPackageSimple(updateType.typeName).startsWith("Update")
                                     }?.let { parameter ->
@@ -603,10 +603,6 @@ object ReadJarFile {
                                             apiNodeBean.updateObjectName = updateInfo[1]
                                         }
                                     }
-                            }
-                            // 找到update方法就去使用它，用完就从方法结合中删掉他
-                            if (updateMethod != null) {
-                                methods.remove(updateMethod)
                             }
                             // </editor-fold>
 
