@@ -1,0 +1,3168 @@
+{
+  "rules": [
+    {
+      "services": [
+        "0388915d-7473-561c-bb3a-0b2ece8836ec",
+        #
+        asi.someip.vwg.services.wlan.v2.WLAN
+        "760119d7-aa28-5882-8b39-b3ddd41da78b",
+        #
+        asi.someip.vwg.services.wlan.v3.WLAN
+        "a7f5be44-f7f6-5e9f-b253-c7f00b8eaf25"
+        #
+        asi.someip.vwg.services.wlan.v1.WLAN
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            1010
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5507
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "049f5723-df7b-4e19-8568-afcafae167a3"
+        #
+        asi.kam.KeepAwakeManagement
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2930
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "06b0f434-aec5-40cb-b835-8fc07beaab94",
+        #
+        asi.SC__if.SportChrono
+        "edb48479-bedd-47d3-a46a-c35d6541d014"
+        #
+        asi.cs_laptimer_if.timer_output
+      ],
+      "clients": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5516
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "073dcb3a-5ea4-573b-95a7-8fb3770c49c9",
+        #
+        asi.someip.vwg.services.security.idssecurityevent.idssecurityevent.v2.IDSSecurityEvent
+        "d3f955f1-dfb5-5755-a145-7f6daed6ea0f"
+        #
+        asi.someip.vwg.services.security.idspremiumservices.idshostsensor.v2.IdsHostSensor
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5507
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5517
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "078d3e2e-7f88-5bb4-950e-109f51e8e46d"
+        #
+        asi.someip.vwg.services.infotainment.predictivestreetdata.predictivestreetdatastd.v3.PredictiveStreetDataStd
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5507,
+            5516
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5516
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "07ff91ea-1bfe-5ce0-a352-e39999b14bc1",
+        #
+        asi.vehiclecomfort.ClimateInfo
+        "19695062-0da3-5771-a9ff-6dab4ee0ec11",
+        #
+        asi.vehicle.Personalization
+        "3f8ae8ac-5e77-5508-b47f-8f76c50cd547",
+        #
+        asi.vehiclecomfort.MultiFunctionSteeringWheelInfo
+        "52508eab-ac11-58f3-955c-2deeaef65470",
+        #
+        asi.vehicle.VehicleConsumption
+        "6fcd8d71-fa74-483f-a649-e0e05b8721f3",
+        #
+        asi.dataexchangeservice.ASIDataExchangeService
+        "72b8cc3b-315f-5a1d-9bd0-4ee1bcf35a8f",
+        #
+        asi.vehicle.GeneralVehicleInfo
+        "7aa44d4c-7466-4c12-889e-18d350122fdb",
+        #
+        asi.chmi_service_if.SportHmiExt
+        "a9c6e040-42c0-5c42-a2f4-48470c569810",
+        #
+        asi.vehicle.BatteryData
+        "b1439c73-4cab-5ee3-b65b-8a887bb42dc8",
+        #
+        asi.vehiclecomfort.VehicleInteriorLight
+        "b1b7e0a5-5afc-4ab3-82c1-ffef49d1c07d",
+        #
+        asi.cs_laptimer_if.laptimer_input
+        "da784074-3c1f-5c8f-8323-c43fbe854c70",
+        #
+        asi.vehiclecomfort.TrailerInfo
+        "df723287-6076-5412-9c65-62eae4ba856a",
+        #
+        asi.vehiclecomfort.Seatmemory
+        "e23e1372-91bc-4605-854c-8720498b07a6",
+        #
+        asi.cs_laptimer_if.laptimer_output
+        "e73975fa-56bd-5683-a572-5961830053bc"
+        #
+        asi.vehicle.VehicleDrivingRange
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5516
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "0bd4d039-c56c-4f62-87ed-5a25c6e8682a",
+        #
+        asi.mcp.inputmanager.InputManager
+        "20da36df-f08a-4d70-9cee-758922b0ccc8"
+        #
+        asi.android.audio.AndroidVolumeKeyEvents
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5601
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "0e70abfc-946f-57e8-a3af-60b8a3a4e7bb",
+        #
+        asi.someip.vwg.services.adas.roadgraph.roadvisualizationhd.v8.RoadVisualizationHD
+        "110b1126-88a8-5d84-96ec-f960f54d42de",
+        #
+        asi.someip.vwg.services.colouredconfigurationservice.v1.ColouredConfigurationService
+        "157e6986-58d4-592a-8d32-a386cf6bccc2",
+        #
+        asi.someip.vwg.services.energy.energypowerprediction.energypowerprediction.v4.EnergyPowerPrediction
+        "1c615e10-7d54-5731-a26f-682d93d3bd4c",
+        #
+        asi.someip.vwg.services.energy.predictiveconsumptioncontrol.predictiveconsumption.v5.PredictiveConsumption
+        "1f35e919-d159-59c4-ac72-7e66a6407d3e",
+        #
+        asi.someip.vwg.services.connect.bluetoothkeysetup.bluetoothkeysetup.v2.BluetoothKeySetup
+        "25b08fb0-d2ef-507d-8fca-b437049e1096",
+        #
+        asi.someip.vwg.services.adas.roadgraph.roadattributesextended.v10.RoadAttributesExtended
+        "3d3cdda6-d64a-525b-8973-540db8265190",
+        #
+        asi.someip.vwg.services.adas.roadgraph.roadvisualizationsd.v8.RoadVisualizationSD
+        "3f9a751d-f467-529c-ac99-5239e834c5d9",
+        #
+        asi.someip.vwg.services.dormantmode.v1.DormantMode
+        "40f4ec23-d182-5511-9daf-d1a535364355",
+        #
+        asi.someip.vwg.services.adas.roadgraph.roadattributes.v8.RoadAttributes
+        "6e20b2eb-39c4-56b5-ae65-256c3b842929",
+        #
+        asi.someip.vwg.services.adas.roadgraph.roadattributesextended.v9.RoadAttributesExtended
+        "8e928b0b-43ab-5cd9-aaed-ce14661f59b5",
+        #
+        asi.someip.vwg.services.adas.roadgraph.localization.v4.Localization
+        "b9639be6-0aba-59df-8fa8-0439e26b0711",
+        #
+        asi.someip.vwg.services.adas.roadgraph.roadvisualizationsd.v6.RoadVisualizationSD
+        "bc495115-484c-5d41-9553-4ac00955b35c",
+        #
+        asi.someip.vwg.services.connect.vehicletoeverythingv2x.v2xmessage.v3.V2XMessage
+        "be99da70-98cc-5cfe-a372-24e74c6e0ad9",
+        #
+        asi.someip.vwg.services.adas.roadgraph.roadattributes.v9.RoadAttributes
+        "cb34dd53-60f1-51ef-900e-196ada95ae2b",
+        #
+        asi.someip.vwg.services.adas.roadgraph.roadvisualizationhd.v6.RoadVisualizationHD
+        "cb48ae89-aecc-5516-8f09-ec4c7b419328",
+        #
+        asi.someip.vwg.services.charging.chargingmanagementcore.chargingmanagementcore.v11.ChargingManagementCore
+        "d272b6be-2e40-533e-a507-0ba96a26690a",
+        #
+        asi.someip.vwg.services.adas.roadgraph.roadvisualizationsd.v7internal.RoadVisualizationSD
+        "e5a42b04-5e5c-5d6a-92d5-8995333ff155",
+        #
+        asi.someip.vwg.services.adas.roadgraph.localization.v5.Localization
+        "f9aadfff-4396-58d8-9bca-3760d3801bdf"
+        #
+        asi.someip.vwg.services.charging.chargingmanagementcore.chargingmanagementcore.v12.ChargingManagementCore
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5507
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "11eaa58a-7811-47de-9981-4f8914ce7c1e",
+        #
+        servmngt.extensions.Watchdog
+        "8b386147-7b79-5170-98e0-b13720c3437c"
+        #
+        ara.exec.management.ExecutionClient
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            0,
+            1000,
+            1010,
+            1041,
+            2912,
+            2920,
+            2929,
+            2930,
+            2931,
+            2936,
+            2949,
+            2990,
+            2992,
+            2995,
+            5500,
+            5501,
+            5503,
+            5504,
+            5505,
+            5506,
+            5507,
+            5508,
+            5510,
+            5512,
+            5513,
+            5514,
+            5515,
+            5516,
+            5517,
+            5518,
+            5519,
+            5550,
+            5570,
+            5580,
+            5581,
+            5590,
+            5601
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            0
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "124bb9cc-e6c1-11ea-adc1-0242ac120002",
+        #
+        asi.vkms.ApplicationServices
+        "124bbcec-e6c1-11ea-adc1-0242ac120002"
+        #
+        asi.vkms.AdminServices
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5516,
+            5517
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "130f0fca-4417-5409-a8c1-57b59ecd3502",
+        #
+        asi.vehicleclusterivi.WarningLamps
+        "16033d86-7fec-5a14-b531-5a6ea979be3b",
+        #
+        asi.vehiclecomfortivi.DoorsWindows
+        "3039bd9a-3b72-583f-8354-6377f7f18f69",
+        #
+        asi.vehiclepowertrainivi.EngineData
+        "39455865-0c6d-55a8-ba84-fbd7a0657f78",
+        #
+        asi.vehiclecomfortivi.VehicleExteriorLight
+        "5603a274-ab1a-5bf9-94ce-e363a718370a",
+        #
+        asi.vehiclecomfortivi.PassengerBeltInfo
+        "8dcf15e0-a012-531e-8841-8fdbeefc426b",
+        #
+        asi.vehiclecomfortivi.SeatAssignment
+        "c36058f7-2633-55cc-81e4-1c0cb2aae228",
+        #
+        asi.vehicleivi.VehicleConsumption
+        "d2916709-1ed7-55f8-9c51-01295522144a",
+        #
+        asi.vehiclepowertrainivi.VehicleOilInfo
+        "d50d3ae1-5fdb-5b1b-af07-52b5af0b12ef",
+        #
+        asi.vehicleivi.GeneralVehicleInfo
+        "e1c7381c-b07d-5d49-8765-dc1b1533b80c"
+        #
+        asi.vehiclecomfortivi.LightDimming
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2920,
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "168433b5-6c76-5bd9-827c-05a39b3a56e7",
+        #
+        asi.vehiclenavigation.NavPos
+        "2b9601f3-c56a-54a0-ba05-1610f5bf13c6",
+        #
+        asi.vehicleivi.BatteryData
+        "36974ad7-097b-5315-963b-79f318d02263",
+        #
+        asi.vehiclenavigation.NavManoever
+        "498f56dc-63d5-57e6-93ee-07af6a726fa3",
+        #
+        asi.vehicleivi.FunctionOnDemand
+        "7baacbc2-0c98-50c0-862c-53ff94633ce7",
+        #
+        asi.vehiclesportivi.Damper
+        "817ae557-525b-5324-a502-6cfdfacf1385",
+        #
+        asi.vehicledrivingassistanceivi.LaneDetectionAlg
+        "8c362120-1433-5eea-9287-50ab934b1a5b",
+        #
+        asi.vehiclenavigation.BvLines
+        "be19582d-c084-525c-8b0d-a07560c7ee0b",
+        #
+        asi.vehiclenavigation.PosGnss
+        "c31af355-8252-5a2a-88e9-371f5277907a",
+        #
+        asi.vehicledrivingassistanceivi.ParkingBrake
+        "cb07b74a-037f-5611-a0c9-444735407f60",
+        #
+        asi.vehiclenavigation.NavData
+        "fc1b4e9d-c06c-52c2-bcc9-1381799b3340"
+        #
+        asi.vehiclecomfortivi.VehicleInteriorLight
+      ],
+      "clients": {
+        "groups": {
+          "accept": []
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "18bef120-98a2-5db1-ad67-4b49cf8a2542"
+        #
+        asi.someip.vwg.services.connect.tracingloggingrecording.logging.v5.Logging
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5500,
+            5507
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5500,
+            5507
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "1aa941f2-4761-51cb-b545-29108967b19d",
+        #
+        asi.someip.vwg.services.testability.message.someiptestabilityclientreliable.v1.SOMEIPTestabilityClientReliable
+        "40180a13-fcf8-5d79-85f9-081292c60451",
+        #
+        asi.someip.vwg.services.testability.message.someiptestabilitysegm.v1.SOMEIPTestabilitySegm
+        "4a7a552c-4ba0-5334-a211-8104cd19b16e",
+        #
+        asi.someip.vwg.services.testability.message.someiptestabilitysegmmcclient.v1.SOMEIPTestabilitySegmMCClient
+        "730430c3-0925-5c77-8075-890c23261372",
+        #
+        asi.someip.vwg.services.testability.message.someiptestabilitymcclient.v1.SOMEIPTestabilityMCClient
+        "811e6bbb-5a74-5346-8ae0-ebc2d1751c7c",
+        #
+        asi.someip.vwg.services.testability.message.someiptestabilitysegmclient.v1.SOMEIPTestabilitySegmClient
+        "bbd0eab0-fce4-58a9-b8be-27a4e4062bc5"
+        #
+        asi.someip.vwg.services.testability.message.someiptestability.v1.SOMEIPTestability
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5507,
+            5508
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5507,
+            5508
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "1d06337e-124e-5e45-8b29-b90f46c80c45",
+        #
+        asi.someip.vwg.services.adas.roadgraph.roadmodel.v9.Roadmodel
+        "2467d1d8-16bc-556a-bc4b-07b4cada3c1f",
+        #
+        asi.someip.vwg.services.infotainment.opensourcedisclaimers.osddistribution.v1.OSDDistribution
+        "2e7a3b03-32ef-5bde-b585-171999be694e",
+        #
+        asi.someip.vwg.services.body.vehicledrivingstateobserver.vehicledrivingstateobserver.v2e312premiumclu43.VehicleDrivingStateObserver
+        "2f8e2b22-64b1-5e9b-b618-5f4ca1a1489a",
+        #
+        asi.someip.vwg.services.adas.roadgraph.roadmodel.v8.Roadmodel
+        "5df9e865-f8f1-5d17-834f-9c84e32d1d6b",
+        #
+        asi.someip.vwg.services.body.vehicledrivingstateobserver.vehicledrivingstateobserver.v2.VehicleDrivingStateObserver
+        "9c061831-1856-5d06-82ae-4333c20aa8c3"
+        #
+        asi.someip.vwg.services.energy.temperatureprediction.temperaturepowerprediction.v3.TemperaturePowerPrediction
+      ],
+      "clients": {
+        "groups": {
+          "accept": []
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5507
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "25cffd07-4364-5d02-9d5a-1f5b8f5d9b40"
+        #
+        asi.irc.ircControlService
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2930
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5500
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "265d15c8-c14d-4fe1-8909-80ac97631cfa"
+        #
+        asi.system.firewall.Tracing
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5500,
+            5518
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "27673c55-f616-4767-8c71-c31df8240151"
+        #
+        asi.android.audio.AndroidAudioStreaming
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            1041
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "2ac5816e-894b-56dd-b7c5-e7dc44ccfa2c",
+        #
+        asi.someip.vwg.services.connect.datacollector.odcagentgenericlarge.v5.OdcAgentGenericLarge
+        "4434983b-2e85-54ab-af59-ef97cef1409e",
+        #
+        asi.someip.vwg.services.connect.datacollector.odcagentcommonlarge.v3.OdcAgentCommonLarge
+        "48171d9b-11fb-57b8-934b-442538850d09",
+        #
+        asi.someip.vwg.services.infotainment.navigation.rangeonroute.v0.RangeOnRoute
+        "620ca63a-5347-5cfb-95f8-c4e4fbbd8a8f",
+        #
+        asi.someip.vwg.services.connect.datacollector.odcagentgenerichuge.v4.OdcAgentGenericHuge
+        "864f861b-994a-5bec-a8d8-73569bdbf26b",
+        #
+        asi.someip.vwg.services.connect.datacollector.odcagentgenerichuge.v3.OdcAgentGenericHuge
+        "98af4e8c-6c01-5998-b796-ddc2b0730db7",
+        #
+        asi.someip.vwg.services.infotainment.predictivestreetdata.predictivestreetdatalr.v11.PredictiveStreetDataLR
+        "a3aedfd0-84bc-5700-875f-320c8740fcc7",
+        #
+        asi.someip.vwg.services.connect.datacollector.odcagentcommonlarge.v4.OdcAgentCommonLarge
+        "a6ba2994-2e8d-5db9-807b-0d725917acc1",
+        #
+        asi.someip.vwg.services.infotainment.predictivestreetdata.predictivestreetdatalr.v10.PredictiveStreetDataLR
+        "c8576a0d-43ff-5540-a04d-7bd8c1383393",
+        #
+        asi.someip.vwg.services.infotainment.predictivestreetdata.timezonedata.v3.TimezoneData
+        "f85e9174-310c-52f6-bf14-114875eacfe2"
+        #
+        asi.someip.vwg.services.infotainment.mapmatchingposition.mapmatchingposition.v1.MapMatchingPosition
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5507
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5516
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "2e4ad56c-8c64-5133-baf7-93590d5ef4eb"
+        #
+        asi.someip.vwg.services.network_access.v2.NetworkAccess
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2992,
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5507
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "2ee38f22-e25b-5ef8-a5ca-31a6a45b3507",
+        #
+        asi.someip.vwg.services.security.idspremiumservices.idsipnetworksensor.v2.IdsIpNetworkSensor
+        "3d2a8358-898b-5493-978d-bdd041e08df2",
+        #
+        asi.someip.vwg.services.infotainment.opensourcedisclaimers.osdregistration.v3.OSDRegistration
+        "5c870aa8-ba06-5ea6-8c2b-3265b6d45594",
+        #
+        asi.someip.vwg.services.infotainment.navigation.navigation.v3.Navigation
+        "8d056059-b576-58c1-9d14-1689927e9bd2"
+        #
+        asi.someip.vwg.services.infotainment.navigation.navigationevroutes.v3.NavigationEVRoutes
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5507
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        }
+      }
+    },
+    {
+      "services": [
+        "2f6b0099-c4ba-5a03-8a31-101d2f7f9b1d",
+        #
+        asi.vehicledrivingassistanceivi.DriverMonitoring
+        "94fdd694-98c4-5e73-8f2c-9ba82a0a66ff",
+        #
+        asi.vehiclepowertrainivi.PedalInfo
+        "9d5a3313-607c-5bfa-aa6e-7e31c20c40c5",
+        #
+        asi.vehicledrivingassistanceivi.FasAssistInfo
+        "a7138b74-4356-5ae1-9107-7c1b6a7862bd",
+        #
+        asi.vehiclecomfortivi.CrashInfo
+        "d07b3e99-8820-5cb7-879f-a8281e3af7f9",
+        #
+        asi.vehiclesportivi.DrivingInformation
+        "f33d31c4-e5c8-527a-9f3e-15136c714245"
+        #
+        asi.vehiclesportivi.LaunchControl
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "374197ca-caef-403f-a993-7e171899db9d"
+        #
+        asi.fec.FecAppMMX
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5516,
+            5518
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "3c0f3eb4-6471-11ea-949c-afb90d59be45",
+        #
+        asi.diag.uds.RoutineCtrl
+        "cc69cdb2-3226-11ea-a1c0-ef404598535f"
+        #
+        asi.diag.uds.ReadDataByIdent
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            0,
+            1000,
+            2912,
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5506
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "424f6130-0e2a-51d6-b1b2-9d08e0c99c8b"
+        #
+        asi.vehicleinfrastructureivi.NwInfra
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5506,
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "426335e6-e9a1-11ed-a9f3-9f118dedfdfa"
+        #
+        asi.diag.si.SpecificInfo
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5516
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108",
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5506
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108",
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "44c573b2-492e-593d-95a7-652240dcf237",
+        #
+        asi.someip.vwg.services.infotainment.positioning.positioning.v3.Positioning
+        "ab3f954f-e23d-53a4-9a54-9dc0e5a2a5c3"
+        #
+        asi.someip.vwg.services.infotainment.gnss.gnss.v4.GNSS
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2995,
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5507
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "51749ceb-66b7-46ea-9862-0230f186a8e7"
+        #
+        servmngt.extensions.SystemEvents
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            0,
+            1000,
+            1010,
+            1041,
+            2912,
+            2920,
+            2929,
+            2930,
+            2931,
+            2936,
+            2949,
+            2990,
+            2992,
+            2995,
+            5500,
+            5501,
+            5503,
+            5504,
+            5505,
+            5506,
+            5507,
+            5508,
+            5510,
+            5512,
+            5513,
+            5514,
+            5515,
+            5516,
+            5517,
+            5518,
+            5519,
+            5550,
+            5570,
+            5580,
+            5581,
+            5590,
+            5601
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            0
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "52220c02-5cbd-5d09-a139-d6f25709a26b"
+        #
+        asi.vehicleinfrastructureivi.VehiclePwrMngt
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2930,
+            5516,
+            5581
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:1"
+        #
+        viwi.eds
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5550
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5515
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:10",
+        #
+        viwi.mcpinputmanager
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:102",
+        #
+        viwi.OilLevelIndicator
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:11",
+        #
+        viwi.mcpremoteinput
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:112",
+        #
+        viwi.PowermanagementDisplay
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:12",
+        #
+        viwi.resourcemanagement
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:121",
+        #
+        viwi.spoiler
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:132",
+        #
+        viwi.TripComputer
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:141",
+        #
+        viwi.velocitythreshold
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:144",
+        #
+        viwi.VirtualExteriorMirror
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:151",
+        #
+        viwi.WarningStoreExtension
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:154",
+        #
+        viwi.wirelesscharger
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:168",
+        #
+        viwi.WindowBlinds
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:169",
+        #
+        viwi.ValetMode
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:21",
+        #
+        viwi.AdditionalInstrumentConfiguration
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:31",
+        #
+        viwi.CarGlobal
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:44",
+        #
+        viwi.DisplaySpeed
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:5",
+        #
+        viwi.mcppopupmanager
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:6",
+        #
+        viwi.mcpdisplaymanager
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:61",
+        #
+        viwi.FactoryResetController
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:68",
+        #
+        viwi.GarageDoor
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:69",
+        #
+        viwi.HeadUpDisplay
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:7",
+        #
+        viwi.combogesturedetector
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:70",
+        #
+        viwi.HIDService
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:79",
+        #
+        viwi.InstrumentClusterConfiguration
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:8",
+        #
+        viwi.nativehmi
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:81",
+        #
+        viwi.IntegratedTollModule
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:83",
+        #
+        viwi.InteriorLightUIExt
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:85",
+        #
+        viwi.language
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:87",
+        #
+        viwi.localdiagmaster
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:88",
+        #
+        viwi.Maintenance
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:9"
+        #
+        viwi.rvcapp
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5515
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:100",
+        #
+        viwi.NavState/deEsoClusterApk
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:101",
+        #
+        viwi.NavState/technologyCariadNavi
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:110",
+        #
+        viwi.phone
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:156",
+        #
+        viwi.MapControl/deEsoClusterApk
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:157",
+        #
+        viwi.MapControl/technologyCariadNavi
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:158",
+        #
+        viwi.NavDestinationMemory/deEsoClusterApk
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:159",
+        #
+        viwi.NavDestinationMemory/technologyCariadNavi
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:27",
+        #
+        viwi.bluetooth
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:3",
+        #
+        viwi.NavResourceProvider
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:40",
+        #
+        viwi.clustermedia
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:41",
+        #
+        viwi.ClusterSDS
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:80",
+        #
+        viwi.InstrumentClusterService
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:94",
+        #
+        viwi.NavGuidance/deEsoClusterApk
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:95",
+        #
+        viwi.NavGuidance/technologyCariadNavi
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:96",
+        #
+        viwi.NavGuidanceControl/deEsoClusterApk
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:97",
+        #
+        viwi.NavGuidanceControl/technologyCariadNavi
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:98",
+        #
+        viwi.NavPosition/deEsoClusterApk
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:99"
+        #
+        viwi.NavPosition/technologyCariadNavi
+      ],
+      "clients": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5515
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:103",
+        #
+        viwi.OnlineUpdateUI
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:106",
+        #
+        viwi.ParkingCoordinator
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:111",
+        #
+        viwi.PlugAndChargeCertificateAdministration
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:115",
+        #
+        viwi.RecuperationSettings
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:116",
+        #
+        viwi.RemoteProductionClientUI
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:117",
+        #
+        viwi.RollingAbility
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:120",
+        #
+        viwi.ServiceManagementODPOne
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:123",
+        #
+        viwi.SportHMI
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:129",
+        #
+        viwi.TrackMode
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:136",
+        #
+        viwi.VehicleHEMSConnection
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:140",
+        #
+        viwi.VehicleTiltAngle
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:150",
+        #
+        viwi.WarnBrakeEvadeHMI
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:153",
+        #
+        viwi.WiperUI
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:20",
+        #
+        viwi.AdaptiveCruiseAssistHMI
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:23",
+        #
+        viwi.AirSuspensionHeightControl
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:25",
+        #
+        viwi.AutonomousDrivingDataRecorder
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:30",
+        #
+        viwi.CallServices
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:32",
+        #
+        viwi.CDN
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:36",
+        #
+        viwi.ChargingManagementExtended
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:37",
+        #
+        viwi.ChassisControl
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:43",
+        #
+        viwi.DisasterWarnings
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:50",
+        #
+        viwi.DrivingProfileSelection
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:52",
+        #
+        viwi.EasyEntry
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:54",
+        #
+        viwi.EmergencyAssistHMI
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:55",
+        #
+        viwi.EnergyFlowState
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:60",
+        #
+        viwi.ExteriorLightingUI
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:67",
+        #
+        viwi.FunctionOnDemandManager
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:72",
+        #
+        viwi.HillDescentControl
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:76",
+        #
+        viwi.HybridOperationModeManager
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:86",
+        #
+        viwi.LimiterHMI
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:91",
+        #
+        viwi.MobileDeviceKey
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:92"
+        #
+        viwi.MobileDevicePairing
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5515
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5503
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:104"
+        #
+        viwi.osd
+      ],
+      "clients": {
+        "groups": {
+          "accept": []
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5515
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:108",
+        #
+        viwi.ParkingSystem
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:19",
+        #
+        viwi.ActiveSound
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:58",
+        #
+        viwi.ExtendedHVACPreconditioning
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:75"
+        #
+        viwi.HVACVehiclePreconditioning
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5515,
+            5550
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5503
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:113"
+        #
+        viwi.PrivacySetupShapeThree
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5503
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5515
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:118",
+        #
+        viwi.seating
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:138",
+        #
+        viwi.VehicleLocking
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:38",
+        #
+        viwi.ChildPresenceDetectionHMI
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:71",
+        #
+        viwi.HIDStatistics
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:82"
+        #
+        viwi.InteriorLightUI
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5515,
+            5550
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:124",
+        #
+        viwi.SunroofControl
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:46"
+        #
+        viwi.DriverNotification
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2920,
+            5515
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:125"
+        #
+        viwi.Time
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2920,
+            2929,
+            2931,
+            5515,
+            5550
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5503
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:127",
+        #
+        viwi.Tires
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:34",
+        #
+        viwi.ChargingManagementCore
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:53",
+        #
+        viwi.ElectricalParkingBrake
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:64",
+        #
+        viwi.FasProfilesMaster
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:78"
+        #
+        viwi.Immobilizer
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2920,
+            5515
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5503
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:130",
+        #
+        viwi.TrafficLightInformation
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:134",
+        #
+        viwi.UserInputCollectorService
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:155"
+        #
+        viwi.WorkloadCalculator
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5550
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5515
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:133"
+        #
+        viwi.UnitMaster
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2920,
+            2929,
+            5515
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:135",
+        #
+        viwi.usermanagement
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:73"
+        #
+        viwi.hvac
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2920,
+            5515,
+            5550
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:15",
+        #
+        viwi.ViWiTestabilityClassTwo/viwitestabilityapp-ivi
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:16"
+        #
+        viwi.ViWiTestabilityClassTwo/extIVI
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5503,
+            5505
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5503,
+            5505
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:152"
+        #
+        viwi.wiperinformation
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5515,
+            5550
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:160"
+        #
+        viwi.streamMonitor
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5580,
+            5581
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5590
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:164"
+        #
+        viwi.ChargingAutomated
+      ],
+      "clients": {
+        "groups": {
+          "accept": []
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5503
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:17"
+        #
+        viwi.registry
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            0,
+            1000,
+            1010,
+            1041,
+            2912,
+            2920,
+            2929,
+            2930,
+            2931,
+            2936,
+            2949,
+            2990,
+            2992,
+            2995,
+            5500,
+            5501,
+            5503,
+            5504,
+            5505,
+            5506,
+            5507,
+            5508,
+            5510,
+            5512,
+            5513,
+            5514,
+            5515,
+            5516,
+            5517,
+            5518,
+            5519,
+            5550,
+            5570,
+            5580,
+            5581,
+            5590,
+            5601
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5504
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:18"
+        #
+        rudi.asi.RudiService
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5504
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:2"
+        #
+        viwi.ruleengine
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5515
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5550
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:24",
+        #
+        viwi.assistinfo
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:28",
+        #
+        viwi.callserviceinfo
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:47",
+        #
+        viwi.drivingassistance
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:59",
+        #
+        viwi.exteriorlight
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:62",
+        #
+        viwi.fascalibrationdata
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:65"
+        #
+        viwi.fasprofilespartner
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5515
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:26",
+        #
+        viwi.batteryinfo
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:56"
+        #
+        viwi.enginegearboxinfo
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2920,
+            5515
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:39"
+        #
+        viwi.climateinfo
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2920,
+            5515,
+            5550
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:45",
+        #
+        viwi.DoorControl
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:51"
+        #
+        viwi.DrivingRange
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2920,
+            5515,
+            5550
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5503
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:66"
+        #
+        viwi.FrontCameraControl
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5580
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5503
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "537db3b4-ec3e-11e5-9ce9-5e5517507c66:84"
+        #
+        viwi.Jokerkey
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5515,
+            5550,
+            5601
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "5ad4ce31-290d-4059-9330-28ce61b7f213"
+        #
+        asi.irc.privacy.ircPrivacyMode
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5500
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "5b48b59a-60c2-11e7-8226-a3283815c5cc"
+        #
+        asi.lgtr.prov.FileProvider
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5500,
+            5513,
+            5516
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5512
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "611e2a17-076d-4cf2-b50d-9416b4b50a81"
+        #
+        asi.servicediag.diag
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5517
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5503,
+            5507
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "63bb63cc-9f4c-450e-95f2-55c4f5de53a2"
+        #
+        servmngt.IServiceManager
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            0
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            0,
+            1000,
+            1010,
+            1041,
+            2912,
+            2920,
+            2929,
+            2930,
+            2931,
+            2936,
+            2949,
+            2990,
+            2992,
+            2995,
+            5500,
+            5501,
+            5503,
+            5504,
+            5505,
+            5506,
+            5507,
+            5508,
+            5510,
+            5512,
+            5513,
+            5514,
+            5515,
+            5516,
+            5517,
+            5518,
+            5519,
+            5550,
+            5570,
+            5580,
+            5581,
+            5590,
+            5601
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "6a754389-4bbd-5c63-a891-a9db6f6e9d75"
+        #
+        asi.vehicle.RadioInfo
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2912,
+            5516
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "6df559d6-29ff-4cdb-b61c-298587daba98",
+        #
+        comm.agent.Watchdog
+        "cc137cf2-73a6-4aee-90a7-d124e3e5a136"
+        #
+        comm.agentinfo.AgentInfo
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5501
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5501
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "6f3e6f28-33aa-11ea-8844-8b58d2128948"
+        #
+        asi.diag.ident.Identification
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            1000,
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5506
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "6fea8387-f6aa-4018-96c0-1cb51b6124cd"
+        #
+        asi.ooc.hcp3.sm.ServiceManagement
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            0
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            2930
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "729c5494-79bf-4ed2-bf93-6978e62e5dfa"
+        #
+        asi.diag.dataset.Dataset
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            1041,
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5506
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "75674fe9-fb50-514b-9b07-ca9d90f0996c"
+        #
+        asi.vehiclepowertrainivi.VehicleMotion
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            0,
+            2920,
+            5506,
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "7ba886f8-43ad-11ec-a932-bb808d2b2c6f"
+        #
+        asi.diag.mi.MetaInfo
+      ],
+      "clients": {
+        "groups": {
+          "accept": []
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5506
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "88067740-bb4e-4352-881c-439e3ab4f2d1"
+        #
+        asi.android.audio.AndroidAudioConcurrence
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2949
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "8d00487b-6b38-50ce-aa2d-9ab40d74b02b"
+        #
+        asi.someip.vwg.services.cockpit.routebasedconsumption.routebasedconsumption.v4.RouteBasedConsumption
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5507,
+            5516
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "8ec57abc-59b3-42df-83a4-12b7c7e0c495"
+        #
+        comm.broker2.Broker
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            0,
+            1000,
+            1010,
+            1041,
+            2912,
+            2920,
+            2929,
+            2930,
+            2931,
+            2936,
+            2949,
+            2990,
+            2992,
+            2995,
+            5500,
+            5501,
+            5503,
+            5504,
+            5505,
+            5506,
+            5507,
+            5508,
+            5510,
+            5512,
+            5513,
+            5514,
+            5515,
+            5516,
+            5517,
+            5518,
+            5519,
+            5550,
+            5570,
+            5580,
+            5581,
+            5590,
+            5601
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5501
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "92c39bd3-ca7c-4d76-957b-ba8b83eb0b90"
+        #
+        asi.tunerremote.ITunerRemoteV100
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            1000,
+            2990
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "9b627e42-0b99-11e6-95b7-54ee756bf2c8"
+        #
+        asi.lgtr.ctrl.Controller
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            0,
+            5516
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5512
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "a076ae55-4079-43fe-b2a8-44f8ec420e8b"
+        #
+        asi.diag.pers.Storage
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            1000,
+            1010,
+            2912,
+            2920,
+            2930,
+            2936,
+            2995,
+            5500,
+            5510,
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5506
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "a3a12897-fb4a-4ce8-99ef-e2eab46731c4"
+        #
+        asi.power.oocpwrmanforivi.IOocPwrmanForIvi
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2930,
+            5503,
+            5506,
+            5507,
+            5510,
+            5550,
+            5581
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "a58995e5-3a88-5f1a-9a3c-1786b9a38589"
+        #
+        asi.persistence.Attributes
+      ],
+      "clients": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5500
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "a83ebe29-7e03-55e4-aed5-ab5bcb1e0fbf"
+        #
+        asi.vehicleinfrastructureivi.DiagnosisInfo
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            1010,
+            5506,
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "adc5f968-ca05-4ac9-b559-2e3ebd4c8ff5"
+        #
+        servmngt.extensions.ServiceManagerEvents
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5517
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            0
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "b686cca1-883f-5845-8836-1b08753fc60e"
+        #
+        asi.someip.vwg.services.diagnostic.diaglocalupdatemanagerclient.diaglocalupdatemanagerclient.v6.DiagLocalUpdateManagerClient
+      ],
+      "clients": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            1000,
+            5516
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "bf4e206e-6188-11eb-922c-6b0700ebb073"
+        #
+        asi.diag.unece.ProgrammingHash
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2936
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5506
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "c4fdc45c-3baf-52b8-9419-a2740cbdf8f4"
+        #
+        asi.vehicledrivingassistanceivi.InteriorCamera
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5580
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5510
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "c71dc6ac-69f2-5684-b53a-babe07c8f692",
+        #
+        asi.someip.vwg.services.infotainment.logtransfer_service.logtransferprovider.v2.LogTransferProvider
+        "f650c464-5986-559a-b96d-9150a84f0ef6"
+        #
+        asi.someip.vwg.services.infotainment.logtransfer_service.logtransferprovider.v3.LogTransferProvider
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5507
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5512
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "c895af9e-fc7f-4765-adcf-c84d7883ddf3",
+        #
+        comm.broker2.BrokerSync
+        "efc8e985-c33e-4f56-9376-741e3681d437"
+        #
+        comm.broker2.BrokerList
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5501
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108",
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5501
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108",
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "c8d9ea97-ecb3-565a-bc90-f083a535d05f"
+        #
+        asi.vehicle.TankInfo
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2920,
+            5516
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "cb8d87a8-3c35-11ea-9df0-53ed12a0bde7"
+        #
+        asi.diag.dtc.Dtc
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            1000,
+            5516,
+            5581
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5506
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "d2a0f180-2f72-4df8-a834-e84b7af566ae"
+        #
+        asi.power.ivipwrman.IviPwrman
+      ],
+      "clients": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            2930
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "d592862c-d954-523d-bf50-2866df0e06f6"
+        #
+        asi.car.NetworkManagement
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5503,
+            5507,
+            5510,
+            5581
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "services": [
+        "da0619b6-3405-4c50-a784-e463fe21e381"
+        #
+        asi.esoids.DataSource
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5517
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5519
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "de4bec92-c8c9-5bd3-805d-872a1a43116d"
+        #
+        asi.someip.vwg.services.connect.tracingloggingrecording.loggingmasterinternal.v5.LoggingMasterInternal
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5500
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5500,
+            5507
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "e59f0b86-e6e6-508f-a8f6-e5e54b54a387"
+        #
+        asi.someip.vwg.services.infotainment.predictivestreetdata.predictivestreetdataslim.v3.PredictiveStreetDataSlim
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            5507,
+            5516
+          ]
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": [
+            5516
+          ]
+        }
+      }
+    },
+    {
+      "services": [
+        "f4a02257-690a-5d61-b5f9-077e1d1819b5"
+        #
+        asi.vehicle.VehicleTime
+      ],
+      "clients": {
+        "groups": {
+          "accept": [
+            2931,
+            2995,
+            5500,
+            5516
+          ]
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::130"
+            ]
+          }
+        }
+      },
+      "servers": {
+        "groups": {
+          "accept": []
+        },
+        "ipaddr": {
+          "accept": {
+            "ipv6": [
+              "fd53:7cb8:383:801::4:108"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "config": {
+    "enabled": true
+  },
+  "global_default": {
+    "clients": "accept",
+    "servers": "accept"
+  },
+  "hooks": [
+    {
+      "services": [
+        "dafd4fa4-3d78-5767-bae8-5ab9d255be7f"
+      ],
+      "type": "service"
+    },
+    {
+      "services": [
+        "dafd4fa4-3d78-5767-bae8-5ab9d255be7f"
+      ],
+      "type": "client"
+    }
+  ],
+  "validator_map": {
+    "proc": [
+      "groups"
+    ],
+    "tcp": [
+      "ipaddr"
+    ]
+  }
+}
