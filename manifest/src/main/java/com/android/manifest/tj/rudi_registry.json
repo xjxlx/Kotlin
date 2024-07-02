@@ -1,0 +1,77 @@
+{
+    "default_scopes" : ["ivi", "sys"],
+    "parent_registry" :
+    {
+        "ivi" : "sys",
+        "sys" : null
+    },
+	 "pinned_service_providers" : {
+            "rsigatewayIVI": [
+	"/AdaptiveCruiseAssistHMI",
+    "/AirSuspensionHeightControl",
+	"/batteryinfo",
+	"/CallServices",
+	#"/CarGlobal", #usually internal service of nativeBL is used
+    "/ChargingManagementCore",
+    "/ChargingManagementExtended",
+	"/ChildPresenceDetectionHMI", 
+	"/ClusterSDS",
+    "/CrossTraffic",
+    "/DisplaySpeed",
+    "/DoorControl",
+	# "/drivinginformation", # not used by CAR functions
+    "/DriverNotification",
+    "/DrivingProfileSelection",
+    "/DrivingRange",
+	"/EasyEntry",
+    "/ElectricalParkingBrake",
+	"/EmergencyAssistHMI",
+	"/EnergyFlowState",
+	// "/enginegearboxinfo",
+    "/ExtendedHVACPreconditioning",
+    "/ExteriorLightingUI",
+    "/fascalibrationdata",
+    "/FasProfilesMaster",
+    "/GarageDoor",
+    "/HIDService",
+	"/hvac",
+    "/HVACVehiclePreconditioning",
+    "/HeadUpDisplay",
+	"/HillDescentControl",
+	"/HybridOperationModeManager",
+    "/Immobilizer",
+    "/InstrumentClusterConfiguration",
+	"/IntegratedTollModule",
+	"/InteriorLightUI",
+	"/InteriorLightUIExt",
+    "/Jokerkey",
+	"/LimiterHMI",
+    "/Maintenance",
+    #"/MobileDeviceKey", # breaks language settings if used
+	"/OilLevelIndicator",
+    "/OnlineUpdateUI",	
+    "/ParkingCoordinator",
+    "/ParkingSystem",
+    "/PlugAndChargeCertificateAdministration",
+    "/RecuperationSettings",
+    "/RollingAbility",
+	"/seating",
+	"/spoiler",
+	"/SunroofControl",
+    "/Time",
+    "/Tires",
+	"/TrailerAssist",
+    "/UnitMaster",
+	#"/usermanagement", # breaks language settings if used
+    "/VehicleHEMSConnection",
+    "/VehicleLocking",
+    "/VehicleTiltAngle",
+    "/VideoParkingSystem",
+	"/VirtualExteriorMirror",
+    "/WarnBrakeEvadeHMI",
+    "/WarningStoreExtension",
+    "/WiperUI"
+           ]
+    }	
+}
+
